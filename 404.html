@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 – Página no encontrada | Super Bot 007</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+:root {
+  --p: #6C63FF; --s: #FF6584; --a: #43E97B;
+  --dark: #07071A; --card: #0F0F26; --border: rgba(108,99,255,0.22);
+  --text: #E8E8FF; --muted: #7777AA;
+  --grad: linear-gradient(135deg, var(--p), var(--s));
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); overflow: hidden; }
+
+/* ── Particles canvas ── */
+#bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* ── Center content ── */
+.page-wrap {
+  position: relative; z-index: 1;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+  gap: 1.6rem;
+}
+
+/* ── Glowing 404 ── */
+.big-404 {
+  font-size: clamp(6rem, 20vw, 14rem);
+  font-weight: 900; line-height: 1;
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 40px rgba(108,99,255,0.4));
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{filter:drop-shadow(0 0 30px rgba(108,99,255,0.35))} 50%{filter:drop-shadow(0 0 60px rgba(108,99,255,0.65))} }
+
+/* ── Robot ── */
+.robot-wrap {
+  font-size: clamp(3rem, 8vw, 5rem);
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+
+/* ── Text ── */
+.err-title {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 800; color: var(--text);
+  margin-bottom: 0.3rem;
+}
+.err-sub {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: var(--muted); max-width: 420px; line-height: 1.6;
+}
+
+/* ── Actions ── */
+.actions {
+  display: flex; gap: 0.9rem; flex-wrap: wrap; justify-content: center;
+  margin-top: 0.4rem;
+}
+.btn-home {
+  padding: 0.85rem 2rem; background: var(--grad); border: none;
+  border-radius: 50px; color: white; font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.4);
+  transition: all 0.3s;
+}
+.btn-home:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(108,99,255,0.55); }
+.btn-back {
+  padding: 0.85rem 2rem; background: transparent;
+  border: 2px solid var(--border); border-radius: 50px;
+  color: var(--text); font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all 0.3s;
+}
+.btn-back:hover { border-color: var(--p); color: var(--p); }
+
+/* ── Divider ── */
+.divider { width: 60px; height: 3px; background: var(--grad); border-radius: 3px; }
+
+/* ── Quick links ── */
+.quick-links {
+  display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;
+  margin-top: 0.2rem;
+}
+.quick-link {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.83rem; color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.quick-link:hover { color: var(--p); }
+.quick-link i { font-size: 0.78rem; }
+
+/* ── Countdown ── */
+.countdown-wrap { font-size: 0.82rem; color: var(--muted); }
+.countdown-wrap span { color: var(--p); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="page-wrap">
+
+  <div class="robot-wrap">🤖</div>
+
+  <div class="big-404">404</div>
+
+  <div>
+    <h1 class="err-title">¡Oops! Página no encontrada</h1>
+    <p class="err-sub">
+      La página que buscas no existe, fue movida o la URL tiene un error tipográfico.
+      ¡Pero tu bot está bien! 😊
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="actions">
+    <a href="index.html" class="btn-home"><i class="fas fa-home"></i> Ir al Inicio</a>
+    <a href="javascript:history.back()" class="btn-back"><i class="fas fa-arrow-left"></i> Volver Atrás</a>
+  </div>
+
+  <div class="quick-links">
+    <a href="form.html" class="quick-link"><i class="fas fa-robot"></i> Crear Bot</a>
+    <a href="dashboard.html" class="quick-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="agent.html" class="quick-link"><i class="fas fa-comment-dots"></i> Chat IA</a>
+  </div>
+
+  <p class="countdown-wrap">
+    Redirigiendo al inicio en <span id="sec">10</span> segundos...
+  </p>
+
+</div>
+
+<script>
+// ── Particles ──
+(function(){
+  const c = document.getElementById('bgCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
+  function resize(){ W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i = 0; i < 60; i++){
+    pts.push({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
+      r: Math.random() * 2 + .5, a: Math.random() * .2 + .04
+    });
+  }
+  (function draw(){
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108,99,255,${p.a})`; ctx.fill();
+      pts.slice(i + 1).forEach(q => {
+        const d = Math.hypot(p.x - q.x, p.y - q.y);
+        if(d < 110){
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(108,99,255,${0.07 * (1 - d / 110)})`;
+          ctx.lineWidth = 0.5; ctx.stroke();
+        }
+      });
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ── Countdown redirect ──
+let secs = 10;
+const secEl = document.getElementById('sec');
+const timer = setInterval(() => {
+  secs--;
+  secEl.textContent = secs;
+  if(secs <= 0){ clearInterval(timer); window.location.href = 'index.html'; }
+}, 1000);
+</script>
+</body>
+</html>

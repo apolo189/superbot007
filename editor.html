@@ -1039,23 +1039,57 @@ async function saveChanges(){
   }
 }
 
-// ── DOWNLOAD CLEAN LANDING ──
+// ── DOWNLOAD CLEAN LANDING (standalone, sin Firebase) ──
 async function downloadLanding(){
-  toast('⏳ Preparando descarga...','info');
-  async function doDownload(){  // wrapped so we can call directly
-    try{
-      const res=await fetch(`landing.html?id=${botId}`);
-      const html=await res.text();
-      const blob=new Blob([html],{type:'text/html'});
-      const a=document.createElement('a');
-      a.href=URL.createObjectURL(blob);
-      a.download=`landing-${(editedData.businessName||'bot').replace(/\s+/g,'-').toLowerCase()}.html`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      toast('✅ ¡Landing descargado!','success');
-    }catch(e){ toast('❌ Error: '+e.message,'error'); }
-  }
-  doDownload();
+  toast('⏳ Generando HTML standalone...','info');
+  try{
+    // 1) Traer la plantilla landing.html
+    const res = await fetch('landing.html');
+    if(!res.ok) throw new Error('No se pudo cargar landing.html ('+res.status+')');
+    let html = await res.text();
+
+    // 2) Serializar datos del bot como JSON inline
+    const data = JSON.parse(JSON.stringify(editedData)); // deep clone
+    const dataJson = JSON.stringify(data).replace(/<\/script>/gi,'<\\/script>');
+
+    // 3) Eliminar el bloque Firebase SDK (type="module") — no necesario en standalone
+    html = html.replace(/<script type="module">[\s\S]*?<\/script>/,'');
+
+    // 4) Inyectar script standalone ANTES del </body>
+    //    — define window.db = null y arranca initPage() directamente con los datos embebidos
+    const standaloneScript = `
+<script>
+/* ══════ STANDALONE MODE — generado por Super Bot 007 Editor ══════ */
+(function(){
+  var BOT_DATA = ${dataJson};
+
+  /* Simular Firebase como no-op para que el código no rompa */
+  window.fbGetDoc  = function(){ return Promise.resolve({ exists:()=>true, data:()=>BOT_DATA }); };
+  window.fbDoc     = function(){ return {}; };
+  window.fbAddDoc  = function(){ return Promise.resolve({ id:'standalone' }); };
+  window.fbCollection = function(){ return {}; };
+  window.db        = {};
+
+  /* Arrancar la página directamente con datos embebidos */
+  document.addEventListener('DOMContentLoaded', function(){
+    window.botData = BOT_DATA;
+    if(typeof initPage === 'function') initPage();
+    else if(typeof loadBot === 'function') loadBot();
+  });
+})();
+<\/script>`;
+
+    html = html.replace('</body>', standaloneScript + '\n</body>');
+
+    // 5) Descargar
+    const blob = new Blob([html],{type:'text/html;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `landing-${(editedData.businessName||'bot').replace(/\s+/g,'-').toLowerCase()}.html`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('✅ ¡Landing standalone descargado!','success');
+  }catch(e){ toast('❌ Error: '+e.message,'error'); console.error(e); }
 }
 
 // ── MODAL ──
