@@ -1077,47 +1077,55 @@ async function downloadLanding(){
     if(!res.ok) throw new Error('No se pudo cargar landing.html ('+res.status+')');
     let html = await res.text();
 
-    // 2) Serializar datos del bot como JSON inline
-    const data = JSON.parse(JSON.stringify(editedData)); // deep clone
+    // 2) Deep-clone los datos actuales del bot
+    const data = JSON.parse(JSON.stringify(editedData));
     const dataJson = JSON.stringify(data).replace(/<\/script>/gi,'<\\/script>');
 
-    // 3) Eliminar el bloque Firebase SDK (type="module") — no necesario en standalone
-    html = html.replace(/<script type="module">[\s\S]*?<\/script>/,'');
-
-    // 4) Inyectar script standalone ANTES del </body>
-    //    — define window.db = null y arranca initPage() directamente con los datos embebidos
-    const standaloneScript = `
-<script>
-/* ══════ STANDALONE MODE — generado por Super Bot 007 Editor ══════ */
-(function(){
-  var BOT_DATA = ${dataJson};
-
-  /* Simular Firebase como no-op para que el código no rompa */
-  window.fbGetDoc  = function(){ return Promise.resolve({ exists:()=>true, data:()=>BOT_DATA }); };
-  window.fbDoc     = function(){ return {}; };
-  window.fbAddDoc  = function(){ return Promise.resolve({ id:'standalone' }); };
-  window.fbCollection = function(){ return {}; };
-  window.db        = {};
-
-  /* Arrancar la página directamente con datos embebidos */
-  document.addEventListener('DOMContentLoaded', function(){
-    window.botData = BOT_DATA;
-    if(typeof initPage === 'function') initPage();
-    else if(typeof loadBot === 'function') loadBot();
-  });
-})();
+    // 3) Reemplazar el bloque Firebase SDK (type="module") con shims no-op
+    //    Esto es crítico: el módulo Firebase debe sustituirse ANTES de que el script
+    //    principal corra, para que window.db y window.fbGetDoc estén listos.
+    const firebaseBlockRegex = /<script type="module">[\s\S]*?<\/script>/;
+    const shimScript = `<script>
+/* ══ STANDALONE — Super Bot 007 (sin Firebase) ══ */
+var __BOT_DATA__ = ${dataJson};
+window.db = { _standalone: true };
+window.fbDoc         = function(){ return {}; };
+window.fbCollection  = function(){ return {}; };
+window.fbAddDoc      = function(){ return Promise.resolve({ id:'standalone' }); };
+window.fbGetDoc      = function(){
+  return Promise.resolve({ exists: function(){ return true; }, data: function(){ return __BOT_DATA__; } });
+};
 <\/script>`;
 
-    html = html.replace('</body>', standaloneScript + '\n</body>');
+    if(firebaseBlockRegex.test(html)){
+      html = html.replace(firebaseBlockRegex, shimScript);
+    } else {
+      // Si por alguna razón no se encuentra, añadir antes del primer <script>
+      html = html.replace('<script>', shimScript + '\n<script>');
+    }
+
+    // 4) Reemplazar la lógica de inicio para que cargue datos locales
+    //    Sustituir el bloque START que llama loadBot() por uno que llama initPage() directo
+    const startBlockRegex = /\/\/ ══════ START ══════[\s\S]*?}, 2500\);/;
+    const standaloneStart = `// ══ STANDALONE START ══
+window.addEventListener('DOMContentLoaded', function(){
+  window.botData = __BOT_DATA__;
+  initPage();
+});`;
+
+    if(startBlockRegex.test(html)){
+      html = html.replace(startBlockRegex, standaloneStart);
+    }
 
     // 5) Descargar
+    const bizName = (data.businessName||'mi-landing').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/gi,'').toLowerCase();
     const blob = new Blob([html],{type:'text/html;charset=utf-8'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `landing-${(editedData.businessName||'bot').replace(/\s+/g,'-').toLowerCase()}.html`;
+    a.download = `landing-${bizName}.html`;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast('✅ ¡Landing standalone descargado!','success');
+    toast('✅ ¡Landing descargado! Abre el .html en tu navegador.','success');
   }catch(e){ toast('❌ Error: '+e.message,'error'); console.error(e); }
 }
 
