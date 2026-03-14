@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Bot 007 – Crear Tu Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #6C63FF;
+  --secondary: #FF6584;
+  --accent: #43E97B;
+  --dark: #0A0A1A;
+  --card: #13132B;
+  --border: rgba(108,99,255,0.3);
+  --text: #E8E8FF;
+  --muted: #9090B0;
+  --gradient: linear-gradient(135deg, #6C63FF, #FF6584);
+  --success: #43E97B;
+  --danger: #FF4757;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+#particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,26,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 1.4rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.logo span { font-size: 0.9rem; font-weight: 400; -webkit-text-fill-color: var(--muted); }
+.progress-wrap { position: fixed; top: 65px; left: 0; right: 0; z-index: 99; background: rgba(10,10,26,0.95); padding: 0.8rem 2rem; border-bottom: 1px solid var(--border); }
+.progress-bar-bg { background: rgba(108,99,255,0.2); border-radius: 50px; height: 6px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 50px; background: var(--gradient); transition: width 0.5s ease; }
+.steps-indicator { display: flex; justify-content: space-between; margin-top: 0.6rem; }
+.step-dot { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-size: 0.65rem; color: var(--muted); transition: color 0.3s; }
+.step-dot .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; transition: all 0.3s; background: var(--card); }
+.step-dot.active .dot { border-color: var(--primary); background: var(--primary); color: white; }
+.step-dot.done .dot { border-color: var(--success); background: var(--success); color: white; content: '✓'; }
+.step-dot.active, .step-dot.done { color: var(--text); }
+.main { padding: 145px 1rem 2rem; max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+.step-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; display: none; animation: fadeIn 0.4s ease; }
+.step-card.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.step-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.step-subtitle { color: var(--muted); margin-bottom: 1.8rem; font-size: 0.9rem; }
+.form-group { margin-bottom: 1.4rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media(max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.required { color: var(--secondary); margin-left: 2px; }
+input[type="text"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"], input[type="number"], input[type="time"], select, textarea { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: all 0.3s; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--primary); background: rgba(108,99,255,0.08); box-shadow: 0 0 0 3px rgba(108,99,255,0.12); }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.6; }
+textarea { resize: vertical; min-height: 80px; }
+select option { background: #1a1a3e; }
+input[type="color"] { width: 60px; height: 44px; padding: 3px; border-radius: 8px; cursor: pointer; background: rgba(255,255,255,0.05); }
+.color-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.color-item { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1; min-width: 90px; }
+.color-item label { font-size: 0.72rem; text-align: center; }
+.color-item input[type="text"] { text-align: center; font-size: 0.78rem; padding: 0.4rem; }
+.img-upload-box { border: 2px dashed var(--border); border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; background: rgba(108,99,255,0.03); min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 1.2rem; }
+.img-upload-box:hover { border-color: var(--primary); background: rgba(108,99,255,0.08); }
+.img-upload-box .icon { font-size: 2rem; margin-bottom: 0.4rem; opacity: 0.5; pointer-events: none; }
+.img-upload-box p { font-size: 0.82rem; color: var(--muted); pointer-events: none; }
+.img-upload-box small { font-size: 0.72rem; color: var(--muted); opacity: 0.7; pointer-events: none; }
+.img-upload-box input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 10; }
+/* Preview INSIDE the upload box */
+.img-box-preview { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; border-radius: 10px; display: none; z-index: 1; }
+.img-box-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 2; border-radius: 10px; pointer-events: none; }
+.img-box-overlay span { color: white; font-size: 0.8rem; font-weight: 700; background: rgba(108,99,255,0.8); padding: 0.4rem 0.9rem; border-radius: 20px; display: flex; align-items: center; gap: 0.4rem; }
+.img-upload-box:hover .img-box-overlay { display: flex; }
+/* Old standalone preview — keep for gallery */
+.img-preview { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; margin-top: 0.6rem; display: none; pointer-events: none; }
+.img-url-input { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.img-url-input input { flex: 1; }
+.btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background: var(--primary); color: white; transition: all 0.2s; white-space: nowrap; }
+.btn-sm:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-ai { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; background: linear-gradient(135deg,rgba(108,99,255,0.15),rgba(255,101,132,0.15)); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 0.8rem; }
+.btn-ai:hover { border-color: var(--primary); background: linear-gradient(135deg,rgba(108,99,255,0.25),rgba(255,101,132,0.25)); }
+.sparkle { animation: rotate 3s linear infinite; display: inline-block; }
+@keyframes rotate { to { transform: rotate(360deg); } }
+.dynamic-list { display: flex; flex-direction: column; gap: 1rem; }
+.list-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; }
+.item-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+.item-num { width: 28px; height: 28px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+.item-title { font-weight: 600; font-size: 0.9rem; }
+.btn-remove { margin-left: auto; background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3); color: #FF4757; padding: 0.3rem 0.65rem; border-radius: 8px; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
+.btn-remove:hover { background: rgba(255,71,87,0.25); }
+.btn-add { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem; border: 2px dashed var(--border); border-radius: 12px; color: var(--primary); font-weight: 600; cursor: pointer; transition: all 0.3s; background: transparent; width: 100%; font-size: 0.88rem; margin-top: 0.8rem; }
+.btn-add:hover { border-color: var(--primary); background: rgba(108,99,255,0.06); }
+.gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.8rem; }
+@media(max-width:600px){ .gallery-grid { grid-template-columns: repeat(2,1fr); } }
+.gallery-slot { aspect-ratio:1; border: 2px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; background: rgba(108,99,255,0.04); transition: all 0.3s; flex-direction: column; gap: 0.3rem; }
+.gallery-slot:hover { border-color: var(--primary); }
+.gallery-slot .add-icon { font-size: 1.4rem; color: var(--muted); pointer-events: none; }
+.gallery-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; }
+.gallery-slot input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.gallery-slot .slot-label { font-size: 0.6rem; color: var(--muted); pointer-events: none; }
+.hours-table { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.hour-row { display: grid; grid-template-columns: 90px 50px 1fr 1fr; gap: 0.6rem; align-items: center; padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(108,99,255,0.08); }
+.hour-row:last-child { border-bottom: none; }
+.hour-row:nth-child(even) { background: rgba(255,255,255,0.02); }
+.day-label { font-weight: 600; font-size: 0.82rem; }
+.toggle-switch { position: relative; width: 40px; height: 22px; display: block; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.12); border-radius: 22px; transition: 0.3s; }
+.toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+input:checked + .toggle-slider { background: var(--primary); }
+input:checked + .toggle-slider:before { transform: translateX(18px); }
+.step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; gap: 1rem; }
+.btn-back { padding: 0.8rem 1.8rem; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text); font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; }
+.btn-back:hover { border-color: var(--primary); }
+.btn-next { padding: 0.8rem 2.2rem; border-radius: 12px; border: none; background: var(--gradient); color: white; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 20px rgba(108,99,255,0.4); display: flex; align-items: center; gap: 0.5rem; }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,0.5); }
+.btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.section-div { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+.info-box { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; font-size: 0.82rem; color: var(--muted); display: flex; gap: 0.7rem; align-items: flex-start; }
+.info-box i { color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
+.tooltip { font-size: 0.72rem; color: var(--muted); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem; }
+.char-count { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 0.2rem; }
+.overlay { position: fixed; inset: 0; background: rgba(10,10,26,0.92); backdrop-filter: blur(12px); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1.5rem; }
+.overlay.show { display: flex; }
+.spinner { width: 48px; height: 48px; border: 4px solid rgba(108,99,255,0.3); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.overlay-text { font-size: 1rem; font-weight: 600; color: var(--text); }
+.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; padding: 0.9rem 1.4rem; border-radius: 12px; font-weight: 600; font-size: 0.88rem; transform: translateX(200%); transition: transform 0.4s ease; max-width: 320px; }
+.toast.show { transform: translateX(0); }
+.toast.success { background: rgba(67,233,123,0.12); border: 1px solid rgba(67,233,123,0.4); color: var(--success); }
+.toast.error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.4); color: var(--danger); }
+.toast.info { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.4); color: var(--primary); }
+.success-card { text-align: center; padding: 2.5rem 1.5rem; }
+.success-icon { font-size: 4.5rem; margin-bottom: 1.2rem; animation: bounceIn 0.8s ease; }
+@keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+.success-title { font-size: 1.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+.bot-id-box { background: rgba(108,99,255,0.12); border: 2px solid var(--primary); border-radius: 12px; padding: 1rem 1.5rem; margin: 1.2rem 0; font-size: 1.1rem; font-weight: 800; font-family: monospace; color: var(--primary); word-break: break-all; cursor: pointer; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.2rem; }
+@media(max-width:480px){ .result-grid { grid-template-columns: 1fr; } }
+.result-btn { padding: 0.85rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; }
+.result-btn.primary { background: var(--gradient); color: white; box-shadow: 0 4px 20px rgba(108,99,255,0.35); }
+.result-btn.outline { background: transparent; border-color: var(--primary); color: var(--primary); }
+.result-btn:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-text" id="overlayText">Procesando...</div></div>
+<div class="toast" id="toast"></div>
+
+<header class="header">
+  <div class="logo">🤖 Super Bot 007 <span>/ Crear Bot</span></div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <span id="stepLabel" style="font-size:0.82rem;color:var(--muted);">Paso 1 de 7</span>
+    <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:0.85rem;"><i class="fas fa-home"></i></a>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:14%"></div></div>
+  <div class="steps-indicator">
+    <div class="step-dot active" id="sdot1"><div class="dot" onclick="tryGoStep(1)">1</div><span>Info</span></div>
+    <div class="step-dot" id="sdot2"><div class="dot" onclick="tryGoStep(2)">2</div><span>Diseño</span></div>
+    <div class="step-dot" id="sdot3"><div class="dot" onclick="tryGoStep(3)">3</div><span>Servicios</span></div>
+    <div class="step-dot" id="sdot4"><div class="dot" onclick="tryGoStep(4)">4</div><span>Productos</span></div>
+    <div class="step-dot" id="sdot5"><div class="dot" onclick="tryGoStep(5)">5</div><span>Galería</span></div>
+    <div class="step-dot" id="sdot6"><div class="dot" onclick="tryGoStep(6)">6</div><span>Contacto</span></div>
+    <div class="step-dot" id="sdot7"><div class="dot" onclick="tryGoStep(7)">7</div><span>IA & Bot</span></div>
+  </div>
+</div>
+
+<main class="main">
+<!-- STEP 1 -->
+<div class="step-card active" id="step1">
+  <div class="step-title">🏢 Información del Negocio</div>
+  <div class="step-subtitle">Cuéntanos sobre el negocio que potenciarás con IA</div>
+  <div class="form-group">
+    <label>Nombre del Negocio <span class="required">*</span></label>
+    <input type="text" id="businessName" placeholder="Ej: Bella Salon & Spa" maxlength="60">
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Tipo de Negocio <span class="required">*</span></label>
+      <select id="businessType">
+        <option value="">Seleccionar...</option>
+        <option>Salón de Belleza</option><option>Restaurante / Cafetería</option>
+        <option>Consultorio Médico</option><option>Dentista</option>
+        <option>Gimnasio / Fitness</option><option>Spa / Masajes</option>
+        <option>Consultora / Agencia</option><option>Tienda de Ropa</option>
+        <option>Panadería / Pastelería</option><option>Hotel / Hospedaje</option>
+        <option>Abogado / Notaría</option><option>Fotógrafo</option>
+        <option>Entrenador Personal</option><option>E-commerce</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Ciudad / País</label>
+      <input type="text" id="businessCity" placeholder="Miami, FL, USA">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Descripción del Negocio <span class="required">*</span></label>
+    <textarea id="description" placeholder="Describe tu negocio, servicios, valores..." rows="3" maxlength="500" oninput="document.getElementById('dc').textContent=this.value.length"></textarea>
+    <div class="char-count"><span id="dc">0</span>/500</div>
+  </div>
+  <hr class="section-div">
+  <div class="form-group">
+    <label>Título Principal Hero <span class="required">*</span></label>
+    <input type="text" id="heroTitle" placeholder="Ej: Transforma Tu Belleza con Nosotros" maxlength="80">
+  </div>
+  <div class="form-group">
+    <label>Subtítulo Hero</label>
+    <input type="text" id="heroSubtitle" placeholder="Ej: Servicios premium en el corazón de Miami" maxlength="120">
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Mensaje Bienvenida del Bot</label>
+      <input type="text" id="welcomeMsg" placeholder="¡Hola! ¿En qué puedo ayudarte?" maxlength="200">
+    </div>
+    <div class="form-group">
+      <label>Avatar del Bot (URL)</label>
+      <input type="url" id="botAvatar" placeholder="https://...imagen.jpg">
+    </div>
+  </div>
+  <div class="step-nav">
+    <div></div>
+    <button class="btn-next" onclick="nextStep(1)">Diseño & Colores <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-card" id="step2">
+  <div class="step-title">🎨 Diseño & Colores</div>
+  <div class="step-subtitle">Personaliza colores, logo e imagen principal de tu landing page</div>
+  <div class="form-group">
+    <label>Paleta de Colores</label>
+    <div class="color-row">
+      <div class="color-item"><label>Primario</label><input type="color" id="primaryColor" value="#6C63FF" oninput="document.getElementById('primaryHex').value=this.value"><input type="text" id="primaryHex" value="#6C63FF" onchange="syncColor('primary')"></div>
+      <div class="color-item"><label>Secundario</label><input type="color" id="secondaryColor" value="#FF6584" oninput="document.getElementById('secondaryHex').value=this.value"><input type="text" id="secondaryHex" value="#FF6584" onchange="syncColor('secondary')"></div>
+      <div class="color-item"><label>Acento</label><input type="color" id="accentColor" value="#43E97B" oninput="document.getElementById('accentHex').value=this.value"><input type="text" id="accentHex" value="#43E97B" onchange="syncColor('accent')"></div>
+      <div class="color-item"><label>Fondo</label><input type="color" id="bgColorPick" value="#0A0A1A" oninput="document.getElementById('bgColorHex').value=this.value"><input type="text" id="bgColorHex" value="#0A0A1A" onchange="document.getElementById('bgColorPick').value=this.value" placeholder="#0A0A1A"></div>
+    </div>
+  </div>
+  <hr class="section-div">
+  <div class="form-group">
+    <label>Logo del Negocio</label>
+    <div class="img-upload-box" id="logoBox" style="aspect-ratio:1/1;max-height:200px;">
+      <input type="file" accept="image/*" onchange="uploadImgBox(this,'logoURL','logoBox','logoPreview')">
+      <img class="img-box-preview" id="logoPreview">
+      <div class="img-box-overlay"><span><i class="fas fa-camera"></i> Cambiar</span></div>
+      <div class="img-box-placeholder" id="logoPlaceholder"><div class="icon">🖼️</div><p>Arrastra o haz clic para subir</p><small>PNG transparente recomendado</small></div>
+    </div>
+    <div class="img-url-input"><input type="url" id="logoURL" placeholder="O pega URL directa del logo..."><button class="btn-sm" onclick="loadUrlBox('logoURL','logoBox','logoPreview','logoPlaceholder')">Cargar</button></div>
+  </div>
+  <div class="form-group">
+    <label>Imagen Hero / Banner Principal</label>
+    <div class="img-upload-box" id="heroBox" style="aspect-ratio:16/9;">
+      <input type="file" accept="image/*" onchange="uploadImgBox(this,'heroImageURL','heroBox','heroPreview')">
+      <img class="img-box-preview" id="heroPreview" style="object-fit:cover;">
+      <div class="img-box-overlay"><span><i class="fas fa-camera"></i> Cambiar</span></div>
+      <div class="img-box-placeholder" id="heroPlaceholder"><div class="icon">🌅</div><p>Imagen de fondo del hero</p><small>1200×600px recomendado</small></div>
+    </div>
+    <div class="img-url-input"><input type="url" id="heroImageURL" placeholder="O pega URL de imagen..."><button class="btn-sm" onclick="loadUrlBox('heroImageURL','heroBox','heroPreview','heroPlaceholder')">Cargar</button></div>
+  </div>
+  <hr class="section-div">
+  <div class="form-row">
+    <div class="form-group"><label>Título Sección Servicios</label><input type="text" id="servicesTitle" value="Nuestros Servicios"></div>
+    <div class="form-group"><label>Subtítulo Servicios</label><input type="text" id="servicesSubtitle" placeholder="La mejor atención para ti"></div>
+  </div>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" onclick="nextStep(2)">Servicios <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step-card" id="step3">
+  <div class="step-title">✂️ Servicios</div>
+  <div class="step-subtitle">Agrega los servicios de tu negocio (mín. 1, máx. 8)</div>
+  <div class="info-box" style="margin-bottom:1rem;"><i class="fas fa-lightbulb"></i> En el último paso podrás generar servicios automáticamente con IA.</div>
+  <div class="dynamic-list" id="servicesList"></div>
+  <button class="btn-add" id="addSvcBtn" onclick="addService()"><i class="fas fa-plus"></i> Añadir Servicio</button>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" onclick="nextStep(3)">Productos <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-card" id="step4">
+  <div class="step-title">🛒 Productos & PayPal</div>
+  <div class="step-subtitle">Vende productos con carrito de compras y pago por PayPal</div>
+  <div class="info-box"><i class="fas fa-info-circle"></i> Los productos aparecen en tu landing con carrito y botón de PayPal. Puedes omitir si solo ofreces servicios.</div>
+  <div class="form-row">
+    <div class="form-group"><label>Email de PayPal</label><input type="email" id="paypalEmail" placeholder="tupaypal@email.com"></div>
+    <div class="form-group"><label>Link PayPal.me (opcional)</label><input type="url" id="paypalLink" placeholder="https://paypal.me/tunombre"></div>
+  </div>
+  <hr class="section-div">
+  <div class="dynamic-list" id="productsList"></div>
+  <button class="btn-add" id="addProdBtn" onclick="addProduct()"><i class="fas fa-plus"></i> Añadir Producto</button>
+  <p class="tooltip" style="margin-top:0.5rem;"><i class="fas fa-lightbulb"></i> Máximo 8 productos.</p>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(4)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" onclick="nextStep(4)">Galería <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step-card" id="step5">
+  <div class="step-title">📸 Galería de Fotos</div>
+  <div class="step-subtitle">Sube hasta 8 fotos del negocio (desde archivo o URL)</div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+  <div class="form-group" style="margin-top:1.2rem;">
+    <label>Título Sección Galería</label>
+    <input type="text" id="galleryTitle" value="Nuestro Trabajo">
+  </div>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(5)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" onclick="nextStep(5)">Contacto & Horarios <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step-card" id="step6">
+  <div class="step-title">📞 Contacto & Horarios</div>
+  <div class="step-subtitle">Información de contacto y horario de atención</div>
+  <div class="form-row">
+    <div class="form-group"><label>Teléfono <span class="required">*</span></label><input type="tel" id="phone" placeholder="+1 (555) 000-0000"></div>
+    <div class="form-group"><label>WhatsApp (solo números)</label><input type="tel" id="whatsapp" placeholder="15550000000"><p class="tooltip"><i class="fas fa-info-circle"></i> Código país + número, sin + ni espacios</p></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="info@tunegocio.com"></div>
+    <div class="form-group"><label>Sitio Web (opcional)</label><input type="url" id="website" placeholder="https://tunegocio.com"></div>
+  </div>
+  <div class="form-group"><label>Dirección</label><input type="text" id="address" placeholder="123 Main St, Miami FL 33101"></div>
+  <hr class="section-div">
+  <label style="margin-bottom:0.5rem;display:block;">Redes Sociales</label>
+  <div class="form-row">
+    <div class="form-group"><label><i class="fab fa-instagram"></i> Instagram</label><input type="url" id="instagram" placeholder="https://instagram.com/..."></div>
+    <div class="form-group"><label><i class="fab fa-facebook"></i> Facebook</label><input type="url" id="facebook" placeholder="https://facebook.com/..."></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label><i class="fab fa-tiktok"></i> TikTok</label><input type="url" id="tiktok" placeholder="https://tiktok.com/@..."></div>
+    <div class="form-group"><label><i class="fab fa-youtube"></i> YouTube</label><input type="url" id="youtube" placeholder="https://youtube.com/@..."></div>
+  </div>
+  <hr class="section-div">
+  <label style="margin-bottom:0.8rem;display:block;">Horario de Atención</label>
+  <div class="hours-table" id="hoursTable"></div>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(6)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" onclick="nextStep(6)">IA & Activar <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- STEP 7 -->
+<div class="step-card" id="step7">
+  <div class="step-title">🤖 IA & Activar Bot</div>
+  <div class="step-subtitle">Genera contenido con IA, configura el chatbot y activa tu Super Bot 007</div>
+
+  <div class="info-box"><i class="fas fa-key"></i> API Key de OpenAI para el chatbot. Opcional si no usas el chatbot. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--primary);">Obtener aquí →</a></div>
+  <div class="form-row">
+    <div class="form-group"><label>OpenAI API Key</label><input type="password" id="openaiKey" placeholder="sk-proj-... (opcional)"><p class="tooltip"><i class="fas fa-lock"></i> Solo se usa para el chatbot IA</p></div>
+    <div class="form-group">
+      <label>Modelo GPT</label>
+      <select id="gptModel"><option value="gpt-4o-mini" selected>GPT-4o Mini (Recomendado)</option><option value="gpt-4o">GPT-4o (Potente)</option><option value="gpt-3.5-turbo">GPT-3.5 Turbo (Económico)</option></select>
+    </div>
+  </div>
+
+  <!-- AI GENERATION SECTION -->
+  <div style="background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,101,132,0.08));border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;">
+    <div style="font-size:1rem;font-weight:700;margin-bottom:0.4rem;">✨ Generar Contenido con IA</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Ingresa tu API Key arriba primero, luego usa estos botones para generar automáticamente</div>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+      <button class="btn-ai" onclick="aiGen('description')" style="margin-bottom:0;"><span class="sparkle">✨</span> Descripción</button>
+      <button class="btn-ai" onclick="aiGen('heroTitle')" style="margin-bottom:0;"><span class="sparkle">✨</span> Título Hero</button>
+      <button class="btn-ai" onclick="aiGen('services')" style="margin-bottom:0;"><span class="sparkle">✨</span> Servicios</button>
+      <button class="btn-ai" onclick="aiGen('testimonials')" style="margin-bottom:0;"><span class="sparkle">✨</span> Testimonios</button>
+      <button class="btn-ai" onclick="aiGen('faqs')" style="margin-bottom:0;"><span class="sparkle">✨</span> FAQs</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Idioma del Bot</label><select id="botLanguage"><option value="es" selected>Español</option><option value="en">English</option><option value="pt">Português</option></select></div>
+    <div class="form-group"><label>Instrucción Especial (opcional)</label><input type="text" id="botInstruction" placeholder="Ej: No hacer descuentos mayores al 10%"></div>
+  </div>
+  <hr class="section-div">
+  <div class="form-group">
+    <label>Testimonios</label>
+    <div class="dynamic-list" id="testimonialsList"></div>
+    <button class="btn-add" onclick="addTestimonial()"><i class="fas fa-plus"></i> Añadir Testimonio</button>
+  </div>
+  <hr class="section-div">
+  <div class="form-group">
+    <label>Preguntas Frecuentes (FAQ)</label>
+    <div class="dynamic-list" id="faqsList"></div>
+    <button class="btn-add" onclick="addFaq()"><i class="fas fa-plus"></i> Añadir FAQ</button>
+  </div>
+  <div class="step-nav">
+    <button class="btn-back" onclick="prevStep(7)"><i class="fas fa-arrow-left"></i> Atrás</button>
+    <button class="btn-next" id="activateBtn" onclick="activateBot()" style="background:linear-gradient(135deg,#43E97B,#38F9D7);box-shadow:0 4px 20px rgba(67,233,123,0.4);">🚀 Activar Bot 007</button>
+  </div>
+</div>
+
+<!-- STEP 8: SUCCESS -->
+<div class="step-card" id="step8">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">¡Bot 007 Activado!</div>
+    <p style="color:var(--muted);margin-bottom:0.5rem;">Tu Super Bot 007 está listo. Guarda este ID:</p>
+    <div class="bot-id-box" id="resultBotId" onclick="copyId(this)">cargando...</div>
+    <p style="font-size:0.75rem;color:var(--muted);">Haz clic para copiar</p>
+    <div class="result-grid">
+      <a id="rLanding" href="#" target="_blank" class="result-btn primary"><i class="fas fa-globe"></i> Ver Landing Page</a>
+      <a id="rEditor" href="#" target="_blank" class="result-btn outline"><i class="fas fa-edit"></i> Abrir Editor</a>
+      <a id="rAgent" href="#" target="_blank" class="result-btn outline"><i class="fas fa-robot"></i> Probar Chatbot</a>
+      <a id="rDash" href="#" target="_blank" class="result-btn outline"><i class="fas fa-chart-bar"></i> Dashboard</a>
+    </div>
+    <button onclick="location.reload()" style="margin-top:1.5rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 2rem;border-radius:10px;cursor:pointer;font-size:0.88rem;">
+      + Crear otro bot
+    </button>
+  </div>
+</div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const cfg = {
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+};
+const app = initializeApp(cfg);
+window.db = getFirestore(app);
+window.fbDoc = doc;
+window.fbSet = setDoc;
+console.log("✅ Firebase ready");
+</script>
+<script>
+// ───────── STATE ─────────
+let step=1,svcN=0,prodN=0,testN=0,faqN=0;
+const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const OPEN=[true,true,true,true,true,true,false];
+const FROM=['09:00','09:00','09:00','09:00','09:00','10:00','10:00'];
+const TO  =['18:00','18:00','18:00','18:00','18:00','16:00','14:00'];
+
+// ───────── PARTICLES ─────────
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<50;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*2+.8,a:Math.random()*.3+.08});
+  (function draw(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(108,99,255,${p.a})`;ctx.fill();});requestAnimationFrame(draw);})();
+})();
+
+// ───────── NAV ─────────
+function tryGoStep(n){ if(n<=step) goToStep(n); }
+function goToStep(n){
+  document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  step=n; updateBar(n); window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextStep(from){
+  if(!validate(from)) return;
+  const next=from+1;
+  document.getElementById('sdot'+from).classList.remove('active');
+  document.getElementById('sdot'+from).classList.add('done');
+  document.getElementById('sdot'+next)?.classList.add('active');
+  goToStep(next);
+}
+function prevStep(from){
+  const prev=from-1;
+  document.getElementById('sdot'+from).classList.remove('active');
+  document.getElementById('sdot'+prev)?.classList.remove('done');
+  document.getElementById('sdot'+prev)?.classList.add('active');
+  goToStep(prev);
+}
+function updateBar(n){ document.getElementById('progressFill').style.width=(n/7*100)+'%'; document.getElementById('stepLabel').textContent=`Paso ${n} de 7`; }
+
+// ───────── VALIDATE ─────────
+function validate(n){
+  if(n===1){
+    if(!g('businessName').trim()){toast('Nombre del negocio es requerido','error');return false;}
+    if(!g('businessType')){toast('Selecciona el tipo de negocio','error');return false;}
+    if(!g('description').trim()){toast('La descripción es requerida','error');return false;}
+    if(!g('heroTitle').trim()){toast('El título principal es requerido','error');return false;}
+  }
+  if(n===6){
+    if(!g('phone').trim()){toast('El teléfono es requerido','error');return false;}
+  }
+  return true;
+}
+function g(id){ return document.getElementById(id)?.value||''; }
+
+// ───────── COLORS ─────────
+function syncColor(type){
+  const hex=document.getElementById(type+'Hex').value;
+  if(/^#[0-9a-fA-F]{6}$/.test(hex)) document.getElementById(type+'Color').value=hex;
+}
+
+// ───────── IMAGE UPLOAD ─────────
+function uploadToImgur(file,cb){
+  showOv('Subiendo imagen...');
+  const fd=new FormData(); fd.append('image',file);
+  fetch('https://api.imgur.com/3/image',{method:'POST',headers:{'Authorization':'Client-ID 546c25a59c58ad7'},body:fd})
+  .then(r=>r.json()).then(d=>{hideOv();if(d.success){cb(d.data.link);toast('✅ Imagen subida','success');}else{toast('Error Imgur. Usa URL directa.','error');}})
+  .catch(()=>{hideOv();toast('Error al subir. Usa URL directa.','error');});
+}
+
+// Nueva función: preview DENTRO del box
+function showImgInBox(url, boxId, prevId, placeholderId){
+  const prev = document.getElementById(prevId);
+  const box  = document.getElementById(boxId);
+  const ph   = placeholderId ? document.getElementById(placeholderId) : null;
+  if(!prev || !box) return;
+  prev.src = url;
+  prev.style.display = 'block';
+  if(ph) ph.style.display = 'none';
+  box.style.border = '2px solid rgba(108,99,255,0.5)';
+  box.style.padding = '0';
+}
+function uploadImgBox(input, urlId, boxId, prevId){
+  const f = input.files[0]; if(!f) return;
+  const placeholderId = boxId.replace('Box','Placeholder');
+  uploadToImgur(f, url=>{
+    document.getElementById(urlId).value = url;
+    showImgInBox(url, boxId, prevId, placeholderId);
+  });
+}
+function loadUrlBox(urlId, boxId, prevId, placeholderId){
+  const url = document.getElementById(urlId)?.value; if(!url) return;
+  showImgInBox(url, boxId, prevId, placeholderId);
+}
+
+// Función legacy para servicios/productos/galería (sin box)
+function uploadImg(input,urlId,prevId){
+  const f=input.files[0]; if(!f) return;
+  uploadToImgur(f,url=>{
+    document.getElementById(urlId).value=url;
+    const p=document.getElementById(prevId); if(p){p.src=url;p.style.display='block';}
+  });
+}
+function loadUrl(urlId,prevId){
+  const url=document.getElementById(urlId).value; if(!url)return;
+  const p=document.getElementById(prevId); if(p){p.src=url;p.style.display='block';}
+}
+
+// ───────── GALLERY ─────────
+function initGallery(){
+  const grid=document.getElementById('galleryGrid'); grid.innerHTML='';
+  for(let i=1;i<=8;i++){
+    grid.innerHTML+=`<div class="gallery-slot" id="gs${i}">
+      <input type="file" accept="image/*" onchange="galUpload(this,${i})">
+      <span class="add-icon"><i class="fas fa-camera"></i></span>
+      <span class="slot-label">Foto ${i}</span>
+    </div>`;
+  }
+  // Add URL inputs below
+  const urlDiv=document.createElement('div');
+  urlDiv.style.cssText='margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;';
+  for(let i=1;i<=8;i++){
+    urlDiv.innerHTML+=`<input type="url" id="gimg${i}" placeholder="URL foto ${i}" style="font-size:0.65rem;padding:0.35rem;" onchange="galUrl(${i})">`;
+  }
+  document.getElementById('galleryGrid').insertAdjacentElement('afterend',urlDiv);
+}
+function galUpload(input,i){
+  const f=input.files[0]; if(!f) return;
+  uploadToImgur(f,url=>{
+    document.getElementById('gimg'+i).value=url;
+    setGalImg(i,url);
+  });
+}
+function galUrl(i){
+  const url=document.getElementById('gimg'+i)?.value; if(url) setGalImg(i,url);
+}
+function setGalImg(i,url){
+  const slot=document.getElementById('gs'+i); if(!slot) return;
+  let img=slot.querySelector('img');
+  if(!img){img=document.createElement('img');slot.appendChild(img);}
+  img.src=url;
+  slot.querySelector('.add-icon').style.opacity='0';
+  slot.querySelector('.slot-label').style.opacity='0';
+}
+
+// ───────── HOURS ─────────
+function initHours(){
+  const t=document.getElementById('hoursTable'); t.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    t.innerHTML+=`<div class="hour-row">
+      <div class="day-label">${d}</div>
+      <label class="toggle-switch"><input type="checkbox" id="open${i}" ${OPEN[i]?'checked':''} onchange="toggleDay(${i})"><span class="toggle-slider"></span></label>
+      <input type="time" id="from${i}" value="${FROM[i]}" ${!OPEN[i]?'disabled':''}>
+      <input type="time" id="to${i}" value="${TO[i]}" ${!OPEN[i]?'disabled':''}>
+    </div>`;
+  });
+}
+function toggleDay(i){
+  const open=document.getElementById('open'+i).checked;
+  document.getElementById('from'+i).disabled=!open;
+  document.getElementById('to'+i).disabled=!open;
+}
+
+// ───────── SERVICES ─────────
+function addService(){
+  if(svcN>=8){toast('Máximo 8 servicios','info');return;}
+  svcN++;const n=svcN;
+  const d=document.createElement('div'); d.className='list-item'; d.id='svc'+n;
+  d.innerHTML=`<div class="item-header"><div class="item-num">${n}</div><div class="item-title">Servicio ${n}</div>${n>1?`<button class="btn-remove" onclick="remItem('svc${n}','svc')"><i class="fas fa-times"></i></button>`:''}</div>
+  <div class="form-row">
+    <div class="form-group"><label>Nombre</label><input type="text" id="sn${n}" placeholder="Ej: Corte de Cabello"></div>
+    <div class="form-group"><label>Precio</label><input type="text" id="sp${n}" placeholder="$45"></div>
+  </div>
+  <div class="form-group"><label>Descripción</label><input type="text" id="sd${n}" placeholder="Breve descripción"></div>
+  <div class="form-group"><label>Imagen</label>
+    <div class="img-upload-box" style="padding:0.8rem;"><input type="file" accept="image/*" onchange="uploadImg(this,'si${n}','sip${n}')"><p style="font-size:0.78rem;">Clic o arrastra imagen</p></div>
+    <img id="sip${n}" class="img-preview">
+    <div class="img-url-input"><input type="url" id="si${n}" placeholder="O URL de imagen..."><button class="btn-sm" onclick="loadUrl('si${n}','sip${n}')">Cargar</button></div>
+  </div>`;
+  document.getElementById('servicesList').appendChild(d);
+  if(svcN>=8) document.getElementById('addSvcBtn').style.display='none';
+}
+// ───────── PRODUCTS ─────────
+function addProduct(){
+  if(prodN>=8){toast('Máximo 8 productos','info');return;}
+  prodN++;const n=prodN;
+  const d=document.createElement('div'); d.className='list-item'; d.id='prod'+n;
+  d.innerHTML=`<div class="item-header"><div class="item-num">${n}</div><div class="item-title">Producto ${n}</div><button class="btn-remove" onclick="remItem('prod${n}','prod')"><i class="fas fa-times"></i></button></div>
+  <div class="form-row">
+    <div class="form-group"><label>Nombre</label><input type="text" id="pn${n}" placeholder="Ej: Shampoo Premium"></div>
+    <div class="form-group"><label>Precio ($)</label><input type="number" id="pp${n}" placeholder="29.99" step="0.01"></div>
+  </div>
+  <div class="form-group"><label>Descripción</label><input type="text" id="pdes${n}" placeholder="Descripción del producto"></div>
+  <div class="form-group"><label>Imagen</label>
+    <div class="img-upload-box" style="padding:0.8rem;"><input type="file" accept="image/*" onchange="uploadImg(this,'pi${n}','pip${n}')"><p style="font-size:0.78rem;">Clic o arrastra imagen</p></div>
+    <img id="pip${n}" class="img-preview">
+    <div class="img-url-input"><input type="url" id="pi${n}" placeholder="O URL de imagen..."><button class="btn-sm" onclick="loadUrl('pi${n}','pip${n}')">Cargar</button></div>
+  </div>`;
+  document.getElementById('productsList').appendChild(d);
+}
+// ───────── TESTIMONIALS ─────────
+function addTestimonial(){
+  if(testN>=6){toast('Máximo 6 testimonios','info');return;}
+  testN++;const n=testN;
+  const d=document.createElement('div'); d.className='list-item'; d.id='tst'+n;
+  d.innerHTML=`<div class="item-header"><div class="item-num">⭐</div><div class="item-title">Testimonio ${n}</div><button class="btn-remove" onclick="remItem('tst${n}','tst')"><i class="fas fa-times"></i></button></div>
+  <div class="form-row">
+    <div class="form-group"><label>Nombre</label><input type="text" id="tn${n}" placeholder="María García"></div>
+    <div class="form-group"><label>Calificación</label><select id="ts${n}"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option></select></div>
+  </div>
+  <div class="form-group"><label>Comentario</label><textarea id="tt${n}" placeholder="¡Excelente servicio!..." rows="2"></textarea></div>`;
+  document.getElementById('testimonialsList').appendChild(d);
+}
+// ───────── FAQS ─────────
+function addFaq(){
+  if(faqN>=10){toast('Máximo 10 FAQs','info');return;}
+  faqN++;const n=faqN;
+  const d=document.createElement('div'); d.className='list-item'; d.id='fq'+n;
+  d.innerHTML=`<div class="item-header"><div class="item-num">❓</div><div class="item-title">FAQ ${n}</div><button class="btn-remove" onclick="remItem('fq${n}','fq')"><i class="fas fa-times"></i></button></div>
+  <div class="form-group"><label>Pregunta</label><input type="text" id="fq${n}" placeholder="¿Cuáles son sus horarios?"></div>
+  <div class="form-group"><label>Respuesta</label><textarea id="fa${n}" placeholder="Estamos abiertos..." rows="2"></textarea></div>`;
+  document.getElementById('faqsList').appendChild(d);
+}
+// ───────── REMOVE ITEM ─────────
+function remItem(id,type){
+  document.getElementById(id)?.remove();
+  if(type==='svc'){svcN=document.querySelectorAll('#servicesList .list-item').length;document.getElementById('addSvcBtn').style.display='';}
+  if(type==='prod') prodN=document.querySelectorAll('#productsList .list-item').length;
+  if(type==='tst') testN=document.querySelectorAll('#testimonialsList .list-item').length;
+  if(type==='fq') faqN=document.querySelectorAll('#faqsList .list-item').length;
+}
+
+// ───────── AI GENERATE ─────────
+function aiGen(field){
+  const name=g('businessName')||'el negocio', type=g('businessType')||'negocio', city=g('businessCity')||'';
+  const key=g('openaiKey');
+  if(!key){
+    toast('Ingresa tu API Key de OpenAI primero (campo arriba) ✨','error');
+    document.getElementById('openaiKey').focus();
+    document.getElementById('openaiKey').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  const prompts={
+    description:`Escribe una descripción atractiva de máximo 150 palabras para un ${type} llamado "${name}"${city?' en '+city:''}. Sé específico, cálido y profesional.`,
+    heroTitle:`Crea UN título impactante de máximo 8 palabras para la landing page de un ${type} llamado "${name}". Solo el título.`,
+    services:`Lista 4 servicios para un ${type} llamado "${name}". Formato JSON: [{"name":"...","price":"$XX","desc":"10 palabras"}]. Solo JSON.`,
+    testimonials:`Crea 3 testimonios realistas para ${type} "${name}". JSON: [{"name":"Nombre","stars":5,"text":"1-2 frases"}]. Solo JSON.`,
+    faqs:`4 preguntas frecuentes para ${type} "${name}". JSON: [{"q":"¿Pregunta?","a":"Respuesta concisa"}]. Solo JSON.`
+  };
+  if(!key){
+    templateGen(field,name,type); return;
+  }
+  showOv('Generando con IA ✨');
+  fetch('https://api.openai.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({model:'gpt-3.5-turbo',messages:[{role:'user',content:prompts[field]}],max_tokens:600,temperature:0.7})
+  }).then(r=>r.json()).then(d=>{
+    hideOv();
+    const text=d.choices?.[0]?.message?.content?.trim();
+    if(!text){toast('Error IA','error');return;}
+    fillField(field,text);
+  }).catch(()=>{hideOv();templateGen(field,name,type);});
+}
+function templateGen(field,name,type){
+  if(field==='description'){document.getElementById('description').value=`${name} es un ${type.toLowerCase()} de primera clase. Ofrecemos servicios de alta calidad con atención personalizada. Nuestro equipo de expertos está comprometido con tu satisfacción.`;document.getElementById('dc').textContent=document.getElementById('description').value.length;toast('Descripción generada ✨','success');}
+  if(field==='heroTitle'){const ts=[`Bienvenido a ${name}`,`Expertos en ${type}`,`Tu ${type} de Confianza`,`La Mejor Experiencia`];document.getElementById('heroTitle').value=ts[Math.floor(Math.random()*ts.length)];toast('Título generado ✨','success');}
+}
+function fillField(field,text){
+  if(field==='description'){document.getElementById('description').value=text;document.getElementById('dc').textContent=text.length;toast('Descripción lista ✨','success');return;}
+  if(field==='heroTitle'){document.getElementById('heroTitle').value=text;toast('Título listo ✨','success');return;}
+  try{
+    const json=JSON.parse(text.replace(/```json|```/g,'').trim());
+    if(field==='services'){document.getElementById('servicesList').innerHTML='';svcN=0;json.slice(0,4).forEach(s=>{addService();document.getElementById('sn'+svcN).value=s.name||'';document.getElementById('sp'+svcN).value=s.price||'';document.getElementById('sd'+svcN).value=s.desc||'';});toast('Servicios generados ✨','success');}
+    if(field==='testimonials'){document.getElementById('testimonialsList').innerHTML='';testN=0;json.forEach(t=>{addTestimonial();document.getElementById('tn'+testN).value=t.name||'';document.getElementById('ts'+testN).value=t.stars||5;document.getElementById('tt'+testN).value=t.text||'';});toast('Testimonios generados ✨','success');}
+    if(field==='faqs'){document.getElementById('faqsList').innerHTML='';faqN=0;json.forEach(f=>{addFaq();document.getElementById('fq'+faqN).value=f.q||'';document.getElementById('fa'+faqN).value=f.a||'';});toast('FAQs generadas ✨','success');}
+  }catch(e){toast('Error al procesar respuesta IA','error');}
+}
+
+// ───────── COLLECT ─────────
+function collect(){
+  const services=[];
+  for(let i=1;i<=svcN;i++){if(!document.getElementById('svc'+i)) continue;services.push({name:g('sn'+i),price:g('sp'+i),desc:g('sd'+i),image:g('si'+i)});}
+  const products=[];
+  for(let i=1;i<=prodN;i++){if(!document.getElementById('prod'+i)) continue;products.push({name:g('pn'+i),price:parseFloat(g('pp'+i))||0,desc:g('pdes'+i),image:g('pi'+i)});}
+  const galleryURLs=[];
+  for(let i=1;i<=8;i++){const v=g('gimg'+i);if(v) galleryURLs.push(v);}
+  const hours={};
+  DAYS.forEach((d,i)=>{hours[d]={open:document.getElementById('open'+i)?.checked||false,from:g('from'+i)||'09:00',to:g('to'+i)||'18:00'};});
+  const testimonials=[];
+  for(let i=1;i<=testN;i++){if(!document.getElementById('tst'+i)) continue;testimonials.push({name:g('tn'+i),stars:parseInt(g('ts'+i))||5,text:g('tt'+i)});}
+  const faqs=[];
+  for(let i=1;i<=faqN;i++){if(!document.getElementById('fq'+i)) continue;faqs.push({q:g('fq'+i),a:g('fa'+i)});}
+  return {
+    businessName:g('businessName'),businessType:g('businessType'),businessCity:g('businessCity'),
+    description:g('description'),heroTitle:g('heroTitle'),heroSubtitle:g('heroSubtitle'),
+    welcomeMsg:g('welcomeMsg')||'¡Hola! ¿En qué puedo ayudarte?',botAvatar:g('botAvatar'),
+    primaryColor:g('primaryHex')||'#6C63FF',secondaryColor:g('secondaryHex')||'#FF6584',accentColor:g('accentHex')||'#43E97B',bgColor:g('bgColorHex')||'#0A0A1A',
+    logoURL:g('logoURL'),heroImageURL:g('heroImageURL'),
+    servicesTitle:g('servicesTitle')||'Nuestros Servicios',servicesSubtitle:g('servicesSubtitle'),
+    galleryTitle:g('galleryTitle')||'Nuestro Trabajo',
+    phone:g('phone'),whatsapp:g('whatsapp'),email:g('email'),website:g('website'),address:g('address'),
+    instagram:g('instagram'),facebook:g('facebook'),tiktok:g('tiktok'),youtube:g('youtube'),
+    paypalEmail:g('paypalEmail'),paypalLink:g('paypalLink'),
+    openaiKey:g('openaiKey'),gptModel:g('gptModel')||'gpt-4o-mini',
+    botLanguage:g('botLanguage')||'es',botInstruction:g('botInstruction'),
+    services,products,galleryURLs,hours,testimonials,faqs
+  };
+}
+
+// ───────── SANITIZE FOR FIRESTORE ─────────
+function sanitizeForFirestore(obj){
+  if(obj===null||obj===undefined) return '';
+  if(typeof obj==='boolean') return obj;
+  if(typeof obj==='number') return isFinite(obj)?obj:0;
+  if(typeof obj==='string') return obj;
+  if(Array.isArray(obj)){
+    return obj.map(item=>sanitizeForFirestore(item)).filter(item=>item!==undefined);
+  }
+  if(typeof obj==='object'){
+    // Block DOM nodes, File objects, and any non-plain objects
+    if(obj instanceof Element||obj instanceof File||obj instanceof FileList) return '';
+    const clean={};
+    Object.keys(obj).forEach(k=>{
+      const v=sanitizeForFirestore(obj[k]);
+      if(v!==undefined) clean[k]=v;
+    });
+    return clean;
+  }
+  // Functions, symbols, etc → drop
+  return '';
+}
+
+// ───────── ACTIVATE ─────────
+async function activateBot(){
+  // API key is optional - bot can work with template responses
+  document.getElementById('activateBtn').disabled=true;
+  showOv('Activando Super Bot 007... 🚀');
+  const rawData=collect();
+  const slug=(rawData.businessName||'bot').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const botId=slug+'-'+Date.now();
+  rawData.botId=botId; rawData.createdAt=Date.now(); rawData.updatedAt=Date.now(); rawData.active=true;
+  // Clean ALL data recursively before sending to Firestore
+  const data=sanitizeForFirestore(rawData);
+  try{
+    if(!window.db) throw new Error('Firebase no listo, recarga la página');
+    await window.fbSet(window.fbDoc(window.db,'bots',botId),data);
+    hideOv();
+    localStorage.setItem('lastBotId',botId);
+    // Show success
+    document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
+    document.getElementById('step8').classList.add('active');
+    document.getElementById('resultBotId').textContent=botId;
+    document.getElementById('rLanding').href=`landing.html?id=${botId}`;
+    document.getElementById('rEditor').href=`editor.html?id=${botId}`;
+    document.getElementById('rAgent').href=`agent.html?id=${botId}`;
+    document.getElementById('rDash').href=`dashboard.html?id=${botId}`;
+    for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
+    toast('🎉 ¡Bot activado!','success');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){
+    hideOv();
+    document.getElementById('activateBtn').disabled=false;
+    toast('Error Firebase: '+e.message,'error');
+    console.error(e);
+  }
+}
+function copyId(el){ navigator.clipboard.writeText(el.textContent).then(()=>toast('ID copiado ✅','success')); }
+
+// ───────── UI HELPERS ─────────
+function showOv(t){document.getElementById('overlayText').textContent=t||'...';document.getElementById('overlay').classList.add('show');}
+function hideOv(){document.getElementById('overlay').classList.remove('show');}
+function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
+
+// ───────── INIT ─────────
+document.addEventListener('DOMContentLoaded',()=>{
+  initGallery();
+  initHours();
+  addService(); addService(); addService();
+});
+</script>
+</body>
+</html>

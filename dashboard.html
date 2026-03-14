@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – Super Bot 007</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+:root{
+  --p:#6C63FF;--s:#FF6584;--a:#43E97B;
+  --dark:#0A0A1A;--card:#111120;--panel:#13132A;
+  --border:rgba(108,99,255,0.25);--text:#E8E8FF;--muted:#8888AA;
+  --grad:linear-gradient(135deg,var(--p),var(--s));
+  --success:#43E97B;--warning:#FFD700;--danger:#FF4757;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(10,10,26,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.8rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.topbar-logo{font-size:1.1rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+.bot-badge{background:rgba(108,99,255,0.1);border:1px solid var(--border);border-radius:8px;padding:0.35rem 0.8rem;font-size:0.75rem;font-family:monospace;color:var(--p);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.topbar-actions{margin-left:auto;display:flex;gap:0.6rem;flex-wrap:wrap;}
+.tb-btn{padding:0.45rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;}
+.tb-btn.primary{background:var(--grad);border:none;color:white;}
+.tb-btn.outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.tb-btn:hover{opacity:0.85;transform:translateY(-1px);}
+/* CONTENT */
+.content{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:1.5rem;}
+/* TABS */
+.dash-tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0;overflow-x:auto;}
+.dash-tab{padding:0.7rem 1.2rem;font-size:0.85rem;font-weight:600;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;display:flex;align-items:center;gap:0.4rem;}
+.dash-tab.active{color:var(--p);border-bottom-color:var(--p);}
+.dash-tab:hover{color:var(--text);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem;position:relative;overflow:hidden;transition:all 0.3s;}
+.kpi-card:hover{transform:translateY(-4px);border-color:var(--p);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);}
+.kpi-icon{width:42px;height:42px;border-radius:12px;background:rgba(108,99,255,0.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:0.8rem;}
+.kpi-num{font-size:2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.kpi-label{font-size:0.78rem;color:var(--muted);margin-top:0.2rem;}
+/* TABLE */
+.data-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.data-table-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap;}
+.data-table-title{font-size:1rem;font-weight:700;}
+.search-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:0.45rem 0.8rem;font-size:0.82rem;outline:none;width:200px;transition:all 0.2s;}
+.search-input:focus{border-color:var(--p);}
+.search-input::placeholder{color:var(--muted);}
+table{width:100%;border-collapse:collapse;}
+th{padding:0.7rem 1rem;text-align:left;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);}
+td{padding:0.85rem 1rem;font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.04);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.status-badge{padding:0.25rem 0.7rem;border-radius:20px;font-size:0.72rem;font-weight:700;display:inline-block;}
+.status-pending{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);color:#FFD700;}
+.status-confirmed{background:rgba(67,233,123,0.12);border:1px solid rgba(67,233,123,0.3);color:var(--success);}
+.status-cancelled{background:rgba(255,71,87,0.12);border:1px solid rgba(255,71,87,0.3);color:var(--danger);}
+.action-btn{padding:0.3rem 0.7rem;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);background:transparent;color:var(--muted);}
+.action-btn:hover{border-color:var(--p);color:var(--p);}
+.action-btn.confirm{border-color:rgba(67,233,123,0.4);color:var(--success);}
+.action-btn.cancel{border-color:rgba(255,71,87,0.4);color:var(--danger);}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:3rem;color:var(--muted);}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:0.5;}
+/* BOT INFO */
+.bot-info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem;}
+.info-card-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.4rem;}
+.info-val{font-size:0.9rem;font-weight:600;word-break:break-all;}
+/* COLOR SWATCHES */
+.color-swatches{display:flex;gap:0.6rem;}
+.swatch{width:32px;height:32px;border-radius:8px;border:2px solid rgba(255,255,255,0.1);}
+/* LINKS GRID */
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin-bottom:2rem;}
+.link-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:0.8rem;transition:all 0.3s;}
+.link-card:hover{border-color:var(--p);transform:translateY(-3px);}
+.link-card i{font-size:1.3rem;color:var(--p);}
+.link-card-info .link-title{font-weight:700;font-size:0.9rem;}
+.link-card-info .link-sub{font-size:0.75rem;color:var(--muted);}
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:0.8rem 1.3rem;border-radius:10px;font-weight:600;font-size:0.85rem;transform:translateX(200%);transition:transform 0.4s;max-width:300px;}
+.toast.show{transform:translateX(0);}
+.toast.success{background:rgba(67,233,123,0.12);border:1px solid rgba(67,233,123,0.4);color:var(--success);}
+.toast.error{background:rgba(255,71,87,0.12);border:1px solid rgba(255,71,87,0.4);color:var(--danger);}
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(10,10,26,0.92);backdrop-filter:blur(12px);z-index:999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;}
+.overlay.show{display:flex;}
+.spinner{width:44px;height:44px;border:4px solid rgba(108,99,255,0.2);border-top-color:var(--p);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:640px){.kpi-grid{grid-template-columns:1fr 1fr;}table{font-size:0.78rem;}td,th{padding:0.6rem 0.6rem;}}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="overlay" id="overlay"><div class="spinner"></div><p style="color:var(--text);font-weight:600;" id="ovTxt">Cargando...</p></div>
+<div class="toast" id="toast"></div>
+
+<div class="topbar">
+  <div class="topbar-logo">🤖 Dashboard</div>
+  <div class="bot-badge" id="botBadge">Cargando...</div>
+  <div class="topbar-actions">
+    <a id="tbLanding" href="#" target="_blank" class="tb-btn outline"><i class="fas fa-globe"></i> Landing</a>
+    <a id="tbEditor" href="#" target="_blank" class="tb-btn outline"><i class="fas fa-edit"></i> Editor</a>
+    <a id="tbAgent" href="#" target="_blank" class="tb-btn outline"><i class="fas fa-robot"></i> Chatbot</a>
+    <a href="index.html" class="tb-btn outline"><i class="fas fa-home"></i></a>
+  </div>
+</div>
+
+<div class="content">
+  <!-- LINKS -->
+  <div class="links-grid" id="linksGrid" style="display:none">
+    <a id="lnk1" href="#" target="_blank" class="link-card"><i class="fas fa-globe"></i><div class="link-card-info"><div class="link-title">Landing Page</div><div class="link-sub">Ver tu página</div></div></a>
+    <a id="lnk2" href="#" target="_blank" class="link-card"><i class="fas fa-edit"></i><div class="link-card-info"><div class="link-title">Editor Visual</div><div class="link-sub">Personalizar</div></div></a>
+    <a id="lnk3" href="#" target="_blank" class="link-card"><i class="fas fa-robot"></i><div class="link-card-info"><div class="link-title">Chatbot IA</div><div class="link-sub">Probar bot</div></div></a>
+    <a id="lnk4" href="#" class="link-card" onclick="copyBotId()"><i class="fas fa-copy"></i><div class="link-card-info"><div class="link-title">Copiar Bot ID</div><div class="link-sub">Compartir acceso</div></div></a>
+  </div>
+
+  <!-- TABS -->
+  <div class="dash-tabs">
+    <div class="dash-tab active" onclick="switchTab('overview')"><i class="fas fa-tachometer-alt"></i> Resumen</div>
+    <div class="dash-tab" onclick="switchTab('appointments')"><i class="fas fa-calendar-check"></i> Citas <span id="apptBadge" style="background:var(--p);color:white;border-radius:10px;padding:0.1rem 0.5rem;font-size:0.68rem;margin-left:0.3rem;">0</span></div>
+    <div class="dash-tab" onclick="switchTab('messages')"><i class="fas fa-comments"></i> Mensajes</div>
+    <div class="dash-tab" onclick="switchTab('botinfo')"><i class="fas fa-cog"></i> Mi Bot</div>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-num" id="kpiAppts">0</div><div class="kpi-label">Citas Recibidas</div></div>
+      <div class="kpi-card"><div class="kpi-icon">⏳</div><div class="kpi-num" id="kpiPending">0</div><div class="kpi-label">Citas Pendientes</div></div>
+      <div class="kpi-card"><div class="kpi-icon">✅</div><div class="kpi-num" id="kpiConfirmed">0</div><div class="kpi-label">Confirmadas</div></div>
+      <div class="kpi-card"><div class="kpi-icon">💬</div><div class="kpi-num" id="kpiMsgs">0</div><div class="kpi-label">Conversaciones Bot</div></div>
+    </div>
+    <div class="data-table-wrap">
+      <div class="data-table-head"><div class="data-table-title">🕐 Citas Recientes</div></div>
+      <div id="recentApptsTable"></div>
+    </div>
+  </div>
+
+  <!-- APPOINTMENTS TAB -->
+  <div class="tab-panel" id="tab-appointments">
+    <div class="data-table-wrap">
+      <div class="data-table-head">
+        <div class="data-table-title">📅 Todas las Citas</div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <input type="text" class="search-input" placeholder="Buscar..." oninput="filterAppts(this.value)">
+          <select id="statusFilter" onchange="filterAppts(document.querySelector('.search-input').value)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:0.45rem 0.8rem;font-size:0.82rem;outline:none;">
+            <option value="">Todos</option><option value="pending">Pendientes</option><option value="confirmed">Confirmados</option><option value="cancelled">Cancelados</option>
+          </select>
+        </div>
+      </div>
+      <div id="allApptsTable"></div>
+    </div>
+  </div>
+
+  <!-- MESSAGES TAB -->
+  <div class="tab-panel" id="tab-messages">
+    <div class="data-table-wrap">
+      <div class="data-table-head"><div class="data-table-title">💬 Conversaciones del Chatbot</div></div>
+      <div id="msgsTable"></div>
+    </div>
+  </div>
+
+  <!-- BOT INFO TAB -->
+  <div class="tab-panel" id="tab-botinfo">
+    <div class="bot-info-grid" id="botInfoGrid"></div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",authDomain:"super-bot-007.firebaseapp.com",projectId:"super-bot-007",storageBucket:"super-bot-007.firebasestorage.app",messagingSenderId:"929685785305",appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"};
+const app=initializeApp(cfg);
+const db=getFirestore(app);
+window.db=db;
+window.fbDoc=doc; window.fbGetDoc=getDoc;
+window.fbCollection=collection; window.fbQuery=query;
+window.fbWhere=where; window.fbGetDocs=getDocs;
+window.fbUpdateDoc=updateDoc; window.fbOrderBy=orderBy; window.fbLimit=limit;
+console.log("✅ Firebase dashboard ready");
+</script>
+<script>
+// ═══ STATE ═══
+let botData=null, allAppts=[], allMsgs=[];
+const botId=new URLSearchParams(location.search).get('id');
+
+// ═══ PARTICLES ═══
+(function(){const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');let W,H,pts=[];function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}resize();window.addEventListener('resize',resize);for(let i=0;i<40;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.5+.5,a:Math.random()*.12+.04});(function draw(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(108,99,255,${p.a})`;ctx.fill();});requestAnimationFrame(draw);})();})();
+
+// ═══ INIT ═══
+window.addEventListener('DOMContentLoaded',()=>{
+  if(!botId){toast('No Bot ID en la URL','error');hideOv();return;}
+  loadDashboard();
+});
+
+async function loadDashboard(){
+  showOv('Cargando dashboard...');
+  try{
+    await waitFor(()=>window.db);
+    // Load bot data
+    const botSnap=await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
+    if(!botSnap.exists()){toast('Bot no encontrado','error');hideOv();return;}
+    botData=botSnap.data();
+    // Apply colors
+    if(botData.primaryColor) document.documentElement.style.setProperty('--p',botData.primaryColor);
+    if(botData.secondaryColor) document.documentElement.style.setProperty('--s',botData.secondaryColor);
+    if(botData.accentColor) document.documentElement.style.setProperty('--a',botData.accentColor);
+    // Set badge & links
+    document.getElementById('botBadge').textContent=botData.businessName||botId;
+    document.title=(botData.businessName||'Bot')+' – Dashboard';
+    setLinks();
+    // Load appointments
+    await loadAppts();
+    await loadMsgs();
+    // KPIs
+    updateKPIs();
+    // Bot Info
+    buildBotInfo();
+    hideOv();
+    toast('Dashboard cargado ✅','success');
+  }catch(e){hideOv();toast('Error: '+e.message,'error');console.error(e);}
+}
+
+function setLinks(){
+  const l=`landing.html?id=${botId}`,e=`editor.html?id=${botId}`,a=`agent.html?id=${botId}`;
+  document.getElementById('tbLanding').href=l;
+  document.getElementById('tbEditor').href=e;
+  document.getElementById('tbAgent').href=a;
+  document.getElementById('lnk1').href=l;
+  document.getElementById('lnk2').href=e;
+  document.getElementById('lnk3').href=a;
+  document.getElementById('linksGrid').style.display='grid';
+}
+
+function copyBotId(){ navigator.clipboard.writeText(botId).then(()=>toast('Bot ID copiado ✅','success')); return false; }
+
+async function loadAppts(){
+  try{
+    const q=window.fbQuery(window.fbCollection(window.db,'appointments'),window.fbWhere('botId','==',botId),window.fbOrderBy('createdAt','desc'),window.fbLimit(100));
+    const snap=await window.fbGetDocs(q);
+    allAppts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('apptBadge').textContent=allAppts.length;
+  }catch(e){
+    // If no index, try without orderBy
+    try{
+      const q2=window.fbQuery(window.fbCollection(window.db,'appointments'),window.fbWhere('botId','==',botId),window.fbLimit(100));
+      const snap2=await window.fbGetDocs(q2);
+      allAppts=snap2.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      document.getElementById('apptBadge').textContent=allAppts.length;
+    }catch(e2){allAppts=[];}
+  }
+}
+
+async function loadMsgs(){
+  try{
+    const q=window.fbQuery(window.fbCollection(window.db,'appointments'),window.fbWhere('botId','==',botId),window.fbWhere('source','==','chatbot'),window.fbLimit(50));
+    const snap=await window.fbGetDocs(q);
+    allMsgs=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){allMsgs=[];}
+}
+
+function updateKPIs(){
+  document.getElementById('kpiAppts').textContent=allAppts.length;
+  document.getElementById('kpiPending').textContent=allAppts.filter(a=>a.status==='pending'||!a.status).length;
+  document.getElementById('kpiConfirmed').textContent=allAppts.filter(a=>a.status==='confirmed').length;
+  document.getElementById('kpiMsgs').textContent=allMsgs.length;
+  // Recent table
+  renderApptsTable(allAppts.slice(0,5),'recentApptsTable',true);
+  // Full tables
+  renderApptsTable(allAppts,'allApptsTable',false);
+  renderMsgsTable(allMsgs,'msgsTable');
+}
+
+function renderApptsTable(appts,elId,compact){
+  const el=document.getElementById(elId);
+  if(!appts.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">📅</div><p>No hay citas aún. Cuando los clientes reserven aparecerán aquí.</p></div>`;return;}
+  const cols=compact?['Nombre','Servicio','Fecha','Estado']:['Nombre','Teléfono','Servicio','Fecha','Hora','Estado','Acciones'];
+  let html=`<table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+  appts.forEach(a=>{
+    const st=a.status||'pending';
+    const stHtml=`<span class="status-badge status-${st}">${st==='pending'?'Pendiente':st==='confirmed'?'Confirmado':'Cancelado'}</span>`;
+    if(compact){
+      html+=`<tr><td>${a.name||'-'}</td><td>${a.service||'-'}</td><td>${a.date||fmtDate(a.createdAt)}</td><td>${stHtml}</td></tr>`;
+    } else {
+      html+=`<tr><td>${a.name||'-'}</td><td>${a.phone||'-'}</td><td>${a.service||'-'}</td><td>${a.date||'-'}</td><td>${a.time||'-'}</td><td>${stHtml}</td>
+      <td style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+        ${st!=='confirmed'?`<button class="action-btn confirm" onclick="updateAppt('${a.id}','confirmed')">✓</button>`:''}
+        ${st!=='cancelled'?`<button class="action-btn cancel" onclick="updateAppt('${a.id}','cancelled')">✕</button>`:''}
+        ${a.phone||a.whatsapp?`<a href="https://wa.me/${(a.phone||'').replace(/\D/g,'')}?text=${encodeURIComponent('Hola '+a.name+'! Confirmamos tu cita de '+a.service+' el '+a.date+' a las '+a.time+'.')}" target="_blank" class="action-btn" style="color:#25D366;border-color:rgba(37,211,102,0.4);text-decoration:none;">WA</a>`:''}
+      </td></tr>`;
+    }
+  });
+  html+='</tbody></table>';
+  el.innerHTML=html;
+}
+
+function renderMsgsTable(msgs,elId){
+  const el=document.getElementById(elId);
+  if(!msgs.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">💬</div><p>No hay conversaciones del chatbot aún.</p></div>`;return;}
+  let html=`<table><thead><tr><th>Fecha</th><th>Negocio</th><th>Mensaje Usuario</th><th>Estado</th></tr></thead><tbody>`;
+  msgs.forEach(m=>{
+    html+=`<tr><td>${fmtDate(m.createdAt)}</td><td>${m.businessName||'-'}</td><td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.userMessage||'-'}</td><td><span class="status-badge status-${m.status||'pending'}">${m.status||'pending'}</span></td></tr>`;
+  });
+  html+='</tbody></table>';
+  el.innerHTML=html;
+}
+
+function buildBotInfo(){
+  const d=botData;
+  const grid=document.getElementById('botInfoGrid');
+  const infos=[
+    {title:'🏢 Negocio',icon:'fas fa-building',content:`<div class="info-val">${d.businessName||'-'}</div><div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">${d.businessType||''} ${d.businessCity?'· '+d.businessCity:''}</div>`},
+    {title:'📞 Contacto',icon:'fas fa-phone',content:`<div class="info-val">${d.phone||'-'}</div><div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">${d.email||''}</div>`},
+    {title:'🎨 Colores',icon:'fas fa-palette',content:`<div class="color-swatches"><div class="swatch" style="background:${d.primaryColor||'#6C63FF'}" title="Primario"></div><div class="swatch" style="background:${d.secondaryColor||'#FF6584'}" title="Secundario"></div><div class="swatch" style="background:${d.accentColor||'#43E97B'}" title="Acento"></div></div>`},
+    {title:'✂️ Servicios',icon:'fas fa-concierge-bell',content:`<div class="info-val">${(d.services||[]).length} servicios</div><div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">${(d.services||[]).slice(0,3).map(s=>s.name).join(', ')}</div>`},
+    {title:'🛒 Productos',icon:'fas fa-shopping-bag',content:`<div class="info-val">${(d.products||[]).length} productos</div>${d.paypalEmail?`<div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">PayPal: ${d.paypalEmail}</div>`:''}`},
+    {title:'🤖 IA',icon:'fas fa-robot',content:`<div class="info-val">${d.gptModel||'gpt-4o-mini'}</div><div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">Idioma: ${d.botLanguage||'es'}</div>`},
+    {title:'📅 Creado',icon:'fas fa-calendar',content:`<div class="info-val">${d.createdAt?fmtDate(d.createdAt):'-'}</div><div style="color:var(--muted);font-size:0.8rem;margin-top:0.3rem;">Actualizado: ${d.updatedAt?fmtDate(d.updatedAt):'-'}</div>`},
+    {title:'🆔 Bot ID',icon:'fas fa-fingerprint',content:`<div class="info-val" style="font-size:0.75rem;font-family:monospace;word-break:break-all;">${d.botId||botId}</div>`},
+  ];
+  grid.innerHTML=infos.map(info=>`<div class="info-card"><div class="info-card-title"><i class="${info.icon}"></i>${info.title}</div>${info.content}</div>`).join('');
+}
+
+// ═══ FILTER / UPDATE ═══
+function filterAppts(search){
+  const status=document.getElementById('statusFilter')?.value||'';
+  const filtered=allAppts.filter(a=>{
+    const matchSearch=!search||(a.name||'').toLowerCase().includes(search.toLowerCase())||(a.service||'').toLowerCase().includes(search.toLowerCase())||(a.phone||'').includes(search);
+    const matchStatus=!status||(a.status||'pending')===status;
+    return matchSearch&&matchStatus;
+  });
+  renderApptsTable(filtered,'allApptsTable',false);
+}
+
+async function updateAppt(id,status){
+  try{
+    await window.fbUpdateDoc(window.fbDoc(window.db,'appointments',id),{status,updatedAt:Date.now()});
+    allAppts=allAppts.map(a=>a.id===id?{...a,status}:a);
+    updateKPIs();
+    toast(`Cita ${status==='confirmed'?'confirmada':'cancelada'}`,'success');
+  }catch(e){toast('Error al actualizar','error');}
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector(`.dash-tab[onclick="switchTab('${name}')"]`).classList.add('active');
+}
+
+// ═══ HELPERS ═══
+function fmtDate(ts){if(!ts)return '-';const d=new Date(typeof ts==='number'?ts:Date.parse(ts));return d.toLocaleDateString('es',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
+function showOv(t){document.getElementById('ovTxt').textContent=t;document.getElementById('overlay').classList.add('show');}
+function hideOv(){document.getElementById('overlay').classList.remove('show');}
+function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
+function waitFor(fn,timeout=3000){return new Promise((res,rej)=>{if(fn()){res();return;}const start=Date.now();const t=setInterval(()=>{if(fn()){clearInterval(t);res();}else if(Date.now()-start>timeout){clearInterval(t);rej(new Error('Firebase timeout'));}},100);});}
+</script>
+</body>
+</html>

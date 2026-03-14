@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot – Super Bot 007</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+:root {
+  --p: #6C63FF; --s: #FF6584; --a: #43E97B;
+  --dark: #03030A; --card: #0A0A1A; --border: rgba(108,99,255,0.22);
+  --text: #E8E8FF; --muted: #7777AA;
+  --grad: linear-gradient(135deg, var(--p), var(--s));
+  --user-bg: linear-gradient(135deg, var(--p), var(--s));
+  --bot-bg: #0D0D1F;
+  --panel-bg: #06061A;
+  --sidebar-w: 270px;
+  --right-w: 295px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000; color: var(--text); overflow: hidden; }
+
+/* Blink cursor */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* BG CANVAS */
+#bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ══════ 3-COLUMN LAYOUT ══════ */
+.app-shell {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr var(--right-w);
+  height: 100vh;
+}
+
+/* ══════ LEFT PANEL ══════ */
+.left-panel {
+  background: rgba(8,8,22,0.98);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  backdrop-filter: blur(28px);
+}
+.left-panel::-webkit-scrollbar { width: 3px; }
+.left-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.biz-header {
+  padding: 1.5rem 1.2rem 1rem;
+  background: linear-gradient(180deg, rgba(108,99,255,0.1) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.biz-avatar {
+  width: 74px; height: 74px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center;
+  justify-content: center; font-size: 2rem; margin: 0 auto 0.75rem;
+  overflow: hidden; border: 2px solid rgba(108,99,255,0.4);
+  box-shadow: 0 0 0 0 rgba(108,99,255,0.4);
+  transition: box-shadow 0.3s;
+}
+.biz-avatar.thinking {
+  animation: avatarPulse 1.2s ease-in-out infinite;
+}
+@keyframes avatarPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(108,99,255,0.5); }
+  50% { box-shadow: 0 0 0 12px rgba(108,99,255,0); }
+}
+.biz-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.biz-name { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 0.2rem; }
+.biz-type { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+.online-badge {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  margin-top: 0.5rem; padding: 0.25rem 0.7rem;
+  background: rgba(67,233,123,0.08); border: 1px solid rgba(67,233,123,0.22);
+  border-radius: 20px; font-size: 0.7rem; color: var(--a); font-weight: 600;
+}
+.online-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--a); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+/* LEFT INFO SECTIONS */
+.info-section { padding: 0.85rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.info-section-title {
+  font-size: 0.63rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted); margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.info-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.45rem; font-size: 0.79rem; }
+.info-row i { color: var(--p); font-size: 0.76rem; margin-top: 0.15rem; min-width: 14px; }
+.info-row span { color: var(--text); line-height: 1.4; }
+.info-row a { color: var(--p); text-decoration: none; }
+.info-row a:hover { color: var(--s); }
+
+/* HOURS */
+.hours-grid { display: flex; flex-direction: column; gap: 0.28rem; }
+.hours-row { display: flex; justify-content: space-between; font-size: 0.74rem; }
+.hours-day { color: var(--muted); }
+.hours-time { color: var(--text); font-weight: 500; }
+.hours-closed { color: #FF4757; font-size: 0.71rem; }
+
+/* SERVICE PILLS */
+.service-pill {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.42rem 0.65rem; background: rgba(108,99,255,0.07);
+  border: 1px solid rgba(108,99,255,0.13); border-radius: 10px; margin-bottom: 0.35rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.service-pill:hover { background: rgba(108,99,255,0.15); border-color: rgba(108,99,255,0.35); }
+.service-pill-name { font-size: 0.77rem; font-weight: 600; color: var(--text); }
+.service-pill-price { font-size: 0.71rem; color: var(--a); font-weight: 700; }
+
+/* SOCIAL */
+.social-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.3rem; }
+.social-btn {
+  width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; font-size: 0.88rem; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+  text-decoration: none; transition: all 0.2s;
+}
+.social-btn:hover { border-color: var(--p); color: var(--p); background: rgba(108,99,255,0.1); }
+
+/* PANEL ACTIONS */
+.panel-actions { padding: 0.9rem 1rem; margin-top: auto; display: flex; flex-direction: column; gap: 0.45rem; }
+.panel-action-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.55rem; border-radius: 10px; font-size: 0.79rem; font-weight: 700;
+  border: none; cursor: pointer; text-decoration: none; transition: all 0.25s;
+}
+.panel-action-btn.wa { background: linear-gradient(135deg,#25D366,#128C7E); color: white; }
+.panel-action-btn.wa:hover { box-shadow: 0 4px 18px rgba(37,211,102,0.4); transform: translateY(-1px); }
+.panel-action-btn.landing { background: rgba(108,99,255,0.1); border: 1px solid var(--border); color: var(--text); }
+.panel-action-btn.landing:hover { background: rgba(108,99,255,0.2); border-color: var(--p); }
+
+/* ══════ CENTER CHAT ══════ */
+.chat-col {
+  display: flex; flex-direction: column;
+  background: rgba(5,5,15,0.7);
+  border-right: 1px solid var(--border);
+  overflow: hidden; position: relative;
+}
+
+/* CHAT TOPBAR */
+.chat-topbar {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.8rem 1.1rem;
+  background: rgba(10,10,25,0.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.chat-topbar-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--grad); display: flex; align-items: center;
+  justify-content: center; font-size: 0.95rem; overflow: hidden;
+  border: 1px solid var(--border); flex-shrink: 0;
+}
+.chat-topbar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chat-topbar-info { flex: 1; }
+.chat-topbar-name { font-size: 0.88rem; font-weight: 700; }
+.chat-topbar-status { font-size: 0.68rem; color: var(--a); display: flex; align-items: center; gap: 0.3rem; }
+.chat-topbar-actions { display: flex; gap: 0.45rem; align-items: center; }
+.topbar-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; transition: all 0.2s; text-decoration: none;
+}
+.topbar-btn:hover { border-color: var(--p); color: var(--p); }
+
+/* CART ICON IN TOPBAR */
+.cart-topbar-btn {
+  position: relative; width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid rgba(255,101,132,0.35); background: rgba(255,101,132,0.08);
+  color: var(--s); cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 0.85rem; transition: all 0.2s;
+}
+.cart-topbar-btn:hover { background: rgba(255,101,132,0.18); border-color: var(--s); transform: scale(1.08); }
+.cart-topbar-count {
+  position: absolute; top: -5px; right: -5px;
+  background: var(--s); color: white; width: 16px; height: 16px;
+  border-radius: 50%; font-size: 0.6rem; font-weight: 800;
+  display: none; align-items: center; justify-content: center;
+  border: 1px solid var(--dark);
+}
+.cart-topbar-count.show { display: flex; }
+
+/* QUICK BUTTONS */
+.quick-btns {
+  display: flex; gap: 0.4rem; padding: 0.5rem 0.9rem;
+  overflow-x: auto; flex-shrink: 0;
+  background: rgba(5,5,15,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.quick-btns::-webkit-scrollbar { height: 0; }
+.quick-btn {
+  white-space: nowrap; padding: 0.32rem 0.75rem;
+  background: rgba(108,99,255,0.09); border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 20px; color: var(--text); font-size: 0.73rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.quick-btn:hover { background: rgba(108,99,255,0.22); border-color: var(--p); color: white; }
+.quick-btn.products-btn {
+  background: rgba(255,101,132,0.1); border-color: rgba(255,101,132,0.3); color: var(--s);
+}
+.quick-btn.products-btn:hover { background: rgba(255,101,132,0.2); border-color: var(--s); color: white; }
+
+/* MESSAGES */
+.messages {
+  flex: 1; overflow-y: auto; padding: 1rem 1.1rem;
+  display: flex; flex-direction: column; gap: 0.8rem;
+}
+.messages::-webkit-scrollbar { width: 3px; }
+.messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Message bubble */
+.msg { display: flex; gap: 0.55rem; max-width: 88%; animation: msgIn 0.3s cubic-bezier(.25,.8,.25,1); }
+.msg.bot.wide { max-width: 98%; }
+@keyframes msgIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg-avatar {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; flex-shrink: 0; overflow: hidden;
+}
+.msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msg-body { display: flex; flex-direction: column; gap: 0.18rem; }
+.msg-bubble {
+  padding: 0.68rem 0.92rem; border-radius: 18px;
+  font-size: 0.86rem; line-height: 1.62; max-width: 100%; word-break: break-word;
+}
+.msg.bot .msg-bubble {
+  background: var(--bot-bg); border: 1px solid var(--border);
+  border-radius: 4px 18px 18px 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+.msg.user .msg-bubble {
+  background: var(--user-bg); color: white;
+  border-radius: 18px 4px 18px 18px;
+  box-shadow: 0 2px 12px rgba(108,99,255,0.3);
+}
+.msg-time { font-size: 0.63rem; color: var(--muted); padding: 0 3px; }
+.msg.user .msg-time { text-align: right; }
+
+/* Typing */
+.typing {
+  display: flex; gap: 5px; align-items: center; padding: 0.68rem 0.92rem;
+  background: var(--bot-bg); border: 1px solid var(--border);
+  border-radius: 4px 18px 18px 18px; width: fit-content;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--p); animation: typingDot 1.3s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.22s; background: var(--s); }
+.typing span:nth-child(3) { animation-delay: 0.44s; background: var(--a); }
+@keyframes typingDot { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-7px);opacity:1} }
+
+/* Action buttons in messages */
+.msg-actions { display: flex; flex-wrap: wrap; gap: 0.38rem; margin-top: 0.5rem; }
+.msg-action {
+  padding: 0.32rem 0.78rem; background: rgba(108,99,255,0.1);
+  border: 1px solid rgba(108,99,255,0.25); border-radius: 20px;
+  font-size: 0.73rem; color: var(--text); cursor: pointer; transition: all 0.2s;
+}
+.msg-action:hover { background: var(--grad); border-color: transparent; color: white; transform: translateY(-1px); }
+
+/* PRODUCT CARDS IN CHAT */
+.products-grid-chat {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem;
+  margin-top: 0.5rem; max-width: 380px;
+}
+.prod-card-chat {
+  background: linear-gradient(145deg, #0F0F24, #151530);
+  border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; transition: all 0.25s; cursor: default;
+}
+.prod-card-chat:hover { border-color: rgba(108,99,255,0.45); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.prod-card-img {
+  width: 100%; height: 75px; background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(255,101,132,0.15));
+  display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+  overflow: hidden;
+}
+.prod-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.prod-card-body { padding: 0.55rem 0.6rem; }
+.prod-card-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prod-card-price { font-size: 0.82rem; font-weight: 800; color: var(--s); margin-bottom: 0.4rem; }
+.prod-card-add {
+  width: 100%; padding: 0.35rem 0; background: rgba(108,99,255,0.15);
+  border: 1px solid rgba(108,99,255,0.3); border-radius: 8px;
+  color: var(--text); font-size: 0.7rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+}
+.prod-card-add:hover { background: var(--grad); border-color: transparent; color: white; }
+
+/* ══════ FLOATING CART ══════ */
+.cart-float {
+  position: absolute; bottom: 80px; right: 12px; z-index: 200;
+}
+.cart-float-btn {
+  width: 48px; height: 48px; background: var(--grad); border: none;
+  border-radius: 50%; color: white; font-size: 1.1rem; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.55); transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.cart-float-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(108,99,255,0.7); }
+.cart-float-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--s); color: white; width: 18px; height: 18px;
+  border-radius: 50%; font-size: 0.62rem; font-weight: 800;
+  display: none; align-items: center; justify-content: center;
+  border: 2px solid var(--dark); animation: badgePop 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.cart-float-badge.show { display: flex; }
+@keyframes badgePop { from{transform:scale(0)} to{transform:scale(1)} }
+
+/* CART DRAWER */
+.cart-drawer {
+  position: absolute; bottom: 0; right: 0; left: 0; z-index: 300;
+  background: linear-gradient(180deg, #0D0D22 0%, #08081A 100%);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  transform: translateY(100%); transition: transform 0.38s cubic-bezier(.25,.8,.25,1);
+  max-height: 70vh; display: flex; flex-direction: column;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
+}
+.cart-drawer.open { transform: translateY(0); }
+.cart-drawer-handle {
+  width: 36px; height: 4px; background: rgba(255,255,255,0.15);
+  border-radius: 2px; margin: 0.7rem auto 0;
+}
+.cart-drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 1.2rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.cart-drawer-title { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+.cart-drawer-close {
+  width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04); color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+  transition: all 0.2s;
+}
+.cart-drawer-close:hover { background: rgba(255,71,87,0.15); border-color: #FF4757; color: #FF4757; }
+.cart-drawer-items { flex: 1; overflow-y: auto; padding: 0.7rem 1rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.cart-drawer-items::-webkit-scrollbar { width: 3px; }
+.cart-item-row {
+  display: flex; align-items: center; gap: 0.65rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 12px; padding: 0.55rem 0.7rem;
+}
+.cart-item-thumb {
+  width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(255,101,132,0.2));
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem; overflow: hidden;
+}
+.cart-item-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 0.82rem; font-weight: 600; }
+.cart-item-price { font-size: 0.78rem; color: var(--s); font-weight: 700; }
+.cart-item-qty {
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.qty-btn {
+  width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06); color: var(--text); cursor: pointer;
+  font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.qty-btn:hover { background: rgba(108,99,255,0.2); border-color: var(--p); }
+.qty-num { font-size: 0.82rem; font-weight: 700; min-width: 16px; text-align: center; }
+.cart-rm-btn {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 0.9rem; transition: color 0.2s; padding: 0.2rem;
+}
+.cart-rm-btn:hover { color: #FF4757; }
+.cart-drawer-footer { padding: 0.8rem 1rem; border-top: 1px solid var(--border); }
+.cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; }
+.cart-total-label { font-size: 0.82rem; color: var(--muted); }
+.cart-total-amount { font-size: 1.2rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.cart-checkout-btns { display: flex; flex-direction: column; gap: 0.45rem; }
+.cart-pay-btn {
+  width: 100%; padding: 0.7rem; border: none; border-radius: 12px;
+  font-weight: 800; font-size: 0.88rem; cursor: pointer; transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.cart-pay-btn.paypal { background: linear-gradient(135deg,#0070BA,#003087); color: white; box-shadow: 0 4px 16px rgba(0,112,186,0.4); }
+.cart-pay-btn.paypal:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0,112,186,0.55); }
+.cart-pay-btn.wa { background: linear-gradient(135deg,#25D366,#128C7E); color: white; box-shadow: 0 4px 16px rgba(37,211,102,0.35); }
+.cart-pay-btn.wa:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(37,211,102,0.5); }
+.cart-empty-msg { text-align: center; padding: 1.5rem; color: var(--muted); font-size: 0.85rem; }
+
+/* INPUT AREA */
+.input-area {
+  padding: 0.75rem 0.9rem; background: rgba(10,10,25,0.97);
+  border-top: 1px solid var(--border);
+  display: flex; gap: 0.55rem; align-items: flex-end; flex-shrink: 0;
+}
+.input-wrap {
+  flex: 1; display: flex; align-items: flex-end; gap: 0.4rem;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 14px; padding: 0.42rem 0.72rem; transition: border-color 0.3s;
+}
+.input-wrap:focus-within { border-color: var(--p); background: rgba(108,99,255,0.06); }
+#userInput {
+  flex: 1; background: none; border: none; color: var(--text);
+  font-family: 'Inter',sans-serif; font-size: 0.87rem; outline: none;
+  resize: none; max-height: 120px; min-height: 22px; line-height: 1.5;
+}
+#userInput::placeholder { color: var(--muted); }
+.send-btn {
+  width: 38px; height: 38px; background: var(--grad); border: none;
+  border-radius: 10px; color: white; font-size: 0.88rem; cursor: pointer;
+  transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 4px 14px rgba(108,99,255,0.45);
+}
+.send-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(108,99,255,0.6); }
+.send-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* ══════ RIGHT PANEL ══════ */
+.right-panel {
+  background: rgba(8,8,22,0.98);
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  backdrop-filter: blur(28px);
+}
+.right-panel::-webkit-scrollbar { width: 3px; }
+.right-panel::-webkit-scrollbar-thumb { background: var(--border); }
+.right-header {
+  padding: 1.1rem 1.1rem 0.75rem;
+  background: linear-gradient(180deg, rgba(255,101,132,0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border); text-align: center;
+}
+.right-title { font-size: 0.93rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.18rem; }
+.right-subtitle { font-size: 0.7rem; color: var(--muted); }
+.booking-panel { padding: 0.9rem; flex: 1; }
+.bk-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); margin-bottom: 0.28rem; display: block; }
+.bk-input, .bk-select, .bk-textarea {
+  width: 100%; padding: 0.52rem 0.72rem;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text); font-family: 'Inter',sans-serif;
+  font-size: 0.81rem; outline: none; transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 0.62rem;
+}
+.bk-input:focus, .bk-select:focus, .bk-textarea:focus { border-color: var(--p); background: rgba(108,99,255,0.08); }
+.bk-input::placeholder, .bk-textarea::placeholder { color: var(--muted); }
+.bk-select option { background: #1a1a3e; }
+.bk-textarea { resize: none; }
+.bk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.bk-row .bk-input { margin-bottom: 0; }
+.bk-row-wrap { margin-bottom: 0.62rem; }
+.bk-btn {
+  width: 100%; padding: 0.65rem; background: var(--grad); border: none;
+  border-radius: 10px; color: white; font-weight: 800; font-size: 0.83rem;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 0.45rem;
+  display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+  box-shadow: 0 4px 16px rgba(108,99,255,0.35);
+}
+.bk-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.bk-btn.wa { background: linear-gradient(135deg,#25D366,#128C7E); box-shadow: 0 4px 16px rgba(37,211,102,0.3); }
+.bk-success {
+  text-align: center; padding: 1.2rem 0.8rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.55rem;
+  background: rgba(67,233,123,0.05); border: 1px solid rgba(67,233,123,0.18);
+  border-radius: 14px; margin: 0.4rem 0;
+}
+.bk-success .check-icon { font-size: 2.2rem; }
+.bk-success h3 { font-size: 0.95rem; font-weight: 800; color: var(--a); }
+.bk-success p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+.bk-success .reset-btn {
+  margin-top: 0.4rem; padding: 0.45rem 1.1rem;
+  background: rgba(108,99,255,0.1); border: 1px solid var(--border);
+  border-radius: 20px; color: var(--text); font-size: 0.76rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.bk-success .reset-btn:hover { background: rgba(108,99,255,0.2); border-color: var(--p); }
+
+/* INLINE APPT FORM */
+.appt-form {
+  background: linear-gradient(145deg, #0F0F24, #161632);
+  border: 1px solid var(--border); border-radius: 18px;
+  padding: 1.1rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.6rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); max-width: 320px;
+}
+.appt-form-title { font-size: 0.88rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.4rem; }
+.appt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.38rem; }
+.appt-form input, .appt-form select, .appt-form textarea {
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text); padding: 0.48rem 0.65rem;
+  font-family: 'Inter', sans-serif; font-size: 0.79rem; outline: none;
+  width: 100%; transition: border-color 0.2s;
+}
+.appt-form input:focus, .appt-form select:focus, .appt-form textarea:focus { border-color: var(--p); }
+.appt-form input::placeholder, .appt-form textarea::placeholder { color: var(--muted); }
+.appt-form select option { background: #1a1a3e; }
+.appt-form textarea { resize: none; }
+.appt-form-btn {
+  padding: 0.62rem; background: var(--grad); border: none; border-radius: 10px;
+  color: white; font-weight: 800; font-size: 0.82rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.42rem;
+  transition: all 0.2s; box-shadow: 0 4px 14px rgba(108,99,255,0.35);
+}
+.appt-form-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.appt-form-btn.wa { background: linear-gradient(135deg,#25D366,#128C7E); box-shadow: 0 4px 14px rgba(37,211,102,0.3); }
+.appt-form-cancel { text-align: center; font-size: 0.72rem; color: var(--muted); cursor: pointer; }
+.appt-form-cancel:hover { color: var(--text); }
+.appt-success { text-align: center; padding: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.42rem; }
+.appt-success .check-icon { font-size: 1.7rem; }
+.appt-success p { font-size: 0.8rem; color: var(--muted); }
+
+/* INIT BANNER */
+.init-banner { text-align: center; padding: 1rem; color: var(--muted); font-size: 0.8rem; }
+
+/* NO BOT */
+.no-bot-msg {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 1rem; text-align: center; padding: 2rem;
+  grid-column: 1 / -1;
+}
+
+/* ══════ MOBILE ══════ */
+@media (max-width: 1024px) {
+  .app-shell { grid-template-columns: var(--sidebar-w) 1fr; }
+  .right-panel { display: none; }
+}
+@media (max-width: 700px) {
+  :root { --sidebar-w: 0px; }
+  .app-shell { grid-template-columns: 1fr; }
+  .left-panel { display: none; }
+  .right-panel { display: none; }
+}
+
+/* TOAST */
+#agentToast {
+  position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%);
+  padding: 0.52rem 1.1rem; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+  z-index: 9999; box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+  animation: toastIn 0.3s ease; display: none;
+}
+#agentToast.show { display: block; }
+@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<div class="app-shell" id="appShell">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel" id="leftPanel">
+    <div class="biz-header">
+      <div class="biz-avatar" id="bizAvatarEl">🤖</div>
+      <div class="biz-name" id="bizNameEl">Super Bot 007</div>
+      <div class="biz-type" id="bizTypeEl">Asistente Virtual</div>
+      <div class="online-badge"><span class="online-dot"></span> En línea</div>
+    </div>
+    <div class="info-section" id="contactSection" style="display:none">
+      <div class="info-section-title"><i class="fas fa-address-card"></i> Contacto</div>
+      <div id="contactRows"></div>
+    </div>
+    <div class="info-section" id="hoursSection" style="display:none">
+      <div class="info-section-title"><i class="fas fa-clock"></i> Horarios</div>
+      <div class="hours-grid" id="hoursGrid"></div>
+    </div>
+    <div class="info-section" id="servicesSection" style="display:none">
+      <div class="info-section-title"><i class="fas fa-star"></i> Servicios</div>
+      <div id="servicesList"></div>
+    </div>
+    <div class="info-section" id="socialSection" style="display:none">
+      <div class="info-section-title"><i class="fas fa-share-alt"></i> Redes Sociales</div>
+      <div class="social-links" id="socialLinks"></div>
+    </div>
+    <div class="panel-actions" id="panelActions">
+      <a class="panel-action-btn landing" id="landingBtn" href="#" target="_blank">
+        <i class="fas fa-globe"></i> Ver Landing Page
+      </a>
+      <a class="panel-action-btn wa" id="waBtnLeft" href="#" target="_blank" style="display:none">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- CENTER CHAT -->
+  <div class="chat-col">
+    <!-- Top Bar -->
+    <div class="chat-topbar">
+      <div class="chat-topbar-avatar" id="topbarAvatar">🤖</div>
+      <div class="chat-topbar-info">
+        <div class="chat-topbar-name" id="topbarName">Super Bot 007</div>
+        <div class="chat-topbar-status"><span class="online-dot" style="display:inline-block;width:5px;height:5px;"></span> IA activa</div>
+      </div>
+      <div class="chat-topbar-actions">
+        <!-- Cart icon in topbar -->
+        <button class="cart-topbar-btn" id="cartTopbarBtn" onclick="toggleCartDrawer()" title="Ver carrito" style="display:none">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-topbar-count" id="cartTopbarCount">0</span>
+        </button>
+        <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
+        <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Buttons -->
+    <div class="quick-btns" id="quickBtns" style="display:none"></div>
+
+    <!-- Messages -->
+    <div class="messages" id="messages">
+      <div class="init-banner" id="initBanner">
+        <i class="fas fa-spinner fa-spin" style="font-size:1.3rem;color:var(--p);margin-bottom:0.4rem;display:block;"></i>
+        Cargando tu asistente...
+      </div>
+    </div>
+
+    <!-- Floating Cart Button -->
+    <div class="cart-float" id="cartFloat" style="display:none">
+      <button class="cart-float-btn" onclick="toggleCartDrawer()" title="Carrito">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-float-badge" id="cartFloatBadge">0</span>
+      </button>
+    </div>
+
+    <!-- Cart Drawer (slides up from bottom) -->
+    <div class="cart-drawer" id="cartDrawer">
+      <div class="cart-drawer-handle"></div>
+      <div class="cart-drawer-header">
+        <div class="cart-drawer-title">🛒 Mi Carrito</div>
+        <button class="cart-drawer-close" onclick="toggleCartDrawer()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cart-drawer-items" id="cartDrawerItems"></div>
+      <div class="cart-drawer-footer">
+        <div class="cart-total-row">
+          <span class="cart-total-label">Total:</span>
+          <span class="cart-total-amount" id="cartTotalAmount">$0.00</span>
+        </div>
+        <div class="cart-checkout-btns" id="cartCheckoutBtns"></div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-wrap">
+        <textarea id="userInput" placeholder="Escribe tu mensaje..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this); playTypingSound();"></textarea>
+      </div>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel" id="rightPanel">
+    <div class="right-header">
+      <div class="right-title"><i class="fas fa-calendar-check"></i> Agendar Cita</div>
+      <div class="right-subtitle">Rellena el formulario y te confirmamos</div>
+    </div>
+    <div class="booking-panel" id="bookingPanel">
+      <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem;">
+        <i class="fas fa-spinner fa-spin" style="font-size:1.3rem;margin-bottom:0.4rem;color:var(--p);display:block;"></i>
+        Cargando...
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="agentToast"></div>
+
+<!-- Audio (Web Audio API — no files needed) -->
+<script>
+// ══════ AUDIO ENGINE ══════
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let soundEnabled = true;
+let lastTypeSnd = 0;
+
+function getAudioCtx(){
+  if(!audioCtx){
+    try{ audioCtx = new AudioCtx(); }catch(e){}
+  }
+  return audioCtx;
+}
+
+function playTypingSound(){
+  if(!soundEnabled) return;
+  const now = Date.now();
+  if(now - lastTypeSnd < 80) return; // throttle
+  lastTypeSnd = now;
+  try{
+    const ctx = getAudioCtx(); if(!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(900 + Math.random()*200, ctx.currentTime);
+    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.06);
+  }catch(e){}
+}
+
+function playReceiveSound(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx(); if(!ctx) return;
+    [0, 0.12].forEach((delay, i)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(i===0?660:880, ctx.currentTime+delay);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime+delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+0.18);
+      osc.start(ctx.currentTime+delay);
+      osc.stop(ctx.currentTime+delay+0.18);
+    });
+  }catch(e){}
+}
+
+function playCartSound(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx(); if(!ctx) return;
+    [0,0.1,0.2].forEach((delay,i)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      const freqs = [523,659,784];
+      osc.frequency.setValueAtTime(freqs[i], ctx.currentTime+delay);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime+delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+0.15);
+      osc.start(ctx.currentTime+delay);
+      osc.stop(ctx.currentTime+delay+0.15);
+    });
+  }catch(e){}
+}
+</script>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const cfg = {
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+};
+const app = initializeApp(cfg);
+const db = getFirestore(app);
+window.db = db;
+window.fbDoc = doc;
+window.fbGetDoc = getDoc;
+window.fbAddDoc = addDoc;
+window.fbCollection = collection;
+console.log("✅ Firebase agent ready");
+</script>
+
+<script>
+// ══════ STATE ══════
+let botData = null;
+let messages = [];
+let isTyping = false;
+let appointmentMode = false;
+let cart = [];
+const botId = new URLSearchParams(location.search).get('id');
+
+// ══════ PARTICLES (black deep bg) ══════
+(function(){
+  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const colors=['rgba(108,99,255,','rgba(255,101,132,','rgba(67,233,123,'];
+  for(let i=0;i<55;i++) pts.push({
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.28, vy:(Math.random()-.5)*.28,
+    r:Math.random()*1.6+.3,
+    a:Math.random()*.14+.03,
+    c:colors[Math.floor(Math.random()*colors.length)]
+  });
+  (function draw(){
+    // Pure black deep feel
+    ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fillRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c+p.a+')'; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ══════ INIT ══════
+window.addEventListener('DOMContentLoaded', ()=>{
+  if(!botId){
+    document.getElementById('initBanner').innerHTML='';
+    addBotMsg('❌ No se especificó Bot ID. Usa <strong>?id=TU_BOT_ID</strong> en la URL.');
+    return;
+  }
+  document.getElementById('landingBtn').href = `landing.html?id=${botId}`;
+  loadBot();
+});
+
+async function loadBot(){
+  try{
+    await waitFor(()=>window.db);
+    const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
+    if(!snap.exists()){
+      document.getElementById('initBanner').textContent='';
+      addBotMsg('❌ Bot no encontrado. Verifica el ID.');
+      return;
+    }
+    botData = snap.data();
+    initChat();
+  }catch(e){
+    document.getElementById('initBanner').textContent='';
+    addBotMsg('Error al cargar: '+e.message);
+    console.error(e);
+  }
+}
+
+function initChat(){
+  const d = botData;
+
+  // Colors
+  if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
+  if(d.secondaryColor) document.documentElement.style.setProperty('--s', d.secondaryColor);
+  if(d.accentColor)    document.documentElement.style.setProperty('--a', d.accentColor);
+  if(d.bgColor)        document.documentElement.style.setProperty('--dark', d.bgColor);
+
+  // Avatar
+  if(d.botAvatar){
+    document.getElementById('bizAvatarEl').innerHTML = `<img src="${d.botAvatar}" alt="bot">`;
+    document.getElementById('topbarAvatar').innerHTML = `<img src="${d.botAvatar}" alt="bot">`;
+  }
+  document.getElementById('bizNameEl').textContent  = d.businessName  || 'Super Bot 007';
+  document.getElementById('bizTypeEl').textContent  = d.businessType  || 'Asistente Virtual';
+  document.getElementById('topbarName').textContent = d.businessName  || 'Super Bot 007';
+  document.title = (d.businessName||'Bot') + ' – Asistente Virtual';
+
+  // Contact rows
+  const cRows = [];
+  if(d.phone)    cRows.push(`<div class="info-row"><i class="fas fa-phone"></i><span><a href="tel:${d.phone}">${d.phone}</a></span></div>`);
+  if(d.whatsapp) cRows.push(`<div class="info-row"><i class="fab fa-whatsapp"></i><span><a href="https://wa.me/${d.whatsapp}" target="_blank">${d.whatsapp}</a></span></div>`);
+  if(d.email)    cRows.push(`<div class="info-row"><i class="fas fa-envelope"></i><span><a href="mailto:${d.email}">${d.email}</a></span></div>`);
+  if(d.address)  cRows.push(`<div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${d.address}</span></div>`);
+  if(d.website)  cRows.push(`<div class="info-row"><i class="fas fa-globe"></i><span><a href="${d.website}" target="_blank">${d.website}</a></span></div>`);
+  if(cRows.length){ document.getElementById('contactRows').innerHTML=cRows.join(''); document.getElementById('contactSection').style.display='block'; }
+
+  // Hours
+  const hours = d.hours || {};
+  if(Object.keys(hours).length){
+    document.getElementById('hoursGrid').innerHTML = Object.entries(hours).map(([day,h])=>`
+      <div class="hours-row">
+        <span class="hours-day">${day}</span>
+        ${h&&h.open?`<span class="hours-time">${h.from||''} – ${h.to||''}</span>`:`<span class="hours-closed">Cerrado</span>`}
+      </div>`).join('');
+    document.getElementById('hoursSection').style.display='block';
+  }
+
+  // Services left panel — clickable!
+  if(d.services && d.services.length){
+    document.getElementById('servicesList').innerHTML = d.services.slice(0,6).map(s=>`
+      <div class="service-pill" onclick="sendQuick('Cuéntame sobre ${s.name}')">
+        <span class="service-pill-name">${s.name||''}</span>
+        ${s.price?`<span class="service-pill-price">${s.price}</span>`:''}
+      </div>`).join('');
+    document.getElementById('servicesSection').style.display='block';
+  }
+
+  // Social
+  const socLinks = [];
+  if(d.instagram) socLinks.push(`<a class="social-btn" href="${d.instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`);
+  if(d.facebook)  socLinks.push(`<a class="social-btn" href="${d.facebook}"  target="_blank"><i class="fab fa-facebook-f"></i></a>`);
+  if(d.tiktok)    socLinks.push(`<a class="social-btn" href="${d.tiktok}"    target="_blank"><i class="fab fa-tiktok"></i></a>`);
+  if(socLinks.length){ document.getElementById('socialLinks').innerHTML=socLinks.join(''); document.getElementById('socialSection').style.display='block'; }
+
+  // WhatsApp
+  if(d.whatsapp){
+    const waL = document.getElementById('waBtnLeft');
+    waL.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola! Me gustaría más información.')}`;
+    waL.style.display='flex';
+  }
+
+  // Right panel booking form
+  buildRightBookingForm(d);
+
+  // Quick replies — DYNAMIC from real services + products button
+  buildQuickReplies(d);
+
+  // Show cart button if products exist
+  if(d.products && d.products.length > 0){
+    document.getElementById('cartFloat').style.display='block';
+    document.getElementById('cartTopbarBtn').style.display='flex';
+  }
+
+  // System prompt
+  buildSystemPrompt();
+
+  // Hide init banner
+  document.getElementById('initBanner').style.display='none';
+
+  // Welcome message with typewriter
+  const welcomeVariants = [
+    d.welcomeMsg || `¡Hola! 👋 Soy el asistente de **${d.businessName}**. Estoy aquí para ayudarte — servicios, precios, citas, lo que necesites. ¿Por dónde empezamos?`,
+    `¡Qué bueno que llegaste! 😊 Soy el asistente de **${d.businessName}**. Cuéntame, ¿en qué te puedo ayudar?`,
+    `¡Bienvenido/a a **${d.businessName}**! 👋 Estoy aquí para lo que necesites — servicios, precios, citas o cualquier pregunta. ¿Qué se te ofrece?`
+  ];
+  // Use custom welcome if set, otherwise pick a variant
+  const welcome = d.welcomeMsg ? d.welcomeMsg : welcomeVariants[Math.floor(Math.random()*welcomeVariants.length)];
+  addBotMsgTypewriter(welcome);
+
+  // Second message with services after delay
+  if(d.services && d.services.length > 0){
+    setTimeout(()=>{
+      const serviceList = d.services.slice(0,4).map(s=>`• **${s.name}**${s.price?' – '+s.price:''}`).join('\n');
+      const actions = d.services.slice(0,3).map(s=>s.name);
+      if(d.products && d.products.length > 0) actions.push('🛒 Ver productos');
+      const serviceIntros = [
+        `Por si te interesa saber, estos son los servicios que más gustan 😊\n\n${serviceList}\n\n¿Alguno te llama la atención?`,
+        `Rápidamente, lo que más hacemos por aquí:\n\n${serviceList}\n\n¿Quieres saber más de alguno? 😄`,
+        `Para que tengas idea de lo que ofrecemos:\n\n${serviceList}\n\n¿Hay algo que ya estabas buscando? 🙌`
+      ];
+      addBotMsgTypewriter(serviceIntros[Math.floor(Math.random()*serviceIntros.length)], actions);
+    }, 1600);
+  }
+}
+
+// ══════ QUICK REPLIES DYNAMIC ══════
+function buildQuickReplies(d){
+  const qb = document.getElementById('quickBtns');
+  qb.innerHTML = '';
+
+  // Core quick replies
+  const baseReplies = [
+    { label: '✂️ Servicios', msg: '¿Qué servicios ofrecen?' },
+    { label: '💰 Precios', msg: '¿Cuáles son sus precios?' },
+    { label: '📅 Cita', msg: 'Quiero agendar una cita' },
+    { label: '🕐 Horarios', msg: '¿Cuáles son sus horarios?' },
+    { label: '📍 Ubicación', msg: '¿Dónde están ubicados?' },
+    { label: '💳 Pagos', msg: '¿Cuáles son sus métodos de pago?' },
+  ];
+
+  baseReplies.forEach(r=>{
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn';
+    btn.textContent = r.label;
+    btn.onclick = ()=>sendQuick(r.msg);
+    qb.appendChild(btn);
+  });
+
+  // Products button — only if products exist
+  if(d.products && d.products.length > 0){
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn products-btn';
+    btn.innerHTML = '🛒 Productos';
+    btn.onclick = ()=>showProductsInChat();
+    qb.appendChild(btn);
+  }
+
+  qb.style.display = 'flex';
+}
+
+// ══════ SHOW PRODUCTS IN CHAT ══════
+function showProductsInChat(){
+  const d = botData || {};
+  const products = d.products || [];
+  if(!products.length){
+    addBotMsgTypewriter('Aún no tenemos productos disponibles en este momento. ¡Pero puedes preguntarme por nuestros servicios! 😊');
+    return;
+  }
+
+  const icons = ['🧴','💊','🎁','🌿','✨','💎','🛍️','🌸','🍕','☕','🧁','🎂'];
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const avatarHtml = botData?.botAvatar
+    ? `<div class="msg-avatar"><img src="${botData.botAvatar}" alt="bot"></div>`
+    : `<div class="msg-avatar">🤖</div>`;
+
+  const cardsHtml = products.map((p,i)=>`
+    <div class="prod-card-chat">
+      <div class="prod-card-img">${p.image?`<img src="${p.image}" alt="${p.name}">`:(icons[i%icons.length])}</div>
+      <div class="prod-card-body">
+        <div class="prod-card-name" title="${p.name||''}">${p.name||''}</div>
+        <div class="prod-card-price">$${parseFloat(p.price||0).toFixed(2)}</div>
+        <button class="prod-card-add" onclick='addToCart(${JSON.stringify(p).replace(/'/g,"&#39;")})'>
+          <i class="fas fa-cart-plus"></i> Agregar
+        </button>
+      </div>
+    </div>`).join('');
+
+  div.innerHTML = `${avatarHtml}
+    <div class="msg-body">
+      <div class="msg-bubble" style="padding:0.7rem;">
+        <div style="font-size:0.88rem;margin-bottom:0.6rem;">¡Tenemos productos increíbles para ti! 😍 Aquí te los muestro 👇<br><small style="color:var(--muted)">Agrega lo que quieras al carrito y paga con PayPal o WhatsApp 🛒</small></div>
+        <div class="products-grid-chat">${cardsHtml}</div>
+      </div>
+      <div class="msg-time">${getTime()}</div>
+    </div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+  playReceiveSound();
+}
+
+// ══════ CART ══════
+function addToCart(product){
+  // Check if already in cart
+  const existing = cart.find(i=>i.name===product.name);
+  if(existing){
+    existing.qty = (existing.qty||1) + 1;
+  } else {
+    cart.push({...product, qty:1});
+  }
+  updateCartUI();
+  playCartSound();
+  toast(`🛒 ${product.name} agregado al carrito`, 'success');
+  // NO abrimos el drawer — el cliente sigue agregando productos libremente
+}
+
+function removeFromCart(idx){
+  cart.splice(idx,1);
+  updateCartUI();
+}
+
+function changeQty(idx, delta){
+  cart[idx].qty = (cart[idx].qty||1) + delta;
+  if(cart[idx].qty <= 0) cart.splice(idx,1);
+  updateCartUI();
+}
+
+function updateCartUI(){
+  const total = cart.reduce((s,i)=>s+parseFloat(i.price||0)*(i.qty||1),0);
+  const count = cart.reduce((s,i)=>s+(i.qty||1),0);
+
+  // Badge
+  const badge = document.getElementById('cartFloatBadge');
+  const topBadge = document.getElementById('cartTopbarCount');
+  if(count > 0){
+    badge.textContent = count; badge.classList.add('show');
+    topBadge.textContent = count; topBadge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+    topBadge.classList.remove('show');
+  }
+
+  // Drawer items
+  const itemsEl = document.getElementById('cartDrawerItems');
+  const icons = ['🧴','💊','🎁','🌿','✨','💎','🛍️','🌸'];
+  if(!cart.length){
+    itemsEl.innerHTML = `<div class="cart-empty-msg">🛒<br>Tu carrito está vacío.<br><small>Agrega productos desde el chat.</small></div>`;
+  } else {
+    itemsEl.innerHTML = cart.map((item,i)=>`
+      <div class="cart-item-row">
+        <div class="cart-item-thumb">${item.image?`<img src="${item.image}" alt="${item.name}">`:(icons[i%icons.length])}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">$${(parseFloat(item.price||0)*(item.qty||1)).toFixed(2)}</div>
+        </div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+          <span class="qty-num">${item.qty||1}</span>
+          <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+        </div>
+        <button class="cart-rm-btn" onclick="removeFromCart(${i})"><i class="fas fa-times"></i></button>
+      </div>`).join('');
+  }
+
+  // Total
+  document.getElementById('cartTotalAmount').textContent = '$'+total.toFixed(2);
+
+  // Checkout buttons
+  const d = botData || {};
+  const btns = document.getElementById('cartCheckoutBtns');
+  if(cart.length > 0){
+    const paypalBtn = (d.paypalLink || d.paypalEmail)
+      ? `<button class="cart-pay-btn paypal" onclick="checkoutPayPal()"><i class="fab fa-paypal"></i> Pagar con PayPal</button>`
+      : '';
+    const waBtn = d.whatsapp || d.phone
+      ? `<button class="cart-pay-btn wa" onclick="checkoutWhatsApp()"><i class="fab fa-whatsapp"></i> Pagar por WhatsApp</button>`
+      : '';
+    btns.innerHTML = paypalBtn + waBtn;
+    if(!paypalBtn && !waBtn){
+      btns.innerHTML = `<p style="color:var(--muted);font-size:0.78rem;text-align:center;">Contacta al negocio para coordinar el pago.</p>`;
+    }
+  } else {
+    btns.innerHTML = '';
+  }
+}
+
+function toggleCartDrawer(){
+  document.getElementById('cartDrawer').classList.toggle('open');
+}
+function openCartDrawer(){
+  document.getElementById('cartDrawer').classList.add('open');
+}
+
+function checkoutPayPal(){
+  const d = botData || {};
+  const total = cart.reduce((s,i)=>s+parseFloat(i.price||0)*(i.qty||1),0).toFixed(2);
+  const itemNames = cart.map(i=>`${i.name}${i.qty>1?' x'+i.qty:''}`).join(', ');
+  if(d.paypalLink && d.paypalLink.includes('paypal')){
+    window.open(d.paypalLink, '_blank');
+  } else if(d.paypalEmail){
+    const url = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(d.paypalEmail)}&item_name=${encodeURIComponent(itemNames)}&amount=${total}&currency_code=USD`;
+    window.open(url, '_blank');
+  }
+  addBotMsgTypewriter(`¡Genial! 🎉 Te redirigí a PayPal para completar tu compra de **$${total}**. Una vez que pagues, ¡queda todo listo! ¿Necesitas algo más? 🙌`);
+}
+
+function checkoutWhatsApp(){
+  const d = botData || {};
+  const total = cart.reduce((s,i)=>s+parseFloat(i.price||0)*(i.qty||1),0).toFixed(2);
+  const itemLines = cart.map(i=>`• ${i.name}${i.qty>1?' x'+i.qty:''} – $${(parseFloat(i.price||0)*(i.qty||1)).toFixed(2)}`).join('\n');
+  const wa = (d.whatsapp||d.phone||'').replace(/\D/g,'');
+  const msg = `Hola ${d.businessName||''}! Quiero hacer un pedido:\n\n${itemLines}\n\n💰 *Total: $${total}*\n\n_Pedido via Super Bot 007_`;
+  const url = wa ? `https://wa.me/${wa}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  addBotMsgTypewriter(`¡Listo! 📲 Te preparé el pedido para enviarlo por WhatsApp. Ahí te coordinan el pago — ¡es rapidísimo! ¿Algo más en lo que pueda ayudarte? 😊`);
+}
+
+// ══════ RIGHT PANEL BOOKING FORM ══════
+function buildRightBookingForm(d){
+  const today = new Date().toISOString().split('T')[0];
+  const services = (d.services||[]).map(s=>`<option value="${s.name||''}"> ${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
+  const waBtn = d.whatsapp ? `<button class="bk-btn wa" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>` : '';
+
+  document.getElementById('bookingPanel').innerHTML = `
+    <div id="bkForm">
+      <label class="bk-label">Nombre *</label>
+      <input class="bk-input" id="bk_name" type="text" placeholder="Tu nombre completo">
+      <label class="bk-label">Teléfono *</label>
+      <input class="bk-input" id="bk_phone" type="tel" placeholder="Ej: 555-123-4567">
+      <label class="bk-label">Email (opcional)</label>
+      <input class="bk-input" id="bk_email" type="email" placeholder="tu@email.com">
+      <label class="bk-label">Servicio</label>
+      <select class="bk-select" id="bk_service">
+        <option value="">Selecciona un servicio...</option>${services}
+      </select>
+      <div class="bk-row-wrap">
+        <div class="bk-row">
+          <div><label class="bk-label">Fecha</label><input class="bk-input" id="bk_date" type="date" min="${today}"></div>
+          <div><label class="bk-label">Hora</label><input class="bk-input" id="bk_time" type="time"></div>
+        </div>
+      </div>
+      <label class="bk-label">Notas adicionales</label>
+      <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="Ej: Alergias, preferencias..."></textarea>
+      <button class="bk-btn" onclick="submitBookingRight('confirm')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
+      ${waBtn}
+    </div>
+    <div id="bkSuccess" style="display:none"></div>`;
+}
+
+async function submitBookingRight(mode){
+  const name    = document.getElementById('bk_name')?.value.trim();
+  const phone   = document.getElementById('bk_phone')?.value.trim();
+  const email   = document.getElementById('bk_email')?.value.trim();
+  const service = document.getElementById('bk_service')?.value;
+  const date    = document.getElementById('bk_date')?.value;
+  const time    = document.getElementById('bk_time')?.value;
+  const note    = document.getElementById('bk_note')?.value.trim();
+
+  if(!name){  document.getElementById('bk_name').focus(); toast('Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById('bk_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
+
+  try{
+    if(window.db){
+      await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{
+        botId:botId||'', businessName:botData?.businessName||'',
+        name, phone, email, service, date, time, note,
+        createdAt:Date.now(), status:'pending', source:'right-panel-form'
+      });
+    }
+  }catch(e){ console.log('Appt save error:',e); }
+
+  if(mode==='wa'){
+    const wa=(botData?.whatsapp||'').replace(/\D/g,'');
+    let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
+    if(email) msg+=`\n📧 ${email}`;
+    if(service) msg+=`\n✂️ Servicio: *${service}*`;
+    if(date) msg+=`\n📅 Fecha: *${date}*`;
+    if(time) msg+=`\n🕐 Hora: *${time}*`;
+    if(note) msg+=`\n📝 ${note}`;
+    msg+=`\n\n_Reserva via Super Bot 007_`;
+    window.open(wa?`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  document.getElementById('bkForm').style.display='none';
+  const sDiv=document.getElementById('bkSuccess');
+  sDiv.style.display='block';
+  sDiv.innerHTML=`<div class="bk-success">
+    <div class="check-icon">${mode==='wa'?'📲':'✅'}</div>
+    <h3>${mode==='wa'?'¡Redirigiendo a WhatsApp!':'¡Cita registrada!'}</h3>
+    <p>Hola <strong>${name}</strong>, ${mode==='wa'?'tu mensaje fue preparado para':'hemos registrado tu cita'}${service?' de <strong>'+service+'</strong>':''}${date?' para el <strong>'+date+'</strong>':''}${time?' a las <strong>'+time+'</strong>':''}.</p>
+    ${mode!=='wa'?`<p>Te contactaremos al <strong>${phone}</strong> para confirmar 😊</p>`:''}
+    <button class="reset-btn" onclick="resetBookingRight()">📅 Nueva Cita</button>
+  </div>`;
+  addBotMsgTypewriter(`¡Perfecto, ${name}! 🎉 ${mode==='wa'?'Tu mensaje fue preparado para WhatsApp.':'Tu cita quedó registrada.'} Te contactaremos pronto. ¿Algo más en lo que pueda ayudarte? 😊`);
+}
+
+function resetBookingRight(){ if(botData) buildRightBookingForm(botData); }
+
+// ══════ SYSTEM PROMPT ══════
+function buildSystemPrompt(){
+  const d = botData;
+  const services = (d.services||[]).map(s=>`- ${s.name}: ${s.price||'Sin precio'} – ${s.desc||''}`).join('\n');
+  const products = (d.products||[]).map(p=>`- ${p.name}: $${p.price||0} – ${p.desc||''}`).join('\n');
+  const hours = Object.entries(d.hours||{}).map(([day,h])=>`${day}: ${h.open?h.from+'-'+h.to:'Cerrado'}`).join(', ');
+  const faqs = (d.faqs||[]).map(f=>`Q: ${f.q}\nA: ${f.a}`).join('\n');
+  const lang = d.botLanguage==='en'?'English':d.botLanguage==='pt'?'Português':'Español';
+
+  const sysPrompt = `Eres el asistente virtual de "${d.businessName}", un ${d.businessType||'negocio'} ${d.businessCity?'en '+d.businessCity:''}.
+
+PERSONALIDAD (esto es lo más importante):
+Eres como una persona real que trabaja ahí: joven, alegre, genuinamente útil y con personalidad propia.
+- Hablas como en WhatsApp con alguien de confianza, NO como una FAQ ni un robot.
+- Eres cálido/a, cercano/a. Si el cliente parece frustrado, lo percibes y cambias a tono empático.
+- Varía tus expresiones SIEMPRE. Jamás repitas la misma frase de bienvenida dos veces.
+- Si el cliente dice su nombre, úsalo de forma natural en la conversación.
+- Haz UNA pregunta a la vez, nunca un listado de preguntas.
+- Usa expresiones naturales: "claro que sí", "con gusto", "mira", "ojo que", "te cuento", etc.
+- Evita frases robóticas como "¿En qué puedo ayudarte hoy?" o "Por supuesto, entiendo tu consulta."
+
+INFORMACIÓN DEL NEGOCIO:
+Descripción: ${d.description||'Un negocio dedicado a dar el mejor servicio.'}
+
+SERVICIOS:
+${services||'Próximamente se añadirán servicios.'}
+
+PRODUCTOS:
+${products||'No hay productos en este momento.'}
+
+HORARIO: ${hours||'Contáctanos para confirmar disponibilidad.'}
+
+CONTACTO:
+- Teléfono: ${d.phone||'Consultar'}
+- WhatsApp: ${d.whatsapp||'Consultar'}
+- Email: ${d.email||'Consultar'}
+- Dirección: ${d.address||'Consultar'}
+- Web: ${d.website||'No disponible'}
+- PayPal: ${d.paypalEmail||d.paypalLink||'No configurado'}
+
+PREGUNTAS FRECUENTES:
+${faqs||'Sin FAQs configuradas.'}
+
+INSTRUCCIONES ESPECIALES: ${d.botInstruction||'Ninguna.'}
+
+REGLAS ABSOLUTAS:
+1. IDIOMA: Siempre en ${lang}. Sin excepción.
+2. VERDAD: JAMÁS inventes precios, servicios ni info. Si no sabes, dilo y sugiere WhatsApp.
+3. BREVEDAD: 1-3 líneas para preguntas simples. Más detalle solo si el cliente lo pide.
+4. VENTAS: Para citas → formula derecha 👉. Para productos → botón 🛒 arriba y carrito flotante. Para pagos → PayPal y WhatsApp.
+5. CONTEXTO: Recuerda toda la conversación. No preguntes lo que ya te dijeron.
+6. EMOJIS: Máximo 2 por respuesta, solo si aportan calidez o claridad.
+7. CIERRE: Termina con UNA pregunta abierta para mantener el diálogo.
+8. EMPATÍA: Si el cliente está frustrado, empatiza PRIMERO, informa después.
+9. COMPRAS: Guía suavemente hacia el carrito, las formas de pago y lo fácil del proceso.
+10. HUMANIDAD: Celebra con el cliente cuando algo lo emociona. Sé genuino/a.`;
+
+  messages = [{ role: 'system', content: sysPrompt }];
+}
+
+// ══════ SEND MESSAGE ══════
+async function sendMessage(){
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if(!text || isTyping) return;
+  input.value = ''; input.style.height='auto';
+
+  // Unlock audio on first interaction
+  getAudioCtx();
+
+  addUserMsg(text);
+  messages.push({ role:'user', content:text });
+
+  // Check for product/shopping intent
+  if(isShoppingIntent(text) && botData?.products?.length > 0){
+    showProductsInChat();
+    addBotMsgTypewriter('¡Aquí arriba te muestro lo que tenemos disponible! 👆 Puedes agregar lo que quieras al carrito y pagar con PayPal o WhatsApp. ¿Ves algo que te guste? 😍', ['¿Tienen descuentos?', '¿Cómo pago?', 'Prefiero un servicio']);
+    return;
+  }
+
+  // Appointment intent
+  if(isAppointmentIntent(text) && !appointmentMode){
+    appointmentMode = true;
+    addBotMsgTypewriter('¡Claro que sí! 😊 Puedes usar el formulario de citas 👉 a la derecha — es súper rápido. Solo pon tu nombre, teléfono y el servicio que quieres. ¿Tienes alguna fecha en mente?', ['Ver servicios disponibles', '¿Cuánto cuesta?']);
+    return;
+  }
+
+  const typingId = showTyping();
+  isTyping = true;
+  document.getElementById('sendBtn').disabled = true;
+  setAvatarThinking(true);
+
+  try{
+    const response = await callGPT(messages);
+    removeTyping(typingId);
+    isTyping = false;
+    document.getElementById('sendBtn').disabled = false;
+    setAvatarThinking(false);
+    if(response){
+      messages.push({ role:'assistant', content:response });
+      addBotMsgTypewriter(response);
+    }
+  }catch(e){
+    removeTyping(typingId);
+    isTyping = false;
+    document.getElementById('sendBtn').disabled = false;
+    setAvatarThinking(false);
+    addBotMsgTypewriter('Lo siento, algo salió mal. ¡Intenta de nuevo! 😊');
+  }
+}
+
+function sendQuick(msg){
+  document.getElementById('userInput').value = msg;
+  sendMessage();
+}
+
+function setAvatarThinking(active){
+  const av = document.getElementById('bizAvatarEl');
+  if(active) av.classList.add('thinking');
+  else av.classList.remove('thinking');
+}
+
+// ══════ GPT CALL ══════
+async function callGPT(msgs){
+  const key = botData?.openaiKey;
+  const model = botData?.gptModel || 'gpt-4o-mini';
+  if(!key) return fallbackResponse(msgs[msgs.length-1].content);
+  const res = await fetch('https://api.openai.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body: JSON.stringify({ model, messages: msgs, max_tokens:520, temperature:0.82 })
+  });
+  if(!res.ok){ const err=await res.json(); throw new Error(err.error?.message||'API error'); }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content?.trim();
+}
+
+// ══════ FALLBACK RESPONSES (más humanas) ══════
+function fallbackResponse(userMsg){
+  const d = botData || {};
+  const lower = userMsg.toLowerCase();
+  const name = d.businessName || 'nosotros';
+
+  if(lower.includes('servicio') || lower.includes('ofrec') || lower.includes('hacen') || lower.includes('tienes') || lower.includes('qué hacen') || lower.includes('que hacen') || lower.includes('qué ofrecen') || lower.includes('que ofrecen')){
+    const s = (d.services||[]).slice(0,5).map(sv=>`✨ **${sv.name}** – ${sv.price||'consultar precio'}${sv.desc?' · '+sv.desc:''}`).join('\n');
+    const opts = [
+      `Mira, esto es lo que más pide la gente 😄\n\n${s||'Tenemos varios servicios — escríbenos y te contamos todo 📱'}\n\n¿Ya tienes algo en mente?`,
+      `Para ${name} los servicios estrella son:\n\n${s||'¡Muchas opciones! Cuéntanos qué necesitas 🙌'}\n\n¿Alguno se adapta a lo que buscas?`,
+      `¡Claro! Esto es lo que hacemos muy bien:\n\n${s||'Varios servicios disponibles — cuéntanos qué necesitas 😊'}\n\n¿Cuál te interesa más?`,
+      `Aquí te va lo que tenemos:\n\n${s||'¡Muchas opciones! Escríbenos y te orientamos 😊'}\n\n¿Alguno te llama la atención?`
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  if(lower.includes('horario') || lower.includes('hora') || lower.includes('abierto') || lower.includes('abren') || lower.includes('cierran') || lower.includes('disponible') || lower.includes('atienden')){
+    const open = Object.entries(d.hours||{}).filter(([,h])=>h&&h.open);
+    if(!open.length){
+      const opts=[
+        `Uy, ahorita no tengo el horario exacto a mano 😅 Lo mejor es que nos escribas al ${d.whatsapp?'WhatsApp':'teléfono'} — te responden en minutos 🙌`,
+        `El horario lo confirma el equipo directamente. ¿Te paso al WhatsApp para que te digan cuándo hay disponibilidad? 📱`
+      ];
+      return opts[Math.floor(Math.random()*opts.length)];
+    }
+    const hrs = open.map(([day,h])=>`📅 **${day}:** ${h.from} – ${h.to}`).join('\n');
+    const opts=[
+      `¡Aquí tienes el horario! ⏰\n\n${hrs}\n\n¿Quieres apartar un lugar en alguno de esos días? 😊`,
+      `Los horarios de ${name} son:\n\n${hrs}\n\n¿Hay algún día que te quede bien? 📅`,
+      `Esto es lo que tenemos disponible:\n\n${hrs}\n\n¿Cuándo te vendría mejor? 😊`
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  if(lower.includes('precio') || lower.includes('costo') || lower.includes('cuanto') || lower.includes('cuánto') || lower.includes('vale') || lower.includes('cobran') || lower.includes('tarifa') || lower.includes('cuánto cuesta') || lower.includes('cuanto cuesta')){
+    const s = (d.services||[]).slice(0,5).map(sv=>`💰 **${sv.name}**: ${sv.price||'Consultar'}`).join('\n');
+    const opts=[
+      `¡Obvio! Aquí te van los precios:\n\n${s||'Los precios varían. ¡Cuéntame qué necesitas y te cotizo sin compromiso! 😊'}\n\n¿Alguno se ajusta a lo que buscas?`,
+      `Con gusto. Esto es lo que manejamos:\n\n${s||'Tenemos opciones para todos — cuéntame qué buscas 🙌'}\n\n¿Tienes alguna duda?`,
+      `Aquí los precios actuales:\n\n${s||'Los precios varían — escríbenos y te hacemos una cotización sin compromiso 😊'}\n\n¿Cuál te interesa más?`
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  if(lower.includes('donde') || lower.includes('dirección') || lower.includes('ubicación') || lower.includes('están') || lower.includes('cómo llegar') || lower.includes('como llegar') || lower.includes('domicilio')){
+    const addr = d.address?`📍 **${d.address}**`:'📍 Escríbenos al WhatsApp y te mandamos la ubicación exacta con mapa';
+    const opts=[
+      `¡Aquí te dejo cómo llegar!\n\n${addr}${d.phone?'\n📞 '+d.phone:''}\n\n¿Quieres que te mande el link de Google Maps? 😄`,
+      `Claro, aquí nos encuentras:\n\n${addr}${d.phone?'\n📞 '+d.phone:''}\n\n¿Tienes alguna duda de cómo llegar? 😊`,
+      `Apunta la dirección:\n\n${addr}${d.phone?'\n📞 Al '+d.phone+' puedes llamar si te pierdes 😄':''}\n\n¿Te queda cerca?`
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  if(lower.includes('product') || lower.includes('comprar') || lower.includes('tienda') || lower.includes('vend') || lower.includes('quiero') || lower.includes('artículo') || lower.includes('articulo')){
+    if(d.products?.length){
+      const opts=[
+        `¡Tenemos cosas muy buenas para ti! 😍 Toca el botón 🛒 **Productos** arriba para verlos y agregarlos al carrito. ¿Buscas algo en especial?`,
+        `¡Sí! Mira los productos con el botón 🛒 arriba — ahí puedes agregar al carrito y pagar con PayPal o WhatsApp. ¿Algo que ya tengas en mente?`,
+        `¡Claro! Usa el botón 🛒 **Productos** para ver todo lo que tenemos. ¿Tienes alguna preferencia?`
+      ];
+      return opts[Math.floor(Math.random()*opts.length)];
+    }
+    return `Por ahora no tenemos tienda online, pero escríbenos y con gusto te ayudamos con lo que necesites 🙌`;
+  }
+  if(lower.includes('pago') || lower.includes('paypal') || lower.includes('tarjeta') || lower.includes('transferencia') || lower.includes('cómo pago') || lower.includes('como pago') || lower.includes('efectivo') || lower.includes('métodos') || lower.includes('metodos')){
+    const pay = d.paypalLink||d.paypalEmail;
+    const opts_pay=[
+      pay?`¡Super! 💳 Aceptamos:\n\n✅ **PayPal** — rápido y seguro\n✅ **WhatsApp** — coordinamos el pago contigo\n\n¿Con cuál prefieres? 😊`:`Manejamos varios métodos de pago. ¡Escríbenos y lo coordinamos sin problema! 💰`,
+      pay?`Las formas de pago son:\n\n✅ **PayPal**\n✅ **WhatsApp** (coordinamos)\n\n¿Cuál te queda más cómodo? 😊`:`¡Sin problema! Escríbenos y te decimos cómo coordinamos el pago 🙌`
+    ];
+    return opts_pay[Math.floor(Math.random()*opts_pay.length)];
+  }
+  if(lower.includes('gracias') || lower.includes('thank') || lower.includes('perfecto') || lower.includes('genial') || lower.includes('excelente') || lower.includes('increíble') || lower.includes('chévere') || lower.includes('bacano') || lower.includes('buenísimo')){
+    const opts=[
+      '¡Para eso estamos! 😊 ¿Hay algo más en lo que pueda ayudarte?',
+      '¡Un placer! 🙌 Aquí estaré si necesitas algo más.',
+      '¡Gracias a ti por escribirnos! Me alegra haber ayudado. ¿Queda alguna duda?',
+      '¡Me alegra que te haya servido! 😄 ¿Hay algo más que quieras saber?',
+      '¡Con gusto! Siempre es un placer atenderte. ¿Algo más? 😊'
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  if(lower.includes('hola') || lower.includes('buenos') || lower.includes('buenas') || lower.includes('hey') || lower.includes('buen día') || lower.includes('buen dia') || lower.includes('qué tal') || lower.includes('que tal') || lower.includes('cómo están') || lower.includes('como estan')){
+    const greets=[
+      `¡Hola! 👋 Qué bueno que nos escribes. ¿En qué te puedo ayudar hoy?`,
+      `¡Hey! Bienvenido/a a **${name}** 😊 ¿Qué se te ofrece?`,
+      `¡Buenas! 😄 Soy el asistente de **${name}**. ¿Cómo te puedo ayudar?`,
+      `¡Hola, hola! Me da gusto que escribas 👋 ¿Qué necesitas?`,
+      `¡Bienvenido/a! Cuéntame, ¿en qué te puedo echar la mano? 😊`
+    ];
+    return greets[Math.floor(Math.random()*greets.length)];
+  }
+  if(lower.includes('cita') || lower.includes('reserva') || lower.includes('agendar') || lower.includes('apartar') || lower.includes('separar') || lower.includes('turno')){
+    const opts=[
+      `¡Claro que sí! 📅 El formulario de la derecha 👉 es rapidísimo — nombre, servicio y fecha preferida. ¿Ya tienes algún día en mente?`,
+      `¡Con gusto! Usa el formulario 👉 a la derecha para apartar tu lugar. ¿Sabes qué servicio quieres o te cuento las opciones?`,
+      `¡Perfecto! Para agendar solo usa el formulario a la derecha 👉 — te toma menos de un minuto. ¿Tienes alguna fecha preferida? 😊`
+    ];
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+  const defaults=[
+    `Mmm, quiero entenderte bien 🤔 ¿Me explicas un poco más? Aquí estoy para lo que necesites 😄`,
+    `Cuéntame más, ¿qué es lo que buscas? Puedo ayudarte con servicios, precios, citas, horarios y más 😊`,
+    `¡Claro! Solo dime un poco más y te ayudo de inmediato 💪`,
+    `Quiero asegurarme de darte la mejor info — ¿puedes contarme un poco más? 😊`,
+    `No te escuché bien 😅 ¿Me cuentas de otra forma? Estoy aquí para lo que necesites de **${name}**`
+  ];
+  return defaults[Math.floor(Math.random()*defaults.length)];
+}
+
+// ══════ INTENT DETECTION ══════
+function isAppointmentIntent(msg){
+  const k=['cita','reserva','agendar','appointment','book','reservar','quiero ir','programar','apartar','separar lugar','pedir turno','turno','quiero una cita','me gustaría ir'];
+  return k.some(kw=>msg.toLowerCase().includes(kw));
+}
+function isShoppingIntent(msg){
+  const k=['comprar','producto','tienda','quiero comprar','quiero uno','carrito','pedido','order','shop','buy','artículo','articulo','quiero llevar','cuánto cuesta el','cuanto cuesta el','precio del producto'];
+  return k.some(kw=>msg.toLowerCase().includes(kw));
+}
+
+// ══════ TYPEWRITER BOT MESSAGE ══════
+function addBotMsgTypewriter(text, actions=[]){
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const avatarHtml = botData?.botAvatar
+    ? `<div class="msg-avatar"><img src="${botData.botAvatar}" alt="bot"></div>`
+    : `<div class="msg-avatar">🤖</div>`;
+  const actionsHtml = actions.length
+    ? `<div class="msg-actions" id="msgAct_${Date.now()}" style="display:none">${actions.map(a=>`<button class="msg-action" onclick="sendQuick('${a.replace(/'/g,"&#39;")}')">${a}</button>`).join('')}</div>`
+    : '';
+  const bubbleId = 'bubble_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+
+  div.innerHTML = `${avatarHtml}
+    <div class="msg-body">
+      <div class="msg-bubble" id="${bubbleId}"></div>
+      <div class="msg-time">${getTime()}</div>
+    </div>`;
+
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+
+  // Typewriter effect
+  const bubble = document.getElementById(bubbleId);
+  const formatted = formatText(text);
+  // Strip HTML tags for character counting, then re-render
+  const plainLen = text.length;
+  let charIndex = 0;
+  let displayText = '';
+
+  const interval = setInterval(()=>{
+    if(charIndex < text.length){
+      displayText += text[charIndex];
+      bubble.innerHTML = formatText(displayText) + '<span class="tw-cursor" style="display:inline-block;width:2px;height:1em;background:var(--p);margin-left:2px;animation:blink 0.7s infinite;vertical-align:middle;border-radius:1px;"></span>';
+      charIndex++;
+      scrollToBottom();
+    } else {
+      clearInterval(interval);
+      bubble.innerHTML = formatted + (actionsHtml ? actionsHtml : '');
+      // Show actions
+      if(actionsHtml){
+        const actDiv = bubble.querySelector('.msg-actions');
+        if(actDiv) actDiv.style.display='flex';
+      }
+      playReceiveSound();
+      scrollToBottom();
+    }
+  }, 18); // speed of typewriter
+
+  return div;
+}
+
+// ══════ ADD MESSAGES (regular, no typewriter) ══════
+function addBotMsg(text, actions=[]){
+  return addBotMsgTypewriter(text, actions);
+}
+
+function addUserMsg(text){
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `<div class="msg-avatar" style="background:var(--grad)">👤</div>
+    <div class="msg-body">
+      <div class="msg-bubble">${escapeHtml(text)}</div>
+      <div class="msg-time">${getTime()}</div>
+    </div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+}
+
+function showTyping(){
+  const id='typing_'+Date.now();
+  const div=document.createElement('div');
+  div.className='msg bot'; div.id=id;
+  const avatarHtml=botData?.botAvatar?`<div class="msg-avatar"><img src="${botData.botAvatar}" alt="bot"></div>`:`<div class="msg-avatar">🤖</div>`;
+  div.innerHTML=`${avatarHtml}<div class="msg-body"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+  return id;
+}
+function removeTyping(id){ document.getElementById(id)?.remove(); }
+
+// ══════ INLINE BOOKING FORM ══════
+function showBookingForm(){
+  const d = botData || {};
+  const services = (d.services||[]).map(s=>`<option value="${s.name||''}"> ${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
+  const today = new Date().toISOString().split('T')[0];
+  const formId = 'apptForm_'+Date.now();
+  const avatarHtml = d.botAvatar?`<div class="msg-avatar"><img src="${d.botAvatar}" alt="bot"></div>`:`<div class="msg-avatar">🤖</div>`;
+  const div = document.createElement('div');
+  div.className = 'msg bot wide'; div.id = formId+'_msg';
+  div.innerHTML = `${avatarHtml}
+    <div class="msg-body" style="width:100%;">
+      <div class="msg-bubble" style="padding:0;background:transparent;border:none;width:100%">
+        <div class="appt-form" id="${formId}">
+          <div class="appt-form-title"><i class="fas fa-calendar-check"></i> Agenda Tu Cita</div>
+          <div class="appt-form-row">
+            <input type="text" id="${formId}_name" placeholder="Nombre *">
+            <input type="tel" id="${formId}_phone" placeholder="Teléfono *">
+          </div>
+          <input type="email" id="${formId}_email" placeholder="Email (opcional)" style="width:100%">
+          <select id="${formId}_service" style="width:100%">
+            <option value="">Selecciona un servicio...</option>${services}
+          </select>
+          <div class="appt-form-row">
+            <input type="date" id="${formId}_date" min="${today}">
+            <input type="time" id="${formId}_time">
+          </div>
+          <textarea id="${formId}_note" placeholder="Notas..." rows="2" style="width:100%"></textarea>
+          <button class="appt-form-btn" onclick="submitApptForm('${formId}')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
+          ${d.whatsapp?`<button class="appt-form-btn wa" onclick="submitApptFormWA('${formId}')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>`:''}
+          <div class="appt-form-cancel" onclick="cancelBookingForm('${formId}_msg')">✕ Cancelar</div>
+        </div>
+      </div>
+      <div class="msg-time">${getTime()}</div>
+    </div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+}
+
+async function submitApptForm(formId){
+  const name=document.getElementById(formId+'_name')?.value.trim();
+  const phone=document.getElementById(formId+'_phone')?.value.trim();
+  const email=document.getElementById(formId+'_email')?.value.trim();
+  const service=document.getElementById(formId+'_service')?.value;
+  const date=document.getElementById(formId+'_date')?.value;
+  const time=document.getElementById(formId+'_time')?.value;
+  const note=document.getElementById(formId+'_note')?.value.trim();
+  if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-form'}); }catch(e){}
+  const form=document.getElementById(formId);
+  if(form) form.innerHTML=`<div class="appt-success"><div class="check-icon">✅</div><strong>¡Cita agendada!</strong><p>Hola <strong>${name}</strong>, tu solicitud está registrada${service?' para <strong>'+service+'</strong>':''}${date?' el <strong>'+date+'</strong>':''}.</p><p>Te contactamos al <strong>${phone}</strong> 😊</p></div>`;
+  appointmentMode=false;
+  addBotMsgTypewriter(`¡Listo, ${name}! 🎉 Tu cita quedó registrada. Te vamos a contactar al ${phone} para confirmar. ¿Algo más en lo que pueda ayudarte? 😊`);
+  scrollToBottom();
+}
+
+async function submitApptFormWA(formId){
+  const name=document.getElementById(formId+'_name')?.value.trim();
+  const phone=document.getElementById(formId+'_phone')?.value.trim();
+  const email=document.getElementById(formId+'_email')?.value.trim();
+  const service=document.getElementById(formId+'_service')?.value;
+  const date=document.getElementById(formId+'_date')?.value;
+  const time=document.getElementById(formId+'_time')?.value;
+  const note=document.getElementById(formId+'_note')?.value.trim();
+  if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-wa'}); }catch(e){}
+  const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
+  const biz=botData?.businessName||'';
+  let msg=`Hola ${biz}! Me llamo *${name}*\n📞 ${phone}`;
+  if(email) msg+=`\n📧 ${email}`; if(service) msg+=`\n✂️ Servicio: *${service}*`;
+  if(date) msg+=`\n📅 Fecha: *${date}*`; if(time) msg+=`\n🕐 Hora: *${time}*`;
+  if(note) msg+=`\n📝 ${note}`; msg+=`\n\n_Reserva via Super Bot 007_`;
+  if(wa) window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`,'_blank');
+  else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+  const form=document.getElementById(formId);
+  if(form) form.innerHTML=`<div class="appt-success"><div class="check-icon">📲</div><strong>¡Redirigiendo a WhatsApp!</strong><p>Tu mensaje fue preparado para ${biz}.</p></div>`;
+  appointmentMode=false;
+}
+
+function cancelBookingForm(msgId){ document.getElementById(msgId)?.remove(); appointmentMode=false; addBotMsgTypewriter('Sin problema 😊 ¿En qué más puedo ayudarte?'); scrollToBottom(); }
+
+// ══════ CLEAR CHAT ══════
+function clearChat(){
+  document.getElementById('messages').innerHTML='';
+  appointmentMode = false;
+  buildSystemPrompt();
+  // Re-show welcome without double-calling initChat
+  if(botData){
+    const welcome = botData.welcomeMsg || `¡Hola de nuevo! 👋 Soy el asistente de **${botData.businessName}**. ¿En qué te puedo ayudar? 😊`;
+    addBotMsgTypewriter(welcome);
+  }
+}
+
+// ══════ TOAST ══════
+function toast(msg, type='info'){
+  const t = document.getElementById('agentToast');
+  t.textContent = msg;
+  t.style.background = type==='error'?'rgba(231,76,60,0.95)':type==='success'?'rgba(46,204,113,0.95)':'rgba(108,99,255,0.95)';
+  t.style.color = 'white';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ══════ HELPERS ══════
+function formatText(text){
+  return text
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getTime(){ return new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}); }
+function scrollToBottom(){ const m=document.getElementById('messages'); m.scrollTop=m.scrollHeight; }
+function handleKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function waitFor(fn,timeout=4000){
+  return new Promise((res,rej)=>{
+    if(fn()){res();return;}
+    const start=Date.now();
+    const t=setInterval(()=>{
+      if(fn()){clearInterval(t);res();}
+      else if(Date.now()-start>timeout){clearInterval(t);rej(new Error('Firebase timeout'));}
+    },100);
+  });
+}
+
+// Blink animation already defined in CSS
+</script>
+</body>
+</html>

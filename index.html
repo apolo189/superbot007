@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Bot 007 – Plataforma IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+:root {
+  --p: #7C6FFF; --s: #FF4F82; --a: #3DFFA0;
+  --dark: #070714; --card: #0F0F22; --border: rgba(124,111,255,0.3);
+  --text: #F0F0FF; --muted: #9090C8;
+  --grad: linear-gradient(135deg, #7C6FFF 0%, #FF4F82 100%);
+  --grad2: linear-gradient(135deg, #3DFFA0 0%, #7C6FFF 100%);
+  --glow: 0 0 40px rgba(124,111,255,0.35);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; }
+#bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; background: rgba(10,10,26,0.92); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-size: 1.4rem; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo span { font-size: 0.85rem; font-weight: 400; -webkit-text-fill-color: var(--muted); }
+.nav-link { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.3s; }
+.nav-link:hover { color: var(--text); }
+.nav-cta { padding: 0.55rem 1.4rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 700; font-size: 0.88rem; cursor: pointer; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 18px rgba(108,99,255,0.35); }
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(108,99,255,0.5); }
+
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 2rem 4rem; text-align: center; position: relative; z-index: 1; }
+.hero-inner { max-width: 900px; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1.3rem; background: rgba(124,111,255,0.18); border: 1px solid rgba(124,111,255,0.5); border-radius: 50px; font-size: 0.78rem; font-weight: 700; color: #a89fff; margin-bottom: 2rem; animation: fadeUp 0.8s ease both; box-shadow: 0 0 20px rgba(124,111,255,0.2); }
+.hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900; line-height: 1.08; margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.1s ease both; }
+.hero-title .grad { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(124,111,255,0.5)); }
+.hero-sub { font-size: clamp(1rem, 2vw, 1.3rem); color: rgba(240,240,255,0.75); max-width: 600px; margin: 0 auto 3rem; line-height: 1.7; animation: fadeUp 0.8s 0.2s ease both; }
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
+.btn-primary { padding: 1rem 2.5rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 30px rgba(124,111,255,0.55), 0 0 60px rgba(255,79,130,0.2); text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 45px rgba(124,111,255,0.7), 0 0 80px rgba(255,79,130,0.3); }
+.btn-outline { padding: 1rem 2.5rem; background: rgba(124,111,255,0.08); border: 2px solid rgba(124,111,255,0.4); border-radius: 50px; color: var(--text); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; }
+.btn-outline:hover { border-color: var(--p); color: var(--p); background: rgba(124,111,255,0.15); box-shadow: 0 0 25px rgba(124,111,255,0.25); }
+.hero-scroll { animation: fadeUp 0.8s 0.5s ease both; margin-top: 4rem; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat-num { font-size: 2.2rem; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 12px rgba(124,111,255,0.6)); }
+.hero-stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+/* BOT ID FINDER */
+#finder { position: relative; z-index: 1; padding: 0 2rem; }
+.finder-card { max-width: 680px; margin: 0 auto; background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(255,101,132,0.08)); border: 1px solid var(--border); border-radius: 24px; padding: 2.5rem; text-align: center; backdrop-filter: blur(10px); }
+.finder-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.finder-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.finder-input-wrap { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.finder-input { flex: 1; min-width: 200px; padding: 0.85rem 1.2rem; background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 50px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.3s; }
+.finder-input:focus { border-color: var(--p); background: rgba(108,99,255,0.1); }
+.finder-input::placeholder { color: var(--muted); }
+.finder-btn { padding: 0.85rem 2rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 18px rgba(108,99,255,0.4); }
+.finder-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(108,99,255,0.5); }
+.finder-results { display: none; margin-top: 1.5rem; }
+.result-links { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.8rem; }
+@media(max-width:480px){ .result-links { grid-template-columns: 1fr; } }
+.res-btn { padding: 0.85rem; border-radius: 14px; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; text-decoration: none; }
+.res-btn.g { background: var(--grad); color: white; box-shadow: 0 4px 18px rgba(108,99,255,0.35); }
+.res-btn.o { background: transparent; border: 2px solid var(--border); color: var(--text); }
+.res-btn:hover { transform: translateY(-2px); }
+.res-btn.o:hover { border-color: var(--p); color: var(--p); }
+
+/* TOOLS */
+#tools { position: relative; z-index: 1; padding: 6rem 2rem; }
+.sec-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 1rem; background: rgba(108,99,255,0.1); border: 1px solid var(--border); border-radius: 50px; font-size: 0.75rem; font-weight: 700; color: var(--p); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
+.sec-title { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; margin-bottom: 0.8rem; text-align: center; }
+.sec-sub { color: var(--muted); font-size: 1.05rem; text-align: center; max-width: 540px; margin: 0 auto 3.5rem; line-height: 1.65; }
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.tool-card { background: linear-gradient(145deg, rgba(15,15,34,0.95), rgba(20,15,40,0.95)); border: 1px solid rgba(124,111,255,0.2); border-radius: 22px; padding: 2rem; transition: all 0.4s; cursor: pointer; text-decoration: none; color: var(--text); display: block; position: relative; overflow: hidden; }
+.tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); opacity: 0; transition: opacity 0.3s; }
+.tool-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(124,111,255,0.08), transparent 70%); opacity: 0; transition: opacity 0.4s; }
+.tool-card:hover { transform: translateY(-10px); border-color: rgba(124,111,255,0.6); box-shadow: 0 24px 60px rgba(124,111,255,0.25), 0 0 40px rgba(124,111,255,0.1); }
+.tool-card:hover::before { opacity: 1; }
+.tool-card:hover::after { opacity: 1; }
+.tool-icon { font-size: 2.8rem; margin-bottom: 1rem; }
+.tool-num { position: absolute; top: 1.5rem; right: 1.5rem; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.tool-name { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.6rem; }
+.tool-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 1.2rem; }
+.tool-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tool-tag { padding: 0.25rem 0.7rem; background: rgba(124,111,255,0.15); border: 1px solid rgba(124,111,255,0.35); border-radius: 20px; font-size: 0.72rem; font-weight: 600; color: #a89fff; }
+
+/* FLOW */
+#flow { position: relative; z-index: 1; padding: 4rem 2rem; background: rgba(108,99,255,0.03); }
+.flow-steps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+.flow-step { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; flex: 1; min-width: 160px; max-width: 200px; text-align: center; }
+.flow-num { width: 52px; height: 52px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; color: white; box-shadow: 0 6px 28px rgba(124,111,255,0.55), 0 0 0 6px rgba(124,111,255,0.1); position: relative; z-index: 1; }
+.flow-arrow { font-size: 1.5rem; color: var(--border); align-self: center; padding: 0 0.3rem; }
+.flow-title { font-weight: 700; font-size: 0.9rem; }
+.flow-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+/* PRICING */
+#pricing { position: relative; z-index: 1; padding: 5rem 2rem; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; max-width: 950px; margin: 0 auto; }
+.price-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 2rem; transition: all 0.3s; }
+.price-card.featured { border-color: var(--p); box-shadow: 0 0 40px rgba(108,99,255,0.2); position: relative; }
+.price-card.featured::before { content: '⭐ Recomendado'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--grad); padding: 0.3rem 1.2rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; color: white; white-space: nowrap; }
+.price-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.price-desc { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.2rem; }
+.price-amount { font-size: 2.8rem; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.price-amount span { font-size: 1rem; font-weight: 500; -webkit-text-fill-color: var(--muted); }
+.price-features { margin: 1.2rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.pf { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
+.pf i { color: var(--a); font-size: 0.8rem; }
+.price-btn { width: 100%; padding: 0.85rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s; border: 2px solid var(--border); background: transparent; color: var(--text); }
+.price-card.featured .price-btn { background: var(--grad); border-color: transparent; color: white; box-shadow: 0 4px 18px rgba(108,99,255,0.4); }
+.price-btn:hover { transform: translateY(-2px); }
+
+/* FOOTER */
+footer { position: relative; z-index: 1; background: #07070F; border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; text-align: center; }
+.footer-logo { font-size: 1.5rem; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+.footer-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.footer-copy { font-size: 0.78rem; color: rgba(136,136,186,0.5); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; padding: 0.8rem 1.3rem; border-radius: 10px; font-weight: 600; font-size: 0.85rem; transform: translateX(200%); transition: transform 0.4s; }
+.toast.show { transform: translateX(0); }
+.toast.success { background: rgba(67,233,123,0.12); border: 1px solid rgba(67,233,123,0.4); color: var(--a); }
+.toast.error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.4); color: #FF4757; }
+.toast.info { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.4); color: var(--p); }
+@media(max-width:600px){.hero-title{font-size:2.3rem;}.hero-actions{flex-direction:column;align-items:center;}.flow-arrow{display:none;}}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🤖 Super Bot 007 <span>/ La Plataforma IA</span></div>
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <a href="#tools" class="nav-link" style="display:none" id="navTools">Herramientas</a>
+    <a href="form.html" class="nav-cta"><i class="fas fa-plus"></i> Crear Bot</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><i class="fas fa-robot"></i> Plataforma SaaS de IA para Negocios</div>
+    <h1 class="hero-title">
+      Crea un <span class="grad">Chatbot + Landing Page</span><br>en Minutos
+    </h1>
+    <p class="hero-sub">
+      Configura una vez, vende siempre. Tu negocio con IA que agenda citas, responde clientes y vende 24/7.
+    </p>
+    <div class="hero-actions">
+      <a href="form.html" class="btn-primary"><i class="fas fa-rocket"></i> Crear Mi Bot Ahora</a>
+      <a href="#finder" class="btn-outline"><i class="fas fa-search"></i> Tengo un Bot ID</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-stat"><div class="hero-stat-num" data-target="500">0</div><div class="hero-stat-label">Bots Creados</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-target="10">0</div><div class="hero-stat-label">Minutos de Configuración</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-target="24">0</div><div class="hero-stat-label">Horas Activo / Día</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" data-target="100">0</div><div class="hero-stat-label">% Sin Código</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOT ID FINDER -->
+<section id="finder" style="position:relative;z-index:1;padding:0 2rem 5rem;">
+  <div class="finder-card reveal">
+    <div style="font-size:2.5rem;margin-bottom:0.8rem;">🔑</div>
+    <div class="finder-title">¿Ya tienes un Bot?</div>
+    <div class="finder-sub">Ingresa tu Bot ID para acceder a todas las herramientas</div>
+    <div class="finder-input-wrap">
+      <input type="text" class="finder-input" id="botIdInput" placeholder="Ej: bella-salon-1234567890" value="">
+      <button class="finder-btn" onclick="findBot()"><i class="fas fa-search"></i> Buscar</button>
+    </div>
+    <div class="finder-results" id="finderResults">
+      <div class="result-links">
+        <a id="rLanding" href="#" target="_blank" class="res-btn g"><i class="fas fa-globe"></i> Ver Landing</a>
+        <a id="rEditor" href="#" target="_blank" class="res-btn o"><i class="fas fa-edit"></i> Editor Visual</a>
+        <a id="rAgent" href="#" target="_blank" class="res-btn o"><i class="fas fa-robot"></i> Chatbot IA</a>
+        <a id="rDashboard" href="#" target="_blank" class="res-btn o"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools" style="position:relative;z-index:1;padding:5rem 2rem;">
+  <div style="text-align:center;">
+    <div class="sec-tag reveal"><i class="fas fa-tools"></i> 5 Herramientas</div>
+    <h2 class="sec-title reveal">Todo Lo Que Necesitas</h2>
+    <p class="sec-sub reveal">De la configuración al cliente en minutos. Sin código. Sin complicaciones.</p>
+  </div>
+  <div class="tools-grid">
+    <a href="form.html" class="tool-card reveal">
+      <div class="tool-num">01</div>
+      <div class="tool-icon">📋</div>
+      <div class="tool-name">Formulario de Creación</div>
+      <div class="tool-desc">7 pasos para configurar tu bot completo: servicios, productos, colores, horarios, PayPal y más. Con ayuda de IA.</div>
+      <div class="tool-tags"><span class="tool-tag">7 Pasos</span><span class="tool-tag">IA Integrada</span><span class="tool-tag">PayPal</span></div>
+    </a>
+    <a href="#finder" class="tool-card reveal" style="transition-delay:0.1s">
+      <div class="tool-num">02</div>
+      <div class="tool-icon">🌐</div>
+      <div class="tool-name">Landing Page Premium</div>
+      <div class="tool-desc">Página profesional con efectos visuales, carrito de compras, galería, testimonios, citas por WhatsApp y más.</div>
+      <div class="tool-tags"><span class="tool-tag">Efectos Visuales</span><span class="tool-tag">Carrito</span><span class="tool-tag">SEO</span></div>
+    </a>
+    <a href="#finder" class="tool-card reveal" style="transition-delay:0.2s">
+      <div class="tool-num">03</div>
+      <div class="tool-icon">🎨</div>
+      <div class="tool-name">Editor Visual</div>
+      <div class="tool-desc">Modifica colores, textos, imágenes, servicios y FAQs. Preview en tiempo real. Descarga HTML limpio.</div>
+      <div class="tool-tags"><span class="tool-tag">Preview Live</span><span class="tool-tag">Descarga HTML</span><span class="tool-tag">Sin Firebase</span></div>
+    </a>
+    <a href="#finder" class="tool-card reveal" style="transition-delay:0.3s">
+      <div class="tool-num">04</div>
+      <div class="tool-icon">🤖</div>
+      <div class="tool-name">Chatbot GPT-4</div>
+      <div class="tool-desc">Asistente virtual inteligente que conoce el negocio, responde preguntas, agenda citas y conecta con WhatsApp.</div>
+      <div class="tool-tags"><span class="tool-tag">GPT-4o</span><span class="tool-tag">Agenda Citas</span><span class="tool-tag">WhatsApp</span></div>
+    </a>
+    <a href="#finder" class="tool-card reveal" style="transition-delay:0.4s">
+      <div class="tool-num">05</div>
+      <div class="tool-icon">📊</div>
+      <div class="tool-name">Dashboard Admin</div>
+      <div class="tool-desc">Panel de control con todas las citas, confirmar/cancelar, enviar WhatsApp y estadísticas del negocio.</div>
+      <div class="tool-tags"><span class="tool-tag">Citas</span><span class="tool-tag">Estadísticas</span><span class="tool-tag">WhatsApp</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow" style="position:relative;z-index:1;padding:4rem 2rem;background:rgba(108,99,255,0.03);">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <div class="sec-tag reveal"><i class="fas fa-stream"></i> Flujo Simple</div>
+    <h2 class="sec-title reveal">4 Pasos Para Tu Bot</h2>
+  </div>
+  <div class="flow-steps">
+    <div class="flow-step reveal">
+      <div class="flow-num">1️⃣</div>
+      <div class="flow-title">Llena el Formulario</div>
+      <div class="flow-sub">Datos del negocio, servicios, colores y API Key de OpenAI</div>
+    </div>
+    <div class="flow-arrow reveal">→</div>
+    <div class="flow-step reveal">
+      <div class="flow-num">2️⃣</div>
+      <div class="flow-title">Recibe tu Bot ID</div>
+      <div class="flow-sub">Se guarda automáticamente en Firebase y recibes un ID único</div>
+    </div>
+    <div class="flow-arrow reveal">→</div>
+    <div class="flow-step reveal">
+      <div class="flow-num">3️⃣</div>
+      <div class="flow-title">Personaliza con Editor</div>
+      <div class="flow-sub">Ajusta visualmente y descarga HTML independiente</div>
+    </div>
+    <div class="flow-arrow reveal">→</div>
+    <div class="flow-step reveal">
+      <div class="flow-num">4️⃣</div>
+      <div class="flow-title">Activa y Vende</div>
+      <div class="flow-sub">Comparte la landing, el chatbot recibe clientes 24/7</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="position:relative;z-index:1;padding:5rem 2rem;">
+  <div style="text-align:center;">
+    <div class="sec-tag reveal"><i class="fas fa-tags"></i> Precios</div>
+    <h2 class="sec-title reveal">Modelo de Negocio</h2>
+    <p class="sec-sub reveal">Úsalo para tu propia agencia. Cobra por cada bot que configures.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-name">Básico</div>
+      <div class="price-desc">Para un negocio local</div>
+      <div class="price-amount">$49<span>/mes</span></div>
+      <div class="price-features">
+        <div class="pf"><i class="fas fa-check-circle"></i>Landing page premium</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Chatbot GPT-4o Mini</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Hasta 5 servicios</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Carrito de compras</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Dashboard admin</div>
+      </div>
+      <button class="price-btn" onclick="location.href='form.html'">Empezar</button>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="price-name">Profesional</div>
+      <div class="price-desc">Para agencias y freelancers</div>
+      <div class="price-amount">$99<span>/mes</span></div>
+      <div class="price-features">
+        <div class="pf"><i class="fas fa-check-circle"></i>Todo del plan básico</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>GPT-4o (más potente)</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Hasta 8 servicios + 8 productos</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Editor visual con descarga</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Soporte prioritario</div>
+      </div>
+      <button class="price-btn" onclick="location.href='form.html'">Empezar Ahora</button>
+    </div>
+    <div class="price-card reveal">
+      <div class="price-name">Agencia</div>
+      <div class="price-desc">Bots ilimitados para clientes</div>
+      <div class="price-amount">$299<span>/mes</span></div>
+      <div class="price-features">
+        <div class="pf"><i class="fas fa-check-circle"></i>Todo ilimitado</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Marca blanca</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>API personalizada</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Onboarding dedicado</div>
+        <div class="pf"><i class="fas fa-check-circle"></i>Reportes avanzados</div>
+      </div>
+      <button class="price-btn" onclick="location.href='form.html'">Contactar</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🤖 Super Bot 007</div>
+  <p class="footer-sub">La plataforma más fácil para crear chatbots + landing pages para negocios locales.</p>
+  <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+    <a href="form.html" style="color:var(--muted);text-decoration:none;font-size:0.88rem;">Crear Bot</a>
+    <a href="#tools" style="color:var(--muted);text-decoration:none;font-size:0.88rem;">Herramientas</a>
+    <a href="#pricing" style="color:var(--muted);text-decoration:none;font-size:0.88rem;">Precios</a>
+  </div>
+  <p class="footer-copy">© 2024 Super Bot 007 · Todos los derechos reservados · Powered by Firebase + OpenAI</p>
+</footer>
+
+<script>
+// ═══ PARTICLES ═══
+(function(){
+  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  const COLORS=['124,111,255','255,79,130','61,255,160'];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<80;i++) pts.push({
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4,
+    r:Math.random()*2.2+.6,
+    a:Math.random()*.28+.08,
+    c:COLORS[Math.floor(Math.random()*COLORS.length)]
+  });
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Fondo negro profundo
+    ctx.fillStyle='#070714';
+    ctx.fillRect(0,0,W,H);
+    // Glow central sutil
+    const grd=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.65);
+    grd.addColorStop(0,'rgba(124,111,255,0.07)');
+    grd.addColorStop(0.5,'rgba(255,79,130,0.03)');
+    grd.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.c},${p.a})`;ctx.fill();
+      pts.slice(i+1,i+6).forEach(q=>{
+        const d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<110){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(124,111,255,${0.1*(1-d/110)})`;ctx.lineWidth=0.6;ctx.stroke();}
+      });
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+// ═══ COUNTERS ═══
+function initCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=parseInt(el.getAttribute('data-target'));
+    let current=0;
+    const step=Math.ceil(target/50);
+    const suffix=el.closest('.hero-stat-num')?' ':'+';
+    const t=setInterval(()=>{ current=Math.min(current+step,target); el.textContent=current+(target>=100?'+':''); if(current>=target) clearInterval(t); },30);
+  });
+}
+
+// ═══ REVEAL ═══
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+}
+
+// ═══ BOT FINDER ═══
+function findBot(){
+  const id=document.getElementById('botIdInput').value.trim();
+  if(!id){ toast('Ingresa un Bot ID','error'); return; }
+  localStorage.setItem('lastBotId',id);
+  document.getElementById('rLanding').href=`landing.html?id=${id}`;
+  document.getElementById('rEditor').href=`editor.html?id=${id}`;
+  document.getElementById('rAgent').href=`agent.html?id=${id}`;
+  document.getElementById('rDashboard').href=`dashboard.html?id=${id}`;
+  document.getElementById('finderResults').style.display='block';
+  toast('¡Links generados! ✅','success');
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&document.activeElement.id==='botIdInput') findBot(); });
+
+// ═══ TOOL CARDS (with ID) ═══
+document.querySelectorAll('.tool-card').forEach((card,i)=>{
+  if(i===0) return; // First card goes to form.html directly
+  card.addEventListener('click',e=>{
+    e.preventDefault();
+    const id=localStorage.getItem('lastBotId');
+    if(!id){
+      document.getElementById('finder').scrollIntoView({behavior:'smooth'});
+      document.getElementById('botIdInput').focus();
+      toast('Primero ingresa tu Bot ID ↑','info');
+      return;
+    }
+    const urls=['landing.html','editor.html','agent.html','dashboard.html'];
+    window.open(`${urls[i-1]}?id=${id}`,'_blank');
+  });
+});
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded',()=>{
+  initCounters();
+  initReveal();
+  // Pre-fill Bot ID if saved
+  const saved=localStorage.getItem('lastBotId');
+  if(saved){
+    document.getElementById('botIdInput').value=saved;
+    document.getElementById('navTools').style.display='block';
+  }
+});
+
+function toast(msg,type='info'){const t=document.createElement('div');t.className=`toast ${type} show`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),500);},3000);}
+</script>
+</body>
+</html>
