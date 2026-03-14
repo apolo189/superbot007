@@ -1072,60 +1072,63 @@ async function saveChanges(){
 async function downloadLanding(){
   toast('⏳ Generando HTML standalone...','info');
   try{
-    // 1) Traer la plantilla landing.html
+    // 1) Traer plantilla landing.html
     const res = await fetch('landing.html');
     if(!res.ok) throw new Error('No se pudo cargar landing.html ('+res.status+')');
     let html = await res.text();
 
-    // 2) Deep-clone los datos actuales del bot
+    // 2) Serializar datos del bot
     const data = JSON.parse(JSON.stringify(editedData));
     const dataJson = JSON.stringify(data).replace(/<\/script>/gi,'<\\/script>');
 
-    // 3) Reemplazar el bloque Firebase SDK (type="module") con shims no-op
-    //    Esto es crítico: el módulo Firebase debe sustituirse ANTES de que el script
-    //    principal corra, para que window.db y window.fbGetDoc estén listos.
-    const firebaseBlockRegex = /<script type="module">[\s\S]*?<\/script>/;
-    const shimScript = `<script>
-/* ══ STANDALONE — Super Bot 007 (sin Firebase) ══ */
-var __BOT_DATA__ = ${dataJson};
-window.db = { _standalone: true };
-window.fbDoc         = function(){ return {}; };
-window.fbCollection  = function(){ return {}; };
-window.fbAddDoc      = function(){ return Promise.resolve({ id:'standalone' }); };
-window.fbGetDoc      = function(){
-  return Promise.resolve({ exists: function(){ return true; }, data: function(){ return __BOT_DATA__; } });
-};
-<\/script>`;
+    // 3) Reemplazar bloque Firebase SDK con shims no-op.
+    //    Se usa un marcador DATAJSON para evitar problemas con backslashes en replace().
+    const MARKER = '/*__BOTDATA__*/';
+    const shimScript = '<script>\n'
+      + '/* STANDALONE - Super Bot 007 */\n'
+      + 'var __BOT_DATA__ = ' + MARKER + ';\n'
+      + 'window.db={_standalone:true};\n'
+      + 'window.fbDoc=function(){return{};};\n'
+      + 'window.fbCollection=function(){return{};};\n'
+      + 'window.fbAddDoc=function(){return Promise.resolve({id:"standalone"});};\n'
+      + 'window.fbGetDoc=function(){return Promise.resolve({exists:function(){return true;},data:function(){return __BOT_DATA__;}});};\n'
+      + '<\/script>';
+    // Primero poner el marcador, luego reemplazar el marcador con el JSON real
+    html = html.replace(/<script type="module">[\s\S]*?<\/script>/, shimScript);
+    html = html.replace(MARKER, dataJson);
 
-    if(firebaseBlockRegex.test(html)){
-      html = html.replace(firebaseBlockRegex, shimScript);
-    } else {
-      // Si por alguna razón no se encuentra, añadir antes del primer <script>
-      html = html.replace('<script>', shimScript + '\n<script>');
-    }
+    // 4) Parchear botId: sin ?id= en la URL local botId sería null → showNoBot()
+    html = html.replace(
+      "const botId = new URLSearchParams(location.search).get('id');",
+      "const botId = 'standalone'; /* STANDALONE */"
+    );
 
-    // 4) Reemplazar la lógica de inicio para que cargue datos locales
-    //    Sustituir el bloque START que llama loadBot() por uno que llama initPage() directo
-    const startBlockRegex = /\/\/ ══════ START ══════[\s\S]*?}, 2500\);/;
-    const standaloneStart = `// ══ STANDALONE START ══
-window.addEventListener('DOMContentLoaded', function(){
-  window.botData = __BOT_DATA__;
-  initPage();
-});`;
+    // 5) Parchear loadBot() para que cargue datos locales directamente
+    const oldLoadBot = "async function loadBot(){\n"
+      + "  if(!botId){ showNoBot(); return; }\n"
+      + "  try{\n"
+      + "    const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));\n"
+      + "    if(!snap.exists()){ showNoBot(); return; }\n"
+      + "    botData = snap.data();\n"
+      + "    initPage();\n"
+      + "  }catch(e){ console.error(e); showNoBot(); }\n"
+      + "}";
+    const newLoadBot = "async function loadBot(){\n"
+      + "  botData = __BOT_DATA__; /* STANDALONE */\n"
+      + "  initPage();\n"
+      + "}";
+    html = html.includes(oldLoadBot) ? html.replace(oldLoadBot, newLoadBot) : html;
 
-    if(startBlockRegex.test(html)){
-      html = html.replace(startBlockRegex, standaloneStart);
-    }
-
-    // 5) Descargar
-    const bizName = (data.businessName||'mi-landing').replace(/\s+/g,'-').replace(/[^a-z0-9\-]/gi,'').toLowerCase();
+    // 6) Descargar archivo
+    const bizName = (data.businessName||'mi-landing')
+      .replace(/\s+/g,'-').replace(/[^a-z0-9\-]/gi,'').toLowerCase() || 'mi-landing';
     const blob = new Blob([html],{type:'text/html;charset=utf-8'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `landing-${bizName}.html`;
+    a.download = 'landing-'+bizName+'.html';
     a.click();
     URL.revokeObjectURL(a.href);
-    toast('✅ ¡Landing descargado! Abre el .html en tu navegador.','success');
+    toast('✅ ¡Descargado! Abre el .html con doble clic.','success');
   }catch(e){ toast('❌ Error: '+e.message,'error'); console.error(e); }
 }
 
