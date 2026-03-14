@@ -249,6 +249,21 @@ footer { background: #07070F; border-top: 1px solid var(--border); padding: 3rem
 /* ─── NO BOT ─── */
 #noBotMsg { display: none; position: fixed; inset: 0; background: var(--dark); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
 #noBotMsg.show { display: flex; }
+
+/* ─── BROKEN IMAGE PLACEHOLDER ─── */
+img.img-broken {
+  background: rgba(108,99,255,0.08);
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 8px;
+  color: transparent;
+  position: relative;
+}
+.img-placeholder-wrap {
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(108,99,255,0.08); border: 1px dashed rgba(108,99,255,0.25);
+  border-radius: 8px; color: var(--muted); font-size: 1.8rem;
+  width: 100%; height: 100%; min-height: 80px;
+}
 </style>
 </head>
 <body>
@@ -461,6 +476,17 @@ console.log("✅ Firebase landing ready");
 </script>
 
 <script>
+
+// ── BROKEN IMAGE HELPER ──
+function handleImgError(img, fallbackEmoji){
+  img.style.display = 'none';
+  const wrap = document.createElement('div');
+  wrap.className = 'img-placeholder-wrap';
+  wrap.textContent = fallbackEmoji || '🖼️';
+  wrap.title = 'Imagen no disponible';
+  if(img.parentElement) img.parentElement.insertBefore(wrap, img.nextSibling);
+}
+
 // ══════ STATE ══════
 let botData = null;
 let cart = JSON.parse(localStorage.getItem('sb007cart') || '[]');
@@ -522,7 +548,7 @@ function initPage(){
   document.getElementById('businessTypeBadge').textContent = d.businessType||'';
 
   // Logo
-  if(d.logoURL){ const l=document.getElementById('navLogo'); l.src=d.logoURL; l.style.display='block'; }
+  if(d.logoURL){ const l=document.getElementById('navLogo'); l.src=d.logoURL; l.style.display='block'; l.onerror=()=>{ l.style.display='none'; }; }
 
   // Hero BG
   if(d.heroImageURL){ const bg=document.getElementById('heroBg'); bg.style.backgroundImage=`url('${d.heroImageURL}')`; }
@@ -570,7 +596,7 @@ function initPage(){
 
   // Chat widget
   document.getElementById('chatBubble').textContent = d.welcomeMsg||'¡Hola! ¿En qué puedo ayudarte?';
-  if(d.botAvatar){ document.getElementById('chatFab').innerHTML=`<img src="${d.botAvatar}" alt="bot">`; }
+  if(d.botAvatar){ document.getElementById('chatFab').innerHTML=`<img src="${d.botAvatar}" alt="bot" onerror="this.parentElement.innerHTML='🤖'">`; }
   setTimeout(()=>{ document.getElementById('chatBubble').style.display='block'; setTimeout(()=>{ document.getElementById('chatBubble').style.display='none'; },5000); },2000);
 
   // Cart from localStorage
@@ -608,7 +634,7 @@ function buildServices(services){
     card.className = 'service-card reveal';
     card.style.transitionDelay = (i*0.1)+'s';
     card.innerHTML = `
-      <div class="svc-img">${s.image?`<img src="${s.image}" alt="${s.name}">`:icons[i%icons.length]}</div>
+      <div class="svc-img">${s.image?`<img src="${s.image}" alt="${s.name}" onerror="handleImgError(this,'${icons[i%icons.length]}')">`:icons[i%icons.length]}</div>
       <div class="svc-body">
         <div class="svc-name">${s.name||''}</div>
         <div class="svc-desc">${s.desc||''}</div>
@@ -630,7 +656,7 @@ function buildProducts(products){
     card.className = 'prod-card reveal';
     card.style.transitionDelay = (i*0.1)+'s';
     card.innerHTML = `
-      <div class="prod-img">${p.image?`<img src="${p.image}" alt="${p.name}">`:['🧴','💊','🎁','🌿','✨','💎','🛍️','🌸'][i%8]}</div>
+      <div class="prod-img">${p.image?`<img src="${p.image}" alt="${p.name}" onerror="handleImgError(this,'${ ['🧴','💊','🎁','🌿','✨','💎','🛍️','🌸'][i%8] }')">`:['🧴','💊','🎁','🌿','✨','💎','🛍️','🌸'][i%8]}</div>
       <div class="prod-body">
         <div class="prod-name">${p.name||''}</div>
         <div class="prod-desc">${p.desc||''}</div>
@@ -663,7 +689,7 @@ function updateCart(){
   cart.forEach((item,i)=>{
     total += parseFloat(item.price||0);
     items.innerHTML += `<div class="cart-item">
-      ${item.image?`<img src="${item.image}" alt="${item.name}">`:'<div style="width:48px;height:48px;background:rgba(108,99,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">🛍️</div>'}
+      ${item.image?`<img src="${item.image}" alt="${item.name}" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=\"width:48px;height:48px;background:rgba(108,99,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;\">🛍️</div>')">`:'<div style="width:48px;height:48px;background:rgba(108,99,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;">🛍️</div>'}
       <div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">$${parseFloat(item.price||0).toFixed(2)}</div></div>
       <button class="cart-item-rm" onclick="removeFromCart(${i})">✕</button>
     </div>`;
@@ -698,7 +724,7 @@ function buildGallery(urls){
     const div = document.createElement('div');
     div.className = 'gallery-item reveal';
     div.style.transitionDelay = (i*0.08)+'s';
-    div.innerHTML = `<img src="${url}" alt="Galería ${i+1}" loading="lazy"><div class="overlay-hover"></div>`;
+    div.innerHTML = `<img src="${url}" alt="Galería ${i+1}" loading="lazy" onerror="handleImgError(this,'🖼️')"><div class="overlay-hover"></div>`;
     div.onclick = ()=> window.open(url,'_blank');
     grid.appendChild(div);
   });
