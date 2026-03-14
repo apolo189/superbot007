@@ -563,24 +563,53 @@ window.addEventListener('DOMContentLoaded', ()=>{
     return;
   }
   if(!botId){
-    // Show manual ID entry form
+    // Show clear instructions + manual ID entry
     document.getElementById('loadingState').innerHTML = `
-      <div style="text-align:center;padding:1.5rem">
-        <i class="fas fa-pencil-alt" style="font-size:2.2rem;color:var(--p);opacity:0.6;display:block;margin-bottom:0.8rem"></i>
-        <strong style="font-size:1rem">Ingresa tu Bot ID</strong>
-        <p style="font-size:0.8rem;color:var(--muted);margin:0.5rem 0 1rem">Pega el ID de tu bot para cargar el editor</p>
-        <div style="display:flex;gap:0.5rem;max-width:340px;margin:0 auto">
-          <input id="manualBotId" type="text" placeholder="ej: mi-negocio-1234567890"
-            style="flex:1;padding:0.6rem 0.8rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:Inter,sans-serif;font-size:0.85rem;outline:none"
+      <div style="text-align:center;padding:1.5rem;max-width:400px;margin:0 auto">
+
+        <div style="font-size:2.8rem;margin-bottom:0.6rem">🤖</div>
+        <strong style="font-size:1.05rem;display:block;margin-bottom:0.3rem">Ningún bot seleccionado</strong>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.55">
+          Para usar el editor necesitas primero <b style="color:var(--text)">crear un bot</b> o ingresar el <b style="color:var(--text)">ID de uno existente</b>.
+        </p>
+
+        <!-- Opción A: crear nuevo -->
+        <a href="form.html"
+          style="display:flex;align-items:center;justify-content:center;gap:0.5rem;
+                 width:100%;padding:0.75rem;margin-bottom:0.7rem;
+                 background:var(--grad);border:none;border-radius:10px;
+                 color:white;font-weight:800;font-size:0.9rem;
+                 text-decoration:none;box-shadow:0 4px 16px rgba(108,99,255,0.35)">
+          <i class="fas fa-plus-circle"></i> Crear mi primer bot
+        </a>
+
+        <!-- Divider -->
+        <div style="display:flex;align-items:center;gap:0.6rem;margin:0.9rem 0;color:var(--muted);font-size:0.75rem">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          YA TENGO UN BOT
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+
+        <!-- Opción B: pegar ID -->
+        <div style="display:flex;gap:0.5rem">
+          <input id="manualBotId" type="text" placeholder="Pega tu Bot ID aquí..."
+            style="flex:1;padding:0.6rem 0.8rem;background:rgba(255,255,255,0.05);
+                   border:1px solid var(--border);border-radius:9px;color:var(--text);
+                   font-family:Inter,sans-serif;font-size:0.85rem;outline:none"
             onkeydown="if(event.key==='Enter') loadManualId()">
           <button onclick="loadManualId()"
-            style="padding:0.6rem 1rem;background:var(--grad);border:none;border-radius:9px;color:white;font-weight:800;font-size:0.85rem;cursor:pointer;white-space:nowrap">
-            <i class="fas fa-arrow-right"></i> Cargar
+            style="padding:0.6rem 1rem;background:rgba(108,99,255,0.2);border:1px solid var(--border);
+                   border-radius:9px;color:var(--p);font-weight:800;font-size:0.85rem;cursor:pointer;white-space:nowrap">
+            <i class="fas fa-arrow-right"></i> Abrir
           </button>
         </div>
-        <p style="font-size:0.72rem;color:var(--muted);margin-top:0.8rem">O abre el editor desde <a href="index.html" style="color:var(--p)">index.html</a> con tu Bot ID</p>
+
+        <p style="font-size:0.7rem;color:var(--muted);margin-top:1rem;line-height:1.5">
+          💡 Tu Bot ID lo encontrás en <a href="index.html" style="color:var(--p)">Inicio</a>
+          o en el link que recibiste al crear tu bot.<br>
+          Ejemplo: <code style="background:rgba(108,99,255,0.12);padding:1px 5px;border-radius:4px;font-size:0.68rem">mi-negocio-1234567890</code>
+        </p>
       </div>`;
-    // Focus the input
     setTimeout(()=>document.getElementById('manualBotId')?.focus(), 100);
     return;
   }
