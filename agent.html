@@ -1428,7 +1428,7 @@ async function submitBookingRight(mode){
     }
   }catch(e){ console.log('Appt save error:',e); }
   if(mode==='wa'){
-    const wa=(botData?.whatsapp||'').replace(/\D/g,'');
+    const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
     let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
     if(email) msg+=`\n📧 ${email}`;
     if(service) msg+=`\n✂️ Servicio: *${service}*`;
@@ -1456,7 +1456,7 @@ function resetBookingRight(){ if(botData) buildRightBookingForm(botData); }
 
 function buildRightBookingForm(d){
   const now = new Date();
-  bkState = { step:1, date:null, time:null, calYear:now.getFullYear(), calMonth:now.getMonth() };
+  bkState = { step:1, date:null, time:null, calYear:now.getFullYear(), calMonth:now.getMonth(), name:'', phone:'', email:'', service:'', note:'' };
   renderBookingStep(d);
 }
 
@@ -1485,14 +1485,14 @@ function renderBookingStep(d){
     closed:  isEN?'Closed':'Cerrado',
   };
 
-  if(bkState.step===1) panel.innerHTML = buildCalendarHTML(d, labels);
-  else if(bkState.step===2) panel.innerHTML = buildTimeHTML(d, labels);
-  else if(bkState.step===3) panel.innerHTML = buildInfoHTML(d, labels);
+  if(bkState.step===1) panel.innerHTML = buildInfoHTML(d, labels);
+  else if(bkState.step===2) panel.innerHTML = buildCalendarHTML(d, labels);
+  else if(bkState.step===3) panel.innerHTML = buildTimeHTML(d, labels);
 }
 
 function stepsHTML(step){
-  const steps=['📅','🕐','👤'];
-  const names=['Fecha','Hora','Datos'];
+  const steps=['👤','📅','🕐'];
+  const names=['Datos','Fecha','Hora'];
   return `<div class="bk-steps">
     ${steps.map((s,i)=>{
       const cls = i+1<step?'done':i+1===step?'active':'';
@@ -1543,7 +1543,7 @@ function buildCalendarHTML(d, labels){
 
   const prevDisabled = (y===today.getFullYear()&&m<=today.getMonth());
   return `
-    ${stepsHTML(1)}
+    ${stepsHTML(2)}
     <div class="bk-section-title">📅 ${labels.pick}</div>
     <div class="bk-cal-nav">
       <button onclick="bkCalNav(-1)" ${prevDisabled?'disabled style="opacity:0.3;cursor:not-allowed"':''}>‹</button>
@@ -1555,7 +1555,8 @@ function buildCalendarHTML(d, labels){
       ${cells}
     </div>
     <div class="bk-nav-btns" style="margin-top:0.8rem;">
-      <button class="bk-next-btn" onclick="bkGoStep2()" ${bkState.date?'':'style="opacity:0.5;cursor:not-allowed"'}>
+      <button class="bk-back-btn" onclick="bkGoStep1()">${labels.back}</button>
+      <button class="bk-next-btn" onclick="bkGoStep3()" ${bkState.date?'':'style="opacity:0.5;cursor:not-allowed"'}>
         ${bkState.date?labels.next:labels.selDate}
       </button>
     </div>`;
@@ -1589,49 +1590,41 @@ function buildTimeHTML(d, labels){
   const dateLabel = `${dy}/${mo}/${yr}`;
 
   return `
-    ${stepsHTML(2)}
+    ${stepsHTML(3)}
     ${bkState.date?`<div class="bk-selected-badge">📅 ${dateLabel}</div>`:''}
     <div class="bk-section-title">🕐 ${labels.pickT}</div>
     <div class="bk-time-grid">
       ${timeSlots.map(t=>`<div class="bk-time-slot${bkState.time===t?' selected':''}" onclick="bkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
     <div class="bk-nav-btns">
-      <button class="bk-back-btn" onclick="bkGoStep1()">${labels.back}</button>
-      <button class="bk-next-btn" onclick="bkGoStep3()" ${bkState.time?'':'style="opacity:0.5;cursor:not-allowed"'}>
-        ${bkState.time?labels.next:labels.selDate.replace('fecha','hora').replace('date','time')}
+      <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
+      <button class="bk-next-btn" onclick="submitBookingRight('confirm')" ${bkState.time?'':'style="opacity:0.5;cursor:not-allowed"'}>
+        ${bkState.time?`<i class="fas fa-check-circle"></i> ${labels.confirm}`:labels.selDate.replace('fecha','hora').replace('date','time')}
       </button>
-    </div>`;
+    </div>
+    ${(d.whatsapp||d.phone)&&bkState.time?`<button class="bk-btn wa" style="margin-top:0.35rem" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>`:''}`;
 }
 
 function buildInfoHTML(d, labels){
-  const services = (Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}">${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
-  const waBtn = d.whatsapp ? `<button class="bk-btn wa" style="margin-top:0.35rem" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>` : '';
-  const [yr,mo,dy] = bkState.date.split('-');
-  const dateLabel = `${dy}/${mo}/${yr}`;
+  const services = (Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}" ${bkState.service===s.name?'selected':''}>${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
   return `
-    ${stepsHTML(3)}
-    <div style="display:flex;gap:0.4rem;margin-bottom:0.7rem;flex-wrap:wrap;">
-      <div class="bk-selected-badge">📅 ${dateLabel}</div>
-      <div class="bk-selected-badge">🕐 ${bkState.time}</div>
-    </div>
+    ${stepsHTML(1)}
     <div id="bkForm">
       <label class="bk-label">${labels.name}</label>
-      <input class="bk-input" id="bk_name" type="text" placeholder="${d.botLanguage==='en'?'Your full name':'Tu nombre completo'}">
+      <input class="bk-input" id="bk_name" type="text" placeholder="${d.botLanguage==='en'?'Your full name':'Tu nombre completo'}" value="${bkState.name||''}">
       <label class="bk-label">${labels.phone}</label>
-      <input class="bk-input" id="bk_phone" type="tel" placeholder="Ej: 555-123-4567">
+      <input class="bk-input" id="bk_phone" type="tel" placeholder="Ej: 555-123-4567" value="${bkState.phone||''}">
       <label class="bk-label">${labels.email}</label>
-      <input class="bk-input" id="bk_email" type="email" placeholder="tu@email.com">
+      <input class="bk-input" id="bk_email" type="email" placeholder="tu@email.com" value="${bkState.email||''}">
       <label class="bk-label">${labels.service}</label>
       <select class="bk-select" id="bk_service">
         <option value="">${labels.selSvc}</option>${services}
       </select>
       <label class="bk-label">${labels.notes}</label>
-      <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="${labels.notesP}"></textarea>
+      <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="${labels.notesP}">${bkState.note||''}</textarea>
       <div class="bk-nav-btns">
-        <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
-        <button class="bk-next-btn" onclick="submitBookingRight('confirm')"><i class="fas fa-check-circle"></i> ${labels.confirm}</button>
+        <button class="bk-next-btn" onclick="bkGoStep2()"><i class="fas fa-calendar-alt"></i> ${d.botLanguage==='en'?'Choose Date →':'Elegir Fecha →'}</button>
       </div>
-      ${waBtn}
     </div>
     <div id="bkSuccess" style="display:none"></div>`;
 }
@@ -1659,21 +1652,30 @@ function bkPickTime(t, el){
   if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; const isEN=botData?.botLanguage==='en'; btn.textContent=isEN?'Next →':'Siguiente →'; }
 }
 function bkGoStep1(){ bkState.step=1; if(botData) renderBookingStep(botData); }
-function bkGoStep2(){ if(!bkState.date) return; bkState.step=2; if(botData) renderBookingStep(botData); }
-function bkGoStep3(){ if(!bkState.time) return; bkState.step=3; if(botData) renderBookingStep(botData); }
+function bkGoStep2(){
+  const name=(document.getElementById('bk_name')?.value||'').trim();
+  const phone=(document.getElementById('bk_phone')?.value||'').trim();
+  if(!name||!phone){ toast(botData?.botLanguage==='en'?'Enter your name and phone':'Ingresa nombre y teléfono','error'); return; }
+  bkState.name=name; bkState.phone=phone;
+  bkState.email=document.getElementById('bk_email')?.value.trim()||'';
+  bkState.service=document.getElementById('bk_service')?.value||'';
+  bkState.note=document.getElementById('bk_note')?.value.trim()||'';
+  bkState.step=2; if(botData) renderBookingStep(botData);
+}
+function bkGoStep3(){ if(!bkState.date) return; bkState.step=3; if(botData) renderBookingStep(botData); }
 
 async function submitBookingRight(mode){
-  const name    = document.getElementById('bk_name')?.value.trim();
-  const phone   = document.getElementById('bk_phone')?.value.trim();
-  const email   = document.getElementById('bk_email')?.value.trim()||'';
-  const service = document.getElementById('bk_service')?.value||'';
-  const note    = document.getElementById('bk_note')?.value.trim()||'';
+  const name    = bkState.name || document.getElementById('bk_name')?.value.trim();
+  const phone   = bkState.phone || document.getElementById('bk_phone')?.value.trim();
+  const email   = bkState.email || document.getElementById('bk_email')?.value.trim()||'';
+  const service = bkState.service || document.getElementById('bk_service')?.value||'';
+  const note    = bkState.note || document.getElementById('bk_note')?.value.trim()||'';
   const date    = bkState.date||'';
   const time    = bkState.time||'';
   const isEN    = botData?.botLanguage==='en';
 
-  if(!name){  document.getElementById('bk_name').focus(); toast(isEN?'Enter your name':'Ingresa tu nombre','error'); return; }
-  if(!phone){ document.getElementById('bk_phone').focus(); toast(isEN?'Enter your phone':'Ingresa tu teléfono','error'); return; }
+  if(!name){ toast(isEN?'Enter your name':'Ingresa tu nombre','error'); return; }
+  if(!phone){ toast(isEN?'Enter your phone':'Ingresa tu teléfono','error'); return; }
 
   try{
     if(window.db){
@@ -1686,7 +1688,7 @@ async function submitBookingRight(mode){
   }catch(e){ console.log('Appt save error:',e); }
 
   if(mode==='wa'){
-    const wa=(botData?.whatsapp||'').replace(/\D/g,'');
+    const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
     let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
     if(email) msg+=`\n📧 ${email}`;
     if(service) msg+=`\n✂️ Servicio: *${service}*`;
