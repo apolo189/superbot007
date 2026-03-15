@@ -801,6 +801,9 @@ function buildAbout(d){
       <div class="about-stat-label">${s.label}</div>
     </div>`).join('');
 }
+
+// ══════ SERVICES ══════
+function buildServices(services){
   const grid = document.getElementById('servicesGrid');
   grid.innerHTML = '';
   if(!services.length){ grid.innerHTML='<p style="color:var(--muted);text-align:center;width:100%">No hay servicios configurados.</p>'; return; }
