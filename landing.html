@@ -10,7 +10,7 @@
 /* ═══════ CSS VARIABLES (overridden by bot data) ═══════ */
 :root {
   --p: #f24207; --s: #FF6584; --a: #43E97B;
-  --dark: #000000; --card: #080808; --border: rgba(242,66,7,0.35);
+  --dark: #000000; --card: #000000; --border: rgba(242,66,7,0.4);
   --text: #FFFFFF; --muted: #9999BB;
   --grad: linear-gradient(135deg, var(--p), var(--s));
 }
@@ -110,7 +110,7 @@ section { position: relative; z-index: 1; }
   transform-style: preserve-3d; cursor: pointer;
 }
 .service-card:hover { transform: translateY(-8px) rotateX(3deg); border-color: var(--p); box-shadow: 0 20px 50px rgba(242,66,7,0.15); }
-.svc-img { width: 100%; height: 180px; object-fit: cover; background: linear-gradient(135deg, rgba(242,66,7,0.12), rgba(255,101,132,0.15)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.svc-img { width: 100%; height: 180px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
 .svc-img img { width: 100%; height: 100%; object-fit: cover; }
 .svc-body { padding: 1.4rem; }
 .svc-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
@@ -124,7 +124,7 @@ section { position: relative; z-index: 1; }
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
 .prod-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s; }
 .prod-card:hover { transform: translateY(-6px); box-shadow: 0 18px 45px rgba(255,101,132,0.15); border-color: var(--s); }
-.prod-img { width: 100%; height: 200px; object-fit: cover; background: linear-gradient(135deg, rgba(255,101,132,0.1), rgba(242,66,7,0.10)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.prod-img { width: 100%; height: 200px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
 .prod-img img { width: 100%; height: 100%; object-fit: cover; }
 .prod-body { padding: 1.2rem; }
 .prod-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
@@ -251,7 +251,7 @@ section { position: relative; z-index: 1; }
 @media(max-width:768px){ .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .about-img-wrap { position: relative; }
 .about-img { width: 100%; border-radius: 24px; object-fit: cover; aspect-ratio: 4/3; display: block; }
-.about-img-placeholder { width: 100%; aspect-ratio: 4/3; border-radius: 24px; background: linear-gradient(135deg,rgba(242,66,7,0.12),rgba(255,101,132,0.1)); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+.about-img-placeholder { width: 100%; aspect-ratio: 4/3; border-radius: 24px; background: #000000; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
 .about-img-placeholder span { font-size: 4rem; }
 .about-img-placeholder p { font-size: 0.85rem; color: var(--muted); }
 .about-badge { position: absolute; bottom: -16px; right: -16px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 0.8rem 1.2rem; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
@@ -676,7 +676,7 @@ function initPage(){
   document.documentElement.style.setProperty('--s',    s);
   document.documentElement.style.setProperty('--a',    a);
   document.documentElement.style.setProperty('--dark', bg);
-  document.documentElement.style.setProperty('--card', '#080808');
+  document.documentElement.style.setProperty('--card', '#000000');
   document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
   // Force body background directly (var() doesn't always rerender dynamically)
   document.body.style.background = bg;
