@@ -534,6 +534,9 @@ img.img-broken {
   <button class="chat-fab" id="chatFab" onclick="openChat()">🤖</button>
 </div>
 
+<!-- TOAST -->
+<div id="landingToast" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;transform:translateX(200%);transition:transform 0.4s ease;max-width:320px;pointer-events:none;"></div>
+
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1138,7 +1141,13 @@ async function submitLbk(mode){
   const name=lbk.name, phone=lbk.phone, email=lbk.email||'';
   const service=lbk.service||'', note=lbk.note||'';
   const date=lbk.date||'', time=lbk.time||'';
-  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); lbkStep1(); return; }
+  if(!name||!phone){
+    const t=document.getElementById('landingToast');
+    t.textContent='Por favor ingresa nombre y teléfono.';
+    t.style.cssText+='background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.4);color:#FF4757;transform:translateX(0)';
+    setTimeout(()=>{ t.style.transform='translateX(200%)'; },3000);
+    lbkStep1(); return;
+  }
   try{
     if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{
       botId, name, phone, email, service, date, time, note,

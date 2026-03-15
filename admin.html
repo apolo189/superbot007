@@ -494,11 +494,26 @@ let botsViewGrid = true; // true=grid, false=table
 let pendingDeleteId = null;
 
 // ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function waitFor(fn, timeout=5000){
+  return new Promise((res,rej)=>{
+    if(fn()){ res(); return; }
+    const start = Date.now();
+    const t = setInterval(()=>{
+      if(fn()){ clearInterval(t); res(); }
+      else if(Date.now()-start>timeout){ clearInterval(t); rej(new Error('Firebase timeout')); }
+    },100);
+  });
+}
+
+// ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
 async function initAdmin(){
   showOverlay('Cargando datos...');
   try{
+    await waitFor(()=>window.db);
     await Promise.all([ loadBots(), loadAppointments(), loadMessages() ]);
     updateKPIs();
     renderBots();

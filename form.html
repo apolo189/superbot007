@@ -803,6 +803,7 @@ function addProduct(){
     <div class="img-url-input"><input type="url" id="pi${n}" placeholder="O URL de imagen..."><button class="btn-sm" onclick="loadUrl('pi${n}','pip${n}')">Cargar</button></div>
   </div>`;
   document.getElementById('productsList').appendChild(d);
+  if(prodN>=8) document.getElementById('addProdBtn').style.display='none';
 }
 // ───────── TESTIMONIALS ─────────
 function addTestimonial(){
@@ -818,11 +819,12 @@ function addTestimonial(){
   document.getElementById('testimonialsList').appendChild(d);
 }
 // ───────── FAQS ─────────
+// NOTE: container id is 'faqitem'+n to avoid collision with input id 'fq'+n
 function addFaq(){
   if(faqN>=10){toast('Máximo 10 FAQs','info');return;}
   faqN++;const n=faqN;
-  const d=document.createElement('div'); d.className='list-item'; d.id='fq'+n;
-  d.innerHTML=`<div class="item-header"><div class="item-num">❓</div><div class="item-title">FAQ ${n}</div><button class="btn-remove" onclick="remItem('fq${n}','fq')"><i class="fas fa-times"></i></button></div>
+  const d=document.createElement('div'); d.className='list-item'; d.id='faqitem'+n;
+  d.innerHTML=`<div class="item-header"><div class="item-num">❓</div><div class="item-title">FAQ ${n}</div><button class="btn-remove" onclick="remItem('faqitem${n}','fq')"><i class="fas fa-times"></i></button></div>
   <div class="form-group"><label>Pregunta</label><input type="text" id="fq${n}" placeholder="¿Cuáles son sus horarios?"></div>
   <div class="form-group"><label>Respuesta</label><textarea id="fa${n}" placeholder="Estamos abiertos..." rows="2"></textarea></div>`;
   document.getElementById('faqsList').appendChild(d);
@@ -833,6 +835,7 @@ function remItem(id,type){
   if(type==='svc'){svcN=document.querySelectorAll('#servicesList .list-item').length;document.getElementById('addSvcBtn').style.display='';}
   if(type==='prod') prodN=document.querySelectorAll('#productsList .list-item').length;
   if(type==='tst') testN=document.querySelectorAll('#testimonialsList .list-item').length;
+  if(type==='prod'){ prodN=document.querySelectorAll('#productsList .list-item').length; if(prodN<8) document.getElementById('addProdBtn').style.display=''; }
   if(type==='fq') faqN=document.querySelectorAll('#faqsList .list-item').length;
 }
 
@@ -879,7 +882,7 @@ function fillField(field,text){
     const json=JSON.parse(text.replace(/```json|```/g,'').trim());
     if(field==='services'){document.getElementById('servicesList').innerHTML='';svcN=0;json.slice(0,4).forEach(s=>{addService();document.getElementById('sn'+svcN).value=s.name||'';document.getElementById('sp'+svcN).value=s.price||'';document.getElementById('sd'+svcN).value=s.desc||'';});toast('Servicios generados ✨','success');}
     if(field==='testimonials'){document.getElementById('testimonialsList').innerHTML='';testN=0;json.forEach(t=>{addTestimonial();document.getElementById('tn'+testN).value=t.name||'';document.getElementById('ts'+testN).value=t.stars||5;document.getElementById('tt'+testN).value=t.text||'';});toast('Testimonios generados ✨','success');}
-    if(field==='faqs'){document.getElementById('faqsList').innerHTML='';faqN=0;json.forEach(f=>{addFaq();document.getElementById('fq'+faqN).value=f.q||'';document.getElementById('fa'+faqN).value=f.a||'';});toast('FAQs generadas ✨','success');}
+    if(field==='faqs'){document.getElementById('faqsList').innerHTML='';faqN=0;json.forEach(f=>{addFaq();const qi=document.getElementById('fq'+faqN);const ai=document.getElementById('fa'+faqN);if(qi)qi.value=f.q||'';if(ai)ai.value=f.a||'';});toast('FAQs generadas ✨','success');}
   }catch(e){toast('Error al procesar respuesta IA','error');}
 }
 
@@ -896,7 +899,7 @@ function collect(){
   const testimonials=[];
   for(let i=1;i<=testN;i++){if(!document.getElementById('tst'+i)) continue;testimonials.push({name:g('tn'+i),stars:parseInt(g('ts'+i))||5,text:g('tt'+i)});}
   const faqs=[];
-  for(let i=1;i<=faqN;i++){if(!document.getElementById('fq'+i)) continue;faqs.push({q:g('fq'+i),a:g('fa'+i)});}
+  for(let i=1;i<=faqN;i++){if(!document.getElementById('faqitem'+i)&&!document.getElementById('fq'+i)) continue;faqs.push({q:g('fq'+i),a:g('fa'+i)});}
   return {
     businessName:g('businessName'),businessType:g('businessType'),businessCity:g('businessCity'),
     description:g('description'),heroTitle:g('heroTitle'),heroSubtitle:g('heroSubtitle'),
