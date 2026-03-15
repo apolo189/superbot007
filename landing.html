@@ -1250,6 +1250,25 @@ async function submitLbk(mode){
       businessName:botData?.businessName||'', createdAt:Date.now(), status:'pending', source:'landing-form'
     });
   }catch(e){}
+  // 🔔 Notificación WhatsApp al dueño del negocio
+  try{
+    const ownerPhone = '19143644377';
+    const bizName = botData?.businessName || 'Tu Negocio';
+    let notifMsg = `🔔 *NUEVA CITA — ${bizName}*\n\n`;
+    notifMsg += `👤 *Cliente:* ${name}\n`;
+    notifMsg += `📞 *Teléfono:* ${phone}\n`;
+    if(email) notifMsg += `📧 *Email:* ${email}\n`;
+    if(service) notifMsg += `✂️ *Servicio:* ${service}\n`;
+    if(date){const[yr,mo,dy]=date.split('-'); notifMsg += `📅 *Fecha:* ${dy}/${mo}/${yr}\n`;}
+    if(time) notifMsg += `🕐 *Hora:* ${time}\n`;
+    if(note) notifMsg += `📝 *Nota:* ${note}\n`;
+    notifMsg += `\n_Super Bot 007 — Notificación automática_`;
+    await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/notify', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ to: ownerPhone, message: notifMsg, botId })
+    });
+  }catch(e){ console.log('Notif WA:', e.message); }
   if(mode==='wa'){
     const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
     let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
