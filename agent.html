@@ -797,6 +797,8 @@ window.fbDoc = doc;
 window.fbGetDoc = getDoc;
 window.fbAddDoc = addDoc;
 window.fbCollection = collection;
+window._fbReadyAgent = true;
+document.dispatchEvent(new CustomEvent('fbReadyAgent'));
 console.log("✅ Firebase agent ready");
 </script>
 
@@ -836,16 +838,35 @@ const botId = new URLSearchParams(location.search).get('id');
   })();
 })();
 
-// ══════ INIT ══════
-window.addEventListener('DOMContentLoaded', ()=>{
+// ══════ INIT — event-driven, single call ══════
+function _startAgent(){
   if(!botId){
     document.getElementById('initBanner').innerHTML='';
     addBotMsg('❌ No se especificó Bot ID. Usa <strong>?id=TU_BOT_ID</strong> en la URL.');
     return;
   }
   document.getElementById('landingBtn').href = `landing.html?id=${botId}`;
+  // Digital Card button
+  const cardBtnL = document.getElementById('cardBtnLeft');
+  if(cardBtnL){
+    const cardBase = location.origin + location.pathname.replace('agent.html','');
+    cardBtnL.href = `${cardBase}card.html?id=${botId}`;
+    cardBtnL.style.display = 'flex';
+  }
   loadBot();
-});
+}
+let _agentStarted = false;
+function _tryStart(){
+  if(_agentStarted) return;
+  _agentStarted = true;
+  _startAgent();
+}
+if(window._fbReadyAgent){
+  _tryStart();
+} else {
+  document.addEventListener('fbReadyAgent', _tryStart, {once:true});
+  setTimeout(()=>{ if(!_agentStarted) _tryStart(); }, 500);
+}
 
 // ══════ PARSE BOT (normaliza datos viejos y nuevos) ══════
 function parseBot(raw){
@@ -954,14 +975,6 @@ function initChat(){
     const waL = document.getElementById('waBtnLeft');
     waL.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola! Me gustaría más información.')}`;
     waL.style.display='flex';
-  }
-
-  // Digital Card button in left panel
-  const cardBtnL = document.getElementById('cardBtnLeft');
-  if(cardBtnL){
-    const cardBase = location.origin + location.pathname.replace('agent.html','');
-    cardBtnL.href = `${cardBase}card.html?id=${botId}`;
-    cardBtnL.style.display = 'flex';
   }
 
   // Right panel booking form
@@ -2072,7 +2085,7 @@ function getTime(){ return new Date().toLocaleTimeString('es',{hour:'2-digit',mi
 function scrollToBottom(){ const m=document.getElementById('messages'); m.scrollTop=m.scrollHeight; }
 function handleKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
 function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
-function waitFor(fn,timeout=4000){
+function waitFor(fn,timeout=15000){
   return new Promise((res,rej)=>{
     if(fn()){res();return;}
     const start=Date.now();
