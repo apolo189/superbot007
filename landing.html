@@ -667,10 +667,19 @@ function showNoBot(){
 function initPage(){
   const d = botData;
   // CSS Variables
-  if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
-  if(d.secondaryColor) document.documentElement.style.setProperty('--s', d.secondaryColor);
-  if(d.accentColor)    document.documentElement.style.setProperty('--a', d.accentColor);
-  if(d.bgColor)        document.documentElement.style.setProperty('--dark', d.bgColor);
+  const bg = d.bgColor || '#000000';
+  const p  = d.primaryColor   || '#6C63FF';
+  const s  = d.secondaryColor || '#FF6584';
+  const a  = d.accentColor    || '#43E97B';
+  // Apply CSS variables
+  document.documentElement.style.setProperty('--p',    p);
+  document.documentElement.style.setProperty('--s',    s);
+  document.documentElement.style.setProperty('--a',    a);
+  document.documentElement.style.setProperty('--dark', bg);
+  document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
+  // Force body background directly (var() doesn't always rerender dynamically)
+  document.body.style.background = bg;
+  document.documentElement.style.background = bg;
 
   // Meta
   document.getElementById('pageTitle').textContent = (d.businessName||'') + ' – Super Bot 007';
@@ -1328,7 +1337,11 @@ window.addEventListener('message', (e)=>{
     if(c.primaryColor)   document.documentElement.style.setProperty('--p', c.primaryColor);
     if(c.secondaryColor) document.documentElement.style.setProperty('--s', c.secondaryColor);
     if(c.accentColor)    document.documentElement.style.setProperty('--a', c.accentColor);
-    if(c.bgColor)        document.documentElement.style.setProperty('--dark', c.bgColor);
+    if(c.bgColor){
+      document.documentElement.style.setProperty('--dark', c.bgColor);
+      document.body.style.background = c.bgColor;
+      document.documentElement.style.background = c.bgColor;
+    }
   }
   if(e.data.type === 'UPDATE_FIELD'){
     const {field, value} = e.data;
