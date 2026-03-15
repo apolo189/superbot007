@@ -465,7 +465,13 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     <!-- PRIMARY SHARE -->
     <div class="share-row">
       <button id="copyAgentBtn" class="share-btn copy" onclick="copyAgentLink()"><i class="fas fa-copy"></i> Copiar enlace del chatbot</button>
-      <a id="waShareBtn" href="#" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i> Compartir por WhatsApp</a>
+      <a id="waShareBtn" href="#" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i> Compartir Chatbot por WA</a>
+    </div>
+    <!-- OWNER NOTIFICATION -->
+    <div style="margin-top:0.6rem;">
+      <a id="waOwnerBtn" href="#" target="_blank" class="share-btn" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;width:100%;background:linear-gradient(135deg,rgba(255,200,0,0.15),rgba(255,140,0,0.1));border:1px solid rgba(255,200,0,0.5);color:#FFD700;padding:0.7rem 1rem;border-radius:10px;font-weight:700;font-size:0.85rem;text-decoration:none;transition:all 0.2s;">
+        <i class="fas fa-id-card"></i> Enviarme TODOS mis links por WhatsApp
+      </a>
     </div>
 
     <!-- BOT ID -->
@@ -1035,8 +1041,39 @@ async function activateBot(){
 
     // ── Share buttons ──
     const businessName = rawData.businessName || 'mi negocio';
+    // Button 1: share chatbot link (public)
     const waText = encodeURIComponent(`¡Hola! Te comparto el chatbot de ${businessName} creado con Super Bot 007. Puedes hacer preguntas, agendar citas y más: ${agentUrl}`);
     document.getElementById('waShareBtn').href = `https://wa.me/?text=${waText}`;
+    // Button 2: send ALL links to myself (owner)
+    const ownerMsg = encodeURIComponent(
+`🤖 *Super Bot 007 — ${businessName}*
+
+Aquí están todos tus links:
+
+💬 *Chatbot:*
+${agentUrl}
+
+🌐 *Landing Page:*
+${landingUrl}
+
+🪭 *Tarjeta Digital:*
+${cardUrl}
+
+✏️ *Editor:*
+${editorUrl}
+
+📊 *Dashboard:*
+${dashUrl}
+
+🛠️ *Bot ID:* ${botId}
+
+_Powered by Super Bot 007 ⚡_`);
+    // Pre-fill owner's own number if they set it
+    const ownerWA = (rawData.whatsapp||rawData.phone||'').replace(/\D/g,'');
+    const ownerHref = ownerWA
+      ? `https://wa.me/${ownerWA}?text=${ownerMsg}`
+      : `https://wa.me/?text=${ownerMsg}`;
+    document.getElementById('waOwnerBtn').href = ownerHref;
 
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
     toast('🎉 ¡Bot activado! Copia el enlace y compártelo.','success');

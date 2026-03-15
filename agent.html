@@ -610,6 +610,9 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <a class="panel-action-btn landing" id="landingBtn" href="#" target="_blank">
         <i class="fas fa-globe"></i> Ver Landing Page
       </a>
+      <a class="panel-action-btn" id="cardBtnLeft" href="#" target="_blank" style="display:none;background:linear-gradient(135deg,rgba(255,200,0,0.15),rgba(255,140,0,0.1));border:1px solid rgba(255,200,0,0.4);color:#FFD700;">
+        <i class="fas fa-id-card"></i> Tarjeta Digital
+      </a>
       <a class="panel-action-btn wa" id="waBtnLeft" href="#" target="_blank" style="display:none">
         <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
@@ -951,6 +954,14 @@ function initChat(){
     const waL = document.getElementById('waBtnLeft');
     waL.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola! Me gustaría más información.')}`;
     waL.style.display='flex';
+  }
+
+  // Digital Card button in left panel
+  const cardBtnL = document.getElementById('cardBtnLeft');
+  if(cardBtnL){
+    const cardBase = location.origin + location.pathname.replace('agent.html','');
+    cardBtnL.href = `${cardBase}card.html?id=${botId}`;
+    cardBtnL.style.display = 'flex';
   }
 
   // Right panel booking form
@@ -1799,7 +1810,17 @@ function fallbackResponse(userMsg){
     }
     return `Por ahora no tenemos tienda online, pero escríbenos y con gusto te ayudamos con lo que necesites 🙌`;
   }
-  if(lower.includes('pago') || lower.includes('paypal') || lower.includes('tarjeta') || lower.includes('transferencia') || lower.includes('cómo pago') || lower.includes('como pago') || lower.includes('efectivo') || lower.includes('métodos') || lower.includes('metodos')){
+  if(lower.includes('tarjeta digital') || lower.includes('digital card') || lower.includes('mi tarjeta') || lower.includes('tarjeta de presentacion') || lower.includes('tarjeta de presentación') || lower.includes('qr') || lower.includes('card')){
+    const cardBase = location.origin + location.pathname.replace('agent.html','');
+    const cardLink = `${cardBase}card.html?id=${botId}`;
+    const opts_card=[
+      `🪪 ¡Aquí está tu **Tarjeta Digital**! Puedes compartirla, guardar el contacto o escanear el QR:\n\n👉 ${cardLink}\n\n¿Necesitas algo más? 😊`,
+      `✨ Tu **Tarjeta Digital** está lista para compartir:\n\n🔗 ${cardLink}\n\n¡Compártela por WhatsApp o redes sociales con un toque! 🚀`,
+      `🪪 ¡Claro! Aquí la **Tarjeta Digital** del negocio con todos los datos, servicios y QR:\n\n${cardLink}\n\n¿Te ayudo con algo más? 😊`
+    ];
+    return opts_card[Math.floor(Math.random()*opts_card.length)];
+  }
+  if(lower.includes('pago') || lower.includes('paypal') || lower.includes('transferencia') || lower.includes('cómo pago') || lower.includes('como pago') || lower.includes('efectivo') || lower.includes('métodos') || lower.includes('metodos')){
     const pay = d.paypalLink||d.paypalEmail;
     const opts_pay=[
       pay?`¡Super! 💳 Aceptamos:\n\n✅ **PayPal** — rápido y seguro\n✅ **WhatsApp** — coordinamos el pago contigo\n\n¿Con cuál prefieres? 😊`:`Manejamos varios métodos de pago. ¡Escríbenos y lo coordinamos sin problema! 💰`,
