@@ -1339,16 +1339,11 @@ function buildTimeHTML(d, labels){
       ${timeSlots.map(t=>`<div class="bk-time-slot${bkState.time===t?' selected':''}" onclick="bkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
     <div id="bkConfirmBtns" style="${bkState.time?'':'display:none'}">
-      ${hasContact?`
-      <button class="bk-btn wa" style="margin-top:0.8rem" onclick="submitBookingRight('wa')">
+      <button class="bk-btn wa" style="margin-top:0.8rem;width:100%" onclick="submitBookingRight('wa')">
         <i class="fab fa-whatsapp"></i> ${labels.waBtn}
       </button>
-      <div style="display:flex;align-items:center;gap:0.6rem;margin:0.5rem 0 0.4rem;color:var(--muted);font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;"><div style="flex:1;height:1px;background:var(--border)"></div>o guarda en el sistema<div style="flex:1;height:1px;background:var(--border)"></div></div>`:''}
-      <div class="bk-nav-btns">
+      <div class="bk-nav-btns" style="margin-top:0.5rem">
         <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
-        <button class="bk-next-btn" onclick="submitBookingRight('confirm')">
-          <i class="fas fa-check-circle"></i> ${labels.confirm}
-        </button>
       </div>
     </div>
     <div id="bkBackOnly" style="${bkState.time?'display:none':''}">
@@ -1473,16 +1468,16 @@ async function submitBookingRight(mode){
   const sDiv=document.getElementById('bkSuccess');
   if(sDiv){
     sDiv.style.display='block';
-    const [yr,mo,dy] = date.split('-');
+    const [yr,mo,dy] = (date||'--').split('-');
     sDiv.innerHTML=`<div class="bk-success">
-      <div class="check-icon">${mode==='wa'?'📲':'✅'}</div>
-      <h3>${mode==='wa'?(isEN?'Redirecting to WhatsApp!':'¡Redirigiendo a WhatsApp!'):(isEN?'Appointment booked!':'¡Cita registrada!')}</h3>
-      <p>${isEN?'Hello':'Hola'} <strong>${name}</strong>${service?', '+service:''}${date?` — ${dy}/${mo}/${yr}`:''}${time?' '+time:''}.</p>
-      ${mode!=='wa'?`<p>${isEN?'We will contact you at':'Te contactaremos al'} <strong>${phone}</strong> 😊</p>`:''}
+      <div class="check-icon">📲</div>
+      <h3>${isEN?'Opening WhatsApp...':'¡Abriendo WhatsApp!'}</h3>
+      <p>${isEN?'Hello':'Hola'} <strong>${name}</strong>${service?` — ${service}`:''}${date?` 📅 ${dy}/${mo}/${yr}`:''}${time?` 🕐 ${time}`:''}.</p>
+      <p style="font-size:0.8rem;color:var(--muted)">${isEN?'Press Send in WhatsApp to confirm.':'Presiona Enviar en WhatsApp para confirmar.'}</p>
       <button class="reset-btn" onclick="resetBookingRight()">📅 ${isEN?'New Appointment':'Nueva Cita'}</button>
     </div>`;
   }
-  addBotMsgTypewriter(`${isEN?'Perfect':'¡Perfecto'}, ${name}! 🎉 ${mode==='wa'?(isEN?'Your message is ready for WhatsApp.':'Tu mensaje fue preparado para WhatsApp.'):(isEN?'Your appointment is booked!':'¡Tu cita quedó registrada!')} ${isEN?'Anything else I can help with?':'¿Algo más en lo que pueda ayudarte?'} 😊`);
+  addBotMsgTypewriter(`${isEN?'Perfect':'¡Perfecto'}, ${name}! 🎉 ${isEN?'Your appointment is ready — just press Send in WhatsApp to confirm!':'Tu cita está lista — solo presiona Enviar en WhatsApp para confirmar!'} 😊`);
 }
 
 function resetBookingRight(){ if(botData) buildRightBookingForm(botData); }

@@ -1119,12 +1119,9 @@ function lbkTimeHTML(d){
       ${slots.map(t=>`<div class="lbk-time-slot${lbk.time===t?' selected':''}" onclick="lbkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
     <div id="lbkConfirmBtns" style="${lbk.time?'':'display:none'}">
-      ${hasContact?`
       <button class="lbk-wa-btn" style="margin-top:0.8rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp ✓</button>
-      <div class="lbk-or">o guarda en el sistema</div>`:''}
-      <div class="lbk-nav-row">
+      <div class="lbk-nav-row" style="margin-top:0.5rem">
         <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
-        <button class="lbk-next" onclick="submitLbk('confirm')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
       </div>
     </div>
     <div id="lbkBackOnly" style="${lbk.time?'display:none':''}">
@@ -1194,10 +1191,10 @@ async function submitLbk(mode){
   if(panel){
     const[yr,mo,dy]=(date||'--').split('-');
     panel.innerHTML=`<div class="lbk-success">
-      <div class="lbk-check">${mode==='wa'?'📲':'✅'}</div>
-      <h3>${mode==='wa'?'¡Redirigiendo a WhatsApp!':'¡Cita registrada!'}</h3>
-      <p>¡Hola <strong>${name}</strong>!${service?' Tu cita de <strong>'+service+'</strong>':' Tu cita'}${date?' para el <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' a las <strong>'+time+'</strong>':''} ${mode==='wa'?'fue preparada para WhatsApp.':'quedó registrada.'}</p>
-      ${mode!=='wa'?`<p>Te contactaremos al <strong>${phone}</strong> para confirmar 😊</p>`:''}
+      <div class="lbk-check">📲</div>
+      <h3>¡Abriendo WhatsApp!</h3>
+      <p>¡Hola <strong>${name}</strong>!${service?' — <strong>'+service+'</strong>':''}${date?' 📅 <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' 🕐 <strong>'+time+'</strong>':''}.</p>
+      <p style="font-size:0.85rem;opacity:0.7">Presiona <strong>Enviar</strong> en WhatsApp para confirmar tu cita.</p>
       <button class="lbk-reset" onclick="initLandingBooking(botData)">📅 Nueva Cita</button>
     </div>`;
   }
