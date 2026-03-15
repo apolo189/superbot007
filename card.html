@@ -7,123 +7,211 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --p:#6C63FF;--s:#FF6584;--a:#43E97B;--dark:#0A0A0F;
-  --card:rgba(255,255,255,0.06);--border:rgba(255,255,255,0.12);
-  --text:#F0F0FF;--muted:#8888AA;
-  --glow:rgba(108,99,255,0.45);
+  --p:#6C63FF;--s:#FF6584;--a:#43E97B;
+  --dark:#000000;
+  --card:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.10);
+  --text:#F0F0FF;--muted:#7777AA;
+  --glow:rgba(108,99,255,0.5);
   --grad:linear-gradient(135deg,var(--p),var(--s));
 }
-html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+html,body{
+  min-height:100vh;
+  background:#000000 !important;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
 
-/* ── CANVAS PARTICLES ── */
-#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+/* ── CANVAS ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;background:#000000}
 
 /* ── LOADING ── */
-#loadingScreen{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s}
+#loadingScreen{
+  position:fixed;inset:0;background:#000000;
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity 0.7s ease;
+}
 #loadingScreen.hide{opacity:0;pointer-events:none}
-.loader-ring{width:52px;height:52px;border:3px solid rgba(255,255,255,0.08);border-top-color:var(--p);border-radius:50%;animation:spin 0.9s linear infinite}
+.loader-ring{
+  width:52px;height:52px;
+  border:3px solid rgba(255,255,255,0.06);
+  border-top-color:var(--p);
+  border-radius:50%;animation:spin 0.9s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── WRAPPER ── */
-.card-wrapper{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem 1rem 3rem}
+.card-wrapper{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem 1rem 3rem;
+}
 
 /* ── MAIN CARD ── */
 .card{
-  width:100%;max-width:420px;
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  width:100%;max-width:430px;
+  background:rgba(8,8,8,0.88);
+  backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
   border:1px solid var(--border);
   border-radius:32px;
   overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.05),inset 0 1px 0 rgba(255,255,255,0.1);
-  animation:cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 40px 100px rgba(0,0,0,0.95),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  animation:cardIn 0.9s cubic-bezier(0.16,1,0.3,1) both;
 }
-@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(50px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 
-/* ── HERO HEADER ── */
+/* ── HERO ── */
 .card-hero{
-  position:relative;height:180px;overflow:hidden;
+  position:relative;height:190px;overflow:hidden;
   background:linear-gradient(135deg,var(--p),var(--s));
 }
-.card-hero-bg{position:absolute;inset:0;background:var(--grad);opacity:0.9}
-.card-hero-blur{
+.hero-pattern{
+  position:absolute;inset:0;opacity:0.07;
+  background-image:radial-gradient(circle,#fff 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.hero-glow{
   position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,0.18),transparent);
+  background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(255,255,255,0.22),transparent);
 }
-.card-hero-pattern{
-  position:absolute;inset:0;opacity:0.08;
-  background-image:radial-gradient(circle,white 1px,transparent 1px);
-  background-size:24px 24px;
-}
-.card-hero-shine{
+.hero-shine{
   position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,0.06) 60deg,transparent 120deg);
-  animation:rotateShin 8s linear infinite;
+  background:conic-gradient(from 0deg,transparent,rgba(255,255,255,0.07) 60deg,transparent 120deg);
+  animation:shine 10s linear infinite;
 }
-@keyframes rotateShin{to{transform:rotate(360deg)}}
+@keyframes shine{to{transform:rotate(360deg)}}
+.hero-scanline{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);
+  pointer-events:none;
+}
+/* Corner neon accents */
+.hero-corner-tl,.hero-corner-br{
+  position:absolute;width:60px;height:60px;
+  border:2px solid rgba(255,255,255,0.25);
+  pointer-events:none;
+}
+.hero-corner-tl{top:14px;left:14px;border-right:none;border-bottom:none;border-radius:8px 0 0 0}
+.hero-corner-br{bottom:14px;right:14px;border-left:none;border-top:none;border-radius:0 0 8px 0}
 
 /* ── LOGO ── */
 .logo-wrap{
-  position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);
-  width:80px;height:80px;
-  border-radius:22px;
-  background:var(--dark);
-  border:3px solid var(--border);
-  box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.08);
+  position:absolute;bottom:-44px;left:50%;transform:translateX(-50%);
+  width:88px;height:88px;border-radius:26px;
+  background:#000;
+  border:3px solid rgba(255,255,255,0.14);
+  box-shadow:0 8px 40px rgba(0,0,0,0.8),0 0 24px var(--glow);
   display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-  transition:transform 0.3s;
+  overflow:hidden;cursor:pointer;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.35s;
 }
-.logo-wrap:hover{transform:translateX(-50%) scale(1.06)}
+.logo-wrap:hover{
+  transform:translateX(-50%) scale(1.12) rotate(-4deg);
+  box-shadow:0 18px 55px rgba(0,0,0,0.9),0 0 36px var(--glow);
+}
 .logo-wrap img{width:100%;height:100%;object-fit:cover}
-.logo-wrap .logo-fallback{font-size:2rem}
+.logo-fallback{font-size:2.4rem}
 
 /* ── BODY ── */
-.card-body{padding:3rem 1.6rem 1.8rem;text-align:center}
+.card-body{padding:3.4rem 1.6rem 2rem;text-align:center}
 
+/* ── ONLINE BADGE ── */
+.online-badge{
+  display:inline-flex;align-items:center;gap:0.45rem;
+  font-size:0.68rem;font-weight:700;color:#43E97B;
+  letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.online-dot{
+  width:7px;height:7px;border-radius:50%;background:#43E97B;
+  animation:dotPulse 2s ease infinite;
+}
+@keyframes dotPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(67,233,123,0.7)}
+  50%{box-shadow:0 0 0 7px rgba(67,233,123,0)}
+}
+
+/* ── TYPEWRITER ── */
+.tw-cursor{
+  display:inline-block;
+  width:2px;height:1em;
+  background:var(--p);
+  vertical-align:text-bottom;
+  margin-left:2px;
+  animation:twBlink 0.75s step-end infinite;
+}
+@keyframes twBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── BIZ NAME ── */
 .biz-name{
-  font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:0.3rem;line-height:1.2;
+  font-size:1.7rem;font-weight:900;letter-spacing:-0.02em;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:0.5rem;line-height:1.2;min-height:2.2rem;
+  word-break:break-word;
 }
-.biz-type{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  font-size:0.8rem;font-weight:600;color:var(--muted);
-  background:rgba(255,255,255,0.05);border:1px solid var(--border);
-  padding:0.3rem 0.9rem;border-radius:20px;margin-bottom:0.7rem;
-  text-transform:uppercase;letter-spacing:0.06em;
-}
-.biz-city{font-size:0.85rem;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;justify-content:center;gap:0.3rem}
 
-/* ── ACTION BUTTONS ROW ── */
-.action-row{display:flex;gap:0.7rem;justify-content:center;margin-bottom:1.6rem;flex-wrap:wrap}
+/* ── TYPE BADGE ── */
+.biz-type{
+  display:inline-block;
+  font-size:0.76rem;font-weight:700;color:var(--muted);
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  padding:0.3rem 0.9rem;border-radius:20px;margin-bottom:0.7rem;
+  text-transform:uppercase;letter-spacing:0.08em;min-height:1.8rem;
+}
+
+/* ── CITY ── */
+.biz-city{
+  font-size:0.83rem;color:var(--muted);
+  margin-bottom:0.8rem;
+  display:flex;align-items:center;justify-content:center;gap:0.35rem;
+}
+
+/* ── DESC ── */
+.biz-desc{
+  font-size:0.8rem;color:var(--muted);line-height:1.7;
+  margin-bottom:1.4rem;padding:0 0.3rem;
+  max-height:5rem;overflow:hidden;
+  mask-image:linear-gradient(to bottom,black 60%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,black 60%,transparent 100%);
+}
+
+/* ── ACTION BTNS ── */
+.action-row{display:flex;gap:0.6rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
 .action-btn{
   display:flex;flex-direction:column;align-items:center;gap:0.3rem;
-  width:70px;padding:0.85rem 0.5rem;
-  background:rgba(255,255,255,0.05);
-  border:1px solid var(--border);
-  border-radius:18px;cursor:pointer;
-  text-decoration:none;color:var(--text);
-  font-size:0.65rem;font-weight:600;
-  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  transform-style:preserve-3d;
+  width:72px;padding:0.9rem 0.4rem;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);border-radius:18px;
+  cursor:pointer;text-decoration:none;color:var(--text);
+  font-size:0.62rem;font-weight:700;letter-spacing:0.03em;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
   position:relative;overflow:hidden;
 }
 .action-btn::before{
-  content:'';position:absolute;inset:0;
-  background:var(--grad);opacity:0;transition:opacity 0.25s;
-  border-radius:inherit;
+  content:'';position:absolute;inset:0;background:var(--grad);
+  opacity:0;transition:opacity 0.25s;border-radius:inherit;
 }
-.action-btn:hover{transform:translateY(-4px) scale(1.06);border-color:var(--p);box-shadow:0 12px 30px var(--glow)}
-.action-btn:hover::before{opacity:0.12}
-.action-btn:active{transform:translateY(-1px) scale(1.02)}
-.action-btn i{font-size:1.3rem;transition:transform 0.25s}
-.action-btn:hover i{transform:scale(1.15)}
+.action-btn:hover{transform:translateY(-6px) scale(1.1);box-shadow:0 16px 36px var(--glow)}
+.action-btn:hover::before{opacity:0.14}
+.action-btn:active{transform:scale(0.96)}
+.action-btn i{font-size:1.4rem;transition:transform 0.28s;z-index:1;position:relative}
+.action-btn span{z-index:1;position:relative}
+.action-btn:hover i{transform:scale(1.2)}
 .action-btn.wa i{color:#25D366}
-.action-btn.wa:hover{border-color:#25D366;box-shadow:0 12px 30px rgba(37,211,102,0.4)}
+.action-btn.wa:hover{border-color:#25D366;box-shadow:0 16px 36px rgba(37,211,102,0.45)}
 .action-btn.call i{color:var(--a)}
 .action-btn.mail i{color:var(--s)}
 .action-btn.web i{color:var(--p)}
@@ -132,114 +220,148 @@ html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:
 .action-btn.tk i{color:#69C9D0}
 .action-btn.yt i{color:#FF0000}
 
-/* ── DIVIDER ── */
+/* ── DIVIDER / SECTION TITLE ── */
 .section-divider{
-  display:flex;align-items:center;gap:0.8rem;
-  margin:1.2rem 0 0.9rem;color:var(--muted);
-  font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  display:flex;align-items:center;gap:0.75rem;
+  margin:1.4rem 0 0.9rem;
+  color:var(--p);font-size:0.7rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:0.14em;
+  min-height:1.2rem;
 }
-.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-divider::before,.section-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,transparent,var(--border),transparent);
+}
 
 /* ── SERVICES ── */
-.services-grid{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.4rem}
+.services-grid{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:0.3rem}
 .svc-item{
   display:flex;justify-content:space-between;align-items:center;
-  padding:0.65rem 1rem;
-  background:rgba(255,255,255,0.03);
-  border:1px solid var(--border);border-radius:12px;
-  font-size:0.85rem;
-  transition:all 0.2s;
+  padding:0.7rem 1rem;
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--border);border-radius:13px;
+  font-size:0.84rem;cursor:default;
+  transition:all 0.24s;
 }
-.svc-item:hover{background:rgba(255,255,255,0.06);border-color:var(--p);transform:translateX(3px)}
-.svc-name{font-weight:600;display:flex;align-items:center;gap:0.5rem}
+.svc-item:hover{
+  background:rgba(255,255,255,0.065);
+  border-color:var(--p);
+  transform:translateX(5px);
+  box-shadow:0 2px 14px var(--glow);
+}
+.svc-name{font-weight:600;display:flex;align-items:center;gap:0.45rem}
 .svc-price{
-  font-size:0.8rem;font-weight:700;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-size:0.8rem;font-weight:800;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
-/* ── SOCIAL ROW ── */
-.social-row{display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.4rem}
+/* ── SOCIAL ── */
+.social-row{display:flex;gap:0.55rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.3rem}
 
-/* ── CTA BUTTONS ── */
-.cta-section{margin-top:1.4rem;display:flex;flex-direction:column;gap:0.7rem}
+/* ── QR SECTION ── */
+.qr-section{margin-top:1.5rem}
+.qr-box{
+  display:flex;flex-direction:column;align-items:center;gap:0.85rem;
+  padding:1.4rem;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:20px;
+}
+.qr-box p{font-size:0.72rem;color:var(--muted);font-weight:600;letter-spacing:0.05em;text-align:center}
+#qrCanvas{
+  border-radius:14px;
+  padding:10px;background:#fff;
+  box-shadow:0 4px 24px rgba(0,0,0,0.6),0 0 16px var(--glow);
+}
+
+/* ── CTA ── */
+.cta-section{margin-top:1.4rem;display:flex;flex-direction:column;gap:0.65rem}
 .cta-btn{
   display:flex;align-items:center;justify-content:center;gap:0.6rem;
-  padding:0.95rem 1.2rem;border-radius:16px;
-  font-weight:700;font-size:0.9rem;cursor:pointer;
+  padding:1rem 1.2rem;border-radius:16px;
+  font-weight:800;font-size:0.88rem;cursor:pointer;
   text-decoration:none;border:none;
-  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
   position:relative;overflow:hidden;
+  letter-spacing:0.02em;
 }
 .cta-btn::after{
-  content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;
-  background:rgba(255,255,255,0.15);transform:skewX(-20deg);
-  transition:left 0.4s;
+  content:'';position:absolute;top:-50%;left:-70%;
+  width:45%;height:200%;
+  background:rgba(255,255,255,0.18);
+  transform:skewX(-20deg);
+  transition:left 0.45s;
 }
-.cta-btn:hover::after{left:120%}
-.cta-btn.primary{background:var(--grad);color:white;box-shadow:0 6px 24px var(--glow)}
-.cta-btn.primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 36px var(--glow)}
-.cta-btn.secondary{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text)}
-.cta-btn.secondary:hover{background:rgba(255,255,255,0.09);border-color:var(--p);transform:translateY(-2px)}
-.cta-btn.wa-cta{background:linear-gradient(135deg,#25D366,#128C7E);color:white;box-shadow:0 6px 24px rgba(37,211,102,0.35)}
-.cta-btn.wa-cta:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 36px rgba(37,211,102,0.5)}
+.cta-btn:hover::after{left:130%}
+.cta-btn.primary{background:var(--grad);color:#fff;box-shadow:0 6px 26px var(--glow)}
+.cta-btn.primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 44px var(--glow)}
+.cta-btn.secondary{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);color:var(--text);
+}
+.cta-btn.secondary:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:var(--p);transform:translateY(-2px);
+}
+.cta-btn.wa-cta{
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;box-shadow:0 6px 24px rgba(37,211,102,0.4);
+}
+.cta-btn.wa-cta:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 44px rgba(37,211,102,0.55)}
 
-/* ── SHARE + VCF ── */
-.share-row{display:flex;gap:0.6rem;margin-top:0.7rem}
+/* ── SHARE ROW ── */
+.share-row{display:flex;gap:0.5rem;margin-top:1rem}
 .share-btn-sm{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:0.4rem;
-  padding:0.7rem;border-radius:12px;font-size:0.78rem;font-weight:600;
+  flex:1;display:flex;align-items:center;justify-content:center;gap:0.38rem;
+  padding:0.65rem 0.3rem;border-radius:12px;
+  font-size:0.72rem;font-weight:700;
   cursor:pointer;border:1px solid var(--border);
-  background:rgba(255,255,255,0.04);color:var(--muted);
-  text-decoration:none;transition:all 0.2s;
+  background:rgba(255,255,255,0.03);color:var(--muted);
+  text-decoration:none;transition:all 0.22s;letter-spacing:0.03em;
 }
-.share-btn-sm:hover{border-color:var(--p);color:var(--text);background:rgba(108,99,255,0.08)}
+.share-btn-sm:hover{border-color:var(--p);color:var(--text);background:rgba(255,255,255,0.07);transform:translateY(-2px)}
 
-/* ── POWERED BY ── */
+/* ── POWERED ── */
 .powered{
-  text-align:center;margin-top:1.8rem;padding-top:1.2rem;
+  text-align:center;margin-top:1.6rem;padding-top:1.1rem;
   border-top:1px solid var(--border);
-  font-size:0.72rem;color:var(--muted);
+  font-size:0.7rem;color:var(--muted);
 }
 .powered a{
-  color:var(--p);text-decoration:none;font-weight:700;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;font-weight:800;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
 /* ── NO BOT ── */
-.no-bot{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1rem;text-align:center;padding:2rem}
-.no-bot h2{font-size:1.4rem;font-weight:700}
-.no-bot p{color:var(--muted);font-size:0.9rem}
+.no-bot{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:60vh;
+  gap:1rem;text-align:center;padding:2rem;
+}
+.no-bot h2{font-size:1.4rem;font-weight:800}
+.no-bot p{color:var(--muted);font-size:0.88rem}
 
 /* ── TOAST ── */
 #cardToast{
-  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);
-  background:rgba(67,233,123,0.15);border:1px solid rgba(67,233,123,0.4);color:#43E97B;
-  padding:0.8rem 1.4rem;border-radius:12px;font-size:0.85rem;font-weight:600;
-  z-index:9999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;
-  white-space:nowrap;
+  position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(120px);
+  padding:0.85rem 1.5rem;border-radius:14px;
+  font-size:0.84rem;font-weight:700;
+  z-index:9999;
+  transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;white-space:nowrap;
+  background:rgba(67,233,123,0.14);
+  border:1px solid rgba(67,233,123,0.4);
+  color:#43E97B;
 }
 #cardToast.show{transform:translateX(-50%) translateY(0)}
 
-/* ── DESCRIPTION ── */
-.biz-desc{
-  font-size:0.82rem;color:var(--muted);line-height:1.6;
-  margin-bottom:1.2rem;text-align:center;padding:0 0.4rem;
-}
-
-/* ── BADGE ── */
-.online-badge{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  font-size:0.7rem;font-weight:600;color:#43E97B;
-  margin-bottom:1rem;
-}
-.online-dot{width:7px;height:7px;border-radius:50%;background:#43E97B;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(67,233,123,0.5)}50%{box-shadow:0 0 0 5px rgba(67,233,123,0)}}
-
 /* ── RESPONSIVE ── */
 @media(max-width:400px){
-  .card-body{padding:3rem 1.2rem 1.5rem}
+  .card-body{padding:3rem 1.1rem 1.6rem}
   .biz-name{font-size:1.35rem}
-  .action-btn{width:62px;font-size:0.6rem}
+  .action-btn{width:62px}
 }
 </style>
 </head>
@@ -253,10 +375,12 @@ html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:
 
     <!-- HERO -->
     <div class="card-hero" id="cardHero">
-      <div class="card-hero-bg"></div>
-      <div class="card-hero-blur"></div>
-      <div class="card-hero-pattern"></div>
-      <div class="card-hero-shine"></div>
+      <div class="hero-pattern"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-shine"></div>
+      <div class="hero-scanline"></div>
+      <div class="hero-corner-tl"></div>
+      <div class="hero-corner-br"></div>
       <div class="logo-wrap" id="logoWrap">
         <span class="logo-fallback" id="logoFallback">🏢</span>
       </div>
@@ -265,33 +389,43 @@ html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:
     <!-- BODY -->
     <div class="card-body">
       <div class="online-badge"><span class="online-dot"></span> En línea</div>
-      <div class="biz-name" id="bizName">Cargando...</div>
-      <div class="biz-type" id="bizType">Negocio</div>
-      <div class="biz-city" id="bizCity"></div>
-      <p class="biz-desc" id="bizDesc"></p>
+
+      <div class="biz-name" id="bizName">&nbsp;</div>
+      <div class="biz-type" id="bizType">&nbsp;</div>
+      <div class="biz-city" id="bizCity" style="display:none"></div>
+      <p class="biz-desc" id="bizDesc" style="display:none"></p>
 
       <!-- ACTION BUTTONS -->
       <div class="action-row" id="actionRow"></div>
 
       <!-- SERVICES -->
       <div id="servicesSection" style="display:none">
-        <div class="section-divider">⚡ Servicios</div>
+        <div class="section-divider" id="svcDivider"></div>
         <div class="services-grid" id="servicesGrid"></div>
       </div>
 
       <!-- SOCIAL -->
       <div id="socialSection" style="display:none">
-        <div class="section-divider">🌐 Redes</div>
+        <div class="section-divider" id="socialDivider"></div>
         <div class="social-row" id="socialRow"></div>
+      </div>
+
+      <!-- QR CODE -->
+      <div class="qr-section" id="qrSection" style="display:none">
+        <div class="section-divider" id="qrDivider"></div>
+        <div class="qr-box">
+          <div id="qrCanvas"></div>
+          <p>Escanea para compartir esta tarjeta</p>
+        </div>
       </div>
 
       <!-- CTA -->
       <div class="cta-section" id="ctaSection"></div>
 
-      <!-- SHARE -->
+      <!-- SHARE ROW -->
       <div class="share-row">
-        <a class="share-btn-sm" id="shareWA" href="#"><i class="fab fa-whatsapp"></i> Compartir</a>
-        <button class="share-btn-sm" onclick="copyCardLink()"><i class="fas fa-link"></i> Copiar link</button>
+        <a class="share-btn-sm" id="shareWA" href="#" target="_blank"><i class="fab fa-whatsapp"></i> Compartir</a>
+        <button class="share-btn-sm" onclick="copyCardLink()"><i class="fas fa-link"></i> Copiar</button>
         <button class="share-btn-sm" onclick="downloadVCF()"><i class="fas fa-address-card"></i> Guardar</button>
       </div>
 
@@ -307,7 +441,7 @@ html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:
     <div style="font-size:3rem">😕</div>
     <h2>Tarjeta no encontrada</h2>
     <p>El Bot ID no existe o fue eliminado.</p>
-    <a href="index.html" style="color:var(--p);text-decoration:none;font-weight:600">← Volver al inicio</a>
+    <a href="index.html" style="color:var(--p);text-decoration:none;font-weight:700">← Inicio</a>
   </div>
 </div>
 
@@ -317,128 +451,194 @@ html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-const firebaseConfig = {
+const app = initializeApp({
   apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
   authDomain:"super-bot-007.firebaseapp.com",
   projectId:"super-bot-007",
   storageBucket:"super-bot-007.firebasestorage.app",
   messagingSenderId:"929685785305",
   appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
-};
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-window.db = db;
-window._fbGetDoc = getDoc;
-window._fbDoc    = doc;
-console.log('Firebase ready ✅');
+});
+const db = getFirestore(app);
+window.db=db; window._fbGetDoc=getDoc; window._fbDoc=doc;
 </script>
 
 <script>
-// ══════════════════════════════════════════
-//  PARTICLES BACKGROUND
-// ══════════════════════════════════════════
-(function initParticles(){
-  const canvas = document.getElementById('bgCanvas');
-  const ctx    = canvas.getContext('2d');
-  let W, H, particles=[];
+// ═══════════════════════════════════════
+//  PARTICLES
+// ═══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('bgCanvas'), ctx=cv.getContext('2d');
+  let W,H,pts=[];
+  function sz(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+  window.addEventListener('resize',sz); sz();
 
-  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
-  window.addEventListener('resize', resize); resize();
-
-  function getColors(){
-    const s = getComputedStyle(document.documentElement);
-    return [s.getPropertyValue('--p').trim()||'#6C63FF', s.getPropertyValue('--s').trim()||'#FF6584', s.getPropertyValue('--a').trim()||'#43E97B'];
+  function getCols(){
+    const s=getComputedStyle(document.documentElement);
+    return [
+      s.getPropertyValue('--p').trim()||'#6C63FF',
+      s.getPropertyValue('--s').trim()||'#FF6584',
+      s.getPropertyValue('--a').trim()||'#43E97B'
+    ];
   }
-
-  function createParticle(colors){
-    return {
-      x: Math.random()*W, y: Math.random()*H,
-      r: Math.random()*2+0.5,
-      vx:(Math.random()-0.5)*0.35, vy:(Math.random()-0.5)*0.35,
-      alpha:Math.random()*0.4+0.1,
-      color:colors[Math.floor(Math.random()*colors.length)]
-    };
+  function mkPt(cols){
+    return{x:Math.random()*W,y:Math.random()*H,
+           r:Math.random()*1.8+0.4,
+           vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,
+           a:Math.random()*.3+.06,
+           c:cols[Math.floor(Math.random()*cols.length)]};
   }
-
-  function initP(){
-    const colors = getColors();
-    particles = Array.from({length:80},()=>createParticle(colors));
-  }
-  initP();
-  window.reinitParticles = initP;
+  function init(){const c=getCols();pts=Array.from({length:100},()=>mkPt(c));}
+  init(); window.reinitParticles=init;
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    particles.forEach(p=>{
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=p.color+(Math.floor(p.alpha*255).toString(16).padStart(2,'0'));
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      // convert hex color + alpha
+      let col=p.c.trim();
+      if(col.length===7){ // #RRGGBB
+        const hex=Math.floor(p.a*255).toString(16).padStart(2,'0');
+        ctx.fillStyle=col+hex;
+      } else {
+        ctx.globalAlpha=p.a;
+        ctx.fillStyle=col;
+        ctx.fill();
+        ctx.globalAlpha=1;
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+        if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+        return;
+      }
       ctx.fill();
       p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
-      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
     });
     requestAnimationFrame(draw);
   }
   draw();
 })();
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
 //  HELPERS
-// ══════════════════════════════════════════
-const params = new URLSearchParams(location.search);
-const botId  = params.get('id')||'';
-let   botData = null;
-const base   = location.origin + location.pathname.replace('card.html','');
+// ═══════════════════════════════════════
+const params=new URLSearchParams(location.search);
+const botId=params.get('id')||'';
+let botData=null;
+const base=location.origin+location.pathname.replace('card.html','');
 
-function toast(msg, type='success'){
+function toast(msg,type='success'){
   const t=document.getElementById('cardToast');
   t.textContent=msg;
-  t.style.background=type==='success'?'rgba(67,233,123,0.15)':'rgba(255,71,87,0.15)';
-  t.style.borderColor=type==='success'?'rgba(67,233,123,0.4)':'rgba(255,71,87,0.4)';
-  t.style.color=type==='success'?'#43E97B':'#FF4757';
+  const ok=type==='success';
+  t.style.background=ok?'rgba(67,233,123,0.14)':'rgba(255,71,87,0.14)';
+  t.style.borderColor=ok?'rgba(67,233,123,0.4)':'rgba(255,71,87,0.4)';
+  t.style.color=ok?'#43E97B':'#FF4757';
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-function waitFor(fn,timeout=5000){
-  return new Promise((res,rej)=>{
-    const t=Date.now();
-    (function check(){ fn()?res():Date.now()-t>timeout?rej(new Error('timeout')):setTimeout(check,80); })();
+function waitFor(fn,ms=8000){
+  return new Promise((ok,fail)=>{
+    const s=Date.now();
+    (function c(){fn()?ok():Date.now()-s>ms?fail(new Error('timeout')):setTimeout(c,80);})();
   });
 }
 
-function setColors(d){
-  const r = document.documentElement.style;
-  if(d.primaryColor)   r.setProperty('--p', d.primaryColor);
-  if(d.secondaryColor) r.setProperty('--s', d.secondaryColor);
-  if(d.accentColor)    r.setProperty('--a', d.accentColor);
-  if(d.bgColor)        r.setProperty('--dark', d.bgColor);
-  // update glow
-  if(d.primaryColor)   r.setProperty('--glow', d.primaryColor+'70');
-  if(d.primaryColor&&d.secondaryColor)
-    r.setProperty('--grad',`linear-gradient(135deg,${d.primaryColor},${d.secondaryColor})`);
-  // update hero gradient
-  const hero = document.getElementById('cardHero');
-  if(hero && d.primaryColor && d.secondaryColor)
-    hero.style.background=`linear-gradient(135deg,${d.primaryColor},${d.secondaryColor})`;
-  // reinit particles with new colors
-  if(window.reinitParticles) setTimeout(window.reinitParticles, 100);
+// ═══════════════════════════════════════
+//  TYPEWRITER ENGINE
+// ═══════════════════════════════════════
+const twQueue=[];
+let twRunning=false;
+
+/**
+ * typewrite(el, text, speed, cb)
+ * Animates text character by character inside `el`.
+ * Appends a blinking cursor span, removes it when done.
+ * Works for any element type (div, span, etc.)
+ */
+function typewrite(el, text, speed=40, cb){
+  if(!el) { if(cb) cb(); return; }
+  el.innerHTML='';
+  const cursor=document.createElement('span');
+  cursor.className='tw-cursor';
+  el.appendChild(cursor);
+  let i=0;
+  function tick(){
+    if(i<text.length){
+      // Insert char before cursor
+      const ch=document.createTextNode(text[i++]);
+      el.insertBefore(ch, cursor);
+      setTimeout(tick, speed + (Math.random()*18-9));
+    } else {
+      cursor.remove();
+      if(cb) cb();
+    }
+  }
+  tick();
 }
 
-// ══════════════════════════════════════════
-//  LOAD BOT
-// ══════════════════════════════════════════
+// Sequential typewriter for section titles
+// usage: queueTW(el, text, speed, delayMs)
+function queueTW(el, text, speed, delay){
+  twQueue.push({el,text,speed:speed||28,delay:delay||0});
+  if(!twRunning) runTWQueue();
+}
+function runTWQueue(){
+  if(!twQueue.length){twRunning=false;return;}
+  twRunning=true;
+  const {el,text,speed,delay}=twQueue.shift();
+  setTimeout(()=>{
+    typewrite(el,text,speed,runTWQueue);
+  },delay);
+}
+
+// ═══════════════════════════════════════
+//  APPLY COLORS FROM BOT
+// ═══════════════════════════════════════
+function applyColors(d){
+  const r=document.documentElement.style;
+  const p=(d.primaryColor||'#6C63FF').trim();
+  const s=(d.secondaryColor||'#FF6584').trim();
+  const a=(d.accentColor||'#43E97B').trim();
+  r.setProperty('--p',p);
+  r.setProperty('--s',s);
+  r.setProperty('--a',a);
+  // ALWAYS black background
+  r.setProperty('--dark','#000000');
+  document.documentElement.style.background='#000000';
+  document.body.style.background='#000000';
+  r.setProperty('--glow',p+'55');
+  r.setProperty('--grad',`linear-gradient(135deg,${p},${s})`);
+  // Hero gradient = bot colors
+  const hero=document.getElementById('cardHero');
+  if(hero) hero.style.background=`linear-gradient(135deg,${p},${s})`;
+  // Logo glow
+  const logo=document.getElementById('logoWrap');
+  if(logo) logo.style.boxShadow=`0 8px 40px rgba(0,0,0,0.8),0 0 28px ${p}55`;
+  // Loader ring color
+  const ring=document.querySelector('.loader-ring');
+  if(ring) ring.style.borderTopColor=p;
+  // Reinit particles with new colors
+  if(window.reinitParticles) setTimeout(window.reinitParticles,80);
+}
+
+// ═══════════════════════════════════════
+//  LOAD FROM FIREBASE
+// ═══════════════════════════════════════
 async function loadCard(){
-  if(!botId){ showNoBot(); return; }
+  if(!botId){showNoBot();return;}
   try{
     await waitFor(()=>window.db);
-    const snap = await window._fbGetDoc(window._fbDoc(window.db,'bots',botId));
-    if(!snap.exists()){ showNoBot(); return; }
-    botData = snap.data();
+    const snap=await window._fbGetDoc(window._fbDoc(window.db,'bots',botId));
+    if(!snap.exists()){showNoBot();return;}
+    botData=snap.data();
     renderCard(botData);
-  }catch(e){ console.error(e); showNoBot(); }
+  }catch(e){
+    console.error(e);
+    showNoBot();
+  }
 }
 
 function showNoBot(){
@@ -446,209 +646,252 @@ function showNoBot(){
   document.getElementById('noBotMsg').style.display='flex';
 }
 
-// ══════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
+//  RENDER CARD
+// ═══════════════════════════════════════
 function renderCard(d){
-  // Colors first
-  setColors(d);
+  // 1 — Colors first (bot colors, black bg)
+  applyColors(d);
 
-  // Logo
-  const logoWrap = document.getElementById('logoWrap');
-  const fallback = document.getElementById('logoFallback');
+  // 2 — Logo / emoji
+  const logoWrap=document.getElementById('logoWrap');
+  const fallback=document.getElementById('logoFallback');
   if(d.logoURL){
     const img=document.createElement('img');
     img.src=d.logoURL; img.alt='logo';
-    img.onerror=()=>{ img.remove(); fallback.style.display='block'; };
+    img.onerror=()=>{img.remove();fallback.style.display='flex';};
     fallback.style.display='none';
     logoWrap.appendChild(img);
   } else {
-    const typeEmojis={salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',construc:'🏗️',dog:'🐶',fitness:'🏋️',tienda:'🛍️',boutique:'👗',tech:'💻',dental:'🦷',medic:'🏥'};
-    const type=(d.businessType||'').toLowerCase();
-    let emoji='🏢';
-    for(const[k,v] of Object.entries(typeEmojis)){ if(type.includes(k)){emoji=v;break;} }
-    fallback.textContent=emoji;
+    const emo={salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',
+               caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',
+               construc:'🏗️',dog:'🐶',fitness:'🏋️',tienda:'🛍️',tech:'💻',
+               dental:'🦷',medic:'🏥',boutique:'👗'};
+    const t=(d.businessType||'').toLowerCase();
+    let e='🏢';
+    for(const[k,v] of Object.entries(emo)){if(t.includes(k)){e=v;break;}}
+    fallback.textContent=e;
   }
 
-  // Basic info
-  document.getElementById('bizName').textContent = d.businessName||'Mi Negocio';
-  document.title = (d.businessName||'Digital Card')+' – Super Bot 007';
+  // 3 — Page title
+  document.title=(d.businessName||'Digital Card')+' • Super Bot 007';
 
-  const typeLabel = d.businessType||'Negocio';
-  document.getElementById('bizType').innerHTML = `<i class="fas fa-tag"></i> ${typeLabel}`;
-
-  const cityEl = document.getElementById('bizCity');
-  if(d.businessCity){ cityEl.innerHTML=`<i class="fas fa-map-marker-alt" style="color:var(--s)"></i> ${d.businessCity}`; }
-  else { cityEl.style.display='none'; }
-
-  const descEl = document.getElementById('bizDesc');
-  if(d.description){ descEl.textContent=d.description; }
-  else { descEl.style.display='none'; }
-
-  // Action buttons
-  buildActionRow(d);
-
-  // Services
-  buildServices(d);
-
-  // Social
-  buildSocial(d);
-
-  // CTA
-  buildCTA(d);
-
-  // Share WA
-  const cardUrl = `${base}card.html?id=${botId}`;
-  const waNum   = (d.whatsapp||d.phone||'').replace(/\D/g,'');
-  const shareMsg= encodeURIComponent(`👋 Mira la tarjeta digital de *${d.businessName||''}*:\n${cardUrl}`);
-  document.getElementById('shareWA').href = `https://wa.me/?text=${shareMsg}`;
-
-  // Show card
+  // 4 — Show card, hide loader
   document.getElementById('mainCard').style.display='block';
   document.getElementById('loadingScreen').classList.add('hide');
+
+  // 5 — Typewriter chain: name → type → rest
+  const nameEl=document.getElementById('bizName');
+  const typeEl=document.getElementById('bizType');
+
+  typewrite(nameEl, (d.businessName||'Mi Negocio').toUpperCase(), 55, ()=>{
+    typewrite(typeEl, (d.businessType||'Negocio').toUpperCase(), 38, ()=>{
+      // City
+      const cityEl=document.getElementById('bizCity');
+      if(d.businessCity){
+        cityEl.style.display='flex';
+        cityEl.innerHTML=`<i class="fas fa-map-marker-alt" style="color:var(--s)"></i>`;
+        const span=document.createElement('span');
+        cityEl.appendChild(span);
+        typewrite(span, d.businessCity, 32);
+      }
+      // Description — plain text (too long for typewriter)
+      if(d.description){
+        const descEl=document.getElementById('bizDesc');
+        descEl.style.display='block';
+        descEl.textContent=d.description;
+      }
+      // Build sections
+      buildActionRow(d);
+      buildServices(d);
+      buildSocial(d);
+      buildQR();
+      buildCTA(d);
+      buildShareRow(d);
+    });
+  });
 }
 
+// ═══════════════════════════════════════
+//  ACTION ROW
+// ═══════════════════════════════════════
 function buildActionRow(d){
-  const row = document.getElementById('actionRow');
+  const row=document.getElementById('actionRow');
   row.innerHTML='';
   const btns=[];
-
   if(d.phone)
-    btns.push({cls:'call',icon:'fa-phone',label:'Llamar',href:`tel:${d.phone}`});
-
+    btns.push({cls:'call',icon:'fas fa-phone',lbl:'Llamar',href:`tel:${d.phone}`});
   if(d.whatsapp||d.phone){
     const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
     const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría más información.`);
-    btns.push({cls:'wa',icon:'fa-whatsapp fab',label:'WhatsApp',href:`https://wa.me/${wa}?text=${msg}`});
+    btns.push({cls:'wa',icon:'fab fa-whatsapp',lbl:'WhatsApp',href:`https://wa.me/${wa}?text=${msg}`});
   }
-
   if(d.email)
-    btns.push({cls:'mail',icon:'fa-envelope',label:'Email',href:`mailto:${d.email}`});
-
+    btns.push({cls:'mail',icon:'fas fa-envelope',lbl:'Email',href:`mailto:${d.email}`});
   if(d.website)
-    btns.push({cls:'web',icon:'fa-globe',label:'Web',href:d.website.startsWith('http')?d.website:'https://'+d.website});
+    btns.push({cls:'web',icon:'fas fa-globe',lbl:'Web',href:d.website.startsWith('http')?d.website:'https://'+d.website});
 
-  btns.forEach(b=>{
+  btns.forEach((b,idx)=>{
     const a=document.createElement('a');
     a.className=`action-btn ${b.cls}`;
     a.href=b.href; a.target='_blank'; a.rel='noopener';
-    const iconClass = b.icon.includes('fab') ? `fab ${b.icon.replace('fab ','')}` : `fas ${b.icon}`;
-    a.innerHTML=`<i class="${iconClass}"></i><span>${b.label}</span>`;
+    a.innerHTML=`<i class="${b.icon}"></i><span>${b.lbl}</span>`;
+    a.style.opacity='0'; a.style.transform='translateY(22px)';
     row.appendChild(a);
+    setTimeout(()=>{
+      a.style.transition='opacity 0.4s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+      a.style.opacity='1'; a.style.transform='translateY(0)';
+    }, idx*110+100);
   });
 }
 
+// ═══════════════════════════════════════
+//  SERVICES
+// ═══════════════════════════════════════
 function buildServices(d){
-  const svcs = Array.isArray(d.services)?d.services.filter(s=>s.name):[];
+  const svcs=(Array.isArray(d.services)?d.services:[]).filter(s=>s&&s.name);
   if(!svcs.length) return;
-  const section = document.getElementById('servicesSection');
-  const grid    = document.getElementById('servicesGrid');
-  section.style.display='block';
-  const svcEmojis={entren:'💪',spinning:'🚴',yoga:'🧘',funcional:'🏋️',zumba:'💃',pilates:'🤸',boxeo:'🥊',natacion:'🏊',corte:'✂️',color:'🎨',manicure:'💅',masaje:'💆',facial:'✨',pizza:'🍕',burger:'🍔',taco:'🌮',pollo:'🍗',sushi:'🍱',pasta:'🍝',dental:'🦷',limpieza:'🧹',pintura:'🖌️',plomer:'🔧',electr:'⚡'};
-  grid.innerHTML = svcs.slice(0,6).map(s=>{
-    const name=(s.name||'').toLowerCase();
-    let emoji='⭐';
-    for(const[k,v] of Object.entries(svcEmojis)){ if(name.includes(k)){emoji=v;break;} }
-    return `<div class="svc-item">
-      <span class="svc-name">${emoji} ${s.name}</span>
+  const sec=document.getElementById('servicesSection');
+  const grid=document.getElementById('servicesGrid');
+  sec.style.display='block';
+
+  // Typewriter on divider title
+  const divEl=document.getElementById('svcDivider');
+  queueTW(divEl,'⚡ Servicios',26,300);
+
+  const emo={entren:'💪',spinning:'🚴',yoga:'🧘',funcional:'🏋️',zumba:'💃',
+             pilates:'🤸',boxeo:'🥊',natacion:'🏊',corte:'✂️',color:'🎨',
+             manicure:'💅',masaje:'💆',facial:'✨',pizza:'🍕',burger:'🍔',
+             taco:'🌮',pollo:'🍗',sushi:'🍱',pasta:'🍝',dental:'🦷',
+             limpieza:'🧹',pintura:'🖌️',plomer:'🔧',electr:'⚡'};
+
+  grid.innerHTML=svcs.slice(0,6).map((s,i)=>{
+    const n=(s.name||'').toLowerCase();
+    let e='⭐';
+    for(const[k,v] of Object.entries(emo)){if(n.includes(k)){e=v;break;}}
+    return `<div class="svc-item" style="opacity:0;transform:translateX(-18px);transition:opacity 0.4s ease ${i*90+500}ms,transform 0.4s ease ${i*90+500}ms">
+      <span class="svc-name">${e} ${s.name}</span>
       ${s.price?`<span class="svc-price">${s.price}</span>`:''}
     </div>`;
   }).join('');
-}
-
-function buildSocial(d){
-  const socials=[];
-  if(d.instagram) socials.push({cls:'ig',icon:'fa-instagram',label:'Instagram',href:d.instagram.startsWith('http')?d.instagram:'https://instagram.com/'+d.instagram.replace('@','')});
-  if(d.facebook)  socials.push({cls:'fb',icon:'fa-facebook',label:'Facebook',href:d.facebook.startsWith('http')?d.facebook:'https://facebook.com/'+d.facebook.replace('@','')});
-  if(d.tiktok)    socials.push({cls:'tk',icon:'fa-tiktok',label:'TikTok',href:d.tiktok.startsWith('http')?d.tiktok:'https://tiktok.com/@'+d.tiktok.replace('@','')});
-  if(d.youtube)   socials.push({cls:'yt',icon:'fa-youtube',label:'YouTube',href:d.youtube.startsWith('http')?d.youtube:'https://youtube.com/'+d.youtube});
-  if(!socials.length) return;
-
-  document.getElementById('socialSection').style.display='block';
-  const row = document.getElementById('socialRow');
-  row.innerHTML = socials.map(s=>`
-    <a class="action-btn ${s.cls}" href="${s.href}" target="_blank" rel="noopener">
-      <i class="fab ${s.icon}"></i><span>${s.label}</span>
-    </a>`).join('');
-}
-
-function buildCTA(d){
-  const section = document.getElementById('ctaSection');
-  section.innerHTML='';
-
-  // WhatsApp CTA (if has number)
-  if(d.whatsapp||d.phone){
-    const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
-    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`);
-    section.innerHTML+=`
-      <a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank">
-        <i class="fab fa-whatsapp"></i> Agendar por WhatsApp
-      </a>`;
-  }
-
-  // Chatbot CTA
-  section.innerHTML+=`
-    <a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank">
-      <i class="fas fa-robot"></i> Chatear con el Bot
-    </a>`;
-
-  // Landing CTA
-  section.innerHTML+=`
-    <a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank">
-      <i class="fas fa-globe"></i> Ver sitio web completo
-    </a>`;
-}
-
-// ══════════════════════════════════════════
-//  COPY LINK
-// ══════════════════════════════════════════
-function copyCardLink(){
-  const url=`${base}card.html?id=${botId}`;
-  navigator.clipboard.writeText(url).then(()=>toast('✅ Link copiado!')).catch(()=>{
-    const ta=document.createElement('textarea');
-    ta.value=url; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); ta.remove(); toast('✅ Link copiado!');
+  requestAnimationFrame(()=>{
+    grid.querySelectorAll('.svc-item').forEach(el=>{
+      setTimeout(()=>{el.style.opacity='1';el.style.transform='translateX(0)';},10);
+    });
   });
 }
 
-// ══════════════════════════════════════════
-//  DOWNLOAD VCF (guardar contacto)
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
+//  SOCIAL
+// ═══════════════════════════════════════
+function buildSocial(d){
+  const socials=[];
+  if(d.instagram) socials.push({cls:'ig',icon:'fab fa-instagram',lbl:'Instagram',href:d.instagram.startsWith('http')?d.instagram:'https://instagram.com/'+d.instagram.replace('@','')});
+  if(d.facebook)  socials.push({cls:'fb',icon:'fab fa-facebook',lbl:'Facebook',href:d.facebook.startsWith('http')?d.facebook:'https://facebook.com/'+d.facebook.replace('@','')});
+  if(d.tiktok)    socials.push({cls:'tk',icon:'fab fa-tiktok',lbl:'TikTok',href:d.tiktok.startsWith('http')?d.tiktok:'https://tiktok.com/@'+d.tiktok.replace('@','')});
+  if(d.youtube)   socials.push({cls:'yt',icon:'fab fa-youtube',lbl:'YouTube',href:d.youtube.startsWith('http')?d.youtube:'https://youtube.com/'+d.youtube});
+  if(!socials.length) return;
+  document.getElementById('socialSection').style.display='block';
+  const row=document.getElementById('socialRow');
+  row.innerHTML=socials.map(s=>`<a class="action-btn ${s.cls}" href="${s.href}" target="_blank" rel="noopener"><i class="${s.icon}"></i><span>${s.lbl}</span></a>`).join('');
+  queueTW(document.getElementById('socialDivider'),'🌐 Redes Sociales',26,200);
+}
+
+// ═══════════════════════════════════════
+//  QR CODE (bot primary color)
+// ═══════════════════════════════════════
+function buildQR(){
+  const cardUrl=`${base}card.html?id=${botId}`;
+  const sec=document.getElementById('qrSection');
+  const container=document.getElementById('qrCanvas');
+  sec.style.display='block';
+  container.innerHTML='';
+
+  const p=getComputedStyle(document.documentElement).getPropertyValue('--p').trim()||'#6C63FF';
+  // Use dark color for QR modules (ensure readability on white bg)
+  // Darken primary if too light
+  new QRCode(container,{
+    text: cardUrl,
+    width: 168,
+    height: 168,
+    colorDark: p,
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  queueTW(document.getElementById('qrDivider'),'📲 Escanea mi QR',26,200);
+}
+
+// ═══════════════════════════════════════
+//  CTA BUTTONS
+// ═══════════════════════════════════════
+function buildCTA(d){
+  const sec=document.getElementById('ctaSection');
+  sec.innerHTML='';
+  if(d.whatsapp||d.phone){
+    const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
+    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`);
+    sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> Agendar por WhatsApp</a>`;
+  }
+  sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> Chatear con el Bot</a>`;
+  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-globe"></i> Ver sitio web completo</a>`;
+}
+
+// ═══════════════════════════════════════
+//  SHARE ROW
+// ═══════════════════════════════════════
+function buildShareRow(d){
+  const cardUrl=`${base}card.html?id=${botId}`;
+  const msg=encodeURIComponent(`👋 Mira la tarjeta digital de *${d.businessName||''}*:\n${cardUrl}`);
+  document.getElementById('shareWA').href=`https://wa.me/?text=${msg}`;
+}
+
+// ═══════════════════════════════════════
+//  COPY LINK
+// ═══════════════════════════════════════
+function copyCardLink(){
+  const url=`${base}card.html?id=${botId}`;
+  navigator.clipboard.writeText(url)
+    .then(()=>toast('✅ Link copiado!'))
+    .catch(()=>{
+      const t=document.createElement('textarea');
+      t.value=url;document.body.appendChild(t);t.select();
+      document.execCommand('copy');t.remove();
+      toast('✅ Link copiado!');
+    });
+}
+
+// ═══════════════════════════════════════
+//  DOWNLOAD VCF
+// ═══════════════════════════════════════
 function downloadVCF(){
-  if(!botData){ toast('Cargando...','error'); return; }
+  if(!botData){toast('Cargando...','error');return;}
   const d=botData;
   const name=d.businessName||'Mi Negocio';
   const phone=(d.phone||d.whatsapp||'').replace(/\D/g,'');
-  const email=d.email||'';
-  const web=d.website||'';
-  const addr=d.address||d.businessCity||'';
   const cardUrl=`${base}card.html?id=${botId}`;
-
-  let vcf=`BEGIN:VCARD\r\nVERSION:3.0\r\n`;
-  vcf+=`FN:${name}\r\n`;
-  vcf+=`ORG:${name}\r\n`;
+  let vcf='BEGIN:VCARD\r\nVERSION:3.0\r\n';
+  vcf+=`FN:${name}\r\nORG:${name}\r\n`;
   if(d.businessType) vcf+=`TITLE:${d.businessType}\r\n`;
   if(phone)  vcf+=`TEL;TYPE=CELL:+${phone}\r\n`;
-  if(email)  vcf+=`EMAIL:${email}\r\n`;
-  if(web)    vcf+=`URL:${web.startsWith('http')?web:'https://'+web}\r\n`;
-  if(addr)   vcf+=`ADR;TYPE=WORK:;;${addr};;;;\r\n`;
+  if(d.email) vcf+=`EMAIL:${d.email}\r\n`;
+  if(d.website) vcf+=`URL:${d.website.startsWith('http')?d.website:'https://'+d.website}\r\n`;
+  if(d.businessCity) vcf+=`ADR;TYPE=WORK:;;${d.businessCity};;;;\r\n`;
   vcf+=`URL;TYPE=CHATBOT:${cardUrl}\r\n`;
   if(d.logoURL) vcf+=`PHOTO;VALUE=URI:${d.logoURL}\r\n`;
-  vcf+=`NOTE:Digital Card via Super Bot 007 ⚡\r\n`;
-  vcf+=`END:VCARD`;
-
+  vcf+=`NOTE:Digital Card via Super Bot 007 ⚡\r\nEND:VCARD`;
   const blob=new Blob([vcf],{type:'text/vcard'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url; a.download=`${name.replace(/\s+/g,'-')}.vcf`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  toast('📇 Contacto descargado!');
+  toast('📇 Contacto guardado!');
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
 //  INIT
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', loadCard);
 if(document.readyState==='complete'||document.readyState==='interactive') loadCard();
 </script>
