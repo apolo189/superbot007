@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hub – Super Bot 007</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --dark:#000000; --card:#0a0a0a; --border:rgba(242,66,7,0.3);
+  --p:#f24207; --s:#FF6584; --a:#43E97B;
+  --text:#FFFFFF; --muted:#9999BB;
+  --grad:linear-gradient(135deg,#f24207,#FF6584);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;font-family:'Inter',sans-serif;background:#000;color:var(--text);overflow-x:hidden;}
+
+/* ── PARTICLES ── */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* ── LOCK SCREEN ── */
+#lockScreen{
+  position:fixed;inset:0;z-index:9999;background:#000;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;
+  padding:2rem;
+}
+.lock-icon{font-size:3rem;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.lock-title{font-size:1.4rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.lock-sub{font-size:0.85rem;color:var(--muted);}
+.lock-input{
+  padding:0.85rem 1.4rem;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:14px;
+  color:var(--text);font-size:1rem;font-family:'Inter',sans-serif;
+  outline:none;width:100%;max-width:320px;text-align:center;letter-spacing:0.1em;
+  transition:all 0.3s;
+}
+.lock-input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(242,66,7,0.15);}
+.lock-btn{
+  padding:0.85rem 2.5rem;background:var(--grad);border:none;border-radius:50px;
+  color:white;font-weight:800;font-size:1rem;cursor:pointer;transition:all 0.3s;
+  width:100%;max-width:320px;
+}
+.lock-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(242,66,7,0.4);}
+.lock-error{color:#FF4757;font-size:0.82rem;opacity:0;transition:opacity 0.3s;}
+.lock-error.show{opacity:1;}
+
+/* ── MAIN ── */
+#mainContent{position:relative;z-index:1;display:none;padding:2rem 1.5rem 4rem;max-width:1100px;margin:0 auto;}
+
+/* ── HEADER ── */
+.hub-header{text-align:center;padding:3rem 1rem 2.5rem;position:relative;z-index:1;}
+.hub-greeting{font-size:0.82rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0.5rem;}
+.hub-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:0.8rem;}
+.hub-title span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hub-sub{font-size:0.95rem;color:var(--muted);margin-bottom:1.5rem;}
+.hub-status{display:inline-flex;align-items:center;gap:0.5rem;padding:0.4rem 1.1rem;background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.3);border-radius:50px;font-size:0.78rem;font-weight:700;color:var(--a);}
+.hub-status-dot{width:7px;height:7px;border-radius:50%;background:var(--a);box-shadow:0 0 6px var(--a);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* ── QUICK ACTIONS ── */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.quick-card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:1.4rem;text-decoration:none;color:var(--text);
+  transition:all 0.3s;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.7rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quick-card::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity 0.3s;}
+.quick-card:hover{transform:translateY(-6px);border-color:var(--p);box-shadow:0 16px 40px rgba(242,66,7,0.2);}
+.quick-card:hover::before{opacity:0.05;}
+.quick-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.quick-name{font-size:0.9rem;font-weight:800;}
+.quick-desc{font-size:0.75rem;color:var(--muted);line-height:1.4;}
+
+/* ── SECTION ── */
+.sec-title{font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── BOTS LIST ── */
+.bots-grid{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:2.5rem;}
+.bot-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:1rem 1.3rem;display:flex;align-items:center;gap:1rem;
+  transition:all 0.3s;
+}
+.bot-card:hover{border-color:var(--p);transform:translateX(4px);}
+.bot-avatar{width:46px;height:46px;border-radius:12px;object-fit:cover;flex-shrink:0;background:rgba(242,66,7,0.1);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.bot-avatar img{width:46px;height:46px;border-radius:12px;object-fit:cover;}
+.bot-info{flex:1;min-width:0;}
+.bot-name{font-weight:800;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bot-type{font-size:0.75rem;color:var(--muted);margin-top:0.1rem;}
+.bot-active{display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;}
+.dot-on{width:7px;height:7px;border-radius:50%;background:var(--a);box-shadow:0 0 5px var(--a);}
+.dot-off{width:7px;height:7px;border-radius:50%;background:#FF4757;}
+.bot-links-row{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.bot-link{padding:0.28rem 0.65rem;background:rgba(242,66,7,0.08);border:1px solid rgba(242,66,7,0.2);border-radius:8px;color:var(--p);font-size:0.7rem;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.bot-link:hover{background:var(--p);color:white;border-color:var(--p);}
+.copy-id{padding:0.28rem 0.65rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.copy-id:hover{border-color:var(--p);color:var(--p);}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.8rem;margin-bottom:2.5rem;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;}
+.kpi-val{font-size:1.8rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.kpi-lbl{font-size:0.7rem;color:var(--muted);margin-top:0.25rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;}
+
+/* ── HEALTH ROW ── */
+.health-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;margin-bottom:2.5rem;}
+.h-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.h-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.h-icon.ok{background:rgba(67,233,123,0.12);color:var(--a);}
+.h-icon.fail{background:rgba(255,71,87,0.12);color:#FF4757;}
+.h-icon.checking{background:rgba(255,215,0,0.1);color:#FFD700;}
+.h-name{font-size:0.82rem;font-weight:700;}
+.h-status{font-size:0.7rem;color:var(--muted);}
+.h-dot{width:7px;height:7px;border-radius:50%;margin-left:auto;flex-shrink:0;}
+.h-dot.ok{background:var(--a);box-shadow:0 0 6px var(--a);}
+.h-dot.fail{background:#FF4757;box-shadow:0 0 6px #FF4757;}
+.h-dot.checking{background:#FFD700;animation:blink 1s infinite;}
+
+/* ── USEFUL LINKS ── */
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.8rem;margin-bottom:2.5rem;}
+.link-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:0.9rem 1.1rem;display:flex;align-items:center;gap:0.8rem;text-decoration:none;color:var(--text);transition:all 0.2s;}
+.link-item:hover{border-color:var(--p);transform:translateY(-2px);}
+.link-item i{color:var(--p);font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.link-item-info{}
+.link-item-name{font-size:0.85rem;font-weight:700;}
+.link-item-url{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+
+/* ── FOOTER ── */
+.hub-footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.78rem;border-top:1px solid var(--border);margin-top:2rem;}
+.hub-footer span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0.7rem 1.4rem;font-size:0.85rem;font-weight:600;opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .bot-links-row{display:none;}
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+  <div class="lock-icon">🔐</div>
+  <div class="lock-title">Super Bot 007 — Hub</div>
+  <div class="lock-sub">Ingresa tu PIN de acceso</div>
+  <input class="lock-input" id="pinInput" type="password" placeholder="••••••" maxlength="10"
+    onkeydown="if(event.key==='Enter') checkPin()">
+  <button class="lock-btn" onclick="checkPin()"><i class="fas fa-unlock-alt"></i> Entrar</button>
+  <div class="lock-error" id="lockError">PIN incorrecto. Intenta de nuevo.</div>
+</div>
+
+<!-- MAIN HUB -->
+<div id="mainContent">
+
+  <!-- HEADER -->
+  <div class="hub-header">
+    <div class="hub-greeting">Bienvenido de vuelta</div>
+    <div class="hub-title">Tu <span>Control Center</span><br>Super Bot 007</div>
+    <div class="hub-sub" id="hubDateTime"></div>
+    <div class="hub-status"><span class="hub-status-dot"></span> Sistema Operativo</div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="sec-title"><i class="fas fa-bolt" style="color:var(--p)"></i> Accesos Rápidos</div>
+  <div class="quick-grid">
+    <a class="quick-card" href="dashboard.html">
+      <div class="quick-icon" style="background:rgba(242,66,7,0.12);color:var(--p)"><i class="fas fa-shield-alt"></i></div>
+      <div class="quick-name">Control Center</div>
+      <div class="quick-desc">Health check, citas, bots, clientes</div>
+    </a>
+    <a class="quick-card" href="admin.html">
+      <div class="quick-icon" style="background:rgba(255,101,132,0.12);color:var(--s)"><i class="fas fa-cogs"></i></div>
+      <div class="quick-name">Admin Panel</div>
+      <div class="quick-desc">Gestionar todos los bots</div>
+    </a>
+    <a class="quick-card" href="form.html">
+      <div class="quick-icon" style="background:rgba(67,233,123,0.12);color:var(--a)"><i class="fas fa-plus-circle"></i></div>
+      <div class="quick-name">Crear Nuevo Bot</div>
+      <div class="quick-desc">Configura un bot en minutos</div>
+    </a>
+    <a class="quick-card" href="dashboard.html" onclick="event.preventDefault();window.location='dashboard.html#tab-appts'">
+      <div class="quick-icon" style="background:rgba(255,215,0,0.1);color:#FFD700"><i class="fas fa-calendar-check"></i></div>
+      <div class="quick-name">Ver Citas</div>
+      <div class="quick-desc">Confirmar / cancelar citas</div>
+    </a>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec-title"><i class="fas fa-chart-bar" style="color:var(--p)"></i> Resumen General</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-val" id="kBots">–</div><div class="kpi-lbl">Bots Totales</div></div>
+    <div class="kpi"><div class="kpi-val" id="kActive">–</div><div class="kpi-lbl">Activos</div></div>
+    <div class="kpi"><div class="kpi-val" id="kAppts">–</div><div class="kpi-lbl">Citas</div></div>
+    <div class="kpi"><div class="kpi-val" id="kPending">–</div><div class="kpi-lbl">Pendientes</div></div>
+    <div class="kpi"><div class="kpi-val" id="kClients">–</div><div class="kpi-lbl">Clientes</div></div>
+  </div>
+
+  <!-- HEALTH -->
+  <div class="sec-title"><i class="fas fa-heartbeat" style="color:var(--p)"></i> Estado de Servicios</div>
+  <div class="health-row">
+    <div class="h-card" id="hc-firebase">
+      <div class="h-icon checking" id="hi-firebase"><i class="fas fa-database"></i></div>
+      <div><div class="h-name">Firebase</div><div class="h-status" id="hs-firebase">Verificando...</div></div>
+      <div class="h-dot checking" id="hd-firebase"></div>
+    </div>
+    <div class="h-card" id="hc-openai">
+      <div class="h-icon checking" id="hi-openai"><i class="fas fa-robot"></i></div>
+      <div><div class="h-name">OpenAI</div><div class="h-status" id="hs-openai">Verificando...</div></div>
+      <div class="h-dot checking" id="hd-openai"></div>
+    </div>
+    <div class="h-card" id="hc-cloudflare">
+      <div class="h-icon checking" id="hi-cloudflare"><i class="fas fa-cloud"></i></div>
+      <div><div class="h-name">Cloudflare WA</div><div class="h-status" id="hs-cloudflare">Verificando...</div></div>
+      <div class="h-dot checking" id="hd-cloudflare"></div>
+    </div>
+    <div class="h-card" id="hc-github">
+      <div class="h-icon checking" id="hi-github"><i class="fab fa-github"></i></div>
+      <div><div class="h-name">GitHub Pages</div><div class="h-status" id="hs-github">Verificando...</div></div>
+      <div class="h-dot checking" id="hd-github"></div>
+    </div>
+  </div>
+
+  <!-- BOTS -->
+  <div class="sec-title"><i class="fas fa-robot" style="color:var(--p)"></i> Mis Bots <span id="botsCount" style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.8rem;"></span></div>
+  <div class="bots-grid" id="botsGrid">
+    <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;">
+      <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:var(--p);display:block;margin-bottom:0.5rem;"></i>
+      Cargando bots...
+    </div>
+  </div>
+
+  <!-- USEFUL LINKS -->
+  <div class="sec-title"><i class="fas fa-link" style="color:var(--p)"></i> Links del Sistema</div>
+  <div class="links-grid">
+    <a class="link-item" href="admin.html"><i class="fas fa-cogs"></i><div class="link-item-info"><div class="link-item-name">Admin Panel</div><div class="link-item-url">admin.html</div></div></a>
+    <a class="link-item" href="dashboard.html"><i class="fas fa-shield-alt"></i><div class="link-item-info"><div class="link-item-name">Control Center</div><div class="link-item-url">dashboard.html</div></div></a>
+    <a class="link-item" href="form.html"><i class="fas fa-plus"></i><div class="link-item-info"><div class="link-item-name">Crear Bot</div><div class="link-item-url">form.html</div></div></a>
+    <a class="link-item" href="https://console.firebase.google.com/project/super-bot-007" target="_blank"><i class="fas fa-database"></i><div class="link-item-info"><div class="link-item-name">Firebase Console</div><div class="link-item-url">console.firebase.google.com</div></div></a>
+    <a class="link-item" href="https://platform.openai.com/usage" target="_blank"><i class="fas fa-robot"></i><div class="link-item-info"><div class="link-item-name">OpenAI Usage</div><div class="link-item-url">platform.openai.com/usage</div></div></a>
+    <a class="link-item" href="https://dash.cloudflare.com" target="_blank"><i class="fas fa-cloud"></i><div class="link-item-info"><div class="link-item-name">Cloudflare Dashboard</div><div class="link-item-url">dash.cloudflare.com</div></div></a>
+    <a class="link-item" href="https://github.com/apolo189/superbot007" target="_blank"><i class="fab fa-github"></i><div class="link-item-info"><div class="link-item-name">GitHub Repo</div><div class="link-item-url">github.com/apolo189/superbot007</div></div></a>
+    <a class="link-item" href="https://www.twilio.com/console" target="_blank"><i class="fas fa-comment-dots"></i><div class="link-item-info"><div class="link-item-name">Twilio Console</div><div class="link-item-url">twilio.com/console</div></div></a>
+  </div>
+
+  <div class="hub-footer">
+    Powered by <span>Super Bot 007</span> · Todos los derechos reservados
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+  import { getFirestore, collection, getDocs }
+    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+  const app = initializeApp({
+    apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+    authDomain:"super-bot-007.firebaseapp.com",
+    projectId:"super-bot-007",
+    storageBucket:"super-bot-007.firebasestorage.app",
+    messagingSenderId:"929685785305",
+    appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+  });
+  const db = getFirestore(app);
+  window.db       = db;
+  window._getDocs = getDocs;
+  window._col     = collection;
+  window._fbReady = true;
+  window.dispatchEvent(new Event('fbReady'));
+</script>
+
+<script>
+// ── PIN ──
+const PIN = '007007'; // Cambia este PIN si quieres
+function checkPin(){
+  const val = document.getElementById('pinInput').value;
+  const err = document.getElementById('lockError');
+  if(val === PIN){
+    sessionStorage.setItem('hub_auth','1');
+    document.getElementById('lockScreen').style.opacity='0';
+    setTimeout(()=>{
+      document.getElementById('lockScreen').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+      initHub();
+    },400);
+    err.classList.remove('show');
+  } else {
+    err.classList.add('show');
+    document.getElementById('pinInput').value='';
+    document.getElementById('pinInput').style.borderColor='#FF4757';
+    setTimeout(()=>document.getElementById('pinInput').style.borderColor='',1500);
+  }
+}
+// Auto-login if already authenticated this session
+if(sessionStorage.getItem('hub_auth')==='1'){
+  document.getElementById('lockScreen').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+}
+
+// ── DATETIME ──
+function updateClock(){
+  const now = new Date();
+  document.getElementById('hubDateTime').textContent =
+    now.toLocaleDateString('es',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) +
+    ' · ' + now.toLocaleTimeString('es');
+}
+setInterval(updateClock, 1000);
+
+// ── INIT ──
+function initHub(){
+  updateClock();
+  runHealthChecks();
+  window.addEventListener('fbReady', loadData, {once:true});
+  if(window._fbReady) loadData();
+  setTimeout(()=>{ if(!window._fbReady) loadData(); }, 2500);
+}
+if(sessionStorage.getItem('hub_auth')==='1') initHub();
+
+// ── LOAD DATA ──
+async function loadData(){
+  if(!window.db) return;
+  try{
+    const [botsSnap, apptsSnap] = await Promise.all([
+      window._getDocs(window._col(window.db,'bots')),
+      window._getDocs(window._col(window.db,'appointments')),
+    ]);
+    const bots=[]; botsSnap.forEach(d=>bots.push({id:d.id,...d.data()}));
+    const appts=[]; apptsSnap.forEach(d=>appts.push({id:d.id,...d.data()}));
+    const clients = new Set(appts.map(a=>a.clientPhone||a.phone||a.clientName).filter(Boolean));
+
+    // KPIs
+    setText('kBots',   bots.length);
+    setText('kActive', bots.filter(b=>b.active!==false).length);
+    setText('kAppts',  appts.length);
+    setText('kPending',appts.filter(a=>a.status==='pending'||!a.status).length);
+    setText('kClients',clients.size);
+
+    // Bots grid
+    renderBots(bots, appts);
+  }catch(e){ console.warn(e); }
+}
+
+function renderBots(bots, appts){
+  const base = location.origin + location.pathname.replace('hub.html','');
+  const botAppts = {};
+  appts.forEach(a=>{ if(a.botId) botAppts[a.botId]=(botAppts[a.botId]||0)+1; });
+
+  document.getElementById('botsCount').textContent = bots.length + ' bots';
+  const grid = document.getElementById('botsGrid');
+  if(bots.length===0){
+    grid.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);">No hay bots aún. <a href="form.html" style="color:var(--p)">Crea el primero →</a></div>';
+    return;
+  }
+  grid.innerHTML = bots.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(b=>{
+    const active = b.active!==false;
+    const na = botAppts[b.id]||0;
+    return `<div class="bot-card">
+      <div class="bot-avatar">${b.logoURL?`<img src="${esc(b.logoURL)}" onerror="this.parentElement.textContent='🤖'">`:'🤖'}</div>
+      <div class="bot-info">
+        <div class="bot-name">${esc(b.businessName||b.id)}</div>
+        <div class="bot-type">${esc(b.businessType||'')}${na>0?' · 📅 '+na+' citas':''}</div>
+      </div>
+      <div class="bot-active" title="${active?'Activo':'Inactivo'}">
+        <div class="${active?'dot-on':'dot-off'}"></div>
+        <span style="font-size:0.7rem;color:var(--muted)">${active?'On':'Off'}</span>
+      </div>
+      <div class="bot-links-row">
+        <a class="bot-link" href="${base}agent.html?id=${b.id}" target="_blank">🤖 Bot</a>
+        <a class="bot-link" href="${base}landing.html?id=${b.id}" target="_blank">🌐 Landing</a>
+        <a class="bot-link" href="${base}card.html?id=${b.id}" target="_blank">💳 Card</a>
+        <a class="bot-link" href="${base}editor.html?id=${b.id}" target="_blank">✏️ Editor</a>
+        <button class="copy-id" onclick="copyText('${b.id}')">📋 ID</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── HEALTH CHECKS ──
+async function runHealthChecks(){
+  setH('firebase', !!window._fbReady, 'Conectado ✅','Sin conexión ❌');
+  checkOpenAI();
+  checkCloudflare();
+  checkGitHub();
+}
+function setH(key, ok, okMsg, failMsg){
+  const cls = ok?'ok':'fail';
+  const card = document.getElementById('hc-'+key);
+  const icon = document.getElementById('hi-'+key);
+  const dot  = document.getElementById('hd-'+key);
+  const stat = document.getElementById('hs-'+key);
+  if(card) card.style.borderColor = ok?'rgba(67,233,123,0.3)':'rgba(255,71,87,0.3)';
+  if(icon) icon.className='h-icon '+cls;
+  if(dot)  dot.className='h-dot '+cls;
+  if(stat) stat.textContent = ok?okMsg:failMsg;
+}
+async function checkOpenAI(){
+  try{
+    const r=await fetch('https://api.openai.com/v1/models',{headers:{'Authorization':'Bearer invalid'},signal:AbortSignal.timeout(6000)});
+    setH('openai',r.status===401||r.status===200,'API Online ✅','Sin respuesta ❌');
+  }catch(e){ setH('openai',false,'API Online ✅','Sin respuesta ❌'); }
+}
+async function checkCloudflare(){
+  try{
+    const r=await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev',{signal:AbortSignal.timeout(8000)});
+    setH('cloudflare',r.status<500,'Worker Online ✅','Worker caído ❌');
+  }catch(e){ setH('cloudflare',false,'Worker Online ✅','Sin respuesta ❌'); }
+}
+async function checkGitHub(){
+  try{
+    const r=await fetch('https://apolo189.github.io/superbot007/admin.html',{method:'HEAD',signal:AbortSignal.timeout(8000)});
+    setH('github',r.ok,'Pages Online ✅','Sin respuesta ❌');
+  }catch(e){ setH('github',false,'Pages Online ✅','Sin respuesta ❌'); }
+}
+
+// ── HELPERS ──
+function setText(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+function esc(s){ const d=document.createElement('div'); d.textContent=String(s||''); return d.innerHTML; }
+function copyText(t){ navigator.clipboard.writeText(t).then(()=>toast('📋 Copiado: '+t)); }
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ── PARTICLES ──
+(function(){
+  const c=document.getElementById('bgCanvas');
+  const ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<60;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,r:Math.random()*2+1,a:Math.random()*0.4+0.1});
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(242,66,7,${p.a})`; ctx.fill();
+      pts.slice(i+1).forEach(q=>{
+        const d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<120){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=`rgba(242,66,7,${0.06*(1-d/120)})`; ctx.lineWidth=0.5; ctx.stroke(); }
+      });
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+</script>
+</body>
+</html>
