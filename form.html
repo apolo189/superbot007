@@ -162,6 +162,32 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .result-btn.outline { background: transparent; border-color: var(--primary); color: var(--primary); }
 .result-btn.green { background: rgba(67,233,123,0.15); border-color: var(--success); color: var(--success); }
 .result-btn:hover { transform: translateY(-2px); }
+/* Bot summary card (Step 8) */
+.bot-summary { background: rgba(108,99,255,0.05); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.4rem; margin: 1.2rem 0; text-align: left; }
+.bot-summary-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
+.bot-summary-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.83rem; }
+.bot-summary-row:last-child { border-bottom: none; }
+.bot-summary-key { color: var(--muted); font-weight: 500; flex-shrink: 0; min-width: 110px; }
+.bot-summary-val { color: var(--text); font-weight: 600; word-break: break-all; text-align: right; }
+.bot-summary-val.mono { font-family: monospace; font-size: 0.78rem; color: var(--primary); }
+/* Link cards grid (Step 8) */
+.link-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem; margin: 1rem 0; }
+@media(max-width:520px){ .link-cards-grid { grid-template-columns: 1fr; } }
+.link-card-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; transition: all 0.25s; }
+.link-card-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+.link-card-item .lci-header { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.link-card-item .lci-url { font-size: 0.72rem; font-family: monospace; color: var(--primary); word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.link-card-item .lci-btns { display: flex; gap: 0.4rem; margin-top: 0.3rem; }
+.lci-btn { flex: 1; padding: 0.4rem 0.5rem; border-radius: 8px; border: none; font-size: 0.73rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.3rem; text-decoration: none; }
+.lci-btn.open { background: var(--gradient); color: white; }
+.lci-btn.copy { background: rgba(108,99,255,0.12); border: 1px solid var(--border); color: var(--primary); }
+.lci-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+/* Webhook box */
+.webhook-box { background: rgba(67,233,123,0.06); border: 1px solid rgba(67,233,123,0.25); border-radius: 14px; padding: 1rem 1.2rem; margin: 1rem 0; text-align: left; }
+.webhook-box .wb-title { font-size: 0.82rem; font-weight: 700; color: var(--success); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+.webhook-url { font-family: monospace; font-size: 0.78rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(67,233,123,0.2); border-radius: 8px; padding: 0.55rem 0.8rem; color: var(--success); word-break: break-all; cursor: pointer; transition: background 0.2s; }
+.webhook-url:hover { background: rgba(67,233,123,0.08); }
+.webhook-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -427,32 +453,83 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     <div class="success-title">¡Tu Bot está LISTO!</div>
     <div class="success-subtitle">Super Bot 007 está activado y funcionando 🚀</div>
 
-    <!-- PRIMARY ACTION: Share chatbot -->
+    <!-- PRIMARY SHARE -->
     <div class="share-row">
       <button id="copyAgentBtn" class="share-btn copy" onclick="copyAgentLink()"><i class="fas fa-copy"></i> Copiar enlace del chatbot</button>
       <a id="waShareBtn" href="#" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i> Compartir por WhatsApp</a>
     </div>
 
-    <!-- Bot ID -->
-    <p style="font-size:0.78rem;color:var(--muted);margin:0.3rem 0 0;">ID de tu bot (guárdalo):</p>
+    <!-- BOT ID -->
+    <p style="font-size:0.78rem;color:var(--muted);margin:0.3rem 0 0;">ID de tu bot — guárdalo:</p>
     <div class="bot-id-box" id="resultBotId" onclick="copyId(this)">cargando...</div>
     <p style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem;">Haz clic para copiar el ID</p>
 
-    <!-- Next steps guide -->
+    <!-- ═══ LINK CARDS ═══ -->
+    <div class="link-cards-grid" id="linkCardsGrid">
+      <!-- Filled dynamically by activateBot() -->
+    </div>
+
+    <!-- ═══ WEBHOOK WHATSAPP ═══ -->
+    <div class="webhook-box">
+      <div class="wb-title"><i class="fas fa-plug"></i> Webhook WhatsApp (Twilio)</div>
+      <div class="webhook-url" id="webhookUrl" onclick="copyWebhook(this)" title="Haz clic para copiar">
+        cargando...
+      </div>
+      <p class="webhook-note">
+        Pega esta URL en tu <strong>Twilio WhatsApp Sandbox</strong> → <em>When a message comes in</em>.<br>
+        Tu bot responderá automáticamente a los mensajes de WhatsApp. 💬
+      </p>
+    </div>
+
+    <!-- ═══ BOT SUMMARY ═══ -->
+    <div class="bot-summary">
+      <div class="bot-summary-title"><i class="fas fa-info-circle"></i> Resumen del Bot</div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">🏢 Negocio</span>
+        <span class="bot-summary-val" id="sNombre">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">📋 Tipo</span>
+        <span class="bot-summary-val" id="sTipo">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">🌎 Ciudad</span>
+        <span class="bot-summary-val" id="sCiudad">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">📞 Teléfono</span>
+        <span class="bot-summary-val" id="sTelefono">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">💬 WhatsApp</span>
+        <span class="bot-summary-val" id="sWhatsapp">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">✂️ Servicios</span>
+        <span class="bot-summary-val" id="sServicios">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">🤖 Modelo IA</span>
+        <span class="bot-summary-val" id="sModelo">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">🌐 Idioma</span>
+        <span class="bot-summary-val" id="sIdioma">—</span>
+      </div>
+      <div class="bot-summary-row">
+        <span class="bot-summary-key">🆔 Bot ID</span>
+        <span class="bot-summary-val mono" id="sBotId">—</span>
+      </div>
+    </div>
+
+    <!-- ═══ NEXT STEPS ═══ -->
     <div class="next-steps">
       <h4>🗺️ ¿Qué hacer ahora?</h4>
       <div class="next-step-item"><div class="next-step-num">1</div><span><strong>Prueba el chatbot</strong> – abre el enlace y hazle preguntas sobre tu negocio.</span></div>
       <div class="next-step-item"><div class="next-step-num">2</div><span><strong>Compártelo</strong> – envía el enlace a amigos o clientes por WhatsApp.</span></div>
-      <div class="next-step-item"><div class="next-step-num">3</div><span><strong>Personaliza tu landing page</strong> – edita textos, colores e imágenes desde el Editor.</span></div>
-      <div class="next-step-item"><div class="next-step-num">4</div><span><strong>Revisa tus citas</strong> – ve al Dashboard para ver las citas agendadas.</span></div>
-    </div>
-
-    <!-- All links -->
-    <div class="result-grid">
-      <a id="rAgent" href="#" target="_blank" class="result-btn green"><i class="fas fa-robot"></i> Probar Chatbot</a>
-      <a id="rLanding" href="#" target="_blank" class="result-btn primary"><i class="fas fa-globe"></i> Ver Landing Page</a>
-      <a id="rEditor" href="#" target="_blank" class="result-btn outline"><i class="fas fa-edit"></i> Abrir Editor</a>
-      <a id="rDash" href="#" target="_blank" class="result-btn outline"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      <div class="next-step-item"><div class="next-step-num">3</div><span><strong>Configura WhatsApp</strong> – pega el Webhook en Twilio para recibir mensajes reales.</span></div>
+      <div class="next-step-item"><div class="next-step-num">4</div><span><strong>Personaliza</strong> – edita textos, colores e imágenes desde el Editor.</span></div>
+      <div class="next-step-item"><div class="next-step-num">5</div><span><strong>Revisa tus citas</strong> – ve al Dashboard para ver las citas agendadas.</span></div>
     </div>
 
     <button onclick="location.reload()" style="margin-top:1.4rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 2rem;border-radius:10px;cursor:pointer;font-size:0.85rem;">
@@ -860,20 +937,59 @@ async function activateBot(){
     // Show success
     document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
     document.getElementById('step8').classList.add('active');
-    document.getElementById('resultBotId').textContent=botId;
-    const agentUrl = `${location.origin}${location.pathname.replace('form.html','')}agent.html?id=${botId}`;
-    const landingUrl = `${location.origin}${location.pathname.replace('form.html','')}landing.html?id=${botId}`;
-    const editorUrl = `${location.origin}${location.pathname.replace('form.html','')}editor.html?id=${botId}`;
-    const dashUrl = `${location.origin}${location.pathname.replace('form.html','')}dashboard.html?id=${botId}`;
-    document.getElementById('rAgent').href = agentUrl;
-    document.getElementById('rLanding').href = landingUrl;
-    document.getElementById('rEditor').href = editorUrl;
-    document.getElementById('rDash').href = dashUrl;
-    // Share buttons
+
+    // ── Build URLs ──
+    const base = `${location.origin}${location.pathname.replace('form.html','')}`;
+    const agentUrl   = `${base}agent.html?id=${botId}`;
+    const landingUrl = `${base}landing.html?id=${botId}`;
+    const editorUrl  = `${base}editor.html?id=${botId}`;
+    const dashUrl    = `${base}dashboard.html?id=${botId}`;
+    const workerUrl  = 'https://superbot007-whatsapp.luisomorgado4.workers.dev';
+    const webhookUrl = `${workerUrl}/whatsapp?botId=${botId}`;
+
+    // ── Populate Bot ID ──
+    document.getElementById('resultBotId').textContent = botId;
     window._agentUrl = agentUrl;
+
+    // ── Webhook box ──
+    document.getElementById('webhookUrl').textContent = webhookUrl;
+
+    // ── Link Cards ──
+    const links = [
+      { icon:'fa-robot',      label:'Chatbot',      color:'rgba(67,233,123,0.15)', border:'rgba(67,233,123,0.4)', url: agentUrl   },
+      { icon:'fa-globe',      label:'Landing Page', color:'rgba(108,99,255,0.12)', border:'rgba(108,99,255,0.4)', url: landingUrl },
+      { icon:'fa-edit',       label:'Editor',       color:'rgba(255,101,132,0.1)', border:'rgba(255,101,132,0.3)', url: editorUrl  },
+      { icon:'fa-chart-bar',  label:'Dashboard',    color:'rgba(255,215,0,0.08)',  border:'rgba(255,215,0,0.3)',   url: dashUrl    },
+    ];
+    document.getElementById('linkCardsGrid').innerHTML = links.map(l=>`
+      <div class="link-card-item" style="background:${l.color};border-color:${l.border}">
+        <div class="lci-header"><i class="fas ${l.icon}"></i> ${l.label}</div>
+        <div class="lci-url">${l.url}</div>
+        <div class="lci-btns">
+          <a class="lci-btn open" href="${l.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir</a>
+          <button class="lci-btn copy" onclick="copyToClipboard('${l.url}','${l.label} copiado ✅')"><i class="fas fa-copy"></i> Copiar</button>
+        </div>
+      </div>`).join('');
+
+    // ── Summary fields ──
+    const g2 = id => { const el=document.getElementById(id); return el?.value?.trim()||''; };
+    const svcsCount = document.querySelectorAll('#servicesList .list-item').length;
+    const langMap = {'es':'Español 🇪🇸','en':'English 🇺🇸','pt':'Português 🇧🇷'};
+    setText('sNombre',   rawData.businessName||'—');
+    setText('sTipo',     rawData.businessType||'—');
+    setText('sCiudad',   rawData.businessCity||'—');
+    setText('sTelefono', rawData.phone||'—');
+    setText('sWhatsapp', rawData.whatsapp||'—');
+    setText('sServicios', svcsCount>0?`${svcsCount} servicio(s)`:'Sin servicios');
+    setText('sModelo',   rawData.gptModel||'gpt-4o-mini');
+    setText('sIdioma',   langMap[rawData.botLanguage]||rawData.botLanguage||'Español');
+    setText('sBotId',    botId);
+
+    // ── Share buttons ──
     const businessName = rawData.businessName || 'mi negocio';
     const waText = encodeURIComponent(`¡Hola! Te comparto el chatbot de ${businessName} creado con Super Bot 007. Puedes hacer preguntas, agendar citas y más: ${agentUrl}`);
     document.getElementById('waShareBtn').href = `https://wa.me/?text=${waText}`;
+
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
     toast('🎉 ¡Bot activado! Copia el enlace y compártelo.','success');
     window.scrollTo({top:0,behavior:'smooth'});
@@ -885,8 +1001,12 @@ async function activateBot(){
   }
 }
 function copyId(el){ navigator.clipboard.writeText(el.textContent).then(()=>toast('ID copiado ✅','success')); }
+function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent=val||'—'; }
+function copyToClipboard(text, msg){ navigator.clipboard.writeText(text).then(()=>toast(msg||'Copiado ✅','success')).catch(()=>{}); }
+function copyWebhook(el){ copyToClipboard(el.textContent.trim(),'Webhook copiado ✅'); }
 function copyAgentLink(){
-  const url = window._agentUrl || document.getElementById('rAgent').href;
+  const url = window._agentUrl;
+  if(!url) return;
   navigator.clipboard.writeText(url).then(()=>{
     const btn = document.getElementById('copyAgentBtn');
     btn.classList.add('copied');
