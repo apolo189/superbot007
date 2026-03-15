@@ -135,16 +135,32 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .toast.success { background: rgba(67,233,123,0.12); border: 1px solid rgba(67,233,123,0.4); color: var(--success); }
 .toast.error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.4); color: var(--danger); }
 .toast.info { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.4); color: var(--primary); }
-.success-card { text-align: center; padding: 2.5rem 1.5rem; }
-.success-icon { font-size: 4.5rem; margin-bottom: 1.2rem; animation: bounceIn 0.8s ease; }
+.success-card { text-align: center; padding: 2rem 1.5rem 2.5rem; }
+.success-icon { font-size: 5rem; margin-bottom: 0.8rem; animation: bounceIn 0.8s ease; display:block; }
 @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
-.success-title { font-size: 1.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
-.bot-id-box { background: rgba(108,99,255,0.12); border: 2px solid var(--primary); border-radius: 12px; padding: 1rem 1.5rem; margin: 1.2rem 0; font-size: 1.1rem; font-weight: 800; font-family: monospace; color: var(--primary); word-break: break-all; cursor: pointer; }
-.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.2rem; }
+.success-title { font-size: 2rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.3rem; }
+.success-subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 1.2rem; }
+/* Share buttons */
+.share-row { display: flex; gap: 0.7rem; margin: 0.9rem 0; justify-content: center; flex-wrap: wrap; }
+.share-btn { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.7rem 1.2rem; border-radius: 12px; font-weight: 700; font-size: 0.88rem; cursor: pointer; border: none; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; }
+.share-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+.share-btn.wa { background: #25D366; color: #fff; }
+.share-btn.copy { background: rgba(108,99,255,0.18); border: 2px solid var(--primary); color: var(--primary); }
+.share-btn.copy.copied { background: rgba(67,233,123,0.18); border-color: var(--success); color: var(--success); }
+/* ID box */
+.bot-id-box { background: rgba(108,99,255,0.12); border: 2px solid var(--primary); border-radius: 12px; padding: 0.8rem 1.2rem; margin: 0.6rem 0; font-size: 0.95rem; font-weight: 800; font-family: monospace; color: var(--primary); word-break: break-all; cursor: pointer; }
+/* Steps guide */
+.next-steps { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 14px; padding: 1.1rem 1.3rem; margin: 1.2rem 0 0.5rem; text-align: left; }
+.next-steps h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin: 0 0 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
+.next-step-item { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.55rem; font-size: 0.83rem; color: var(--muted); line-height: 1.4; }
+.next-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--gradient); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+/* Result grid */
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1rem; }
 @media(max-width:480px){ .result-grid { grid-template-columns: 1fr; } }
-.result-btn { padding: 0.85rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; }
+.result-btn { padding: 0.78rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.83rem; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; }
 .result-btn.primary { background: var(--gradient); color: white; box-shadow: 0 4px 20px rgba(108,99,255,0.35); }
 .result-btn.outline { background: transparent; border-color: var(--primary); color: var(--primary); }
+.result-btn.green { background: rgba(67,233,123,0.15); border-color: var(--success); color: var(--success); }
 .result-btn:hover { transform: translateY(-2px); }
 </style>
 </head>
@@ -407,18 +423,39 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <!-- STEP 8: SUCCESS -->
 <div class="step-card" id="step8">
   <div class="success-card">
-    <div class="success-icon">🎉</div>
-    <div class="success-title">¡Bot 007 Activado!</div>
-    <p style="color:var(--muted);margin-bottom:0.5rem;">Tu Super Bot 007 está listo. Guarda este ID:</p>
+    <span class="success-icon">🎉</span>
+    <div class="success-title">¡Tu Bot está LISTO!</div>
+    <div class="success-subtitle">Super Bot 007 está activado y funcionando 🚀</div>
+
+    <!-- PRIMARY ACTION: Share chatbot -->
+    <div class="share-row">
+      <button id="copyAgentBtn" class="share-btn copy" onclick="copyAgentLink()"><i class="fas fa-copy"></i> Copiar enlace del chatbot</button>
+      <a id="waShareBtn" href="#" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i> Compartir por WhatsApp</a>
+    </div>
+
+    <!-- Bot ID -->
+    <p style="font-size:0.78rem;color:var(--muted);margin:0.3rem 0 0;">ID de tu bot (guárdalo):</p>
     <div class="bot-id-box" id="resultBotId" onclick="copyId(this)">cargando...</div>
-    <p style="font-size:0.75rem;color:var(--muted);">Haz clic para copiar</p>
+    <p style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem;">Haz clic para copiar el ID</p>
+
+    <!-- Next steps guide -->
+    <div class="next-steps">
+      <h4>🗺️ ¿Qué hacer ahora?</h4>
+      <div class="next-step-item"><div class="next-step-num">1</div><span><strong>Prueba el chatbot</strong> – abre el enlace y hazle preguntas sobre tu negocio.</span></div>
+      <div class="next-step-item"><div class="next-step-num">2</div><span><strong>Compártelo</strong> – envía el enlace a amigos o clientes por WhatsApp.</span></div>
+      <div class="next-step-item"><div class="next-step-num">3</div><span><strong>Personaliza tu landing page</strong> – edita textos, colores e imágenes desde el Editor.</span></div>
+      <div class="next-step-item"><div class="next-step-num">4</div><span><strong>Revisa tus citas</strong> – ve al Dashboard para ver las citas agendadas.</span></div>
+    </div>
+
+    <!-- All links -->
     <div class="result-grid">
+      <a id="rAgent" href="#" target="_blank" class="result-btn green"><i class="fas fa-robot"></i> Probar Chatbot</a>
       <a id="rLanding" href="#" target="_blank" class="result-btn primary"><i class="fas fa-globe"></i> Ver Landing Page</a>
       <a id="rEditor" href="#" target="_blank" class="result-btn outline"><i class="fas fa-edit"></i> Abrir Editor</a>
-      <a id="rAgent" href="#" target="_blank" class="result-btn outline"><i class="fas fa-robot"></i> Probar Chatbot</a>
       <a id="rDash" href="#" target="_blank" class="result-btn outline"><i class="fas fa-chart-bar"></i> Dashboard</a>
     </div>
-    <button onclick="location.reload()" style="margin-top:1.5rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 2rem;border-radius:10px;cursor:pointer;font-size:0.88rem;">
+
+    <button onclick="location.reload()" style="margin-top:1.4rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.6rem 2rem;border-radius:10px;cursor:pointer;font-size:0.85rem;">
       + Crear otro bot
     </button>
   </div>
@@ -824,12 +861,21 @@ async function activateBot(){
     document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
     document.getElementById('step8').classList.add('active');
     document.getElementById('resultBotId').textContent=botId;
-    document.getElementById('rLanding').href=`landing.html?id=${botId}`;
-    document.getElementById('rEditor').href=`editor.html?id=${botId}`;
-    document.getElementById('rAgent').href=`agent.html?id=${botId}`;
-    document.getElementById('rDash').href=`dashboard.html?id=${botId}`;
+    const agentUrl = `${location.origin}${location.pathname.replace('form.html','')}agent.html?id=${botId}`;
+    const landingUrl = `${location.origin}${location.pathname.replace('form.html','')}landing.html?id=${botId}`;
+    const editorUrl = `${location.origin}${location.pathname.replace('form.html','')}editor.html?id=${botId}`;
+    const dashUrl = `${location.origin}${location.pathname.replace('form.html','')}dashboard.html?id=${botId}`;
+    document.getElementById('rAgent').href = agentUrl;
+    document.getElementById('rLanding').href = landingUrl;
+    document.getElementById('rEditor').href = editorUrl;
+    document.getElementById('rDash').href = dashUrl;
+    // Share buttons
+    window._agentUrl = agentUrl;
+    const businessName = rawData.businessName || 'mi negocio';
+    const waText = encodeURIComponent(`¡Hola! Te comparto el chatbot de ${businessName} creado con Super Bot 007. Puedes hacer preguntas, agendar citas y más: ${agentUrl}`);
+    document.getElementById('waShareBtn').href = `https://wa.me/?text=${waText}`;
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
-    toast('🎉 ¡Bot activado!','success');
+    toast('🎉 ¡Bot activado! Copia el enlace y compártelo.','success');
     window.scrollTo({top:0,behavior:'smooth'});
   }catch(e){
     hideOv();
@@ -839,6 +885,16 @@ async function activateBot(){
   }
 }
 function copyId(el){ navigator.clipboard.writeText(el.textContent).then(()=>toast('ID copiado ✅','success')); }
+function copyAgentLink(){
+  const url = window._agentUrl || document.getElementById('rAgent').href;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copyAgentBtn');
+    btn.classList.add('copied');
+    btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!';
+    toast('Enlace del chatbot copiado ✅','success');
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500);
+  });
+}
 
 // ───────── UI HELPERS ─────────
 function showOv(t){document.getElementById('overlayText').textContent=t||'...';document.getElementById('overlay').classList.add('show');}
