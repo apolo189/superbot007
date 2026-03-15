@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Digital Card – Super Bot 007</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#6C63FF;--s:#FF6584;--a:#43E97B;--dark:#0A0A0F;
+  --card:rgba(255,255,255,0.06);--border:rgba(255,255,255,0.12);
+  --text:#F0F0FF;--muted:#8888AA;
+  --glow:rgba(108,99,255,0.45);
+  --grad:linear-gradient(135deg,var(--p),var(--s));
+}
+html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* ── CANVAS PARTICLES ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LOADING ── */
+#loadingScreen{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s}
+#loadingScreen.hide{opacity:0;pointer-events:none}
+.loader-ring{width:52px;height:52px;border:3px solid rgba(255,255,255,0.08);border-top-color:var(--p);border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── WRAPPER ── */
+.card-wrapper{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem 1rem 3rem}
+
+/* ── MAIN CARD ── */
+.card{
+  width:100%;max-width:420px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--border);
+  border-radius:32px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.05),inset 0 1px 0 rgba(255,255,255,0.1);
+  animation:cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ── HERO HEADER ── */
+.card-hero{
+  position:relative;height:180px;overflow:hidden;
+  background:linear-gradient(135deg,var(--p),var(--s));
+}
+.card-hero-bg{position:absolute;inset:0;background:var(--grad);opacity:0.9}
+.card-hero-blur{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,0.18),transparent);
+}
+.card-hero-pattern{
+  position:absolute;inset:0;opacity:0.08;
+  background-image:radial-gradient(circle,white 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.card-hero-shine{
+  position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(255,255,255,0.06) 60deg,transparent 120deg);
+  animation:rotateShin 8s linear infinite;
+}
+@keyframes rotateShin{to{transform:rotate(360deg)}}
+
+/* ── LOGO ── */
+.logo-wrap{
+  position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);
+  width:80px;height:80px;
+  border-radius:22px;
+  background:var(--dark);
+  border:3px solid var(--border);
+  box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:transform 0.3s;
+}
+.logo-wrap:hover{transform:translateX(-50%) scale(1.06)}
+.logo-wrap img{width:100%;height:100%;object-fit:cover}
+.logo-wrap .logo-fallback{font-size:2rem}
+
+/* ── BODY ── */
+.card-body{padding:3rem 1.6rem 1.8rem;text-align:center}
+
+.biz-name{
+  font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:0.3rem;line-height:1.2;
+}
+.biz-type{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.8rem;font-weight:600;color:var(--muted);
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  padding:0.3rem 0.9rem;border-radius:20px;margin-bottom:0.7rem;
+  text-transform:uppercase;letter-spacing:0.06em;
+}
+.biz-city{font-size:0.85rem;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;justify-content:center;gap:0.3rem}
+
+/* ── ACTION BUTTONS ROW ── */
+.action-row{display:flex;gap:0.7rem;justify-content:center;margin-bottom:1.6rem;flex-wrap:wrap}
+.action-btn{
+  display:flex;flex-direction:column;align-items:center;gap:0.3rem;
+  width:70px;padding:0.85rem 0.5rem;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:18px;cursor:pointer;
+  text-decoration:none;color:var(--text);
+  font-size:0.65rem;font-weight:600;
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  transform-style:preserve-3d;
+  position:relative;overflow:hidden;
+}
+.action-btn::before{
+  content:'';position:absolute;inset:0;
+  background:var(--grad);opacity:0;transition:opacity 0.25s;
+  border-radius:inherit;
+}
+.action-btn:hover{transform:translateY(-4px) scale(1.06);border-color:var(--p);box-shadow:0 12px 30px var(--glow)}
+.action-btn:hover::before{opacity:0.12}
+.action-btn:active{transform:translateY(-1px) scale(1.02)}
+.action-btn i{font-size:1.3rem;transition:transform 0.25s}
+.action-btn:hover i{transform:scale(1.15)}
+.action-btn.wa i{color:#25D366}
+.action-btn.wa:hover{border-color:#25D366;box-shadow:0 12px 30px rgba(37,211,102,0.4)}
+.action-btn.call i{color:var(--a)}
+.action-btn.mail i{color:var(--s)}
+.action-btn.web i{color:var(--p)}
+.action-btn.ig i{color:#E1306C}
+.action-btn.fb i{color:#1877F2}
+.action-btn.tk i{color:#69C9D0}
+.action-btn.yt i{color:#FF0000}
+
+/* ── DIVIDER ── */
+.section-divider{
+  display:flex;align-items:center;gap:0.8rem;
+  margin:1.2rem 0 0.9rem;color:var(--muted);
+  font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── SERVICES ── */
+.services-grid{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.4rem}
+.svc-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.65rem 1rem;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:12px;
+  font-size:0.85rem;
+  transition:all 0.2s;
+}
+.svc-item:hover{background:rgba(255,255,255,0.06);border-color:var(--p);transform:translateX(3px)}
+.svc-name{font-weight:600;display:flex;align-items:center;gap:0.5rem}
+.svc-price{
+  font-size:0.8rem;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── SOCIAL ROW ── */
+.social-row{display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.4rem}
+
+/* ── CTA BUTTONS ── */
+.cta-section{margin-top:1.4rem;display:flex;flex-direction:column;gap:0.7rem}
+.cta-btn{
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  padding:0.95rem 1.2rem;border-radius:16px;
+  font-weight:700;font-size:0.9rem;cursor:pointer;
+  text-decoration:none;border:none;
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;overflow:hidden;
+}
+.cta-btn::after{
+  content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;
+  background:rgba(255,255,255,0.15);transform:skewX(-20deg);
+  transition:left 0.4s;
+}
+.cta-btn:hover::after{left:120%}
+.cta-btn.primary{background:var(--grad);color:white;box-shadow:0 6px 24px var(--glow)}
+.cta-btn.primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 36px var(--glow)}
+.cta-btn.secondary{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text)}
+.cta-btn.secondary:hover{background:rgba(255,255,255,0.09);border-color:var(--p);transform:translateY(-2px)}
+.cta-btn.wa-cta{background:linear-gradient(135deg,#25D366,#128C7E);color:white;box-shadow:0 6px 24px rgba(37,211,102,0.35)}
+.cta-btn.wa-cta:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 36px rgba(37,211,102,0.5)}
+
+/* ── SHARE + VCF ── */
+.share-row{display:flex;gap:0.6rem;margin-top:0.7rem}
+.share-btn-sm{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:0.4rem;
+  padding:0.7rem;border-radius:12px;font-size:0.78rem;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);color:var(--muted);
+  text-decoration:none;transition:all 0.2s;
+}
+.share-btn-sm:hover{border-color:var(--p);color:var(--text);background:rgba(108,99,255,0.08)}
+
+/* ── POWERED BY ── */
+.powered{
+  text-align:center;margin-top:1.8rem;padding-top:1.2rem;
+  border-top:1px solid var(--border);
+  font-size:0.72rem;color:var(--muted);
+}
+.powered a{
+  color:var(--p);text-decoration:none;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ── NO BOT ── */
+.no-bot{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1rem;text-align:center;padding:2rem}
+.no-bot h2{font-size:1.4rem;font-weight:700}
+.no-bot p{color:var(--muted);font-size:0.9rem}
+
+/* ── TOAST ── */
+#cardToast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);
+  background:rgba(67,233,123,0.15);border:1px solid rgba(67,233,123,0.4);color:#43E97B;
+  padding:0.8rem 1.4rem;border-radius:12px;font-size:0.85rem;font-weight:600;
+  z-index:9999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;
+  white-space:nowrap;
+}
+#cardToast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── DESCRIPTION ── */
+.biz-desc{
+  font-size:0.82rem;color:var(--muted);line-height:1.6;
+  margin-bottom:1.2rem;text-align:center;padding:0 0.4rem;
+}
+
+/* ── BADGE ── */
+.online-badge{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-size:0.7rem;font-weight:600;color:#43E97B;
+  margin-bottom:1rem;
+}
+.online-dot{width:7px;height:7px;border-radius:50%;background:#43E97B;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(67,233,123,0.5)}50%{box-shadow:0 0 0 5px rgba(67,233,123,0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:400px){
+  .card-body{padding:3rem 1.2rem 1.5rem}
+  .biz-name{font-size:1.35rem}
+  .action-btn{width:62px;font-size:0.6rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div id="loadingScreen"><div class="loader-ring"></div></div>
+
+<div class="card-wrapper">
+  <div class="card" id="mainCard" style="display:none">
+
+    <!-- HERO -->
+    <div class="card-hero" id="cardHero">
+      <div class="card-hero-bg"></div>
+      <div class="card-hero-blur"></div>
+      <div class="card-hero-pattern"></div>
+      <div class="card-hero-shine"></div>
+      <div class="logo-wrap" id="logoWrap">
+        <span class="logo-fallback" id="logoFallback">🏢</span>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+      <div class="online-badge"><span class="online-dot"></span> En línea</div>
+      <div class="biz-name" id="bizName">Cargando...</div>
+      <div class="biz-type" id="bizType">Negocio</div>
+      <div class="biz-city" id="bizCity"></div>
+      <p class="biz-desc" id="bizDesc"></p>
+
+      <!-- ACTION BUTTONS -->
+      <div class="action-row" id="actionRow"></div>
+
+      <!-- SERVICES -->
+      <div id="servicesSection" style="display:none">
+        <div class="section-divider">⚡ Servicios</div>
+        <div class="services-grid" id="servicesGrid"></div>
+      </div>
+
+      <!-- SOCIAL -->
+      <div id="socialSection" style="display:none">
+        <div class="section-divider">🌐 Redes</div>
+        <div class="social-row" id="socialRow"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section" id="ctaSection"></div>
+
+      <!-- SHARE -->
+      <div class="share-row">
+        <a class="share-btn-sm" id="shareWA" href="#"><i class="fab fa-whatsapp"></i> Compartir</a>
+        <button class="share-btn-sm" onclick="copyCardLink()"><i class="fas fa-link"></i> Copiar link</button>
+        <button class="share-btn-sm" onclick="downloadVCF()"><i class="fas fa-address-card"></i> Guardar</button>
+      </div>
+
+      <!-- POWERED -->
+      <div class="powered">
+        Powered by <a href="https://apolo189.github.io/superbot007/" target="_blank">⚡ Super Bot 007</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NO BOT -->
+  <div class="no-bot" id="noBotMsg" style="display:none">
+    <div style="font-size:3rem">😕</div>
+    <h2>Tarjeta no encontrada</h2>
+    <p>El Bot ID no existe o fue eliminado.</p>
+    <a href="index.html" style="color:var(--p);text-decoration:none;font-weight:600">← Volver al inicio</a>
+  </div>
+</div>
+
+<div id="cardToast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+window.db = db;
+window._fbGetDoc = getDoc;
+window._fbDoc    = doc;
+console.log('Firebase ready ✅');
+</script>
+
+<script>
+// ══════════════════════════════════════════
+//  PARTICLES BACKGROUND
+// ══════════════════════════════════════════
+(function initParticles(){
+  const canvas = document.getElementById('bgCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles=[];
+
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  function getColors(){
+    const s = getComputedStyle(document.documentElement);
+    return [s.getPropertyValue('--p').trim()||'#6C63FF', s.getPropertyValue('--s').trim()||'#FF6584', s.getPropertyValue('--a').trim()||'#43E97B'];
+  }
+
+  function createParticle(colors){
+    return {
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*2+0.5,
+      vx:(Math.random()-0.5)*0.35, vy:(Math.random()-0.5)*0.35,
+      alpha:Math.random()*0.4+0.1,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    };
+  }
+
+  function initP(){
+    const colors = getColors();
+    particles = Array.from({length:80},()=>createParticle(colors));
+  }
+  initP();
+  window.reinitParticles = initP;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color+(Math.floor(p.alpha*255).toString(16).padStart(2,'0'));
+      ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════
+const params = new URLSearchParams(location.search);
+const botId  = params.get('id')||'';
+let   botData = null;
+const base   = location.origin + location.pathname.replace('card.html','');
+
+function toast(msg, type='success'){
+  const t=document.getElementById('cardToast');
+  t.textContent=msg;
+  t.style.background=type==='success'?'rgba(67,233,123,0.15)':'rgba(255,71,87,0.15)';
+  t.style.borderColor=type==='success'?'rgba(67,233,123,0.4)':'rgba(255,71,87,0.4)';
+  t.style.color=type==='success'?'#43E97B':'#FF4757';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function waitFor(fn,timeout=5000){
+  return new Promise((res,rej)=>{
+    const t=Date.now();
+    (function check(){ fn()?res():Date.now()-t>timeout?rej(new Error('timeout')):setTimeout(check,80); })();
+  });
+}
+
+function setColors(d){
+  const r = document.documentElement.style;
+  if(d.primaryColor)   r.setProperty('--p', d.primaryColor);
+  if(d.secondaryColor) r.setProperty('--s', d.secondaryColor);
+  if(d.accentColor)    r.setProperty('--a', d.accentColor);
+  if(d.bgColor)        r.setProperty('--dark', d.bgColor);
+  // update glow
+  if(d.primaryColor)   r.setProperty('--glow', d.primaryColor+'70');
+  if(d.primaryColor&&d.secondaryColor)
+    r.setProperty('--grad',`linear-gradient(135deg,${d.primaryColor},${d.secondaryColor})`);
+  // update hero gradient
+  const hero = document.getElementById('cardHero');
+  if(hero && d.primaryColor && d.secondaryColor)
+    hero.style.background=`linear-gradient(135deg,${d.primaryColor},${d.secondaryColor})`;
+  // reinit particles with new colors
+  if(window.reinitParticles) setTimeout(window.reinitParticles, 100);
+}
+
+// ══════════════════════════════════════════
+//  LOAD BOT
+// ══════════════════════════════════════════
+async function loadCard(){
+  if(!botId){ showNoBot(); return; }
+  try{
+    await waitFor(()=>window.db);
+    const snap = await window._fbGetDoc(window._fbDoc(window.db,'bots',botId));
+    if(!snap.exists()){ showNoBot(); return; }
+    botData = snap.data();
+    renderCard(botData);
+  }catch(e){ console.error(e); showNoBot(); }
+}
+
+function showNoBot(){
+  document.getElementById('loadingScreen').classList.add('hide');
+  document.getElementById('noBotMsg').style.display='flex';
+}
+
+// ══════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════
+function renderCard(d){
+  // Colors first
+  setColors(d);
+
+  // Logo
+  const logoWrap = document.getElementById('logoWrap');
+  const fallback = document.getElementById('logoFallback');
+  if(d.logoURL){
+    const img=document.createElement('img');
+    img.src=d.logoURL; img.alt='logo';
+    img.onerror=()=>{ img.remove(); fallback.style.display='block'; };
+    fallback.style.display='none';
+    logoWrap.appendChild(img);
+  } else {
+    const typeEmojis={salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',construc:'🏗️',dog:'🐶',fitness:'🏋️',tienda:'🛍️',boutique:'👗',tech:'💻',dental:'🦷',medic:'🏥'};
+    const type=(d.businessType||'').toLowerCase();
+    let emoji='🏢';
+    for(const[k,v] of Object.entries(typeEmojis)){ if(type.includes(k)){emoji=v;break;} }
+    fallback.textContent=emoji;
+  }
+
+  // Basic info
+  document.getElementById('bizName').textContent = d.businessName||'Mi Negocio';
+  document.title = (d.businessName||'Digital Card')+' – Super Bot 007';
+
+  const typeLabel = d.businessType||'Negocio';
+  document.getElementById('bizType').innerHTML = `<i class="fas fa-tag"></i> ${typeLabel}`;
+
+  const cityEl = document.getElementById('bizCity');
+  if(d.businessCity){ cityEl.innerHTML=`<i class="fas fa-map-marker-alt" style="color:var(--s)"></i> ${d.businessCity}`; }
+  else { cityEl.style.display='none'; }
+
+  const descEl = document.getElementById('bizDesc');
+  if(d.description){ descEl.textContent=d.description; }
+  else { descEl.style.display='none'; }
+
+  // Action buttons
+  buildActionRow(d);
+
+  // Services
+  buildServices(d);
+
+  // Social
+  buildSocial(d);
+
+  // CTA
+  buildCTA(d);
+
+  // Share WA
+  const cardUrl = `${base}card.html?id=${botId}`;
+  const waNum   = (d.whatsapp||d.phone||'').replace(/\D/g,'');
+  const shareMsg= encodeURIComponent(`👋 Mira la tarjeta digital de *${d.businessName||''}*:\n${cardUrl}`);
+  document.getElementById('shareWA').href = `https://wa.me/?text=${shareMsg}`;
+
+  // Show card
+  document.getElementById('mainCard').style.display='block';
+  document.getElementById('loadingScreen').classList.add('hide');
+}
+
+function buildActionRow(d){
+  const row = document.getElementById('actionRow');
+  row.innerHTML='';
+  const btns=[];
+
+  if(d.phone)
+    btns.push({cls:'call',icon:'fa-phone',label:'Llamar',href:`tel:${d.phone}`});
+
+  if(d.whatsapp||d.phone){
+    const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
+    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría más información.`);
+    btns.push({cls:'wa',icon:'fa-whatsapp fab',label:'WhatsApp',href:`https://wa.me/${wa}?text=${msg}`});
+  }
+
+  if(d.email)
+    btns.push({cls:'mail',icon:'fa-envelope',label:'Email',href:`mailto:${d.email}`});
+
+  if(d.website)
+    btns.push({cls:'web',icon:'fa-globe',label:'Web',href:d.website.startsWith('http')?d.website:'https://'+d.website});
+
+  btns.forEach(b=>{
+    const a=document.createElement('a');
+    a.className=`action-btn ${b.cls}`;
+    a.href=b.href; a.target='_blank'; a.rel='noopener';
+    const iconClass = b.icon.includes('fab') ? `fab ${b.icon.replace('fab ','')}` : `fas ${b.icon}`;
+    a.innerHTML=`<i class="${iconClass}"></i><span>${b.label}</span>`;
+    row.appendChild(a);
+  });
+}
+
+function buildServices(d){
+  const svcs = Array.isArray(d.services)?d.services.filter(s=>s.name):[];
+  if(!svcs.length) return;
+  const section = document.getElementById('servicesSection');
+  const grid    = document.getElementById('servicesGrid');
+  section.style.display='block';
+  const svcEmojis={entren:'💪',spinning:'🚴',yoga:'🧘',funcional:'🏋️',zumba:'💃',pilates:'🤸',boxeo:'🥊',natacion:'🏊',corte:'✂️',color:'🎨',manicure:'💅',masaje:'💆',facial:'✨',pizza:'🍕',burger:'🍔',taco:'🌮',pollo:'🍗',sushi:'🍱',pasta:'🍝',dental:'🦷',limpieza:'🧹',pintura:'🖌️',plomer:'🔧',electr:'⚡'};
+  grid.innerHTML = svcs.slice(0,6).map(s=>{
+    const name=(s.name||'').toLowerCase();
+    let emoji='⭐';
+    for(const[k,v] of Object.entries(svcEmojis)){ if(name.includes(k)){emoji=v;break;} }
+    return `<div class="svc-item">
+      <span class="svc-name">${emoji} ${s.name}</span>
+      ${s.price?`<span class="svc-price">${s.price}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function buildSocial(d){
+  const socials=[];
+  if(d.instagram) socials.push({cls:'ig',icon:'fa-instagram',label:'Instagram',href:d.instagram.startsWith('http')?d.instagram:'https://instagram.com/'+d.instagram.replace('@','')});
+  if(d.facebook)  socials.push({cls:'fb',icon:'fa-facebook',label:'Facebook',href:d.facebook.startsWith('http')?d.facebook:'https://facebook.com/'+d.facebook.replace('@','')});
+  if(d.tiktok)    socials.push({cls:'tk',icon:'fa-tiktok',label:'TikTok',href:d.tiktok.startsWith('http')?d.tiktok:'https://tiktok.com/@'+d.tiktok.replace('@','')});
+  if(d.youtube)   socials.push({cls:'yt',icon:'fa-youtube',label:'YouTube',href:d.youtube.startsWith('http')?d.youtube:'https://youtube.com/'+d.youtube});
+  if(!socials.length) return;
+
+  document.getElementById('socialSection').style.display='block';
+  const row = document.getElementById('socialRow');
+  row.innerHTML = socials.map(s=>`
+    <a class="action-btn ${s.cls}" href="${s.href}" target="_blank" rel="noopener">
+      <i class="fab ${s.icon}"></i><span>${s.label}</span>
+    </a>`).join('');
+}
+
+function buildCTA(d){
+  const section = document.getElementById('ctaSection');
+  section.innerHTML='';
+
+  // WhatsApp CTA (if has number)
+  if(d.whatsapp||d.phone){
+    const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
+    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`);
+    section.innerHTML+=`
+      <a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank">
+        <i class="fab fa-whatsapp"></i> Agendar por WhatsApp
+      </a>`;
+  }
+
+  // Chatbot CTA
+  section.innerHTML+=`
+    <a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank">
+      <i class="fas fa-robot"></i> Chatear con el Bot
+    </a>`;
+
+  // Landing CTA
+  section.innerHTML+=`
+    <a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank">
+      <i class="fas fa-globe"></i> Ver sitio web completo
+    </a>`;
+}
+
+// ══════════════════════════════════════════
+//  COPY LINK
+// ══════════════════════════════════════════
+function copyCardLink(){
+  const url=`${base}card.html?id=${botId}`;
+  navigator.clipboard.writeText(url).then(()=>toast('✅ Link copiado!')).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove(); toast('✅ Link copiado!');
+  });
+}
+
+// ══════════════════════════════════════════
+//  DOWNLOAD VCF (guardar contacto)
+// ══════════════════════════════════════════
+function downloadVCF(){
+  if(!botData){ toast('Cargando...','error'); return; }
+  const d=botData;
+  const name=d.businessName||'Mi Negocio';
+  const phone=(d.phone||d.whatsapp||'').replace(/\D/g,'');
+  const email=d.email||'';
+  const web=d.website||'';
+  const addr=d.address||d.businessCity||'';
+  const cardUrl=`${base}card.html?id=${botId}`;
+
+  let vcf=`BEGIN:VCARD\r\nVERSION:3.0\r\n`;
+  vcf+=`FN:${name}\r\n`;
+  vcf+=`ORG:${name}\r\n`;
+  if(d.businessType) vcf+=`TITLE:${d.businessType}\r\n`;
+  if(phone)  vcf+=`TEL;TYPE=CELL:+${phone}\r\n`;
+  if(email)  vcf+=`EMAIL:${email}\r\n`;
+  if(web)    vcf+=`URL:${web.startsWith('http')?web:'https://'+web}\r\n`;
+  if(addr)   vcf+=`ADR;TYPE=WORK:;;${addr};;;;\r\n`;
+  vcf+=`URL;TYPE=CHATBOT:${cardUrl}\r\n`;
+  if(d.logoURL) vcf+=`PHOTO;VALUE=URI:${d.logoURL}\r\n`;
+  vcf+=`NOTE:Digital Card via Super Bot 007 ⚡\r\n`;
+  vcf+=`END:VCARD`;
+
+  const blob=new Blob([vcf],{type:'text/vcard'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`${name.replace(/\s+/g,'-')}.vcf`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('📇 Contacto descargado!');
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', loadCard);
+if(document.readyState==='complete'||document.readyState==='interactive') loadCard();
+</script>
+</body>
+</html>

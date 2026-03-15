@@ -966,6 +966,7 @@ async function activateBot(){
     const landingUrl = `${base}landing.html?id=${botId}`;
     const editorUrl  = `${base}editor.html?id=${botId}`;
     const dashUrl    = `${base}dashboard.html?id=${botId}`;
+    const cardUrl    = `${base}card.html?id=${botId}`;
     const workerUrl  = 'https://superbot007-whatsapp.luisomorgado4.workers.dev';
     const webhookUrl = `${workerUrl}/whatsapp?botId=${botId}`;
     const hasWhatsApp = !!(rawData.whatsapp && rawData.whatsapp.trim());
@@ -983,10 +984,11 @@ async function activateBot(){
 
     // ── Link Cards (base 4 + WhatsApp si configurado) ──
     const links = [
-      { icon:'fa-robot',      label:'Chatbot',      color:'rgba(67,233,123,0.15)', border:'rgba(67,233,123,0.4)', url: agentUrl   },
-      { icon:'fa-globe',      label:'Landing Page', color:'rgba(108,99,255,0.12)', border:'rgba(108,99,255,0.4)', url: landingUrl },
-      { icon:'fa-edit',       label:'Editor',       color:'rgba(255,101,132,0.1)', border:'rgba(255,101,132,0.3)', url: editorUrl  },
-      { icon:'fa-chart-bar',  label:'Dashboard',    color:'rgba(255,215,0,0.08)',  border:'rgba(255,215,0,0.3)',   url: dashUrl    },
+      { icon:'fa-robot',        label:'Chatbot',        color:'rgba(67,233,123,0.15)',  border:'rgba(67,233,123,0.4)',  url: agentUrl   },
+      { icon:'fa-globe',        label:'Landing Page',   color:'rgba(108,99,255,0.12)',  border:'rgba(108,99,255,0.4)',  url: landingUrl },
+      { icon:'fa-edit',         label:'Editor',         color:'rgba(255,101,132,0.1)',  border:'rgba(255,101,132,0.3)', url: editorUrl  },
+      { icon:'fa-chart-bar',    label:'Dashboard',      color:'rgba(255,215,0,0.08)',   border:'rgba(255,215,0,0.3)',   url: dashUrl    },
+      { icon:'fa-id-card',      label:'Digital Card ✨', color:'rgba(255,215,0,0.1)',   border:'rgba(255,200,0,0.45)',  url: cardUrl    },
     ];
     // 5th card: Webhook WhatsApp — solo si el usuario configuró un número
     if(hasWhatsApp){
