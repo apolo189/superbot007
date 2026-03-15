@@ -561,6 +561,8 @@ window.fbDoc = doc;
 window.fbAddDoc = addDoc;
 window.fbCollection = collection;
 window.db = db;
+window._fbReadyLanding = true;
+document.dispatchEvent(new CustomEvent('fbReadyLanding'));
 console.log("✅ Firebase landing ready");
 </script>
 
@@ -639,11 +641,14 @@ function parseBot(raw){
 // ══════ LOAD BOT ══════
 let _loadBotCalled = false;
 async function loadBot(){
-  if(_loadBotCalled) return; _loadBotCalled = true;
+  if(_loadBotCalled) return;
+  _loadBotCalled = true;
   if(!botId){ showNoBot(); return; }
-  // Wait for Firebase db to be ready (max 6s)
+  // Wait for Firebase — up to 15s
   let waited = 0;
-  while(!window.db && waited < 6000){ await new Promise(r=>setTimeout(r,200)); waited+=200; }
+  while(!(window._fbReadyLanding || window.db) && waited < 15000){
+    await new Promise(r=>setTimeout(r,150)); waited+=150;
+  }
   if(!window.db){ console.error('Firebase no disponible'); showNoBot(); return; }
   try{
     const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
@@ -1305,10 +1310,14 @@ function toggleMenu(){
   nav.style.borderBottom = '1px solid var(--border)';
 }
 
-// ══════ START ══════
-window.addEventListener('DOMContentLoaded', ()=>{ loadBot(); });
-// Fallback — in case DOMContentLoaded already fired
-if(document.readyState === 'complete' || document.readyState === 'interactive'){ loadBot(); }
+// ══════ START — single call, event-driven ══════
+if(window._fbReadyLanding){
+  loadBot();
+} else {
+  document.addEventListener('fbReadyLanding', loadBot, {once:true});
+  // Safety fallback after 500ms in case event was missed
+  setTimeout(()=>{ if(!_loadBotCalled) loadBot(); }, 500);
+}
 
 // ══════ REAL-TIME EDITOR MESSAGES ══════
 // Receives postMessage from editor.html to apply changes instantly
