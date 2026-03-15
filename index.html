@@ -22,23 +22,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'In
 /* ── COLOR OVERLAY (switches per section) ── */
 #overlay{
   position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
-  transition:background 1.2s ease;
-  background:radial-gradient(ellipse at 20% 50%, rgba(242,66,7,0.07) 0%, transparent 60%),
-             radial-gradient(ellipse at 80% 50%, rgba(242,66,7,0.04) 0%, transparent 60%);
+  transition:background 0.5s ease;
+  background:radial-gradient(ellipse at 15% 50%, rgba(242,66,7,0.18) 0%, transparent 55%),
+             radial-gradient(ellipse at 85% 50%, rgba(242,66,7,0.10) 0%, transparent 55%),
+             radial-gradient(ellipse at 50% 100%, rgba(242,66,7,0.08) 0%, transparent 50%);
 }
 #overlay.green-mode{
-  background:radial-gradient(ellipse at 20% 50%, rgba(0,255,136,0.07) 0%, transparent 60%),
-             radial-gradient(ellipse at 80% 50%, rgba(0,255,136,0.04) 0%, transparent 60%);
+  background:radial-gradient(ellipse at 15% 50%, rgba(0,255,136,0.18) 0%, transparent 55%),
+             radial-gradient(ellipse at 85% 50%, rgba(0,255,136,0.10) 0%, transparent 55%),
+             radial-gradient(ellipse at 50% 100%, rgba(0,255,136,0.08) 0%, transparent 50%);
 }
 
 /* ── SECTION STRIPE (left border indicator) ── */
 #sectionStripe{
-  position:fixed;left:0;top:0;width:4px;height:100%;z-index:50;
-  transition:background 1s ease;
-  background:linear-gradient(180deg, var(--red), rgba(242,66,7,0.1));
+  position:fixed;left:0;top:0;width:6px;height:100%;z-index:50;
+  transition:background 0.5s ease,box-shadow 0.5s ease;
+  background:linear-gradient(180deg, var(--red), rgba(242,66,7,0.2));
+  box-shadow:0 0 18px rgba(242,66,7,0.6),0 0 40px rgba(242,66,7,0.3);
 }
 #sectionStripe.green-mode{
-  background:linear-gradient(180deg, var(--green), rgba(0,255,136,0.1));
+  background:linear-gradient(180deg, var(--green), rgba(0,255,136,0.2));
+  box-shadow:0 0 18px rgba(0,255,136,0.6),0 0 40px rgba(0,255,136,0.3);
 }
 
 /* ── DECK ── */
@@ -47,7 +51,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'In
   position:absolute;top:0;left:0;width:100%;height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:50px 24px 80px;opacity:0;transform:translateX(80px);
-  transition:opacity 0.55s ease,transform 0.55s ease;pointer-events:none;
+  transition:opacity 0.35s ease,transform 0.35s ease;pointer-events:none;
 }
 .slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
 .slide.exit{opacity:0;transform:translateX(-80px);}
@@ -189,15 +193,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'In
 .dot.ag{background:var(--green);width:20px;border-radius:4px;}
 
 /* ── TIMER BAR ── */
-#tbar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),#ff6a00);z-index:200;}
-#tbar.green-mode{background:linear-gradient(90deg,var(--green),#00cc66);}
+#tbar{position:fixed;bottom:0;left:0;height:4px;background:linear-gradient(90deg,var(--red),#ff6a00);z-index:200;box-shadow:0 0 10px rgba(242,66,7,0.7);}
+#tbar.green-mode{background:linear-gradient(90deg,var(--green),#00cc66);box-shadow:0 0 10px rgba(0,255,136,0.7);}
 
 /* ── SECTION PILL (top right) ── */
 #pill{
   position:fixed;top:18px;right:18px;z-index:100;
   padding:6px 18px;border-radius:50px;font-size:0.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
   border:1px solid rgba(242,66,7,0.4);color:rgba(242,66,7,0.85);background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
-  transition:border-color .8s,color .8s;
+  transition:border-color .4s,color .4s;
 }
 #pill.green-mode{border-color:rgba(0,255,136,0.4);color:rgba(0,255,136,0.85);}
 
@@ -491,17 +495,23 @@ function draw(){
     if(p.x<0)p.x=W;if(p.x>W)p.x=0;
     if(p.y<0)p.y=H;if(p.y>H)p.y=0;
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=isGreenMode?`rgba(0,255,136,${p.a})`:`rgba(242,66,7,${p.a})`;
+    ctx.fillStyle=isGreenMode?`rgba(0,255,136,${p.a+0.1})`:`rgba(242,66,7,${p.a+0.1})`;
     ctx.fill();
+    // glow on bigger particles
+    if(p.r>1.2){
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*2.5,0,Math.PI*2);
+      ctx.fillStyle=isGreenMode?`rgba(0,255,136,0.04)`:`rgba(242,66,7,0.04)`;
+      ctx.fill();
+    }
   });
   for(let i=0;i<pts.length;i++){
     for(let j=i+1;j<pts.length;j++){
       const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
       if(d<110){
-        const al=(1-d/110)*0.1;
+        const al=(1-d/110)*0.18;
         ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
         ctx.strokeStyle=isGreenMode?`rgba(0,255,136,${al})`:`rgba(242,66,7,${al})`;
-        ctx.lineWidth=0.5;ctx.stroke();
+        ctx.lineWidth=0.6;ctx.stroke();
       }
     }
   }
@@ -515,7 +525,7 @@ draw();
 const slides=Array.from(document.querySelectorAll('.slide'));
 const total=slides.length;
 let cur=0,autoTmr=null;
-const INTERVAL=7000;
+const INTERVAL=4000;
 
 const dotsEl=document.getElementById('dots');
 const pill=document.getElementById('pill');
@@ -570,7 +580,7 @@ function goTo(idx){
 
   slides[prevIdx].classList.remove('active');
   slides[prevIdx].classList.add('exit');
-  setTimeout(()=>slides[prevIdx].classList.remove('exit'),600);
+  setTimeout(()=>slides[prevIdx].classList.remove('exit'),380);
 
   cur=idx;
   slides[cur].classList.add('active');
