@@ -434,7 +434,7 @@ img.img-broken {
   <div class="section-wrap">
     <div class="text-center">
       <div class="section-tag reveal"><i class="fas fa-shopping-bag"></i> Tienda Online</div>
-      <h2 class="section-title reveal">Nuestros Productos</h2>
+      <h2 class="section-title reveal" id="productsTitleEl">Nuestros Productos</h2>
       <p class="section-sub reveal">Compra online con facilidad y seguridad</p>
     </div>
     <div class="products-grid" id="productsGrid"></div>
@@ -469,7 +469,7 @@ img.img-broken {
   <div class="section-wrap">
     <div class="text-center">
       <div class="section-tag reveal"><i class="fas fa-heart"></i> Testimonios</div>
-      <h2 class="section-title reveal">Lo Que Dicen Nuestros Clientes</h2>
+      <h2 class="section-title reveal" id="testimonialsTitleEl">Lo Que Dicen Nuestros Clientes</h2>
     </div>
     <div class="test-grid" id="testGrid"></div>
   </div>
@@ -480,7 +480,7 @@ img.img-broken {
   <div class="section-wrap">
     <div class="text-center">
       <div class="section-tag reveal"><i class="fas fa-question-circle"></i> FAQ</div>
-      <h2 class="section-title reveal">Preguntas Frecuentes</h2>
+      <h2 class="section-title reveal" id="faqTitleEl">Preguntas Frecuentes</h2>
     </div>
     <div class="faq-list" id="faqList"></div>
   </div>
@@ -507,7 +507,7 @@ img.img-broken {
   <div class="section-wrap">
     <div class="text-center" style="margin-bottom:3rem;">
       <div class="section-tag reveal"><i class="fas fa-map-marker-alt"></i> Encuéntranos</div>
-      <h2 class="section-title reveal">Contacto & Horarios</h2>
+      <h2 class="section-title reveal" id="contactTitleEl">Contacto & Horarios</h2>
     </div>
     <div class="contact-grid">
       <div class="contact-info reveal left" id="contactInfo"></div>
@@ -692,7 +692,7 @@ function initPage(){
   // Hero BG
   if(d.heroImageURL){ const bg=document.getElementById('heroBg'); bg.style.backgroundImage=`url('${d.heroImageURL}')`; }
 
-  // Typewriter
+  // Hero typewriter (fires immediately — no need to scroll)
   typewrite(d.heroTitle||d.businessName||'', 'heroTitleEl');
   document.getElementById('heroSubtitleEl').textContent = d.heroSubtitle||d.description||'';
 
@@ -732,6 +732,17 @@ function initPage(){
   // Hours
   buildHours(d.hours||{});
 
+  // ── Register ALL section titles for typewriter-on-scroll ──
+  _sectionTWMap['servicesTitleEl']    = d.servicesTitle    || 'Nuestros Servicios';
+  _sectionTWMap['productsTitleEl']    = 'Nuestros Productos';
+  _sectionTWMap['aboutTitle']         = '¿Quiénes Somos? — ' + (d.businessName||'');
+  _sectionTWMap['galleryTitleEl']     = d.galleryTitle     || 'Nuestro Trabajo';
+  _sectionTWMap['testimonialsTitleEl']= 'Lo Que Dicen Nuestros Clientes';
+  _sectionTWMap['faqTitleEl']         = 'Preguntas Frecuentes';
+  _sectionTWMap['bookingTitle']       = d.bookingTitle     || 'Agenda Tu Cita';
+  _sectionTWMap['contactTitleEl']     = 'Contacto & Horarios';
+  initSectionTypewriters();
+
   // Footer
   document.getElementById('footerName').textContent = d.businessName||'';
   document.getElementById('footerDesc').textContent = d.description||'';
@@ -760,16 +771,56 @@ function initPage(){
   },800);
 }
 
-// ══════ TYPEWRITER ══════
-function typewrite(text, elId){
+// ══════ TYPEWRITER ENGINE ══════
+// typewrite(text, elId, speed?, cb?)  — types text into element, calls cb when done
+function typewrite(text, elId, speed, cb){
+  speed = speed || 55;
   const el = document.getElementById(elId);
+  if(!el) { if(cb) cb(); return; }
   el.textContent = '';
+  // Remove any old tw-cursor sibling
+  const oldC = el.parentElement && el.parentElement.querySelector('.tw-cursor-section');
+  if(oldC) oldC.remove();
+  // Insert blinking cursor after element
+  const cursor = document.createElement('span');
+  cursor.className = 'tw-cursor-section';
+  cursor.style.cssText = 'display:inline-block;width:3px;height:0.9em;background:var(--p);margin-left:3px;vertical-align:middle;animation:blink 0.9s infinite;';
+  el.insertAdjacentElement('afterend', cursor);
   let i = 0;
   const interval = setInterval(()=>{
     el.textContent += text[i]||'';
     i++;
-    if(i >= text.length) clearInterval(interval);
-  }, 65);
+    if(i >= text.length){
+      clearInterval(interval);
+      setTimeout(()=>{ cursor.remove(); if(cb) cb(); }, 600);
+    }
+  }, speed);
+}
+
+// Section-title typewriter queue — fires when element enters viewport
+const _sectionTWMap = {}; // elId → text
+function _fireSectionTW(elId){
+  const text = _sectionTWMap[elId];
+  if(!text) return;
+  typewrite(text, elId, 55);
+}
+function initSectionTypewriters(){
+  if(!window.IntersectionObserver) return; // fallback: text already set by textContent
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = entry.target.id;
+        if(id && _sectionTWMap[id]){
+          obs.unobserve(entry.target);
+          _fireSectionTW(id);
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+  Object.keys(_sectionTWMap).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) obs.observe(el);
+  });
 }
 
 // ══════ SERVICES ══════
