@@ -149,6 +149,39 @@ export default {
         {headers:{'Content-Type':'application/json'}});
     }
 
+    // ── /notify — Notificación al dueño cuando alguien agenda una cita ──
+    if(request.method === 'POST' && url.pathname === '/notify'){
+      const corsHeaders = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      };
+      try{
+        const data   = await request.json();
+        const to     = `whatsapp:+${(data.to||'').replace(/\D/g,'')}`;
+        const msg    = data.message || '🔔 Nueva cita agendada';
+        const ok     = await sendWA(to, msg, TWILIO_SID, TWILIO_TOKEN, TWILIO_FROM);
+        return new Response(JSON.stringify({ok}), {
+          headers:{...corsHeaders,'Content-Type':'application/json'}
+        });
+      }catch(e){
+        return new Response(JSON.stringify({ok:false, error:e.message}), {
+          status:500, headers:{...corsHeaders,'Content-Type':'application/json'}
+        });
+      }
+    }
+
+    // ── CORS preflight ──
+    if(request.method === 'OPTIONS'){
+      return new Response(null, {
+        headers:{
+          'Access-Control-Allow-Origin':'*',
+          'Access-Control-Allow-Methods':'POST, OPTIONS',
+          'Access-Control-Allow-Headers':'Content-Type'
+        }
+      });
+    }
+
     if(request.method !== 'POST' || url.pathname !== '/whatsapp'){
       return new Response('Super Bot 007 WhatsApp Worker — Online ✅', {status:200});
     }
