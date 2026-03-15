@@ -843,6 +843,34 @@ window.addEventListener('DOMContentLoaded', ()=>{
   loadBot();
 });
 
+// ══════ PARSE BOT (normaliza datos viejos y nuevos) ══════
+function parseBot(raw){
+  if(!raw) return {};
+  const d = Object.assign({}, raw);
+  // --- Asegurar que arrays sean arrays ---
+  ['services','products','testimonials','faqs'].forEach(k=>{
+    if(!Array.isArray(d[k])) d[k] = [];
+  });
+  if(!Array.isArray(d.galleryURLs)) d.galleryURLs = [];
+  // --- Normalizar número WhatsApp: si no hay whatsapp usar phone ---
+  if(!d.whatsapp && d.phone) d.whatsapp = d.phone.replace(/\D/g,'');
+  // --- Fallbacks de texto ---
+  d.businessName  = d.businessName  || d.name        || '';
+  d.description   = d.description   || d.desc        || d.about || '';
+  d.heroTitle     = d.heroTitle     || d.businessName || '';
+  d.phone         = d.phone         || d.whatsapp     || '';
+  d.city          = d.city          || d.businessCity || '';
+  // --- Sanitizar servicios: si son strings (bots viejos) convertir a objeto ---
+  d.services = d.services.map(s=>{
+    if(typeof s === 'string') return { name:s, price:'', desc:'' };
+    return s;
+  });
+  // --- Sanitizar faqs ---
+  d.faqs = d.faqs.filter(f=> f && (f.q||f.question));
+  d.faqs = d.faqs.map(f=>({ q: f.q||f.question||'', a: f.a||f.answer||'' }));
+  return d;
+}
+
 async function loadBot(){
   try{
     await waitFor(()=>window.db);
@@ -852,7 +880,7 @@ async function loadBot(){
       addBotMsg('❌ Bot no encontrado. Verifica el ID.');
       return;
     }
-    botData = snap.data();
+    botData = parseBot(snap.data());
     initChat();
   }catch(e){
     document.getElementById('initBanner').textContent='';
@@ -1162,7 +1190,269 @@ function checkoutWhatsApp(){
 
 // ══════ RIGHT PANEL BOOKING FORM ══════
 // ══════ BOOKING CALENDAR ══════
-let bkState = { step:1, date:null, time:null, calYear:null, calMonth:null };
+// NEW ORDER: Step 1 = Personal info, Step 2 = Calendar, Step 3 = Time slots
+let bkState = { step:1, date:null, time:null, calYear:null, calMonth:null,
+                name:'', phone:'', email:'', service:'', note:'' };
+
+function buildRightBookingForm(d){
+  const now = new Date();
+  bkState = { step:1, date:null, time:null, calYear:now.getFullYear(), calMonth:now.getMonth(),
+              name:'', phone:'', email:'', service:'', note:'' };
+  renderBookingStep(d);
+}
+
+function renderBookingStep(d){
+  const panel = document.getElementById('bookingPanel');
+  if(!panel) return;
+  const isEN = d.botLanguage==='en';
+  const labels = {
+    next:    isEN?'Next →':'Siguiente →',
+    back:    isEN?'← Back':'← Atrás',
+    confirm: isEN?'Confirm Appointment':'Confirmar Cita',
+    waBtn:   isEN?'Confirm via WhatsApp':'Confirmar por WhatsApp',
+    selDate: isEN?'Select a date first':'Elige una fecha',
+    selTime: isEN?'Select a time first':'Elige un horario',
+  };
+  if(bkState.step===1) panel.innerHTML = buildInfoStep1(d, labels);
+  else if(bkState.step===2) panel.innerHTML = buildCalendarHTML(d, labels);
+  else if(bkState.step===3) panel.innerHTML = buildTimeHTML(d, labels);
+}
+
+function stepsHTML(step){
+  const isEN = botData?.botLanguage==='en';
+  const steps=['👤','📅','🕐'];
+  const names = isEN?['Info','Date','Time']:['Datos','Fecha','Hora'];
+  return `<div class="bk-steps">
+    ${steps.map((s,i)=>{
+      const cls = i+1<step?'done':i+1===step?'active':'';
+      const line = i<2?(i+1<step?'done':''):'';
+      return `<div class="bk-step-dot ${cls}"><span>${i+1<step?'✓':s}</span>${names[i]}</div>${i<2?`<div class="bk-step-line ${line}"></div>`:''}`;
+    }).join('')}
+  </div>`;
+}
+
+function buildInfoStep1(d, labels){
+  const isEN = d.botLanguage==='en';
+  const services = (Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}" ${bkState.service===s.name?'selected':''}>${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
+  const waBtn = d.whatsapp ? `<button class="bk-btn wa" onclick="bkSaveInfoAndSubmit('wa')"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>` : '';
+  return `
+    ${stepsHTML(1)}
+    <label class="bk-label">${isEN?'Full name *':'Nombre completo *'}</label>
+    <input class="bk-input" id="bk_name" type="text" placeholder="${isEN?'Your full name':'Tu nombre completo'}" value="${bkState.name}">
+    <label class="bk-label">${isEN?'Phone *':'Teléfono *'}</label>
+    <input class="bk-input" id="bk_phone" type="tel" placeholder="Ej: 555-123-4567" value="${bkState.phone}">
+    <label class="bk-label">${isEN?'Email (optional)':'Email (opcional)'}</label>
+    <input class="bk-input" id="bk_email" type="email" placeholder="tu@email.com" value="${bkState.email}">
+    <label class="bk-label">${isEN?'Service':'Servicio'}</label>
+    <select class="bk-select" id="bk_service">
+      <option value="">${isEN?'Select a service...':'Selecciona un servicio...'}</option>${services}
+    </select>
+    <label class="bk-label">${isEN?'Notes (optional)':'Notas (opcional)'}</label>
+    <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="${isEN?'Allergies, preferences...':'Alergias, preferencias...'}">${bkState.note}</textarea>
+    <div class="bk-nav-btns">
+      <button class="bk-next-btn" onclick="bkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> ${isEN?'Pick a Date':'Elegir Fecha'} →</button>
+    </div>
+    ${waBtn}`;
+}
+
+function bkSaveInfoGoStep2(){
+  const name  = document.getElementById('bk_name')?.value.trim();
+  const phone = document.getElementById('bk_phone')?.value.trim();
+  const isEN  = botData?.botLanguage==='en';
+  if(!name){  document.getElementById('bk_name').focus();  toast(isEN?'Enter your name':'Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById('bk_phone').focus(); toast(isEN?'Enter your phone':'Ingresa tu teléfono','error'); return; }
+  bkState.name    = name;
+  bkState.phone   = phone;
+  bkState.email   = document.getElementById('bk_email')?.value.trim()||'';
+  bkState.service = document.getElementById('bk_service')?.value||'';
+  bkState.note    = document.getElementById('bk_note')?.value.trim()||'';
+  bkState.step = 2;
+  if(botData) renderBookingStep(botData);
+}
+
+async function bkSaveInfoAndSubmit(mode){
+  const name  = document.getElementById('bk_name')?.value.trim();
+  const phone = document.getElementById('bk_phone')?.value.trim();
+  const isEN  = botData?.botLanguage==='en';
+  if(!name){  document.getElementById('bk_name').focus();  toast(isEN?'Enter your name':'Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById('bk_phone').focus(); toast(isEN?'Enter your phone':'Ingresa tu teléfono','error'); return; }
+  bkState.name    = name;
+  bkState.phone   = phone;
+  bkState.email   = document.getElementById('bk_email')?.value.trim()||'';
+  bkState.service = document.getElementById('bk_service')?.value||'';
+  bkState.note    = document.getElementById('bk_note')?.value.trim()||'';
+  await submitBookingRight(mode);
+}
+
+function buildCalendarHTML(d, labels){
+  const DAYS_EN = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const DAYS_ES = ['Do','Lu','Ma','Mi','Ju','Vi','Sa'];
+  const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const isEN = d.botLanguage==='en';
+  const dowLabels = isEN?DAYS_EN:DAYS_ES;
+  const monthNames = isEN?MONTHS_EN:MONTHS_ES;
+  const y = bkState.calYear, m = bkState.calMonth;
+  const firstDay = new Date(y,m,1).getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const DOW_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  const hours = d.hours||{};
+  let cells = '';
+  for(let i=0;i<firstDay;i++) cells+=`<div class="bk-cal-day empty"></div>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const dt = new Date(y,m,day);
+    const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isPast = dt < today;
+    const dow = dt.getDay();
+    const key = DOW_KEY[dow];
+    const hData = hours[key]||null;
+    const isClosed = hData && !hData.open;
+    const isToday = dt.getTime()===today.getTime();
+    const isSel = bkState.date===dateStr;
+    let cls = 'bk-cal-day';
+    if(isPast) cls+=' disabled';
+    else if(isClosed) cls+=' closed';
+    else if(isSel) cls+=' selected';
+    else if(isToday) cls+=' today';
+    const clickable = !isPast && !isClosed;
+    cells+=`<div class="${cls}" ${clickable?`onclick="bkPickDate('${dateStr}',this)"`:''}>${day}</div>`;
+  }
+  const prevDisabled = (y===today.getFullYear()&&m<=today.getMonth());
+  return `
+    ${stepsHTML(2)}
+    <div class="bk-cal-nav">
+      <button onclick="bkCalNav(-1)" ${prevDisabled?'disabled style="opacity:0.3;cursor:not-allowed"':''}>‹</button>
+      <span class="bk-cal-month">${monthNames[m]} ${y}</span>
+      <button onclick="bkCalNav(1)">›</button>
+    </div>
+    <div class="bk-cal-grid">
+      ${dowLabels.map(d=>`<div class="bk-cal-dow">${d}</div>`).join('')}
+      ${cells}
+    </div>
+    <div class="bk-nav-btns" style="margin-top:0.8rem;">
+      <button class="bk-back-btn" onclick="bkGoStep1()">${labels.back}</button>
+      <button class="bk-next-btn" onclick="bkGoStep3()" ${bkState.date?'':'style="opacity:0.5;cursor:not-allowed"'}>
+        ${bkState.date?labels.next:labels.selDate}
+      </button>
+    </div>`;
+}
+
+function buildTimeHTML(d, labels){
+  const hours = d.hours||{};
+  const DOW_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  let timeSlots = [];
+  if(bkState.date){
+    const dt = new Date(bkState.date+'T12:00:00');
+    const key = DOW_KEY[dt.getDay()];
+    const hData = hours[key]||null;
+    if(hData && hData.open && hData.from && hData.to){
+      const [fh,fm] = hData.from.split(':').map(Number);
+      const [th,tm] = hData.to.split(':').map(Number);
+      let cur = fh*60+(fm||0);
+      const end = th*60+(tm||0);
+      while(cur+30<=end){
+        const hh=Math.floor(cur/60), mm=cur%60;
+        const suffix=hh>=12?'pm':'am', h12=hh%12||12;
+        timeSlots.push(`${h12}:${String(mm).padStart(2,'0')}${suffix}`);
+        cur+=30;
+      }
+    }
+  }
+  if(!timeSlots.length) timeSlots=['9:00am','9:30am','10:00am','10:30am','11:00am','11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:00pm','2:30pm','3:00pm','3:30pm','4:00pm','4:30pm','5:00pm'];
+  const [yr,mo,dy] = bkState.date.split('-');
+  const dateLabel = `${dy}/${mo}/${yr}`;
+  const isEN = d.botLanguage==='en';
+  return `
+    ${stepsHTML(3)}
+    <div class="bk-selected-badge">📅 ${dateLabel}</div>
+    <div class="bk-section-title">🕐 ${isEN?'Pick a time':'Elige un horario'}</div>
+    <div class="bk-time-grid">
+      ${timeSlots.map(t=>`<div class="bk-time-slot${bkState.time===t?' selected':''}" onclick="bkPickTime('${t}',this)">${t}</div>`).join('')}
+    </div>
+    <div class="bk-nav-btns">
+      <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
+      <button class="bk-next-btn" onclick="submitBookingRight('confirm')" ${bkState.time?'':'style="opacity:0.5;cursor:not-allowed"'}>
+        ${bkState.time?'<i class="fas fa-check-circle"></i> '+labels.confirm:labels.selTime}
+      </button>
+    </div>
+    ${d.whatsapp&&bkState.time?`<button class="bk-btn wa" style="margin-top:0.4rem" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>`:''}`;
+}
+
+// Calendar navigation helpers
+function bkCalNav(dir){
+  bkState.calMonth += dir;
+  if(bkState.calMonth>11){ bkState.calMonth=0; bkState.calYear++; }
+  if(bkState.calMonth<0){ bkState.calMonth=11; bkState.calYear--; }
+  if(botData) renderBookingStep(botData);
+}
+function bkPickDate(dateStr, el){
+  bkState.date = dateStr;
+  document.querySelectorAll('.bk-cal-day.selected').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.querySelector('.bk-next-btn');
+  if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; const isEN=botData?.botLanguage==='en'; btn.innerHTML=isEN?'Next →':'Siguiente →'; }
+}
+function bkPickTime(t, el){
+  bkState.time = t;
+  document.querySelectorAll('.bk-time-slot.selected').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.querySelector('.bk-next-btn');
+  const isEN = botData?.botLanguage==='en';
+  if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; btn.innerHTML=`<i class="fas fa-check-circle"></i> ${isEN?'Confirm Appointment':'Confirmar Cita'}`; }
+  // Show WhatsApp button if available
+  if(botData?.whatsapp){ const waRow=document.querySelector('.bk-btn.wa'); if(waRow) waRow.style.display='flex'; }
+}
+function bkGoStep1(){ bkState.step=1; if(botData) renderBookingStep(botData); }
+function bkGoStep2(){ bkState.step=2; if(botData) renderBookingStep(botData); }
+function bkGoStep3(){ if(!bkState.date) return; bkState.step=3; if(botData) renderBookingStep(botData); }
+
+async function submitBookingRight(mode){
+  const name    = bkState.name;
+  const phone   = bkState.phone;
+  const email   = bkState.email||'';
+  const service = bkState.service||'';
+  const note    = bkState.note||'';
+  const date    = bkState.date||'';
+  const time    = bkState.time||'';
+  const isEN    = botData?.botLanguage==='en';
+  if(!name||!phone){ bkGoStep1(); toast(isEN?'Enter your name and phone':'Ingresa nombre y teléfono','error'); return; }
+  if(!time){ toast(isEN?'Select a time':'Selecciona un horario','error'); return; }
+  try{
+    if(window.db){
+      await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{
+        botId:botId||'', businessName:botData?.businessName||'',
+        name, phone, email, service, date, time, note,
+        createdAt:Date.now(), status:'pending', source:'right-panel-form'
+      });
+    }
+  }catch(e){ console.log('Appt save error:',e); }
+  if(mode==='wa'){
+    const wa=(botData?.whatsapp||'').replace(/\D/g,'');
+    let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
+    if(email) msg+=`\n📧 ${email}`;
+    if(service) msg+=`\n✂️ Servicio: *${service}*`;
+    if(date){ const [yr,mo,dy]=date.split('-'); msg+=`\n📅 Fecha: *${dy}/${mo}/${yr}*`; }
+    if(time) msg+=`\n🕐 Hora: *${time}*`;
+    if(note) msg+=`\n📝 ${note}`;
+    msg+=`\n\n_Reserva via Super Bot 007_`;
+    window.open(wa?`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+  const panel = document.getElementById('bookingPanel');
+  if(panel){
+    const [yr,mo,dy] = date.split('-');
+    panel.innerHTML=`<div class="bk-success">
+      <div class="check-icon">${mode==='wa'?'📲':'✅'}</div>
+      <h3>${mode==='wa'?(isEN?'Redirecting to WhatsApp!':'¡Redirigiendo a WhatsApp!'):(isEN?'Appointment booked!':'¡Cita registrada!')}</h3>
+      <p>${isEN?'Hello':'Hola'} <strong>${name}</strong>${service?', '+service:''}${date?` — ${dy}/${mo}/${yr}`:''}${time?' '+time:''}.</p>
+      ${mode!=='wa'?`<p>${isEN?'We will contact you at':'Te contactaremos al'} <strong>${phone}</strong> 😊</p>`:''}
+      <button class="reset-btn" onclick="resetBookingRight()">📅 ${isEN?'New Appointment':'Nueva Cita'}</button>
+    </div>`;
+  }
+  addBotMsgTypewriter(`${isEN?'Perfect':'¡Perfecto'}, ${name}! 🎉 ${mode==='wa'?(isEN?'Your message is ready for WhatsApp.':'Tu mensaje fue preparado para WhatsApp.'):(isEN?'Your appointment is booked!':'¡Tu cita quedó registrada!')} ${isEN?'Anything else I can help with?':'¿Algo más en lo que pueda ayudarte?'} 😊`);
+}
+
+function resetBookingRight(){ if(botData) buildRightBookingForm(botData); }
 
 function buildRightBookingForm(d){
   const now = new Date();
