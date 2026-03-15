@@ -241,6 +241,29 @@ section { position: relative; z-index: 1; }
 .lbk-reset { margin-top:1rem; padding:0.55rem 1.5rem; background:rgba(108,99,255,0.1); border:1px solid var(--border); border-radius:20px; color:var(--text); font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
 .lbk-reset:hover { background:rgba(108,99,255,0.2); border-color:var(--p); }
 
+/* ─── ABOUT ─── */
+#about { background: linear-gradient(180deg, rgba(108,99,255,0.04) 0%, var(--dark) 100%); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+@media(max-width:768px){ .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+.about-img-wrap { position: relative; }
+.about-img { width: 100%; border-radius: 24px; object-fit: cover; aspect-ratio: 4/3; display: block; }
+.about-img-placeholder { width: 100%; aspect-ratio: 4/3; border-radius: 24px; background: linear-gradient(135deg,rgba(108,99,255,0.15),rgba(255,101,132,0.1)); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+.about-img-placeholder span { font-size: 4rem; }
+.about-img-placeholder p { font-size: 0.85rem; color: var(--muted); }
+.about-badge { position: absolute; bottom: -16px; right: -16px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 0.8rem 1.2rem; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.about-badge .ab-num { font-size: 1.5rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.about-badge .ab-label { font-size: 0.7rem; color: var(--muted); }
+.about-text { }
+.about-desc { font-size: 1rem; color: var(--muted); line-height: 1.8; margin-bottom: 2rem; }
+.about-features { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+.about-feat { display: flex; align-items: flex-start; gap: 0.85rem; }
+.about-feat-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(108,99,255,0.12); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.about-feat-text strong { display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.18rem; }
+.about-feat-text span { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+.about-stats-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.about-stat { text-align: center; }
+.about-stat-num { font-size: 1.6rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.about-stat-label { font-size: 0.73rem; color: var(--muted); }
 /* ─── CONTACT ─── */
 #contact { background: rgba(255,101,132,0.03); }
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -335,6 +358,7 @@ img.img-broken {
   </div>
   <ul class="nav-links">
     <li><a href="#services">Servicios</a></li>
+    <li><a href="#about">Nosotros</a></li>
     <li><a href="#products" id="navProducts" style="display:none">Productos</a></li>
     <li><a href="#gallery">Galería</a></li>
     <li><a href="#booking">Citas</a></li>
@@ -373,6 +397,31 @@ img.img-broken {
       <p class="section-sub reveal" id="servicesSubEl"></p>
     </div>
     <div class="services-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal left">
+        <div class="about-img-placeholder" id="aboutImgWrap">
+          <span id="aboutEmoji">🏢</span>
+          <p id="aboutImgHint">Foto del negocio</p>
+        </div>
+        <div class="about-badge">
+          <div class="ab-num" id="aboutYearBadge">2024</div>
+          <div class="ab-label">Año fundado</div>
+        </div>
+      </div>
+      <div class="about-text reveal right">
+        <div class="section-tag"><i class="fas fa-info-circle"></i> Acerca de Nosotros</div>
+        <h2 class="section-title" id="aboutTitle">¿Quiénes Somos?</h2>
+        <p class="about-desc" id="aboutDesc">Somos un equipo apasionado dedicado a ofrecer el mejor servicio.</p>
+        <div class="about-features" id="aboutFeatures"></div>
+        <div class="about-stats-row" id="aboutStatsRow"></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -470,8 +519,9 @@ img.img-broken {
     <p class="footer-desc" id="footerDesc"></p>
     <div class="footer-links">
       <a href="#services">Servicios</a>
-      <a href="#booking">Citas</a>
+      <a href="#about">Nosotros</a>
       <a href="#gallery">Galería</a>
+      <a href="#booking">Citas</a>
       <a href="#contact">Contacto</a>
     </div>
     <p class="footer-copy">© 2024 Powered by Super Bot 007 · Todos los derechos reservados</p>
@@ -601,6 +651,9 @@ function initPage(){
     document.getElementById('cartBtn').style.display='flex';
   }
 
+  // About
+  buildAbout(d);
+
   // Gallery
   document.getElementById('galleryTitleEl').textContent = d.galleryTitle||'Nuestro Trabajo';
   buildGallery(d.galleryURLs||[]);
@@ -655,7 +708,63 @@ function typewrite(text, elId){
 }
 
 // ══════ SERVICES ══════
-function buildServices(services){
+// ══════ BUILD ABOUT ══════
+function buildAbout(d){
+  // Title
+  document.getElementById('aboutTitle').textContent = '¿Quiénes Somos? — ' + (d.businessName||'');
+  document.getElementById('aboutDesc').textContent = d.description || 'Somos un equipo apasionado dedicado a ofrecer el mejor servicio a cada uno de nuestros clientes.';
+
+  // Avatar/hero image as about image
+  const imgWrap = document.getElementById('aboutImgWrap');
+  const heroImg = d.heroImageURL || d.avatarURL || d.logoURL || '';
+  if(heroImg){
+    imgWrap.innerHTML = `<img src="${heroImg}" class="about-img" alt="${d.businessName||''}" onerror="this.style.display='none'">` ;
+  } else {
+    // emoji by business type
+    const typeEmojis = { salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',construc:'🏗️',dog:'🐶',fitness:'🏋️' };
+    const type = (d.businessType||'').toLowerCase();
+    let emoji = '🏢';
+    for(const [k,v] of Object.entries(typeEmojis)){ if(type.includes(k)){ emoji=v; break; } }
+    document.getElementById('aboutEmoji').textContent = emoji;
+    document.getElementById('aboutImgHint').textContent = d.businessName||'Nuestro Negocio';
+  }
+
+  // Year badge
+  const year = d.createdAt ? new Date(d.createdAt).getFullYear() : new Date().getFullYear();
+  document.getElementById('aboutYearBadge').textContent = year;
+
+  // Features — built from services or generic
+  const featEl = document.getElementById('aboutFeatures');
+  const svcs = Array.isArray(d.services) ? d.services.slice(0,3) : [];
+  const genericFeats = [
+    { icon:'⭐', title:'Calidad Garantizada', desc:'Nos comprometemos con la excelencia en cada servicio.' },
+    { icon:'👥', title:'Equipo Profesional', desc:'Personal capacitado y con experiencia en el rubro.' },
+    { icon:'❤️', title:'Clientes Primero', desc:'Tu satisfacción es nuestra mayor prioridad.' },
+  ];
+  const feats = svcs.length >= 2
+    ? svcs.map(s=>({ icon:'✓', title:s.name||'', desc:s.desc||'Servicio de alta calidad.' }))
+    : genericFeats;
+  featEl.innerHTML = feats.map(f=>`
+    <div class="about-feat">
+      <div class="about-feat-icon">${f.icon}</div>
+      <div class="about-feat-text"><strong>${f.title}</strong><span>${f.desc}</span></div>
+    </div>`).join('');
+
+  // Stats row
+  const statsEl = document.getElementById('aboutStatsRow');
+  const numSvcs = Array.isArray(d.services)?d.services.length:0;
+  const numProds = Array.isArray(d.products)?d.products.length:0;
+  const stats = [
+    numSvcs  ? { num: numSvcs+'+'  , label:'Servicios' } : { num:'100%', label:'Calidad' },
+    numProds ? { num: numProds+'+'  , label:'Productos' } : { num:'24/7', label:'Disponible' },
+    d.phone||d.whatsapp ? { num:'📞', label:'Te llamamos' } : { num:'❤️', label:'Con amor' },
+  ];
+  statsEl.innerHTML = stats.map(s=>`
+    <div class="about-stat">
+      <div class="about-stat-num">${s.num}</div>
+      <div class="about-stat-label">${s.label}</div>
+    </div>`).join('');
+}
   const grid = document.getElementById('servicesGrid');
   grid.innerHTML = '';
   if(!services.length){ grid.innerHTML='<p style="color:var(--muted);text-align:center;width:100%">No hay servicios configurados.</p>'; return; }
