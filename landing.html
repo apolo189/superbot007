@@ -1001,9 +1001,6 @@ function lbkInfoHTML(d){
     <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (opcional)" value="${lbk.email}" style="margin-top:0.7rem">
     <select class="lbk-select" id="lbkService"><option value="">Selecciona un servicio...</option>${svcs}</select>
     <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="Notas adicionales...">${lbk.note}</textarea>
-    ${hasWA ? `
-    <button class="lbk-wa-btn" onclick="lbkSaveInfoAndSubmit('wa')"><i class="fab fa-whatsapp"></i> Enviar reserva por WhatsApp</button>
-    <div class="lbk-or">o elige fecha y hora exacta</div>` : ''}
     <div class="lbk-nav-row">
       <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> Elegir Fecha y Hora →</button>
     </div>`;
@@ -1114,20 +1111,27 @@ function lbkTimeHTML(d){
   }
   if(!slots.length) slots=['9:00am','9:30am','10:00am','10:30am','11:00am','11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:00pm','2:30pm','3:00pm','3:30pm','4:00pm','4:30pm','5:00pm'];
   const [yr,mo,dy]=lbk.date.split('-');
+  const hasContact = !!(d.whatsapp||d.phone);
   return `${lbkStepsHTML(3)}
     <div class="lbk-badge">📅 ${dy}/${mo}/${yr}</div>
     <div class="lbk-section-title">🕐 Elige un horario</div>
     <div class="lbk-time-grid">
       ${slots.map(t=>`<div class="lbk-time-slot${lbk.time===t?' selected':''}" onclick="lbkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
-    ${(d.whatsapp||d.phone)?`
-    <button class="lbk-wa-btn" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> ${lbk.time?'Confirmar por WhatsApp ✓':'Enviar por WhatsApp (sin hora exacta)'}</button>
-    <div class="lbk-or">o confirma la cita en el sistema</div>`:''}
-    <div class="lbk-nav-row">
-      <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
-      <button class="lbk-next" onclick="submitLbk('confirm')" ${lbk.time?'':'disabled'}>
-        ${lbk.time?'<i class="fas fa-check-circle"></i> Confirmar Cita':'Selecciona un horario primero'}
-      </button>
+    <div id="lbkConfirmBtns" style="${lbk.time?'':'display:none'}">
+      ${hasContact?`
+      <button class="lbk-wa-btn" style="margin-top:0.8rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp ✓</button>
+      <div class="lbk-or">o guarda en el sistema</div>`:''}
+      <div class="lbk-nav-row">
+        <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
+        <button class="lbk-next" onclick="submitLbk('confirm')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
+      </div>
+    </div>
+    <div id="lbkBackOnly" style="${lbk.time?'display:none':''}">
+      <div class="lbk-nav-row" style="margin-top:0.6rem">
+        <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
+        <button class="lbk-next" disabled>Selecciona un horario</button>
+      </div>
     </div>`;
 }
 
@@ -1148,10 +1152,11 @@ function lbkPickTime(t,el){
   lbk.time=t;
   document.querySelectorAll('.lbk-time-slot.selected').forEach(d=>d.classList.remove('selected'));
   el.classList.add('selected');
-  const btn=document.querySelector('#lbkPanel .lbk-next');
-  if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Confirmar Cita';}
-  const waBtn=document.querySelector('#lbkPanel .lbk-wa-btn');
-  if(waBtn){ waBtn.style.display='flex'; waBtn.innerHTML=`<i class="fab fa-whatsapp"></i> Confirmar por WhatsApp ✓`; }
+  // Show confirm block, hide the disabled back-only block
+  const confirmBlock=document.getElementById('lbkConfirmBtns');
+  const backOnly=document.getElementById('lbkBackOnly');
+  if(confirmBlock) confirmBlock.style.display='';
+  if(backOnly)     backOnly.style.display='none';
 }
 function lbkStep1(){lbk.step=1;if(botData)renderLbkStep(botData);}
 function lbkStep2(){lbk.step=2;if(botData)renderLbkStep(botData);}

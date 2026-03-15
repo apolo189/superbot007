@@ -1330,6 +1330,7 @@ function buildTimeHTML(d, labels){
   const [yr,mo,dy] = bkState.date.split('-');
   const dateLabel = `${dy}/${mo}/${yr}`;
 
+  const hasContact = !!(d.whatsapp||d.phone);
   return `
     ${stepsHTML(3)}
     ${bkState.date?`<div class="bk-selected-badge">📅 ${dateLabel}</div>`:''}
@@ -1337,18 +1338,29 @@ function buildTimeHTML(d, labels){
     <div class="bk-time-grid">
       ${timeSlots.map(t=>`<div class="bk-time-slot${bkState.time===t?' selected':''}" onclick="bkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
-    <div class="bk-nav-btns">
-      <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
-      <button class="bk-next-btn" onclick="submitBookingRight('confirm')" ${bkState.time?'':'style="opacity:0.5;cursor:not-allowed"'}>
-        ${bkState.time?`<i class="fas fa-check-circle"></i> ${labels.confirm}`:labels.selDate.replace('fecha','hora').replace('date','time')}
+    <div id="bkConfirmBtns" style="${bkState.time?'':'display:none'}">
+      ${hasContact?`
+      <button class="bk-btn wa" style="margin-top:0.8rem" onclick="submitBookingRight('wa')">
+        <i class="fab fa-whatsapp"></i> ${labels.waBtn}
       </button>
+      <div style="display:flex;align-items:center;gap:0.6rem;margin:0.5rem 0 0.4rem;color:var(--muted);font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;"><div style="flex:1;height:1px;background:var(--border)"></div>o guarda en el sistema<div style="flex:1;height:1px;background:var(--border)"></div></div>`:''}
+      <div class="bk-nav-btns">
+        <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
+        <button class="bk-next-btn" onclick="submitBookingRight('confirm')">
+          <i class="fas fa-check-circle"></i> ${labels.confirm}
+        </button>
+      </div>
     </div>
-    ${(d.whatsapp||d.phone)?`<button class="bk-btn wa" style="margin-top:0.35rem" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> ${bkState.time?labels.waBtn:(labels.waBtn+' (sin hora exacta)')}</button>`:''}`;
+    <div id="bkBackOnly" style="${bkState.time?'display:none':''}">
+      <div class="bk-nav-btns" style="margin-top:0.6rem">
+        <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
+        <button class="bk-next-btn" style="opacity:0.4;cursor:not-allowed">${labels.selDate.replace('fecha','hora').replace('date','time')}</button>
+      </div>
+    </div>`;
 }
 
 function buildInfoHTML(d, labels){
   const services = (Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}" ${bkState.service===s.name?'selected':''}>${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
-  const waQuick = (d.whatsapp||d.phone) ? `<button class="bk-btn wa" style="margin-top:0.3rem" onclick="bkQuickWA()"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>` : '';
   return `
     ${stepsHTML(1)}
     <div id="bkForm">
@@ -1364,8 +1376,6 @@ function buildInfoHTML(d, labels){
       </select>
       <label class="bk-label">${labels.notes}</label>
       <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="${labels.notesP}">${bkState.note||''}</textarea>
-      ${waQuick}
-      ${(d.whatsapp||d.phone)?`<div style="display:flex;align-items:center;gap:0.7rem;margin:0.5rem 0 0.4rem;color:var(--muted);font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;"><div style="flex:1;height:1px;background:var(--border)"></div>o elige fecha<div style="flex:1;height:1px;background:var(--border)"></div></div>`:''}
       <div class="bk-nav-btns">
         <button class="bk-next-btn" onclick="bkGoStep2()"><i class="fas fa-calendar-alt"></i> ${d.botLanguage==='en'?'Choose Date →':'Elegir Fecha →'}</button>
       </div>
@@ -1404,13 +1414,11 @@ function bkPickTime(t, el){
   bkState.time = t;
   document.querySelectorAll('.bk-time-slot.selected').forEach(d=>d.classList.remove('selected'));
   el.classList.add('selected');
-  const btn = document.querySelector('.bk-next-btn');
-  const isEN = botData?.botLanguage==='en';
-  if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; btn.innerHTML=`<i class="fas fa-check-circle"></i> ${isEN?'Confirm Appointment':'Confirmar Cita'}`; }
-  // Update WhatsApp button text now that time is known
-  const waBtn = document.querySelector('#bookingPanel .bk-btn.wa');
-  const isEN2 = botData?.botLanguage==='en';
-  if(waBtn){ waBtn.style.display='flex'; waBtn.innerHTML=`<i class="fab fa-whatsapp"></i> ${isEN2?'Confirm via WhatsApp ✓':'Confirmar por WhatsApp ✓'}`; }
+  // Show confirm buttons block, hide the "disabled" back-only block
+  const confirmBlock = document.getElementById('bkConfirmBtns');
+  const backOnly     = document.getElementById('bkBackOnly');
+  if(confirmBlock) confirmBlock.style.display='';
+  if(backOnly)     backOnly.style.display='none';
 }
 function bkGoStep1(){ bkState.step=1; if(botData) renderBookingStep(botData); }
 function bkGoStep2(){
