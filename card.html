@@ -762,8 +762,14 @@ function buildActionRow(d){
   }
   if(d.email)
     btns.push({cls:'mail',icon:'fas fa-envelope',lbl:'Email',href:`mailto:${d.email}`});
-  if(d.website)
-    btns.push({cls:'web',icon:'fas fa-globe',lbl:'Web',href:d.website.startsWith('http')?d.website:'https://'+d.website});
+  // Only show Web button if website is a real external URL (not an agent.html / bot link)
+  if(d.website){
+    const ws = d.website.trim();
+    const wsUrl = ws.startsWith('http') ? ws : 'https://'+ws;
+    const isInternalBot = wsUrl.includes('agent.html') || wsUrl.includes('landing.html') || wsUrl.includes('card.html');
+    if(!isInternalBot)
+      btns.push({cls:'web',icon:'fas fa-globe',lbl:'Web',href:wsUrl});
+  }
 
   btns.forEach((b,idx)=>{
     const a=document.createElement('a');
@@ -868,7 +874,16 @@ function buildCTA(d){
     sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> Agendar por WhatsApp</a>`;
   }
   sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> Chatear con el Bot</a>`;
-  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-globe"></i> Ver sitio web completo</a>`;
+  // "Ver sitio" → real website if configured, otherwise landing page
+  if(d.website){
+    const ws = d.website.trim();
+    const wsUrl = ws.startsWith('http') ? ws : 'https://'+ws;
+    const isInternalBot = wsUrl.includes('agent.html') || wsUrl.includes('landing.html') || wsUrl.includes('card.html');
+    if(!isInternalBot){
+      sec.innerHTML+=`<a class="cta-btn secondary" href="${wsUrl}" target="_blank"><i class="fas fa-globe"></i> Visitar sitio web</a>`;
+    }
+  }
+  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-file-alt"></i> Ver Landing Page</a>`;
 }
 
 // ═══════════════════════════════════════
