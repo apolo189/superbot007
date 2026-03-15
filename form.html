@@ -183,11 +183,20 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .lci-btn.copy { background: rgba(108,99,255,0.12); border: 1px solid var(--border); color: var(--primary); }
 .lci-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 /* Webhook box */
-.webhook-box { background: rgba(67,233,123,0.06); border: 1px solid rgba(67,233,123,0.25); border-radius: 14px; padding: 1rem 1.2rem; margin: 1rem 0; text-align: left; }
+.webhook-box { background: rgba(67,233,123,0.06); border: 1px solid rgba(67,233,123,0.25); border-radius: 14px; padding: 1rem 1.2rem; margin: 1rem 0; text-align: left; display:none; }
+.webhook-box.visible { display:block; }
 .webhook-box .wb-title { font-size: 0.82rem; font-weight: 700; color: var(--success); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
 .webhook-url { font-family: monospace; font-size: 0.78rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(67,233,123,0.2); border-radius: 8px; padding: 0.55rem 0.8rem; color: var(--success); word-break: break-all; cursor: pointer; transition: background 0.2s; }
 .webhook-url:hover { background: rgba(67,233,123,0.08); }
 .webhook-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.5; }
+.webhook-steps { margin-top: 0.75rem; }
+.webhook-steps .ws-item { display:flex; align-items:flex-start; gap:0.5rem; font-size:0.72rem; color:var(--muted); margin-bottom:0.4rem; line-height:1.4; }
+.webhook-steps .ws-num { background: var(--success); color:#000; border-radius:50%; width:16px; height:16px; min-width:16px; display:flex; align-items:center; justify-content:center; font-size:0.62rem; font-weight:700; }
+.sandbox-badge { display:inline-block; background:rgba(67,233,123,0.12); border:1px solid rgba(67,233,123,0.3); border-radius:6px; padding:0.25rem 0.6rem; font-family:monospace; font-size:0.72rem; color:var(--success); margin: 0.1rem 0; }
+.wb-wa-number { font-size:0.75rem; font-weight:600; color:var(--text); background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.4rem 0.8rem; margin:0.5rem 0; display:flex; align-items:center; gap:0.5rem; }
+/* Webhook summary sub-row */
+.bot-summary-sub { font-size:0.68rem; color:var(--success); font-family:monospace; margin-top:0.2rem; word-break:break-all; display:none; }
+.bot-summary-sub.visible { display:block; }
 </style>
 </head>
 <body>
@@ -469,16 +478,23 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
       <!-- Filled dynamically by activateBot() -->
     </div>
 
-    <!-- ═══ WEBHOOK WHATSAPP ═══ -->
-    <div class="webhook-box">
-      <div class="wb-title"><i class="fas fa-plug"></i> Webhook WhatsApp (Twilio)</div>
-      <div class="webhook-url" id="webhookUrl" onclick="copyWebhook(this)" title="Haz clic para copiar">
-        cargando...
+    <!-- ═══ WEBHOOK WHATSAPP ═══ (solo visible si tiene WhatsApp configurado) -->
+    <div class="webhook-box" id="webhookBox">
+      <div class="wb-title"><i class="fab fa-whatsapp"></i> WhatsApp via Twilio — Configuración</div>
+
+      <p style="font-size:0.78rem;color:var(--text);margin-bottom:0.5rem;">URL Webhook para <strong>Twilio WhatsApp Sandbox</strong>:</p>
+      <div class="webhook-url" id="webhookUrl" onclick="copyWebhook(this)" title="Haz clic para copiar">cargando...</div>
+
+      <div class="wb-wa-number"><i class="fab fa-whatsapp" style="color:#25D366;"></i> Número Sandbox Twilio: <span style="font-family:monospace;">+1 415 523 8886</span></div>
+
+      <div class="webhook-steps">
+        <div class="ws-item"><div class="ws-num">1</div><span>Abre <a href="https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn" target="_blank" style="color:var(--primary);">Twilio Console → WhatsApp Sandbox</a></span></div>
+        <div class="ws-item"><div class="ws-num">2</div><span>En <em>"When a message comes in"</em> pega la URL arriba y guarda.</span></div>
+        <div class="ws-item"><div class="ws-num">3</div><span>Para probar: envía <span class="sandbox-badge">join fifty-disease</span> al <span class="sandbox-badge">+1 415 523 8886</span> desde WhatsApp.</span></div>
+        <div class="ws-item"><div class="ws-num">4</div><span>¡Listo! Tu bot responderá automáticamente a los mensajes de WhatsApp. 💬</span></div>
       </div>
-      <p class="webhook-note">
-        Pega esta URL en tu <strong>Twilio WhatsApp Sandbox</strong> → <em>When a message comes in</em>.<br>
-        Tu bot responderá automáticamente a los mensajes de WhatsApp. 💬
-      </p>
+
+      <p class="webhook-note" style="margin-top:0.6rem;"><i class="fas fa-info-circle"></i> Esta URL ya apunta a tu bot — solo pégala en Twilio, sin cambiar nada.</p>
     </div>
 
     <!-- ═══ BOT SUMMARY ═══ -->
@@ -502,7 +518,10 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
       </div>
       <div class="bot-summary-row">
         <span class="bot-summary-key">💬 WhatsApp</span>
-        <span class="bot-summary-val" id="sWhatsapp">—</span>
+        <div style="display:flex;flex-direction:column;">
+          <span class="bot-summary-val" id="sWhatsapp">—</span>
+          <span class="bot-summary-sub" id="sWebhookSub"></span>
+        </div>
       </div>
       <div class="bot-summary-row">
         <span class="bot-summary-key">✂️ Servicios</span>
@@ -946,27 +965,46 @@ async function activateBot(){
     const dashUrl    = `${base}dashboard.html?id=${botId}`;
     const workerUrl  = 'https://superbot007-whatsapp.luisomorgado4.workers.dev';
     const webhookUrl = `${workerUrl}/whatsapp?botId=${botId}`;
+    const hasWhatsApp = !!(rawData.whatsapp && rawData.whatsapp.trim());
 
     // ── Populate Bot ID ──
     document.getElementById('resultBotId').textContent = botId;
     window._agentUrl = agentUrl;
+    window._webhookUrl = webhookUrl;
 
-    // ── Webhook box ──
+    // ── Webhook box — solo si tiene WhatsApp configurado ──
     document.getElementById('webhookUrl').textContent = webhookUrl;
+    if(hasWhatsApp){
+      document.getElementById('webhookBox').classList.add('visible');
+    }
 
-    // ── Link Cards ──
+    // ── Link Cards (base 4 + WhatsApp si configurado) ──
     const links = [
       { icon:'fa-robot',      label:'Chatbot',      color:'rgba(67,233,123,0.15)', border:'rgba(67,233,123,0.4)', url: agentUrl   },
       { icon:'fa-globe',      label:'Landing Page', color:'rgba(108,99,255,0.12)', border:'rgba(108,99,255,0.4)', url: landingUrl },
       { icon:'fa-edit',       label:'Editor',       color:'rgba(255,101,132,0.1)', border:'rgba(255,101,132,0.3)', url: editorUrl  },
       { icon:'fa-chart-bar',  label:'Dashboard',    color:'rgba(255,215,0,0.08)',  border:'rgba(255,215,0,0.3)',   url: dashUrl    },
     ];
+    // 5th card: Webhook WhatsApp — solo si el usuario configuró un número
+    if(hasWhatsApp){
+      links.push({
+        icon:'fab fa-whatsapp',
+        label:'Webhook WhatsApp',
+        color:'rgba(37,211,102,0.08)',
+        border:'rgba(37,211,102,0.4)',
+        url: webhookUrl,
+        isWebhook: true
+      });
+    }
     document.getElementById('linkCardsGrid').innerHTML = links.map(l=>`
       <div class="link-card-item" style="background:${l.color};border-color:${l.border}">
-        <div class="lci-header"><i class="fas ${l.icon}"></i> ${l.label}</div>
+        <div class="lci-header"><i class="${l.icon.startsWith('fab') ? l.icon : 'fas '+l.icon}"></i> ${l.label}</div>
         <div class="lci-url">${l.url}</div>
         <div class="lci-btns">
-          <a class="lci-btn open" href="${l.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir</a>
+          ${l.isWebhook
+            ? `<button class="lci-btn open" onclick="document.getElementById('webhookBox').scrollIntoView({behavior:'smooth'})"><i class="fas fa-arrow-down"></i> Ver config</button>`
+            : `<a class="lci-btn open" href="${l.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir</a>`
+          }
           <button class="lci-btn copy" onclick="copyToClipboard('${l.url}','${l.label} copiado ✅')"><i class="fas fa-copy"></i> Copiar</button>
         </div>
       </div>`).join('');
@@ -980,6 +1018,11 @@ async function activateBot(){
     setText('sCiudad',   rawData.businessCity||'—');
     setText('sTelefono', rawData.phone||'—');
     setText('sWhatsapp', rawData.whatsapp||'—');
+    // ── WhatsApp webhook sub-row in summary ──
+    if(hasWhatsApp){
+      const subEl = document.getElementById('sWebhookSub');
+      if(subEl){ subEl.textContent = '🔗 Webhook: '+webhookUrl; subEl.classList.add('visible'); }
+    }
     setText('sServicios', svcsCount>0?`${svcsCount} servicio(s)`:'Sin servicios');
     setText('sModelo',   rawData.gptModel||'gpt-4o-mini');
     setText('sIdioma',   langMap[rawData.botLanguage]||rawData.botLanguage||'Español');
