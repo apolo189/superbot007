@@ -598,6 +598,36 @@ const botId = new URLSearchParams(location.search).get('id');
   })();
 })();
 
+// ══════ PARSE BOT (normaliza datos viejos y nuevos) ══════
+function parseBot(raw){
+  if(!raw) return {};
+  const d = Object.assign({}, raw);
+  // --- Asegurar que arrays sean arrays ---
+  ['services','products','testimonials','faqs'].forEach(k=>{
+    if(!Array.isArray(d[k])) d[k] = [];
+  });
+  // galleryURLs puede venir como array o como nada
+  if(!Array.isArray(d.galleryURLs)) d.galleryURLs = [];
+  // --- Normalizar número WhatsApp: si no hay whatsapp usar phone ---
+  if(!d.whatsapp && d.phone) d.whatsapp = d.phone.replace(/\D/g,'');
+  // --- Fallbacks de texto ---
+  d.businessName  = d.businessName  || d.name         || '';
+  d.description   = d.description   || d.desc         || d.about || '';
+  d.heroTitle     = d.heroTitle     || d.businessName  || '';
+  d.heroSubtitle  = d.heroSubtitle  || d.description  || '';
+  d.phone         = d.phone         || d.whatsapp      || '';
+  d.city          = d.city          || d.businessCity  || '';
+  // --- Sanitizar servicios: si son strings (bots viejos) convertir a objeto ---
+  d.services = d.services.map(s=>{
+    if(typeof s === 'string') return { name:s, price:'', desc:'' };
+    return s;
+  });
+  // --- Sanitizar faqs: si no tienen q/a ---
+  d.faqs = d.faqs.filter(f=> f && (f.q||f.question));
+  d.faqs = d.faqs.map(f=>({ q: f.q||f.question||'', a: f.a||f.answer||'' }));
+  return d;
+}
+
 // ══════ LOAD BOT ══════
 let _loadBotCalled = false;
 async function loadBot(){
@@ -610,7 +640,7 @@ async function loadBot(){
   try{
     const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
     if(!snap.exists()){ showNoBot(); return; }
-    botData = snap.data();
+    botData = parseBot(snap.data());
     initPage();
   }catch(e){ console.error('loadBot error:',e); showNoBot(); }
 }
@@ -920,24 +950,25 @@ function toggleFaq(el){
 
 // ══════ BOOKING ══════
 // ══════ LANDING BOOKING CALENDAR ══════
-let lbk = { step:1, date:null, time:null, calY:null, calM:null };
+// NEW ORDER: Step 1 = Personal info, Step 2 = Calendar, Step 3 = Time
+let lbk = { step:1, date:null, time:null, calY:null, calM:null, name:'', phone:'', email:'', service:'', note:'' };
 
 function initLandingBooking(d){
   const now = new Date();
-  lbk = { step:1, date:null, time:null, calY:now.getFullYear(), calM:now.getMonth() };
+  lbk = { step:1, date:null, time:null, calY:now.getFullYear(), calM:now.getMonth(), name:'', phone:'', email:'', service:'', note:'' };
   renderLbkStep(d);
 }
 
 function renderLbkStep(d){
   const panel = document.getElementById('lbkPanel');
   if(!panel) return;
-  if(lbk.step===1) panel.innerHTML = lbkCalHTML(d);
-  else if(lbk.step===2) panel.innerHTML = lbkTimeHTML(d);
-  else if(lbk.step===3) panel.innerHTML = lbkInfoHTML(d);
+  if(lbk.step===1) panel.innerHTML = lbkInfoHTML(d);
+  else if(lbk.step===2) panel.innerHTML = lbkCalHTML(d);
+  else if(lbk.step===3) panel.innerHTML = lbkTimeHTML(d);
 }
 
 function lbkStepsHTML(step){
-  const icons=['📅','🕐','👤'], names=['Fecha','Hora','Datos'];
+  const icons=['👤','📅','🕐'], names=['Datos','Fecha','Hora'];
   return `<div class="lbk-steps">
     ${icons.map((ic,i)=>{
       const cls=i+1<step?'done':i+1===step?'active':'';
@@ -945,6 +976,47 @@ function lbkStepsHTML(step){
       return `<div class="lbk-step-dot ${cls}"><span>${i+1<step?'✓':ic}</span>${names[i]}</div>${i<2?`<div class="lbk-step-line ${lc}"></div>`:''}`;
     }).join('')}
   </div>`;
+}
+
+function lbkInfoHTML(d){
+  const svcs=(Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}" ${lbk.service===s.name?'selected':''}>${s.name||''}${s.price?' – '+s.price:''}</option>`).join('');
+  const waBtn = (d.whatsapp||d.phone) ? `<button class="lbk-wa-btn" onclick="lbkSaveInfoAndSubmit('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp sin fecha</button>` : '';
+  return `${lbkStepsHTML(1)}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">Nombre *</label>
+      <input class="lbk-input" id="lbkName" type="text" placeholder="Tu nombre completo" value="${lbk.name}" style="margin-bottom:0"></div>
+      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">Teléfono *</label>
+      <input class="lbk-input" id="lbkPhone" type="tel" placeholder="555-123-4567" value="${lbk.phone}" style="margin-bottom:0"></div>
+    </div>
+    <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (opcional)" value="${lbk.email}" style="margin-top:0.7rem">
+    <select class="lbk-select" id="lbkService"><option value="">Selecciona un servicio...</option>${svcs}</select>
+    <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="Notas adicionales...">${lbk.note}</textarea>
+    <div class="lbk-nav-row">
+      <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> Elegir Fecha →</button>
+    </div>
+    ${waBtn}`;
+}
+
+function lbkSaveInfoGoStep2(){
+  const name=document.getElementById('lbkName')?.value.trim();
+  const phone=document.getElementById('lbkPhone')?.value.trim();
+  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); return; }
+  lbk.name=name; lbk.phone=phone;
+  lbk.email=document.getElementById('lbkEmail')?.value.trim()||'';
+  lbk.service=document.getElementById('lbkService')?.value||'';
+  lbk.note=document.getElementById('lbkNote')?.value.trim()||'';
+  lbk.step=2; if(botData) renderLbkStep(botData);
+}
+
+function lbkSaveInfoAndSubmit(mode){
+  const name=document.getElementById('lbkName')?.value.trim();
+  const phone=document.getElementById('lbkPhone')?.value.trim();
+  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); return; }
+  lbk.name=name; lbk.phone=phone;
+  lbk.email=document.getElementById('lbkEmail')?.value.trim()||'';
+  lbk.service=document.getElementById('lbkService')?.value||'';
+  lbk.note=document.getElementById('lbkNote')?.value.trim()||'';
+  submitLbk(mode);
 }
 
 function lbkCalHTML(d){
@@ -976,7 +1048,7 @@ function lbkCalHTML(d){
     cells+=`<div class="${cls}" ${clickable?`onclick="lbkPickDate('${ds}',this)"`:''}>${day}</div>`;
   }
   const prevDis=(y===today.getFullYear()&&m<=today.getMonth());
-  return `${lbkStepsHTML(1)}
+  return `${lbkStepsHTML(2)}
     <div class="lbk-section-title">📅 Elige una fecha</div>
     <div class="lbk-cal-nav">
       <button onclick="lbkNavCal(-1)" ${prevDis?'disabled style="opacity:0.3;cursor:not-allowed"':''}>‹</button>
@@ -988,7 +1060,8 @@ function lbkCalHTML(d){
       ${cells}
     </div>
     <div class="lbk-nav-row">
-      <button class="lbk-next" onclick="lbkStep2()" ${lbk.date?'':'disabled'}>
+      <button class="lbk-back" onclick="lbkStep1()">← Atrás</button>
+      <button class="lbk-next" onclick="lbkStep3()" ${lbk.date?'':'disabled'}>
         ${lbk.date?'Siguiente →':'Selecciona una fecha'}
       </button>
     </div>`;
@@ -1017,43 +1090,19 @@ function lbkTimeHTML(d){
   }
   if(!slots.length) slots=['9:00am','9:30am','10:00am','10:30am','11:00am','11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:00pm','2:30pm','3:00pm','3:30pm','4:00pm','4:30pm','5:00pm'];
   const [yr,mo,dy]=lbk.date.split('-');
-  return `${lbkStepsHTML(2)}
+  return `${lbkStepsHTML(3)}
     <div class="lbk-badge">📅 ${dy}/${mo}/${yr}</div>
     <div class="lbk-section-title">🕐 Elige un horario</div>
     <div class="lbk-time-grid">
       ${slots.map(t=>`<div class="lbk-time-slot${lbk.time===t?' selected':''}" onclick="lbkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
     <div class="lbk-nav-row">
-      <button class="lbk-back" onclick="lbkStep1()">← Atrás</button>
-      <button class="lbk-next" onclick="lbkStep3()" ${lbk.time?'':'disabled'}>
-        ${lbk.time?'Siguiente →':'Selecciona un horario'}
+      <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
+      <button class="lbk-next" onclick="submitLbk('confirm')" ${lbk.time?'':'disabled'}>
+        ${lbk.time?'<i class="fas fa-check-circle"></i> Confirmar Cita':'Selecciona un horario'}
       </button>
-    </div>`;
-}
-
-function lbkInfoHTML(d){
-  const svcs=(Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}">${s.name||''}${s.price?' – '+s.price:''}</option>`).join('');
-  const [yr,mo,dy]=lbk.date.split('-');
-  return `${lbkStepsHTML(3)}
-    <div style="margin-bottom:0.8rem;">
-      <span class="lbk-badge">📅 ${dy}/${mo}/${yr}</span>
-      <span class="lbk-badge">🕐 ${lbk.time}</span>
     </div>
-    <div id="lbkForm">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
-        <input class="lbk-input" id="lbkName" type="text" placeholder="Tu nombre *">
-        <input class="lbk-input" id="lbkPhone" type="tel" placeholder="Teléfono *">
-      </div>
-      <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (opcional)">
-      <select class="lbk-select" id="lbkService"><option value="">Selecciona un servicio...</option>${svcs}</select>
-      <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="Notas adicionales..."></textarea>
-      <div class="lbk-nav-row">
-        <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
-        <button class="lbk-next" onclick="submitLbk('confirm')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
-      </div>
-      ${d.whatsapp?`<button class="lbk-wa-btn" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>`:''}
-    </div>
-    <div id="lbkSuccess" style="display:none"></div>`;
+    ${(d.whatsapp||d.phone)&&lbk.time?`<button class="lbk-wa-btn" style="margin-top:0.5rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>`:''}`;
 }
 
 function lbkNavCal(dir){
@@ -1074,20 +1123,19 @@ function lbkPickTime(t,el){
   document.querySelectorAll('.lbk-time-slot.selected').forEach(d=>d.classList.remove('selected'));
   el.classList.add('selected');
   const btn=document.querySelector('#lbkPanel .lbk-next');
-  if(btn){btn.disabled=false;btn.textContent='Siguiente →';}
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Confirmar Cita';}
+  const waBtn=document.querySelector('#lbkPanel .lbk-wa-btn');
+  if(waBtn) waBtn.style.display='flex';
 }
 function lbkStep1(){lbk.step=1;if(botData)renderLbkStep(botData);}
-function lbkStep2(){if(!lbk.date)return;lbk.step=2;if(botData)renderLbkStep(botData);}
-function lbkStep3(){if(!lbk.time)return;lbk.step=3;if(botData)renderLbkStep(botData);}
+function lbkStep2(){lbk.step=2;if(botData)renderLbkStep(botData);}
+function lbkStep3(){if(!lbk.date)return;lbk.step=3;if(botData)renderLbkStep(botData);}
 
 async function submitLbk(mode){
-  const name=document.getElementById('lbkName')?.value.trim();
-  const phone=document.getElementById('lbkPhone')?.value.trim();
-  const email=document.getElementById('lbkEmail')?.value.trim()||'';
-  const service=document.getElementById('lbkService')?.value||'';
-  const note=document.getElementById('lbkNote')?.value.trim()||'';
+  const name=lbk.name, phone=lbk.phone, email=lbk.email||'';
+  const service=lbk.service||'', note=lbk.note||'';
   const date=lbk.date||'', time=lbk.time||'';
-  if(!name||!phone){alert('Por favor ingresa nombre y teléfono.');return;}
+  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); lbkStep1(); return; }
   try{
     if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{
       botId, name, phone, email, service, date, time, note,
@@ -1105,16 +1153,13 @@ async function submitLbk(mode){
     msg+=`\n\n_Reserva via Super Bot 007_`;
     window.open(wa?`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
   }
-  const form=document.getElementById('lbkForm');
-  if(form) form.style.display='none';
-  const sDiv=document.getElementById('lbkSuccess');
-  if(sDiv){
-    const[yr,mo,dy]=date.split('-');
-    sDiv.style.display='block';
-    sDiv.innerHTML=`<div class="lbk-success">
+  const panel=document.getElementById('lbkPanel');
+  if(panel){
+    const[yr,mo,dy]=(date||'--').split('-');
+    panel.innerHTML=`<div class="lbk-success">
       <div class="lbk-check">${mode==='wa'?'📲':'✅'}</div>
       <h3>${mode==='wa'?'¡Redirigiendo a WhatsApp!':'¡Cita registrada!'}</h3>
-      <p>¡Hola <strong>${name}</strong>! ${service?'Tu cita de <strong>'+service+'</strong>':' Tu cita'}${date?' para el <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' a las <strong>'+time+'</strong>':''} ${mode==='wa'?'fue preparada para WhatsApp.':'quedó registrada.'}</p>
+      <p>¡Hola <strong>${name}</strong>!${service?' Tu cita de <strong>'+service+'</strong>':' Tu cita'}${date?' para el <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' a las <strong>'+time+'</strong>':''} ${mode==='wa'?'fue preparada para WhatsApp.':'quedó registrada.'}</p>
       ${mode!=='wa'?`<p>Te contactaremos al <strong>${phone}</strong> para confirmar 😊</p>`:''}
       <button class="lbk-reset" onclick="initLandingBooking(botData)">📅 Nueva Cita</button>
     </div>`;
@@ -1122,6 +1167,7 @@ async function submitLbk(mode){
 }
 
 function submitBooking(){ submitLbk('wa'); }
+
 
 // ══════ CONTACT ══════
 function buildContact(d){
