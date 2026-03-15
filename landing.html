@@ -599,14 +599,20 @@ const botId = new URLSearchParams(location.search).get('id');
 })();
 
 // ══════ LOAD BOT ══════
+let _loadBotCalled = false;
 async function loadBot(){
+  if(_loadBotCalled) return; _loadBotCalled = true;
   if(!botId){ showNoBot(); return; }
+  // Wait for Firebase db to be ready (max 6s)
+  let waited = 0;
+  while(!window.db && waited < 6000){ await new Promise(r=>setTimeout(r,200)); waited+=200; }
+  if(!window.db){ console.error('Firebase no disponible'); showNoBot(); return; }
   try{
     const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
     if(!snap.exists()){ showNoBot(); return; }
     botData = snap.data();
     initPage();
-  }catch(e){ console.error(e); showNoBot(); }
+  }catch(e){ console.error('loadBot error:',e); showNoBot(); }
 }
 
 function showNoBot(){
@@ -1212,15 +1218,9 @@ function toggleMenu(){
 }
 
 // ══════ START ══════
-window.addEventListener('DOMContentLoaded', ()=>{
-  if(!window.db){
-    setTimeout(loadBot, 1000);
-  } else {
-    loadBot();
-  }
-});
-// Fallback if firebase loads after DOMContentLoaded
-setTimeout(()=>{ if(!botData && !document.getElementById('noBotMsg').classList.contains('show')) loadBot(); }, 2500);
+window.addEventListener('DOMContentLoaded', ()=>{ loadBot(); });
+// Fallback — in case DOMContentLoaded already fired
+if(document.readyState === 'complete' || document.readyState === 'interactive'){ loadBot(); }
 
 // ══════ REAL-TIME EDITOR MESSAGES ══════
 // Receives postMessage from editor.html to apply changes instantly
