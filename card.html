@@ -475,6 +475,9 @@ const app = initializeApp({
 });
 const db = getFirestore(app);
 window.db=db; window._fbGetDoc=getDoc; window._fbDoc=doc;
+// Signal that Firebase is ready
+window._fbReady=true;
+document.dispatchEvent(new CustomEvent('fbReady'));
 </script>
 
 <script>
@@ -553,10 +556,11 @@ function toast(msg,type='success'){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-function waitFor(fn,ms=8000){
+function waitFor(fn,ms=15000){
   return new Promise((ok,fail)=>{
+    if(fn()){ok();return;}
     const s=Date.now();
-    (function c(){fn()?ok():Date.now()-s>ms?fail(new Error('timeout')):setTimeout(c,80);})();
+    (function c(){fn()?ok():Date.now()-s>ms?fail(new Error('timeout')):setTimeout(c,100);})();
   });
 }
 
@@ -661,23 +665,50 @@ function applyColors(d){
 // ═══════════════════════════════════════
 //  LOAD FROM FIREBASE
 // ═══════════════════════════════════════
+let _cardLoaded=false;
 async function loadCard(){
-  if(!botId){showNoBot();return;}
+  if(_cardLoaded) return;  // prevent double-call
+  _cardLoaded=true;
+  if(!botId){showNoBot('no-id');return;}
   try{
-    await waitFor(()=>window.db);
+    await waitFor(()=>window._fbReady||window.db);
     const snap=await window._fbGetDoc(window._fbDoc(window.db,'bots',botId));
-    if(!snap.exists()){showNoBot();return;}
+    if(!snap.exists()){showNoBot('not-found');return;}
     botData=snap.data();
     renderCard(botData);
   }catch(e){
-    console.error(e);
-    showNoBot();
+    console.error('loadCard error:',e);
+    _cardLoaded=false; // allow retry
+    showNoBot('error');
   }
 }
 
-function showNoBot(){
+function showNoBot(reason){
   document.getElementById('loadingScreen').classList.add('hide');
-  document.getElementById('noBotMsg').style.display='flex';
+  const el=document.getElementById('noBotMsg');
+  if(reason==='error'){
+    el.innerHTML=`
+      <div style="font-size:3rem">📡</div>
+      <h2>Error de conexión</h2>
+      <p>No se pudo conectar. Verifica tu internet e intenta de nuevo.</p>
+      <button onclick="_cardLoaded=false;document.getElementById('loadingScreen').classList.remove('hide');el.style.display='none';loadCard();"
+        style="margin-top:1rem;padding:0.75rem 1.5rem;background:var(--grad);color:#fff;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:0.9rem;">
+        🔄 Reintentar
+      </button>`;
+  } else if(reason==='not-found'){
+    el.innerHTML=`
+      <div style="font-size:3rem">😕</div>
+      <h2>Tarjeta no encontrada</h2>
+      <p>El Bot ID no existe o fue eliminado.</p>
+      <a href="index.html" style="color:var(--p);text-decoration:none;font-weight:700">← Inicio</a>`;
+  } else {
+    el.innerHTML=`
+      <div style="font-size:3rem">😕</div>
+      <h2>Bot ID no especificado</h2>
+      <p>Agrega <strong>?id=TU_BOT_ID</strong> en la URL.</p>
+      <a href="index.html" style="color:var(--p);text-decoration:none;font-weight:700">← Inicio</a>`;
+  }
+  el.style.display='flex';
 }
 
 // ═══════════════════════════════════════
@@ -939,10 +970,21 @@ function downloadVCF(){
 }
 
 // ═══════════════════════════════════════
-//  INIT
+//  INIT — single call, event-driven
 // ═══════════════════════════════════════
-document.addEventListener('DOMContentLoaded', loadCard);
-if(document.readyState==='complete'||document.readyState==='interactive') loadCard();
+if(window._fbReady){
+  // Firebase already ready (unlikely but safe)
+  loadCard();
+} else {
+  // Wait for Firebase module to signal ready
+  document.addEventListener('fbReady', loadCard, {once:true});
+  // Fallback: also try after DOM ready in case event was missed
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', ()=>setTimeout(loadCard,200), {once:true});
+  } else {
+    setTimeout(loadCard, 200);
+  }
+}
 </script>
 </body>
 </html>
