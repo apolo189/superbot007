@@ -454,6 +454,45 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 }
 .bk-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 .bk-btn.wa { background: linear-gradient(135deg,#25D366,#128C7E); box-shadow: 0 4px 16px rgba(37,211,102,0.3); }
+
+/* ── BOOKING CALENDAR ── */
+.bk-steps { display:flex; align-items:center; gap:0; margin-bottom:0.8rem; }
+.bk-step-dot { flex:1; text-align:center; font-size:0.65rem; font-weight:700; color:var(--muted); position:relative; }
+.bk-step-dot.active { color:var(--p); }
+.bk-step-dot.done { color:var(--a); }
+.bk-step-dot span { display:block; width:22px; height:22px; border-radius:50%; border:2px solid var(--border); margin:0 auto 3px; line-height:18px; font-size:0.65rem; }
+.bk-step-dot.active span { border-color:var(--p); background:rgba(108,99,255,0.18); color:var(--p); }
+.bk-step-dot.done span { border-color:var(--a); background:rgba(67,233,123,0.15); color:var(--a); }
+.bk-step-line { flex:0 0 18px; height:2px; background:var(--border); margin-bottom:14px; }
+.bk-step-line.done { background:var(--a); }
+.bk-cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.55rem; }
+.bk-cal-nav button { background:rgba(108,99,255,0.12); border:1px solid var(--border); color:var(--text); border-radius:8px; width:28px; height:28px; cursor:pointer; font-size:0.75rem; transition:all 0.2s; }
+.bk-cal-nav button:hover { background:rgba(108,99,255,0.25); border-color:var(--p); }
+.bk-cal-month { font-size:0.82rem; font-weight:700; color:var(--text); }
+.bk-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.bk-cal-dow { font-size:0.58rem; font-weight:700; color:var(--muted); text-align:center; padding:2px 0; }
+.bk-cal-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:0.72rem; font-weight:600; cursor:pointer; border:1px solid transparent; transition:all 0.18s; color:var(--text); }
+.bk-cal-day:hover:not(.disabled):not(.empty) { background:rgba(108,99,255,0.2); border-color:var(--p); }
+.bk-cal-day.today { border-color:rgba(108,99,255,0.4); color:var(--p); }
+.bk-cal-day.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 2px 10px rgba(108,99,255,0.4); }
+.bk-cal-day.disabled { color:rgba(144,144,176,0.3); cursor:not-allowed; }
+.bk-cal-day.empty { cursor:default; }
+.bk-cal-day.closed { color:rgba(255,71,87,0.35); cursor:not-allowed; text-decoration:line-through; }
+.bk-time-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; max-height:160px; overflow-y:auto; padding-right:2px; }
+.bk-time-grid::-webkit-scrollbar { width:3px; }
+.bk-time-grid::-webkit-scrollbar-track { background:transparent; }
+.bk-time-grid::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+.bk-time-slot { padding:0.38rem 0.2rem; text-align:center; border:1px solid var(--border); border-radius:8px; font-size:0.72rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.18s; background:rgba(255,255,255,0.02); }
+.bk-time-slot:hover { border-color:var(--p); color:var(--p); background:rgba(108,99,255,0.1); }
+.bk-time-slot.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 2px 8px rgba(108,99,255,0.35); }
+.bk-section-title { font-size:0.7rem; font-weight:700; color:var(--muted); margin:0.6rem 0 0.35rem; text-transform:uppercase; letter-spacing:0.04em; }
+.bk-selected-badge { display:inline-flex; align-items:center; gap:0.35rem; background:rgba(67,233,123,0.12); border:1px solid rgba(67,233,123,0.3); border-radius:20px; padding:0.25rem 0.65rem; font-size:0.72rem; font-weight:700; color:var(--a); margin-bottom:0.5rem; }
+.bk-nav-btns { display:flex; gap:0.4rem; margin-top:0.6rem; }
+.bk-back-btn { flex:0 0 auto; padding:0.6rem 0.8rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px; color:var(--muted); font-size:0.78rem; cursor:pointer; transition:all 0.2s; }
+.bk-back-btn:hover { border-color:var(--p); color:var(--text); }
+.bk-next-btn { flex:1; padding:0.6rem; background:var(--grad); border:none; border-radius:10px; color:white; font-weight:800; font-size:0.8rem; cursor:pointer; transition:all 0.2s; box-shadow:0 3px 12px rgba(108,99,255,0.35); }
+.bk-next-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
 .bk-success {
   text-align: center; padding: 1.2rem 0.8rem;
   display: flex; flex-direction: column; align-items: center; gap: 0.55rem;
@@ -1122,48 +1161,229 @@ function checkoutWhatsApp(){
 }
 
 // ══════ RIGHT PANEL BOOKING FORM ══════
-function buildRightBookingForm(d){
-  const today = new Date().toISOString().split('T')[0];
-  const services = (d.services||[]).map(s=>`<option value="${s.name||''}"> ${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
-  const waBtn = d.whatsapp ? `<button class="bk-btn wa" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>` : '';
+// ══════ BOOKING CALENDAR ══════
+let bkState = { step:1, date:null, time:null, calYear:null, calMonth:null };
 
-  document.getElementById('bookingPanel').innerHTML = `
+function buildRightBookingForm(d){
+  const now = new Date();
+  bkState = { step:1, date:null, time:null, calYear:now.getFullYear(), calMonth:now.getMonth() };
+  renderBookingStep(d);
+}
+
+function renderBookingStep(d){
+  const panel = document.getElementById('bookingPanel');
+  if(!panel) return;
+  const isEN = d.botLanguage==='en';
+  const labels = {
+    appt:    isEN?'Book Appointment':'Agendar Cita',
+    pick:    isEN?'Pick a date':'Elige una fecha',
+    pickT:   isEN?'Pick a time':'Elige un horario',
+    info:    isEN?'Your info':'Tus datos',
+    next:    isEN?'Next →':'Siguiente →',
+    confirm: isEN?'Confirm Appointment':'Confirmar Cita',
+    waBtn:   isEN?'Confirm via WhatsApp':'Confirmar por WhatsApp',
+    name:    isEN?'Full name *':'Nombre completo *',
+    phone:   isEN?'Phone *':'Teléfono *',
+    email:   isEN?'Email (optional)':'Email (opcional)',
+    service: isEN?'Service':'Servicio',
+    selSvc:  isEN?'Select a service...':'Selecciona un servicio...',
+    notes:   isEN?'Notes (optional)':'Notas (opcional)',
+    notesP:  isEN?'Allergies, preferences...':'Alergias, preferencias...',
+    back:    isEN?'← Back':'← Atrás',
+    selDate: isEN?'Select date first':'Primero elige una fecha',
+    noSlots: isEN?'No slots available':'Sin horarios disponibles',
+    closed:  isEN?'Closed':'Cerrado',
+  };
+
+  if(bkState.step===1) panel.innerHTML = buildCalendarHTML(d, labels);
+  else if(bkState.step===2) panel.innerHTML = buildTimeHTML(d, labels);
+  else if(bkState.step===3) panel.innerHTML = buildInfoHTML(d, labels);
+}
+
+function stepsHTML(step){
+  const steps=['📅','🕐','👤'];
+  const names=['Fecha','Hora','Datos'];
+  return `<div class="bk-steps">
+    ${steps.map((s,i)=>{
+      const cls = i+1<step?'done':i+1===step?'active':'';
+      const line = i<2?(i+1<step?'done':''):'';
+      return `<div class="bk-step-dot ${cls}"><span>${i+1<step?'✓':s}</span>${names[i]}</div>${i<2?`<div class="bk-step-line ${line}"></div>`:''}`;
+    }).join('')}
+  </div>`;
+}
+
+function buildCalendarHTML(d, labels){
+  const DAYS_EN = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const DAYS_ES = ['Do','Lu','Ma','Mi','Ju','Vi','Sa'];
+  const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const isEN = d.botLanguage==='en';
+  const dowLabels = isEN?DAYS_EN:DAYS_ES;
+  const monthNames = isEN?MONTHS_EN:MONTHS_ES;
+
+  const y = bkState.calYear, m = bkState.calMonth;
+  const firstDay = new Date(y,m,1).getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Map day-of-week to hours key
+  const DOW_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  const hours = d.hours||{};
+
+  let cells = '';
+  // Empty cells before first day
+  for(let i=0;i<firstDay;i++) cells+=`<div class="bk-cal-day empty"></div>`;
+  for(let day=1;day<=daysInMonth;day++){
+    const dt = new Date(y,m,day);
+    const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isPast = dt < today;
+    const dow = dt.getDay();
+    const key = DOW_KEY[dow];
+    const hData = hours[key]||hours[Object.keys(hours)[dow]]||null;
+    const isClosed = hData && !hData.open;
+    const isToday = dt.getTime()===today.getTime();
+    const isSel = bkState.date===dateStr;
+    let cls = 'bk-cal-day';
+    if(isPast||isClosed) cls+= isPast?' disabled':' closed';
+    else if(isSel) cls+=' selected';
+    else if(isToday) cls+=' today';
+    const clickable = !isPast && !isClosed;
+    cells+=`<div class="${cls}" ${clickable?`onclick="bkPickDate('${dateStr}',this)"`:''}>${day}</div>`;
+  }
+
+  const prevDisabled = (y===today.getFullYear()&&m<=today.getMonth());
+  return `
+    ${stepsHTML(1)}
+    <div class="bk-section-title">📅 ${labels.pick}</div>
+    <div class="bk-cal-nav">
+      <button onclick="bkCalNav(-1)" ${prevDisabled?'disabled style="opacity:0.3;cursor:not-allowed"':''}>‹</button>
+      <span class="bk-cal-month">${monthNames[m]} ${y}</span>
+      <button onclick="bkCalNav(1)">›</button>
+    </div>
+    <div class="bk-cal-grid">
+      ${dowLabels.map(d=>`<div class="bk-cal-dow">${d}</div>`).join('')}
+      ${cells}
+    </div>
+    <div class="bk-nav-btns" style="margin-top:0.8rem;">
+      <button class="bk-next-btn" onclick="bkGoStep2()" ${bkState.date?'':'style="opacity:0.5;cursor:not-allowed"'}>
+        ${bkState.date?labels.next:labels.selDate}
+      </button>
+    </div>`;
+}
+
+function buildTimeHTML(d, labels){
+  const hours = d.hours||{};
+  const DOW_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  let timeSlots = [];
+
+  if(bkState.date){
+    const dt = new Date(bkState.date+'T12:00:00');
+    const key = DOW_KEY[dt.getDay()];
+    const hData = hours[key]||null;
+    if(hData && hData.open && hData.from && hData.to){
+      const [fh,fm] = hData.from.split(':').map(Number);
+      const [th,tm] = hData.to.split(':').map(Number);
+      let cur = fh*60+(fm||0);
+      const end = th*60+(tm||0);
+      while(cur+30<=end){
+        const hh=Math.floor(cur/60), mm=cur%60;
+        const suffix=hh>=12?'pm':'am', h12=hh%12||12;
+        timeSlots.push(`${h12}:${String(mm).padStart(2,'0')}${suffix}`);
+        cur+=30;
+      }
+    }
+  }
+  if(!timeSlots.length) timeSlots=['9:00am','9:30am','10:00am','10:30am','11:00am','11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:00pm','2:30pm','3:00pm','3:30pm','4:00pm','4:30pm','5:00pm'];
+
+  const [yr,mo,dy] = bkState.date.split('-');
+  const dateLabel = `${dy}/${mo}/${yr}`;
+
+  return `
+    ${stepsHTML(2)}
+    ${bkState.date?`<div class="bk-selected-badge">📅 ${dateLabel}</div>`:''}
+    <div class="bk-section-title">🕐 ${labels.pickT}</div>
+    <div class="bk-time-grid">
+      ${timeSlots.map(t=>`<div class="bk-time-slot${bkState.time===t?' selected':''}" onclick="bkPickTime('${t}',this)">${t}</div>`).join('')}
+    </div>
+    <div class="bk-nav-btns">
+      <button class="bk-back-btn" onclick="bkGoStep1()">${labels.back}</button>
+      <button class="bk-next-btn" onclick="bkGoStep3()" ${bkState.time?'':'style="opacity:0.5;cursor:not-allowed"'}>
+        ${bkState.time?labels.next:labels.selDate.replace('fecha','hora').replace('date','time')}
+      </button>
+    </div>`;
+}
+
+function buildInfoHTML(d, labels){
+  const services = (Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}">${s.name||''} ${s.price?'– '+s.price:''}</option>`).join('');
+  const waBtn = d.whatsapp ? `<button class="bk-btn wa" style="margin-top:0.35rem" onclick="submitBookingRight('wa')"><i class="fab fa-whatsapp"></i> ${labels.waBtn}</button>` : '';
+  const [yr,mo,dy] = bkState.date.split('-');
+  const dateLabel = `${dy}/${mo}/${yr}`;
+  return `
+    ${stepsHTML(3)}
+    <div style="display:flex;gap:0.4rem;margin-bottom:0.7rem;flex-wrap:wrap;">
+      <div class="bk-selected-badge">📅 ${dateLabel}</div>
+      <div class="bk-selected-badge">🕐 ${bkState.time}</div>
+    </div>
     <div id="bkForm">
-      <label class="bk-label">Nombre *</label>
-      <input class="bk-input" id="bk_name" type="text" placeholder="Tu nombre completo">
-      <label class="bk-label">Teléfono *</label>
+      <label class="bk-label">${labels.name}</label>
+      <input class="bk-input" id="bk_name" type="text" placeholder="${d.botLanguage==='en'?'Your full name':'Tu nombre completo'}">
+      <label class="bk-label">${labels.phone}</label>
       <input class="bk-input" id="bk_phone" type="tel" placeholder="Ej: 555-123-4567">
-      <label class="bk-label">Email (opcional)</label>
+      <label class="bk-label">${labels.email}</label>
       <input class="bk-input" id="bk_email" type="email" placeholder="tu@email.com">
-      <label class="bk-label">Servicio</label>
+      <label class="bk-label">${labels.service}</label>
       <select class="bk-select" id="bk_service">
-        <option value="">Selecciona un servicio...</option>${services}
+        <option value="">${labels.selSvc}</option>${services}
       </select>
-      <div class="bk-row-wrap">
-        <div class="bk-row">
-          <div><label class="bk-label">Fecha</label><input class="bk-input" id="bk_date" type="date" min="${today}"></div>
-          <div><label class="bk-label">Hora</label><input class="bk-input" id="bk_time" type="time"></div>
-        </div>
+      <label class="bk-label">${labels.notes}</label>
+      <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="${labels.notesP}"></textarea>
+      <div class="bk-nav-btns">
+        <button class="bk-back-btn" onclick="bkGoStep2()">${labels.back}</button>
+        <button class="bk-next-btn" onclick="submitBookingRight('confirm')"><i class="fas fa-check-circle"></i> ${labels.confirm}</button>
       </div>
-      <label class="bk-label">Notas adicionales</label>
-      <textarea class="bk-textarea" id="bk_note" rows="2" placeholder="Ej: Alergias, preferencias..."></textarea>
-      <button class="bk-btn" onclick="submitBookingRight('confirm')"><i class="fas fa-check-circle"></i> Confirmar Cita</button>
       ${waBtn}
     </div>
     <div id="bkSuccess" style="display:none"></div>`;
 }
 
+// Calendar navigation helpers
+function bkCalNav(dir){
+  bkState.calMonth += dir;
+  if(bkState.calMonth>11){ bkState.calMonth=0; bkState.calYear++; }
+  if(bkState.calMonth<0){ bkState.calMonth=11; bkState.calYear--; }
+  if(botData) renderBookingStep(botData);
+}
+function bkPickDate(dateStr, el){
+  bkState.date = dateStr;
+  document.querySelectorAll('.bk-cal-day.selected').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  // Update next button
+  const btn = document.querySelector('.bk-next-btn');
+  if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; const isEN=botData?.botLanguage==='en'; btn.textContent=isEN?'Next →':'Siguiente →'; }
+}
+function bkPickTime(t, el){
+  bkState.time = t;
+  document.querySelectorAll('.bk-time-slot.selected').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.querySelector('.bk-next-btn');
+  if(btn){ btn.style.opacity='1'; btn.style.cursor='pointer'; const isEN=botData?.botLanguage==='en'; btn.textContent=isEN?'Next →':'Siguiente →'; }
+}
+function bkGoStep1(){ bkState.step=1; if(botData) renderBookingStep(botData); }
+function bkGoStep2(){ if(!bkState.date) return; bkState.step=2; if(botData) renderBookingStep(botData); }
+function bkGoStep3(){ if(!bkState.time) return; bkState.step=3; if(botData) renderBookingStep(botData); }
+
 async function submitBookingRight(mode){
   const name    = document.getElementById('bk_name')?.value.trim();
   const phone   = document.getElementById('bk_phone')?.value.trim();
-  const email   = document.getElementById('bk_email')?.value.trim();
-  const service = document.getElementById('bk_service')?.value;
-  const date    = document.getElementById('bk_date')?.value;
-  const time    = document.getElementById('bk_time')?.value;
-  const note    = document.getElementById('bk_note')?.value.trim();
+  const email   = document.getElementById('bk_email')?.value.trim()||'';
+  const service = document.getElementById('bk_service')?.value||'';
+  const note    = document.getElementById('bk_note')?.value.trim()||'';
+  const date    = bkState.date||'';
+  const time    = bkState.time||'';
+  const isEN    = botData?.botLanguage==='en';
 
-  if(!name){  document.getElementById('bk_name').focus(); toast('Ingresa tu nombre','error'); return; }
-  if(!phone){ document.getElementById('bk_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
+  if(!name){  document.getElementById('bk_name').focus(); toast(isEN?'Enter your name':'Ingresa tu nombre','error'); return; }
+  if(!phone){ document.getElementById('bk_phone').focus(); toast(isEN?'Enter your phone':'Ingresa tu teléfono','error'); return; }
 
   try{
     if(window.db){
@@ -1180,24 +1400,28 @@ async function submitBookingRight(mode){
     let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
     if(email) msg+=`\n📧 ${email}`;
     if(service) msg+=`\n✂️ Servicio: *${service}*`;
-    if(date) msg+=`\n📅 Fecha: *${date}*`;
+    if(date){ const [yr,mo,dy]=date.split('-'); msg+=`\n📅 Fecha: *${dy}/${mo}/${yr}*`; }
     if(time) msg+=`\n🕐 Hora: *${time}*`;
     if(note) msg+=`\n📝 ${note}`;
     msg+=`\n\n_Reserva via Super Bot 007_`;
     window.open(wa?`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
   }
 
-  document.getElementById('bkForm').style.display='none';
+  const bkForm = document.getElementById('bkForm');
+  if(bkForm) bkForm.style.display='none';
   const sDiv=document.getElementById('bkSuccess');
-  sDiv.style.display='block';
-  sDiv.innerHTML=`<div class="bk-success">
-    <div class="check-icon">${mode==='wa'?'📲':'✅'}</div>
-    <h3>${mode==='wa'?'¡Redirigiendo a WhatsApp!':'¡Cita registrada!'}</h3>
-    <p>Hola <strong>${name}</strong>, ${mode==='wa'?'tu mensaje fue preparado para':'hemos registrado tu cita'}${service?' de <strong>'+service+'</strong>':''}${date?' para el <strong>'+date+'</strong>':''}${time?' a las <strong>'+time+'</strong>':''}.</p>
-    ${mode!=='wa'?`<p>Te contactaremos al <strong>${phone}</strong> para confirmar 😊</p>`:''}
-    <button class="reset-btn" onclick="resetBookingRight()">📅 Nueva Cita</button>
-  </div>`;
-  addBotMsgTypewriter(`¡Perfecto, ${name}! 🎉 ${mode==='wa'?'Tu mensaje fue preparado para WhatsApp.':'Tu cita quedó registrada.'} Te contactaremos pronto. ¿Algo más en lo que pueda ayudarte? 😊`);
+  if(sDiv){
+    sDiv.style.display='block';
+    const [yr,mo,dy] = date.split('-');
+    sDiv.innerHTML=`<div class="bk-success">
+      <div class="check-icon">${mode==='wa'?'📲':'✅'}</div>
+      <h3>${mode==='wa'?(isEN?'Redirecting to WhatsApp!':'¡Redirigiendo a WhatsApp!'):(isEN?'Appointment booked!':'¡Cita registrada!')}</h3>
+      <p>${isEN?'Hello':'Hola'} <strong>${name}</strong>${service?', '+service:''}${date?` — ${dy}/${mo}/${yr}`:''}${time?' '+time:''}.</p>
+      ${mode!=='wa'?`<p>${isEN?'We will contact you at':'Te contactaremos al'} <strong>${phone}</strong> 😊</p>`:''}
+      <button class="reset-btn" onclick="resetBookingRight()">📅 ${isEN?'New Appointment':'Nueva Cita'}</button>
+    </div>`;
+  }
+  addBotMsgTypewriter(`${isEN?'Perfect':'¡Perfecto'}, ${name}! 🎉 ${mode==='wa'?(isEN?'Your message is ready for WhatsApp.':'Tu mensaje fue preparado para WhatsApp.'):(isEN?'Your appointment is booked!':'¡Tu cita quedó registrada!')} ${isEN?'Anything else I can help with?':'¿Algo más en lo que pueda ayudarte?'} 😊`);
 }
 
 function resetBookingRight(){ if(botData) buildRightBookingForm(botData); }
