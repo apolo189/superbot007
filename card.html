@@ -154,6 +154,20 @@ html,body{
 }
 @keyframes twBlink{0%,100%{opacity:1}50%{opacity:0}}
 
+/* Gradient-text typewriter: the inner span carries the visible text
+   while the outer div provides the gradient clip */
+.biz-name .tw-text{
+  display:inline;
+  -webkit-background-clip:inherit;
+  background-clip:inherit;
+  -webkit-text-fill-color:inherit;
+}
+.biz-name .tw-cursor{
+  /* cursor uses solid color so it's visible over gradient parent */
+  background:var(--s);
+  -webkit-text-fill-color:initial;
+}
+
 /* ── BIZ NAME ── */
 .biz-name{
   font-size:1.7rem;font-weight:900;letter-spacing:-0.02em;
@@ -561,15 +575,35 @@ let twRunning=false;
 function typewrite(el, text, speed=40, cb){
   if(!el) { if(cb) cb(); return; }
   el.innerHTML='';
+
+  // For gradient-text elements (-webkit-text-fill-color:transparent),
+  // text nodes are invisible. Use an inner <span> that inherits the clip.
+  const isGradientText = getComputedStyle(el).webkitTextFillColor === 'transparent'
+    || el.style.webkitTextFillColor === 'transparent';
+
+  let textHolder;
+  if(isGradientText){
+    textHolder = document.createElement('span');
+    textHolder.className='tw-text';
+    el.appendChild(textHolder);
+  } else {
+    textHolder = el;
+  }
+
   const cursor=document.createElement('span');
   cursor.className='tw-cursor';
   el.appendChild(cursor);
+
   let i=0;
   function tick(){
     if(i<text.length){
-      // Insert char before cursor
       const ch=document.createTextNode(text[i++]);
-      el.insertBefore(ch, cursor);
+      // insert before cursor (which lives directly on el)
+      if(isGradientText){
+        textHolder.appendChild(ch);
+      } else {
+        el.insertBefore(ch, cursor);
+      }
       setTimeout(tick, speed + (Math.random()*18-9));
     } else {
       cursor.remove();
