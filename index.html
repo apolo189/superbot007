@@ -7,689 +7,615 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  :root{
-    --red:#f24207;
-    --green:#00FF88;
-    --black:#000000;
-    --white:#FFFFFF;
-    --card:#0D0D1A;
-    --glass:rgba(242,66,7,0.08);
-    --glass-green:rgba(0,255,136,0.08);
-    --border-red:rgba(242,66,7,0.35);
-    --border-green:rgba(0,255,136,0.35);
-  }
-  html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Inter',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --red:#f24207;
+  --green:#00FF88;
+  --black:#000000;
+  --white:#FFFFFF;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Inter',sans-serif;}
 
-  /* CANVAS PARTICLES */
-  #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+/* ── CANVAS ── */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 
-  /* DECK */
-  .deck{position:relative;z-index:1;width:100%;height:100vh;overflow:hidden;}
-  .slide{
-    position:absolute;top:0;left:0;width:100%;height:100vh;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:40px 20px;opacity:0;transform:translateX(100px);
-    transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none;
-  }
-  .slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
-  .slide.exit{opacity:0;transform:translateX(-100px);}
+/* ── COLOR OVERLAY (switches per section) ── */
+#overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+  transition:background 1.2s ease;
+  background:radial-gradient(ellipse at 20% 50%, rgba(242,66,7,0.07) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 50%, rgba(242,66,7,0.04) 0%, transparent 60%);
+}
+#overlay.green-mode{
+  background:radial-gradient(ellipse at 20% 50%, rgba(0,255,136,0.07) 0%, transparent 60%),
+             radial-gradient(ellipse at 80% 50%, rgba(0,255,136,0.04) 0%, transparent 60%);
+}
 
-  /* SECTION DIVIDER */
-  .section-badge{
-    display:inline-block;padding:6px 18px;border-radius:50px;
-    font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
-    margin-bottom:16px;
-  }
-  .badge-red{background:rgba(242,66,7,0.15);border:1px solid var(--border-red);color:var(--red);}
-  .badge-green{background:rgba(0,255,136,0.15);border:1px solid var(--border-green);color:var(--green);}
+/* ── SECTION STRIPE (left border indicator) ── */
+#sectionStripe{
+  position:fixed;left:0;top:0;width:4px;height:100%;z-index:50;
+  transition:background 1s ease;
+  background:linear-gradient(180deg, var(--red), rgba(242,66,7,0.1));
+}
+#sectionStripe.green-mode{
+  background:linear-gradient(180deg, var(--green), rgba(0,255,136,0.1));
+}
 
-  /* TITLES */
-  .slide-title{
-    font-family:'Orbitron',sans-serif;
-    font-size:clamp(1.6rem,4vw,3rem);
-    font-weight:900;color:var(--white);
-    text-align:center;line-height:1.15;margin-bottom:14px;
-  }
-  .slide-title span.red{color:var(--red);}
-  .slide-title span.green{color:var(--green);}
-  .slide-sub{font-size:clamp(0.85rem,1.8vw,1.1rem);color:rgba(255,255,255,0.7);text-align:center;max-width:700px;margin-bottom:28px;line-height:1.6;}
+/* ── DECK ── */
+.deck{position:relative;z-index:1;width:100%;height:100vh;overflow:hidden;}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:50px 24px 80px;opacity:0;transform:translateX(80px);
+  transition:opacity 0.55s ease,transform 0.55s ease;pointer-events:none;
+}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.exit{opacity:0;transform:translateX(-80px);}
 
-  /* GLASS CARD */
-  .glass-card{
-    background:var(--glass);backdrop-filter:blur(12px);
-    border:1px solid var(--border-red);border-radius:16px;
-    padding:22px 28px;
-  }
-  .glass-card-green{
-    background:var(--glass-green);backdrop-filter:blur(12px);
-    border:1px solid var(--border-green);border-radius:16px;
-    padding:22px 28px;
-  }
+/* slide-level color skin */
+.slide[data-section="Para Clientes"] .accent{color:var(--red);}
+.slide[data-section="Para Socios"]   .accent{color:var(--green);}
 
-  /* GRID LAYOUTS */
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%;max-width:900px;}
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;width:100%;max-width:800px;}
-  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;width:100%;max-width:960px;}
+/* ── BADGES ── */
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 20px;border-radius:50px;
+  font-size:0.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.badge-r{background:rgba(242,66,7,0.12);border:1px solid rgba(242,66,7,0.4);color:var(--red);}
+.badge-g{background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.4);color:var(--green);}
 
-  /* ICON BOX */
-  .icon-box{font-size:2rem;margin-bottom:10px;}
-  .card-title{font-size:0.95rem;font-weight:700;color:var(--white);margin-bottom:6px;}
-  .card-text{font-size:0.78rem;color:rgba(255,255,255,0.65);line-height:1.5;}
+/* ── TITLES ── */
+.t1{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(1.5rem,3.8vw,2.8rem);
+  font-weight:900;color:#fff;text-align:center;line-height:1.15;margin-bottom:12px;
+}
+.t1 .r{color:var(--red);}
+.t1 .g{color:var(--green);}
+.sub{font-size:clamp(0.82rem,1.7vw,1.05rem);color:rgba(255,255,255,0.65);text-align:center;max-width:680px;margin-bottom:26px;line-height:1.65;}
 
-  /* PROBLEM LIST */
-  .problem-list{list-style:none;display:flex;flex-direction:column;gap:14px;max-width:600px;width:100%;}
-  .problem-list li{
-    display:flex;align-items:center;gap:14px;
-    background:rgba(242,66,7,0.06);border:1px solid rgba(242,66,7,0.2);
-    border-radius:12px;padding:14px 20px;
-    font-size:clamp(0.85rem,1.5vw,1rem);color:var(--white);
-  }
-  .problem-list li .icon-red{color:var(--red);font-size:1.2rem;min-width:24px;}
-  .solution-list{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:600px;width:100%;}
-  .solution-list li{
-    display:flex;align-items:center;gap:14px;
-    background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);
-    border-radius:12px;padding:12px 18px;
-    font-size:clamp(0.82rem,1.4vw,0.95rem);color:var(--white);
-  }
-  .solution-list li .icon-green{color:var(--green);font-size:1.1rem;min-width:22px;}
+/* ── LOGO ── */
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;letter-spacing:5px;margin-bottom:6px;}
+.logo .r{color:var(--red);}
+.logo .g{color:var(--green);}
 
-  /* STEPS */
-  .steps{display:flex;gap:20px;max-width:860px;width:100%;justify-content:center;}
-  .step{
-    flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;
-    background:rgba(242,66,7,0.07);border:1px solid var(--border-red);border-radius:16px;padding:22px 16px;
-    position:relative;
-  }
-  .step-num{
-    width:42px;height:42px;border-radius:50%;
-    background:var(--red);color:var(--white);
-    font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.1rem;
-    display:flex;align-items:center;justify-content:center;margin-bottom:12px;
-    box-shadow:0 0 16px rgba(242,66,7,0.5);
-  }
-  .step-icon{font-size:1.6rem;margin-bottom:8px;}
-  .step-title{font-size:0.9rem;font-weight:700;color:var(--white);margin-bottom:4px;}
-  .step-text{font-size:0.75rem;color:rgba(255,255,255,0.6);}
+/* ── GLASS CARDS ── */
+.card-r{background:rgba(242,66,7,0.07);border:1px solid rgba(242,66,7,0.3);border-radius:16px;padding:20px 22px;backdrop-filter:blur(10px);}
+.card-g{background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.3);border-radius:16px;padding:20px 22px;backdrop-filter:blur(10px);}
+.card-n{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:20px 22px;}
 
-  /* PRICE CARDS */
-  .price-wrap{display:flex;gap:24px;max-width:800px;width:100%;}
-  .price-card{
-    flex:1;border-radius:20px;padding:28px 24px;text-align:center;
-    display:flex;flex-direction:column;align-items:center;gap:10px;
-  }
-  .price-card.free{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);}
-  .price-card.pro{background:rgba(242,66,7,0.1);border:2px solid var(--red);box-shadow:0 0 30px rgba(242,66,7,0.25);}
-  .price-tag{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;}
-  .price-tag.red{color:var(--red);}
-  .price-tag.white{color:var(--white);}
-  .price-label{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;}
-  .price-features{list-style:none;text-align:left;width:100%;margin-top:8px;}
-  .price-features li{font-size:0.8rem;color:rgba(255,255,255,0.75);padding:4px 0;display:flex;align-items:center;gap:8px;}
-  .price-features li i{font-size:0.75rem;}
-  .feat-ok{color:var(--green);}
-  .feat-no{color:rgba(255,255,255,0.3);}
-  .feat-lock{color:rgba(255,80,0,0.7);}
-  .popular-badge{
-    background:var(--red);color:var(--white);
-    font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-    padding:4px 12px;border-radius:50px;
-  }
+/* ── GRIDS ── */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:880px;}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;width:100%;max-width:780px;}
 
-  /* CTA BUTTON */
-  .btn-cta{
-    display:inline-flex;align-items:center;gap:10px;
-    background:var(--red);color:var(--white);
-    border:none;border-radius:50px;
-    padding:14px 36px;font-size:1rem;font-weight:700;
-    cursor:pointer;text-decoration:none;letter-spacing:1px;
-    box-shadow:0 0 30px rgba(242,66,7,0.45);
-    transition:transform 0.2s,box-shadow 0.2s;
-    font-family:'Inter',sans-serif;
-  }
-  .btn-cta:hover{transform:scale(1.05);box-shadow:0 0 45px rgba(242,66,7,0.65);}
-  .btn-cta-green{
-    display:inline-flex;align-items:center;gap:10px;
-    background:var(--green);color:#000;
-    border:none;border-radius:50px;
-    padding:14px 36px;font-size:1rem;font-weight:700;
-    cursor:pointer;text-decoration:none;letter-spacing:1px;
-    box-shadow:0 0 30px rgba(0,255,136,0.4);
-    transition:transform 0.2s,box-shadow 0.2s;
-    font-family:'Inter',sans-serif;
-  }
-  .btn-cta-green:hover{transform:scale(1.05);box-shadow:0 0 45px rgba(0,255,136,0.6);}
+/* card internals */
+.ci{font-size:2rem;margin-bottom:8px;}
+.ct{font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:5px;}
+.cd{font-size:0.75rem;color:rgba(255,255,255,0.6);line-height:1.5;}
 
-  /* STATS */
-  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:820px;width:100%;}
-  .stat-card{
-    background:rgba(0,255,136,0.06);border:1px solid var(--border-green);
-    border-radius:16px;padding:20px;text-align:center;
-  }
-  .stat-num{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--green);}
-  .stat-label{font-size:0.75rem;color:rgba(255,255,255,0.6);margin-top:4px;}
+/* ── PROBLEM / SOLUTION LISTS ── */
+.plist{list-style:none;display:flex;flex-direction:column;gap:12px;max-width:600px;width:100%;}
+.plist li{display:flex;align-items:center;gap:12px;background:rgba(242,66,7,0.06);border:1px solid rgba(242,66,7,0.18);border-radius:12px;padding:13px 18px;font-size:clamp(0.82rem,1.4vw,0.97rem);color:#fff;}
+.plist .xi{color:var(--red);font-size:1.1rem;min-width:22px;}
 
-  /* MONEY CALC */
-  .calc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:700px;width:100%;}
-  .calc-row{
-    display:flex;align-items:center;justify-content:space-between;
-    background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);
-    border-radius:12px;padding:14px 20px;
-  }
-  .calc-left{font-size:0.85rem;color:rgba(255,255,255,0.7);}
-  .calc-right{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;color:var(--green);}
+.slist{list-style:none;display:flex;flex-direction:column;gap:11px;max-width:600px;width:100%;}
+.slist li{display:flex;align-items:center;gap:12px;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.18);border-radius:12px;padding:11px 16px;font-size:clamp(0.8rem,1.35vw,0.93rem);color:#fff;}
+.slist .gi{color:var(--green);font-size:1rem;min-width:20px;}
 
-  /* SECTION HEADER */
-  .section-header{
-    width:100%;max-width:960px;
-    display:flex;align-items:center;gap:14px;
-    margin-bottom:12px;padding-bottom:12px;
-    border-bottom:1px solid rgba(242,66,7,0.2);
-  }
-  .section-header.green{border-bottom-color:rgba(0,255,136,0.2);}
-  .section-label{font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
-  .section-label.red{color:var(--red);}
-  .section-label.green-txt{color:var(--green);}
-  .section-line{flex:1;height:1px;background:rgba(255,255,255,0.08);}
+/* ── STEPS (red) ── */
+.steps{display:flex;gap:18px;max-width:840px;width:100%;justify-content:center;}
+.step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;background:rgba(242,66,7,0.06);border:1px solid rgba(242,66,7,0.28);border-radius:16px;padding:20px 14px;}
+.snum{width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 0 14px rgba(242,66,7,0.55);}
+.sico{font-size:1.5rem;margin-bottom:6px;}
+.stit{font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.stxt{font-size:0.72rem;color:rgba(255,255,255,0.55);}
 
-  /* LOGO */
-  .logo-007{
-    font-family:'Orbitron',sans-serif;font-weight:900;font-size:2.8rem;
-    color:var(--white);letter-spacing:4px;margin-bottom:8px;
-  }
-  .logo-007 span{color:var(--red);}
+/* ── PRICES ── */
+.pwrap{display:flex;gap:20px;max-width:780px;width:100%;}
+.pc{flex:1;border-radius:18px;padding:24px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pc.free{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);}
+.pc.pro{background:rgba(242,66,7,0.09);border:2px solid var(--red);box-shadow:0 0 28px rgba(242,66,7,0.22);}
+.ptag{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;}
+.ptag.r{color:var(--red);}
+.ptag.w{color:#fff;}
+.plbl{font-size:0.7rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:2px;}
+.pfeat{list-style:none;text-align:left;width:100%;margin-top:6px;}
+.pfeat li{font-size:0.76rem;color:rgba(255,255,255,0.72);padding:3px 0;display:flex;align-items:center;gap:7px;}
+.pfeat li i{font-size:0.7rem;}
+.ok{color:var(--green);}
+.lk{color:rgba(255,100,0,0.7);}
+.pbadge{background:var(--red);color:#fff;font-size:0.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 11px;border-radius:50px;}
 
-  /* NAVIGATION */
-  #nav{
-    position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-    z-index:100;display:flex;align-items:center;gap:16px;
-  }
-  .nav-btn{
-    width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);
-    background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
-    color:var(--white);font-size:1rem;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:border-color 0.2s,background 0.2s;
-  }
-  .nav-btn:hover{border-color:var(--red);background:rgba(242,66,7,0.2);}
-  #progress{display:flex;gap:6px;align-items:center;}
-  .dot{
-    width:7px;height:7px;border-radius:50%;
-    background:rgba(255,255,255,0.25);transition:background 0.3s,width 0.3s;cursor:pointer;
-  }
-  .dot.active{background:var(--red);width:22px;border-radius:4px;}
+/* ── COMPARE TABLE ── */
+.ctable{width:100%;max-width:680px;border-collapse:collapse;margin-top:12px;}
+.ctable th,.ctable td{padding:9px 12px;font-size:0.78rem;text-align:center;}
+.ctable th{color:rgba(255,255,255,0.45);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08);}
+.ctable td{color:#fff;border-bottom:1px solid rgba(255,255,255,0.05);}
+.ctable .hl td{background:rgba(242,66,7,0.09);}
+.ctable .hl td:first-child{color:var(--red);font-weight:700;}
+.ctable .cheaper{color:var(--green);font-weight:700;}
 
-  /* TIMER BAR */
-  #timerBar{
-    position:fixed;bottom:0;left:0;height:3px;
-    background:linear-gradient(90deg,var(--red),#ff6a00);
-    z-index:200;transition:width 0.1s linear;
-  }
+/* ── STAT CARDS (green) ── */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:800px;width:100%;}
+.scard{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.28);border-radius:14px;padding:18px;text-align:center;}
+.snum{font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;color:var(--green);}
+.slbl{font-size:0.72rem;color:rgba(255,255,255,0.55);margin-top:3px;}
 
-  /* SECTION TAB */
-  #sectionTab{
-    position:fixed;top:20px;right:20px;z-index:100;
-    background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
-    border-radius:50px;padding:6px 16px;
-    font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-    border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);
-  }
+/* ── CALC GRID (green) ── */
+.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:680px;width:100%;}
+.crow{display:flex;align-items:center;justify-content:space-between;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.18);border-radius:11px;padding:13px 18px;}
+.cl{font-size:0.82rem;color:rgba(255,255,255,0.65);}
+.cr{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:900;color:var(--green);}
 
-  /* COMPARE TABLE */
-  .compare-table{width:100%;max-width:700px;border-collapse:collapse;}
-  .compare-table th,.compare-table td{padding:10px 14px;font-size:0.82rem;text-align:center;}
-  .compare-table th{color:rgba(255,255,255,0.5);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.1);}
-  .compare-table td{color:var(--white);border-bottom:1px solid rgba(255,255,255,0.06);}
-  .compare-table tr.highlight td{background:rgba(242,66,7,0.1);color:var(--white);}
-  .compare-table tr.highlight td:first-child{color:var(--red);font-weight:700;}
-  .compare-table .cheaper{color:var(--green);font-weight:700;}
+/* ── BUTTONS ── */
+.btn-r{display:inline-flex;align-items:center;gap:9px;background:var(--red);color:#fff;border:none;border-radius:50px;padding:13px 34px;font-size:0.95rem;font-weight:700;cursor:pointer;text-decoration:none;letter-spacing:1px;box-shadow:0 0 28px rgba(242,66,7,0.45);transition:transform .2s,box-shadow .2s;font-family:'Inter',sans-serif;}
+.btn-r:hover{transform:scale(1.05);box-shadow:0 0 44px rgba(242,66,7,0.7);}
+.btn-g{display:inline-flex;align-items:center;gap:9px;background:var(--green);color:#000;border:none;border-radius:50px;padding:13px 34px;font-size:0.95rem;font-weight:700;cursor:pointer;text-decoration:none;letter-spacing:1px;box-shadow:0 0 28px rgba(0,255,136,0.4);transition:transform .2s,box-shadow .2s;font-family:'Inter',sans-serif;}
+.btn-g:hover{transform:scale(1.05);box-shadow:0 0 44px rgba(0,255,136,0.65);}
 
-  /* PULSE ANIMATION */
-  @keyframes pulse-red{0%,100%{box-shadow:0 0 20px rgba(242,66,7,0.4);}50%{box-shadow:0 0 40px rgba(242,66,7,0.8);}}
-  @keyframes pulse-green{0%,100%{box-shadow:0 0 20px rgba(0,255,136,0.4);}50%{box-shadow:0 0 40px rgba(0,255,136,0.8);}}
-  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-  @keyframes glow-red{0%,100%{text-shadow:0 0 20px rgba(242,66,7,0.6);}50%{text-shadow:0 0 40px rgba(242,66,7,1);}}
-  @keyframes glow-green{0%,100%{text-shadow:0 0 20px rgba(0,255,136,0.6);}50%{text-shadow:0 0 40px rgba(0,255,136,1);}}
+/* ── ANIMATIONS ── */
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+@keyframes glowR{0%,100%{text-shadow:0 0 18px rgba(242,66,7,0.55);}50%{text-shadow:0 0 38px rgba(242,66,7,1),0 0 60px rgba(242,66,7,0.4);}}
+@keyframes glowG{0%,100%{text-shadow:0 0 18px rgba(0,255,136,0.55);}50%{text-shadow:0 0 38px rgba(0,255,136,1),0 0 60px rgba(0,255,136,0.4);}}
+@keyframes pulseR{0%,100%{box-shadow:0 0 22px rgba(242,66,7,0.4);}50%{box-shadow:0 0 42px rgba(242,66,7,0.85);}}
+@keyframes pulseG{0%,100%{box-shadow:0 0 22px rgba(0,255,136,0.4);}50%{box-shadow:0 0 42px rgba(0,255,136,0.85);}}
+@keyframes scanline{0%{top:-4px;}100%{top:100%;}}
 
-  .anim-float{animation:float 3s ease-in-out infinite;}
-  .anim-pulse-red{animation:pulse-red 2s ease-in-out infinite;}
-  .anim-pulse-green{animation:pulse-green 2s ease-in-out infinite;}
-  .glow-red{animation:glow-red 2s ease-in-out infinite;}
-  .glow-green{animation:glow-green 2s ease-in-out infinite;}
+.fa{animation:floatY 3s ease-in-out infinite;}
+.ga{animation:glowR 2s ease-in-out infinite;}
+.gg{animation:glowG 2s ease-in-out infinite;}
+.pa{animation:pulseR 2s ease-in-out infinite;}
+.pg{animation:pulseG 2s ease-in-out infinite;}
 
-  /* DIVIDER LINE */
-  .v-divider{
-    width:100%;max-width:820px;
-    display:flex;align-items:center;gap:12px;margin:8px 0;
-  }
-  .v-divider span{font-size:0.65rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.3);text-transform:uppercase;white-space:nowrap;}
-  .v-divider::before,.v-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08);}
+/* ── TRANSITION WIPE (scanline effect between sections) ── */
+#wipe{
+  position:fixed;left:0;top:-4px;width:100%;height:4px;z-index:300;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+  opacity:0;pointer-events:none;
+}
+#wipe.run{opacity:1;animation:scanline 0.5s linear forwards;}
+#wipe.green-mode{background:linear-gradient(90deg,transparent,var(--green),transparent);}
 
-  /* RESPONSIVE */
-  @media(max-width:600px){
-    .grid-3,.steps,.price-wrap,.stat-grid,.calc-grid{grid-template-columns:1fr;flex-direction:column;}
-    .grid-2{grid-template-columns:1fr;}
-    .grid-4{grid-template-columns:repeat(2,1fr);}
-  }
+/* ── NAV ── */
+#nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:14px;}
+.nb{width:42px;height:42px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);color:#fff;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s;}
+.nb:hover{border-color:var(--red);background:rgba(242,66,7,0.18);}
+.nb.green-mode:hover{border-color:var(--green);background:rgba(0,255,136,0.18);}
+#dots{display:flex;gap:5px;align-items:center;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.22);transition:background .3s,width .3s;cursor:pointer;}
+.dot.ar{background:var(--red);width:20px;border-radius:4px;}
+.dot.ag{background:var(--green);width:20px;border-radius:4px;}
+
+/* ── TIMER BAR ── */
+#tbar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),#ff6a00);z-index:200;}
+#tbar.green-mode{background:linear-gradient(90deg,var(--green),#00cc66);}
+
+/* ── SECTION PILL (top right) ── */
+#pill{
+  position:fixed;top:18px;right:18px;z-index:100;
+  padding:6px 18px;border-radius:50px;font-size:0.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  border:1px solid rgba(242,66,7,0.4);color:rgba(242,66,7,0.85);background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  transition:border-color .8s,color .8s;
+}
+#pill.green-mode{border-color:rgba(0,255,136,0.4);color:rgba(0,255,136,0.85);}
+
+/* ── SECTION TRANSITION SLIDE (7 = first socios) ── */
+.slide[data-section="Para Socios"] .steps .step{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.28);}
+.slide[data-section="Para Socios"] .snum{background:var(--green);color:#000;box-shadow:0 0 14px rgba(0,255,136,0.55);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:620px){
+  .g3,.steps,.pwrap,.sgrid,.cgrid{grid-template-columns:1fr;flex-direction:column;}
+  .g2{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
 <canvas id="bgCanvas"></canvas>
-<div id="timerBar" style="width:0%"></div>
-<div id="sectionTab">Para Clientes</div>
+<div id="overlay"></div>
+<div id="sectionStripe"></div>
+<div id="wipe"></div>
+<div id="tbar" style="width:0%"></div>
+<div id="pill">🔴 Para Tu Negocio</div>
 
 <div class="deck" id="deck">
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 1 — PORTADA CLIENTES -->
-  <!-- ============================================================ -->
-  <div class="slide active" data-section="Para Clientes">
-    <div class="logo-007 anim-float">SUPER <span>BOT</span> 007</div>
-    <div class="section-badge badge-red">🔴 Tu Negocio en el Futuro</div>
-    <h1 class="slide-title glow-red">Tu Negocio Merece un<br/><span class="red">Asistente de IA</span> 🤖</h1>
-    <p class="slide-sub">Crea tu <strong>Bot + Landing Page + Tarjeta Digital</strong> en menos de 5 minutos — sin código, sin complicaciones.</p>
-    <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-cta anim-pulse-red">
-      <i class="fas fa-rocket"></i> EMPIEZA GRATIS AHORA
-    </a>
-    <p style="margin-top:16px;font-size:0.72rem;color:rgba(255,255,255,0.35);">✅ Sin tarjeta de crédito &nbsp;|&nbsp; ✅ Listo en 5 minutos &nbsp;|&nbsp; ✅ 100% gratis para empezar</p>
-  </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 — PORTADA CLIENTES                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide active" data-section="Para Clientes">
+  <div class="logo fa">SUPER <span class="r">BOT</span> 007</div>
+  <div class="badge badge-r">🔴 Automatiza Tu Negocio con IA</div>
+  <h1 class="t1 ga">Tu Negocio Merece un<br/><span class="r">Asistente de IA</span> 🤖</h1>
+  <p class="sub">Crea tu <strong>Bot + Landing Page + Tarjeta Digital</strong><br/>en menos de 5 minutos — sin código, sin complicaciones.</p>
+  <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-r pa">
+    <i class="fas fa-rocket"></i> EMPIEZA GRATIS AHORA
+  </a>
+  <p style="margin-top:14px;font-size:0.68rem;color:rgba(255,255,255,0.3);">✅ Sin tarjeta de crédito &nbsp;·&nbsp; ✅ Listo en 5 min &nbsp;·&nbsp; ✅ 100% gratis para empezar</p>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 2 — EL PROBLEMA -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Clientes">
-    <div class="section-badge badge-red">😩 El Problema</div>
-    <h1 class="slide-title">¿Cansado de <span class="red">perder clientes</span>?</h1>
-    <ul class="problem-list">
-      <li><i class="fas fa-times-circle icon-red"></i> Respondes mensajes a las 2am y pierdes ventas mientras duermes</li>
-      <li><i class="fas fa-times-circle icon-red"></i> No tienes página web — pareces menos profesional que la competencia</li>
-      <li><i class="fas fa-times-circle icon-red"></i> Tus clientes no saben tus horarios, precios ni cómo agendar</li>
-    </ul>
-    <div style="margin-top:22px;background:rgba(242,66,7,0.08);border:1px solid rgba(242,66,7,0.25);border-radius:14px;padding:16px 24px;max-width:560px;text-align:center;">
-      <p style="color:var(--white);font-size:0.9rem;font-weight:600;">💡 <span style="color:var(--red);">Super Bot 007</span> resuelve todo esto automáticamente</p>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 — EL PROBLEMA                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Clientes">
+  <div class="badge badge-r">😩 El Problema</div>
+  <h1 class="t1">¿Cansado de <span class="r">perder clientes</span>?</h1>
+  <ul class="plist">
+    <li><i class="fas fa-times-circle xi"></i> Respondes mensajes a las 2am y pierdes ventas mientras duermes</li>
+    <li><i class="fas fa-times-circle xi"></i> No tienes página web — pareces menos profesional que la competencia</li>
+    <li><i class="fas fa-times-circle xi"></i> Tus clientes no saben tus horarios, precios ni cómo agendar contigo</li>
+  </ul>
+  <div style="margin-top:20px;background:rgba(242,66,7,0.08);border:1px solid rgba(242,66,7,0.25);border-radius:13px;padding:14px 22px;max-width:540px;text-align:center;">
+    <p style="color:#fff;font-size:0.88rem;font-weight:600;">💡 <span style="color:var(--red);">Super Bot 007</span> resuelve todo esto — automáticamente 🚀</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 — LA SOLUCIÓN                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Clientes">
+  <div class="badge badge-r">🚀 La Solución</div>
+  <h1 class="t1">Super Bot 007 trabaja<br/><span class="r">por ti 24/7</span></h1>
+  <div class="g3">
+    <div class="card-r" style="text-align:center;">
+      <div class="ci">🤖</div>
+      <div class="ct">Bot con IA</div>
+      <div class="cd">Responde preguntas, agenda citas y vende automáticamente — sin que estés presente.</div>
+    </div>
+    <div class="card-r" style="text-align:center;">
+      <div class="ci">🌐</div>
+      <div class="ct">Landing Page</div>
+      <div class="cd">Tu página web profesional con servicios, galería, testimoniales y citas.</div>
+    </div>
+    <div class="card-r" style="text-align:center;">
+      <div class="ci">💳</div>
+      <div class="ct">Tarjeta Digital</div>
+      <div class="cd">Con código QR, redes sociales y botón de WhatsApp. Compártela en segundos.</div>
     </div>
   </div>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 3 — LA SOLUCIÓN -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Clientes">
-    <div class="section-badge badge-red">🚀 La Solución</div>
-    <h1 class="slide-title">Super Bot 007 trabaja<br/><span class="red">por ti 24/7</span></h1>
-    <div class="grid-3">
-      <div class="glass-card" style="text-align:center;">
-        <div class="icon-box">🤖</div>
-        <div class="card-title">Bot con IA</div>
-        <div class="card-text">Responde preguntas, agenda citas y vende tus productos automáticamente — sin que estés presente.</div>
-      </div>
-      <div class="glass-card" style="text-align:center;">
-        <div class="icon-box">🌐</div>
-        <div class="card-title">Landing Page</div>
-        <div class="card-text">Tu página web profesional con tus servicios, galería, testimoniales y formulario de citas.</div>
-      </div>
-      <div class="glass-card" style="text-align:center;">
-        <div class="icon-box">💳</div>
-        <div class="card-title">Tarjeta Digital</div>
-        <div class="card-text">Tarjeta con código QR, redes sociales y botón de WhatsApp. Compártela en segundos.</div>
-      </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 — CÓMO FUNCIONA                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Clientes">
+  <div class="badge badge-r">⚡ Cómo Funciona</div>
+  <h1 class="t1"><span class="r">3 Pasos</span> y Listo ✅</h1>
+  <div class="steps">
+    <div class="step">
+      <div class="snum">1</div>
+      <div class="sico">📝</div>
+      <div class="stit">Llena el Formulario</div>
+      <div class="stxt">Nombre, negocio, servicios, colores — ¡2 minutos máximo!</div>
+    </div>
+    <div class="step">
+      <div class="snum">2</div>
+      <div class="sico">🤖</div>
+      <div class="stit">IA Genera Todo</div>
+      <div class="stxt">Tu bot, landing page y tarjeta digital se crean al instante.</div>
+    </div>
+    <div class="step">
+      <div class="snum">3</div>
+      <div class="sico">🚀</div>
+      <div class="stit">Activa y Comparte</div>
+      <div class="stxt">Con el plan PRO tus links se activan y el mundo te ve.</div>
     </div>
   </div>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 4 — CÓMO FUNCIONA -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Clientes">
-    <div class="section-badge badge-red">⚡ Cómo Funciona</div>
-    <h1 class="slide-title"><span class="red">3 Pasos</span> y Listo ✅</h1>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-icon">📝</div>
-        <div class="step-title">Llena el Formulario</div>
-        <div class="step-text">Nombre, tipo de negocio, servicios, colores — ¡2 minutos máximo!</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-icon">🤖</div>
-        <div class="step-title">IA Genera Todo</div>
-        <div class="step-text">Tu bot, landing page y tarjeta digital se crean automáticamente.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-icon">🚀</div>
-        <div class="step-title">Activa y Comparte</div>
-        <div class="step-text">Con el plan PRO tus links se activan y puedes compartirlo con el mundo.</div>
-      </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 — PRECIOS                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Clientes">
+  <div class="badge badge-r">💰 Precios</div>
+  <h1 class="t1">Precio que no puedes <span class="r">ignorar</span></h1>
+  <div class="pwrap">
+    <div class="pc free">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;">Starter</div>
+      <div class="ptag w">GRATIS</div>
+      <div class="plbl">Para siempre</div>
+      <ul class="pfeat">
+        <li><i class="fas fa-check ok"></i> Crea hasta 5 bots</li>
+        <li><i class="fas fa-check ok"></i> Diseña todo al 100%</li>
+        <li><i class="fas fa-check ok"></i> Ve tu landing page y card</li>
+        <li><i class="fas fa-lock lk"></i> Links en modo demo</li>
+        <li><i class="fas fa-lock lk"></i> Sin WhatsApp activo</li>
+        <li><i class="fas fa-lock lk"></i> Sin citas en línea</li>
+      </ul>
+    </div>
+    <div class="pc pro pa">
+      <div class="pbadge">⭐ MÁS POPULAR</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;color:rgba(242,66,7,0.85);text-transform:uppercase;margin-top:2px;">PRO</div>
+      <div class="ptag r">$19</div>
+      <div class="plbl">/mes — Todo incluido</div>
+      <ul class="pfeat">
+        <li><i class="fas fa-check ok"></i> Links activos y públicos</li>
+        <li><i class="fas fa-check ok"></i> Bot responde 24/7</li>
+        <li><i class="fas fa-check ok"></i> Landing page pública</li>
+        <li><i class="fas fa-check ok"></i> Tarjeta digital + QR</li>
+        <li><i class="fas fa-check ok"></i> WhatsApp automatizado</li>
+        <li><i class="fas fa-check ok"></i> Sistema de citas online</li>
+      </ul>
     </div>
   </div>
+  <table class="ctable">
+    <thead><tr><th>Plataforma</th><th>Precio</th><th>¿Qué incluye?</th></tr></thead>
+    <tbody>
+      <tr><td>ManyChat</td><td>$15/mes</td><td>Solo chatbot</td></tr>
+      <tr><td>Chatfuel</td><td>$19.99/mes</td><td>Solo chatbot</td></tr>
+      <tr class="hl"><td>⚡ Super Bot 007</td><td class="cheaper">$19/mes</td><td class="cheaper">Bot + Landing + Card + Citas + WA</td></tr>
+    </tbody>
+  </table>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 5 — PRECIOS -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Clientes">
-    <div class="section-badge badge-red">💰 Precios</div>
-    <h1 class="slide-title">Precio que no puedes <span class="red">ignorar</span></h1>
-    <div class="price-wrap">
-      <div class="price-card free">
-        <div style="font-size:0.75rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);text-transform:uppercase;">Starter</div>
-        <div class="price-tag white">GRATIS</div>
-        <div class="price-label">Para siempre</div>
-        <ul class="price-features">
-          <li><i class="fas fa-check feat-ok"></i> Crea hasta 5 bots</li>
-          <li><i class="fas fa-check feat-ok"></i> Diseña tu bot completo</li>
-          <li><i class="fas fa-check feat-ok"></i> Ve tu landing page y card</li>
-          <li><i class="fas fa-lock feat-lock"></i> Links bloqueados (demo)</li>
-          <li><i class="fas fa-lock feat-lock"></i> WhatsApp no disponible</li>
-          <li><i class="fas fa-lock feat-lock"></i> Sin citas en línea</li>
-        </ul>
-      </div>
-      <div class="price-card pro anim-pulse-red">
-        <div class="popular-badge">⭐ MÁS POPULAR</div>
-        <div style="font-size:0.75rem;font-weight:700;letter-spacing:2px;color:rgba(242,66,7,0.8);text-transform:uppercase;margin-top:4px;">PRO</div>
-        <div class="price-tag red">$19</div>
-        <div class="price-label">/mes — Todo incluido</div>
-        <ul class="price-features">
-          <li><i class="fas fa-check feat-ok"></i> Links activos y públicos</li>
-          <li><i class="fas fa-check feat-ok"></i> Bot responde 24/7</li>
-          <li><i class="fas fa-check feat-ok"></i> Landing page pública</li>
-          <li><i class="fas fa-check feat-ok"></i> Tarjeta digital + QR</li>
-          <li><i class="fas fa-check feat-ok"></i> WhatsApp automatizado</li>
-          <li><i class="fas fa-check feat-ok"></i> Sistema de citas online</li>
-        </ul>
-      </div>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 — CTA CLIENTES                                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Clientes">
+  <div class="badge badge-r">🔥 ¡Actúa Ahora!</div>
+  <h1 class="t1 ga">¿Qué estás<br/><span class="r">esperando?</span> 🔥</h1>
+  <p class="sub">Empieza <strong style="color:var(--green);">GRATIS</strong> hoy mismo — sin tarjeta, sin código.<br/>Diseña tu bot en 5 minutos y vas a decir:<br/><em style="color:var(--red);">"Oh my God, I need this!"</em></p>
+  <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-r pa" style="font-size:1.05rem;padding:15px 44px;">
+    <i class="fas fa-robot"></i> CREAR MI BOT GRATIS
+  </a>
+  <p style="margin-top:14px;font-size:0.67rem;color:rgba(255,255,255,0.3);">🔒 Tus datos seguros &nbsp;·&nbsp; ✅ Sin compromisos &nbsp;·&nbsp; 🚀 Listo en 5 min</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 — PORTADA SOCIOS  💚                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Socios">
+  <div class="logo fa">SUPER <span class="g">BOT</span> 007</div>
+  <div class="badge badge-g">💚 Oportunidad de Negocio</div>
+  <h1 class="t1 gg">Gana Dinero Vendiendo<br/><span class="g">Bots de IA</span> 🤖💰</h1>
+  <p class="sub">Sin código. Sin inversión. Sin límites.<br/>Conviértete en <strong style="color:var(--green);">socio revendedor</strong> y genera ingresos desde hoy.</p>
+  <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-g pg">
+    <i class="fas fa-handshake"></i> QUIERO SER SOCIO
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 8 — LA OPORTUNIDAD  💚                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Socios">
+  <div class="badge badge-g">🌎 El Mercado</div>
+  <h1 class="t1">El mercado está <span class="g">hambriento</span> 🌎</h1>
+  <div class="sgrid">
+    <div class="scard">
+      <div class="snum">+5M</div>
+      <div class="slbl">Pequeños negocios sin presencia digital</div>
     </div>
-    <div style="margin-top:14px;">
-      <table class="compare-table">
-        <thead><tr><th>Plataforma</th><th>Precio</th><th>¿Qué incluye?</th></tr></thead>
-        <tbody>
-          <tr><td>ManyChat</td><td>$15/mes</td><td>Solo chatbot</td></tr>
-          <tr><td>Chatfuel</td><td>$19.99/mes</td><td>Solo chatbot</td></tr>
-          <tr class="highlight"><td>⚡ Super Bot 007</td><td class="cheaper">$19/mes</td><td class="cheaper">Bot + Landing + Card + Citas + WA</td></tr>
-        </tbody>
-      </table>
+    <div class="scard">
+      <div class="snum">80%</div>
+      <div class="slbl">Prefiere atención por chatbot vs llamadas</div>
     </div>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- SLIDE 6 — CTA CLIENTES -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Clientes">
-    <div class="section-badge badge-red">🔥 ¡Actúa Ahora!</div>
-    <h1 class="slide-title glow-red">¿Qué estás<br/><span class="red">esperando?</span> 🔥</h1>
-    <p class="slide-sub">Empieza <strong style="color:var(--green);">GRATIS</strong> hoy mismo — sin tarjeta de crédito, sin código, sin complicaciones. Diseña tu bot en 5 minutos y cuando lo veas vas a decir: <em>"Oh my God, I need this!"</em></p>
-    <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-cta anim-pulse-red" style="font-size:1.1rem;padding:16px 48px;">
-      <i class="fas fa-robot"></i> CREAR MI BOT GRATIS
-    </a>
-    <p style="margin-top:16px;font-size:0.72rem;color:rgba(255,255,255,0.35);">🔒 Tus datos están seguros &nbsp;|&nbsp; ✅ Sin compromisos &nbsp;|&nbsp; 🚀 Listo en 5 min</p>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- SLIDE 7 — PORTADA SOCIOS -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Socios">
-    <div class="section-badge badge-green" style="animation:pulse-green 2s ease-in-out infinite;">💚 Oportunidad de Negocio</div>
-    <div class="logo-007 anim-float" style="font-size:2rem;">SUPER <span style="color:var(--green);">BOT</span> 007</div>
-    <h1 class="slide-title glow-green">Gana Dinero Vendiendo<br/><span class="green">Bots de IA</span> 🤖💰</h1>
-    <p class="slide-sub">Sin código. Sin inversión. Sin límites.<br/>Conviértete en <strong style="color:var(--green);">socio revendedor</strong> y genera ingresos desde hoy.</p>
-    <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-cta-green anim-pulse-green">
-      <i class="fas fa-handshake"></i> QUIERO SER SOCIO
-    </a>
-  </div>
-
-  <!-- ============================================================ -->
-  <!-- SLIDE 8 — LA OPORTUNIDAD -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Socios">
-    <div class="section-badge badge-green">🌎 El Mercado</div>
-    <h1 class="slide-title">El mercado está <span class="green">hambriento</span> 🌎</h1>
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-num">+5M</div>
-        <div class="stat-label">Pequeños negocios sin presencia digital</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">80%</div>
-        <div class="stat-label">Prefiere atención por chatbot vs llamadas</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">$500B</div>
-        <div class="stat-label">Valor del mercado IA para 2027</div>
-      </div>
-    </div>
-    <div style="margin-top:20px;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:14px 24px;max-width:620px;text-align:center;">
-      <p style="color:var(--white);font-size:0.9rem;">💡 Cada negocio que conoces es un <strong style="color:var(--green);">cliente potencial</strong> — gym, restaurante, salón, clínica, barbería, cafetería...</p>
+    <div class="scard">
+      <div class="snum">$500B</div>
+      <div class="slbl">Valor del mercado IA para 2027</div>
     </div>
   </div>
-
-  <!-- ============================================================ -->
-  <!-- SLIDE 9 — QUÉ VENDES -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Socios">
-    <div class="section-badge badge-green">🤝 Tu Oferta</div>
-    <h1 class="slide-title">Tú vendes, nosotros<br/><span class="green">hacemos el trabajo</span> 🛠️</h1>
-    <ul class="solution-list">
-      <li><i class="fas fa-check-circle icon-green"></i> <strong>Bot de IA personalizado</strong> — responde, agenda y vende 24/7</li>
-      <li><i class="fas fa-check-circle icon-green"></i> <strong>Landing Page profesional</strong> — lista para compartir en redes</li>
-      <li><i class="fas fa-check-circle icon-green"></i> <strong>Tarjeta Digital con QR</strong> — compártela por WhatsApp</li>
-      <li><i class="fas fa-check-circle icon-green"></i> <strong>Sistema de citas online</strong> — sin llamadas, sin estrés</li>
-      <li><i class="fas fa-check-circle icon-green"></i> <strong>WhatsApp automatizado</strong> — respuestas instantáneas</li>
-    </ul>
-    <p style="margin-top:18px;font-size:0.82rem;color:rgba(255,255,255,0.5);text-align:center;">Todo esto por solo <strong style="color:var(--green);">$19/mes</strong> — tú cobras lo que quieras al cliente final 💰</p>
+  <div style="margin-top:18px;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:13px;padding:13px 22px;max-width:600px;text-align:center;">
+    <p style="color:#fff;font-size:0.87rem;">💡 Cada negocio que conoces es un <strong style="color:var(--green);">cliente potencial</strong><br/>— gym, restaurante, salón, clínica, barbería, cafetería...</p>
   </div>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 10 — EL DINERO -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Socios">
-    <div class="section-badge badge-green">💵 ¿Cuánto Puedes Ganar?</div>
-    <h1 class="slide-title">Tu calculadora de <span class="green">ingresos</span> 💵</h1>
-    <div class="calc-grid">
-      <div class="calc-row">
-        <div class="calc-left">10 clientes × $19</div>
-        <div class="calc-right">$190/mes</div>
-      </div>
-      <div class="calc-row">
-        <div class="calc-left">50 clientes × $19</div>
-        <div class="calc-right">$950/mes</div>
-      </div>
-      <div class="calc-row">
-        <div class="calc-left">100 clientes × $19</div>
-        <div class="calc-right">$1,900/mes</div>
-      </div>
-      <div class="calc-row" style="border-color:rgba(0,255,136,0.5);background:rgba(0,255,136,0.1);">
-        <div class="calc-left" style="color:var(--white);font-weight:700;">500 clientes × $19</div>
-        <div class="calc-right" style="font-size:1.4rem;">$9,500/mes</div>
-      </div>
-    </div>
-    <div style="margin-top:16px;text-align:center;font-size:0.8rem;color:rgba(255,255,255,0.45);">
-      * Puedes cobrar más al cliente final — el margen es tuyo 🎯
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 9 — QUÉ VENDES  💚                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Socios">
+  <div class="badge badge-g">🤝 Tu Oferta</div>
+  <h1 class="t1">Tú vendes, nosotros<br/><span class="g">hacemos el trabajo</span> 🛠️</h1>
+  <ul class="slist">
+    <li><i class="fas fa-check-circle gi"></i> <strong>Bot de IA personalizado</strong> — responde, agenda y vende 24/7</li>
+    <li><i class="fas fa-check-circle gi"></i> <strong>Landing Page profesional</strong> — lista para compartir en redes</li>
+    <li><i class="fas fa-check-circle gi"></i> <strong>Tarjeta Digital con QR</strong> — compártela en segundos por WhatsApp</li>
+    <li><i class="fas fa-check-circle gi"></i> <strong>Sistema de citas online</strong> — sin llamadas, sin estrés</li>
+    <li><i class="fas fa-check-circle gi"></i> <strong>WhatsApp automatizado</strong> — respuestas instantáneas 24/7</li>
+  </ul>
+  <p style="margin-top:16px;font-size:0.8rem;color:rgba(255,255,255,0.45);text-align:center;">Todo esto por solo <strong style="color:var(--green);">$19/mes</strong> — tú cobras lo que quieras al cliente final 💰</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 10 — EL DINERO  💚                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Socios">
+  <div class="badge badge-g">💵 Tu Calculadora</div>
+  <h1 class="t1">¿Cuánto puedes <span class="g">ganar?</span> 💵</h1>
+  <div class="cgrid">
+    <div class="crow"><div class="cl">10 clientes × $19</div><div class="cr">$190/mes</div></div>
+    <div class="crow"><div class="cl">50 clientes × $19</div><div class="cr">$950/mes</div></div>
+    <div class="crow"><div class="cl">100 clientes × $19</div><div class="cr">$1,900/mes</div></div>
+    <div class="crow" style="border-color:rgba(0,255,136,0.5);background:rgba(0,255,136,0.1);">
+      <div class="cl" style="color:#fff;font-weight:700;">500 clientes × $19</div>
+      <div class="cr" style="font-size:1.3rem;">$9,500/mes</div>
     </div>
   </div>
+  <p style="margin-top:14px;font-size:0.77rem;color:rgba(255,255,255,0.4);text-align:center;">* Puedes cobrar más al cliente final — el margen es 100% tuyo 🎯</p>
+</div>
 
-  <!-- ============================================================ -->
-  <!-- SLIDE 11 — CTA SOCIOS -->
-  <!-- ============================================================ -->
-  <div class="slide" data-section="Para Socios">
-    <div class="section-badge badge-green">🚀 Empieza Hoy</div>
-    <h1 class="slide-title glow-green">El momento es <span class="green">AHORA</span> 🚀</h1>
-    <p class="slide-sub">El <strong style="color:var(--green);">Plan Agency</strong> está en camino con más features y más poder. Mientras tanto, empieza con el plan PRO y <strong>genera tus primeros clientes hoy.</strong></p>
-    <div class="glass-card-green" style="max-width:540px;width:100%;text-align:center;margin-bottom:22px;">
-      <p style="font-size:0.85rem;color:rgba(255,255,255,0.7);margin-bottom:8px;">📣 <strong style="color:var(--white);">Agency Plan — Próximamente</strong></p>
-      <p style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Bots ilimitados · Marca blanca · Panel de revendedor · Comisiones automáticas</p>
-    </div>
-    <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-cta-green anim-pulse-green" style="font-size:1.05rem;padding:16px 44px;">
-      <i class="fas fa-handshake"></i> QUIERO SER SOCIO AHORA
-    </a>
-    <p style="margin-top:14px;font-size:0.72rem;color:rgba(255,255,255,0.3);">🔥 Únete antes que la competencia &nbsp;|&nbsp; 💰 Sin inversión inicial &nbsp;|&nbsp; 🤖 Tecnología lista</p>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SLIDE 11 — CTA SOCIOS  💚                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide" data-section="Para Socios">
+  <div class="badge badge-g">🚀 Empieza Hoy</div>
+  <h1 class="t1 gg">El momento es <span class="g">AHORA</span> 🚀</h1>
+  <p class="sub">El <strong style="color:var(--green);">Plan Agency</strong> viene con más features y más poder.<br/>Mientras tanto, empieza con PRO y <strong>genera tus primeros clientes hoy.</strong></p>
+  <div class="card-g" style="max-width:520px;width:100%;text-align:center;margin-bottom:20px;">
+    <p style="font-size:0.83rem;color:rgba(255,255,255,0.7);margin-bottom:6px;">📣 <strong style="color:#fff;">Agency Plan — Próximamente</strong></p>
+    <p style="font-size:0.75rem;color:rgba(255,255,255,0.45);">Bots ilimitados · Marca blanca · Panel de revendedor · Comisiones automáticas</p>
   </div>
+  <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-g pg" style="font-size:1rem;padding:15px 42px;">
+    <i class="fas fa-handshake"></i> QUIERO SER SOCIO AHORA
+  </a>
+  <p style="margin-top:13px;font-size:0.67rem;color:rgba(255,255,255,0.28);">🔥 Únete antes que la competencia &nbsp;·&nbsp; 💰 Sin inversión inicial &nbsp;·&nbsp; 🤖 Tecnología lista</p>
+</div>
 
 </div><!-- /deck -->
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 <div id="nav">
-  <button class="nav-btn" id="btnPrev"><i class="fas fa-chevron-left"></i></button>
-  <div id="progress"></div>
-  <button class="nav-btn" id="btnNext"><i class="fas fa-chevron-right"></i></button>
+  <button class="nb" id="bp"><i class="fas fa-chevron-left"></i></button>
+  <div id="dots"></div>
+  <button class="nb" id="bn"><i class="fas fa-chevron-right"></i></button>
 </div>
 
 <script>
-// ======================================================
-// PARTICLES
-// ======================================================
-(function(){
-  const canvas = document.getElementById('bgCanvas');
-  const ctx = canvas.getContext('2d');
-  let W,H,pts=[];
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize();window.addEventListener('resize',resize);
-  function mkPts(){
-    pts=[];
-    const n=Math.floor((W*H)/16000);
-    for(let i=0;i<n;i++){
-      pts.push({
-        x:Math.random()*W,y:Math.random()*H,
-        r:Math.random()*1.5+0.5,
-        a:Math.random()*0.25+0.05,
-        vx:(Math.random()-0.5)*0.3,
-        vy:(Math.random()-0.5)*0.3
-      });
-    }
+/* ════════════════════════════════
+   PARTICLES — dual color (red/green), switch on section change
+════════════════════════════════ */
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let W,H,pts=[];
+let particleMode = 'red'; // or 'green'
+
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+resize();addEventListener('resize',resize);
+
+function mkPts(){
+  pts=[];
+  const n=Math.floor((W*H)/15000);
+  for(let i=0;i<n;i++){
+    pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+0.4,a:Math.random()*0.22+0.05,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,idx:i});
   }
-  mkPts();
-  window.addEventListener('resize',mkPts);
-  let frame=0;
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    frame++;
-    pts.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
-      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-      // alternate red/green particles
-      const isGreen=(pts.indexOf(p)%7===0);
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=isGreen?`rgba(0,255,136,${p.a})`:`rgba(242,66,7,${p.a})`;
-      ctx.fill();
-    });
-    // draw lines between close particles
-    for(let i=0;i<pts.length;i++){
-      for(let j=i+1;j<pts.length;j++){
-        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d<120){
-          const alpha=(1-d/120)*0.12;
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x,pts[i].y);
-          ctx.lineTo(pts[j].x,pts[j].y);
-          ctx.strokeStyle=`rgba(242,66,7,${alpha})`;
-          ctx.lineWidth=0.5;
-          ctx.stroke();
-        }
+}
+mkPts();addEventListener('resize',mkPts);
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  const isGreenMode = particleMode==='green';
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=isGreenMode?`rgba(0,255,136,${p.a})`:`rgba(242,66,7,${p.a})`;
+    ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){
+        const al=(1-d/110)*0.1;
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle=isGreenMode?`rgba(0,255,136,${al})`:`rgba(242,66,7,${al})`;
+        ctx.lineWidth=0.5;ctx.stroke();
       }
     }
-    requestAnimationFrame(draw);
   }
-  draw();
-})();
+  requestAnimationFrame(draw);
+}
+draw();
 
-// ======================================================
-// SLIDES ENGINE
-// ======================================================
-const slides = Array.from(document.querySelectorAll('.slide'));
-const totalSlides = slides.length;
-let current = 0;
-let autoTimer = null;
-const AUTO_INTERVAL = 7000;
+/* ════════════════════════════════
+   SLIDES ENGINE
+════════════════════════════════ */
+const slides=Array.from(document.querySelectorAll('.slide'));
+const total=slides.length;
+let cur=0,autoTmr=null;
+const INTERVAL=7000;
 
-const progress = document.getElementById('progress');
-const sectionTab = document.getElementById('sectionTab');
-const timerBar = document.getElementById('timerBar');
+const dotsEl=document.getElementById('dots');
+const pill=document.getElementById('pill');
+const tbar=document.getElementById('tbar');
+const overlay=document.getElementById('overlay');
+const stripe=document.getElementById('sectionStripe');
+const wipe=document.getElementById('wipe');
+const btnPrev=document.getElementById('bp');
+const btnNext=document.getElementById('bn');
 
-// Build dots
+// build dots
 slides.forEach((_,i)=>{
-  const dot = document.createElement('div');
-  dot.className='dot'+(i===0?' active':'');
-  dot.addEventListener('click',()=>goTo(i));
-  progress.appendChild(dot);
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' ar':'');
+  d.addEventListener('click',()=>goTo(i));
+  dotsEl.appendChild(d);
 });
 
+function setGreenMode(on){
+  overlay.classList.toggle('green-mode',on);
+  stripe.classList.toggle('green-mode',on);
+  tbar.classList.toggle('green-mode',on);
+  pill.classList.toggle('green-mode',on);
+  btnPrev.classList.toggle('green-mode',on);
+  btnNext.classList.toggle('green-mode',on);
+  wipe.classList.toggle('green-mode',on);
+  particleMode=on?'green':'red';
+  pill.textContent=on?'💚 Para Socios':'🔴 Para Tu Negocio';
+}
+
 function updateDots(){
+  const isGreen=slides[cur].getAttribute('data-section')==='Para Socios';
   document.querySelectorAll('.dot').forEach((d,i)=>{
-    d.classList.toggle('active',i===current);
+    d.classList.remove('ar','ag');
+    if(i===cur) d.classList.add(isGreen?'ag':'ar');
   });
 }
 
+let prevSection='';
 function goTo(idx){
-  if(idx<0||idx>=totalSlides)return;
-  slides[current].classList.remove('active');
-  slides[current].classList.add('exit');
-  setTimeout(()=>slides[current-1>=0?current:0].classList.remove('exit'),600);
-  const prev=current;
-  current=idx;
-  slides[prev].classList.remove('active');
-  setTimeout(()=>slides[prev].classList.remove('exit'),600);
-  slides[current].classList.add('active');
-  updateDots();
-  const section=slides[current].getAttribute('data-section')||'';
-  sectionTab.textContent=section;
-  // Color the section tab
-  if(section==='Para Socios'){
-    sectionTab.style.borderColor='rgba(0,255,136,0.3)';
-    sectionTab.style.color='rgba(0,255,136,0.7)';
-  } else {
-    sectionTab.style.borderColor='rgba(255,255,255,0.1)';
-    sectionTab.style.color='rgba(255,255,255,0.5)';
+  if(idx<0||idx>=total)return;
+  const prevIdx=cur;
+  const prevSec=slides[prevIdx].getAttribute('data-section');
+  const nextSec=slides[idx].getAttribute('data-section');
+
+  // section change wipe
+  if(prevSec!==nextSec){
+    wipe.classList.remove('run');
+    void wipe.offsetWidth; // reflow
+    wipe.classList.add('run');
   }
+
+  slides[prevIdx].classList.remove('active');
+  slides[prevIdx].classList.add('exit');
+  setTimeout(()=>slides[prevIdx].classList.remove('exit'),600);
+
+  cur=idx;
+  slides[cur].classList.add('active');
+  updateDots();
+
+  const isGreen=nextSec==='Para Socios';
+  setGreenMode(isGreen);
   resetTimer();
 }
 
-function next(){goTo((current+1)%totalSlides);}
-function prev(){goTo((current-1+totalSlides)%totalSlides);}
+function next(){goTo((cur+1)%total);}
+function prev(){goTo((cur-1+total)%total);}
 
-document.getElementById('btnNext').addEventListener('click',next);
-document.getElementById('btnPrev').addEventListener('click',prev);
+btnNext.addEventListener('click',next);
+btnPrev.addEventListener('click',prev);
 
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' ')next();
   if(e.key==='ArrowLeft')prev();
 });
 
-document.querySelector('.deck').addEventListener('click',e=>{
+document.getElementById('deck').addEventListener('click',e=>{
   if(!e.target.closest('button')&&!e.target.closest('a')&&!e.target.closest('.dot'))next();
 });
 
-// Timer bar
-let timerStart=null;
-function animateTimer(ts){
-  if(!timerStart)timerStart=ts;
-  const elapsed=ts-timerStart;
-  const pct=Math.min((elapsed/AUTO_INTERVAL)*100,100);
-  timerBar.style.width=pct+'%';
-  if(elapsed<AUTO_INTERVAL){
-    autoTimer=requestAnimationFrame(animateTimer);
-  } else {
-    timerBar.style.width='100%';
-    setTimeout(()=>{timerBar.style.width='0%';next();},80);
-  }
+// timer bar
+let ts0=null;
+function animBar(ts){
+  if(!ts0)ts0=ts;
+  const e=ts-ts0,pct=Math.min(e/INTERVAL*100,100);
+  tbar.style.width=pct+'%';
+  if(e<INTERVAL){autoTmr=requestAnimationFrame(animBar);}
+  else{tbar.style.width='100%';setTimeout(()=>{tbar.style.width='0%';next();},80);}
 }
 function resetTimer(){
-  if(autoTimer)cancelAnimationFrame(autoTimer);
-  timerStart=null;
-  timerBar.style.width='0%';
-  autoTimer=requestAnimationFrame(animateTimer);
+  if(autoTmr)cancelAnimationFrame(autoTmr);
+  ts0=null;tbar.style.width='0%';
+  autoTmr=requestAnimationFrame(animBar);
 }
 resetTimer();
 
-// Touch swipe
-let touchStartX=0;
-document.addEventListener('touchstart',e=>touchStartX=e.touches[0].clientX,{passive:true});
-document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-touchStartX;
-  if(Math.abs(dx)>50){dx<0?next():prev();}
-},{passive:true});
+// touch swipe
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){dx<0?next():prev();}},{passive:true});
 </script>
 </body>
 </html>
