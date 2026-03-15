@@ -232,8 +232,12 @@ section { position: relative; z-index: 1; }
 .lbk-next { flex:1; padding:0.75rem; background:linear-gradient(135deg,var(--p),var(--s)); border:none; border-radius:12px; color:white; font-weight:800; font-size:0.9rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(108,99,255,0.35); }
 .lbk-next:hover { opacity:0.9; transform:translateY(-2px); }
 .lbk-next:disabled { opacity:0.45; cursor:not-allowed; transform:none; }
-.lbk-wa-btn { width:100%; padding:0.9rem; background:linear-gradient(135deg,#25D366,#128C7E); border:none; border-radius:14px; color:white; font-weight:800; font-size:0.95rem; cursor:pointer; margin-top:0.5rem; transition:all 0.3s; box-shadow:0 4px 16px rgba(37,211,102,0.3); display:flex; align-items:center; justify-content:center; gap:0.5rem; }
-.lbk-wa-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(37,211,102,0.4); }
+.lbk-wa-btn { width:100%; padding:0.9rem 1rem; background:linear-gradient(135deg,#25D366,#128C7E); border:none; border-radius:14px; color:white; font-weight:800; font-size:1rem; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 20px rgba(37,211,102,0.35); display:flex; align-items:center; justify-content:center; gap:0.5rem; }
+.lbk-wa-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(37,211,102,0.5); }
+/* Divider "o" entre botones */
+.lbk-or { display:flex; align-items:center; gap:0.7rem; margin:0.8rem 0 0.6rem; color:var(--muted); font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+.lbk-or::before,.lbk-or::after { content:''; flex:1; height:1px; background:var(--border); }
+.lbk-action-block { display:flex; flex-direction:column; gap:0; margin-top:0.4rem; }
 .lbk-success { text-align:center; padding:1.5rem 1rem; }
 .lbk-success .lbk-check { font-size:3rem; margin-bottom:0.5rem; }
 .lbk-success h3 { font-size:1.1rem; font-weight:800; color:var(--a); margin-bottom:0.4rem; }
@@ -986,7 +990,7 @@ function lbkStepsHTML(step){
 
 function lbkInfoHTML(d){
   const svcs=(Array.isArray(d.services)?d.services:[]).map(s=>`<option value="${s.name||''}" ${lbk.service===s.name?'selected':''}>${s.name||''}${s.price?' – '+s.price:''}</option>`).join('');
-  const waBtn = (d.whatsapp||d.phone) ? `<button class="lbk-wa-btn" onclick="lbkSaveInfoAndSubmit('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp sin fecha</button>` : '';
+  const hasWA = !!(d.whatsapp||d.phone);
   return `${lbkStepsHTML(1)}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
       <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">Nombre *</label>
@@ -997,16 +1001,24 @@ function lbkInfoHTML(d){
     <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (opcional)" value="${lbk.email}" style="margin-top:0.7rem">
     <select class="lbk-select" id="lbkService"><option value="">Selecciona un servicio...</option>${svcs}</select>
     <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="Notas adicionales...">${lbk.note}</textarea>
+    ${hasWA ? `
+    <button class="lbk-wa-btn" onclick="lbkSaveInfoAndSubmit('wa')"><i class="fab fa-whatsapp"></i> Enviar reserva por WhatsApp</button>
+    <div class="lbk-or">o elige fecha y hora exacta</div>` : ''}
     <div class="lbk-nav-row">
-      <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> Elegir Fecha →</button>
-    </div>
-    ${waBtn}`;
+      <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> Elegir Fecha y Hora →</button>
+    </div>`;
 }
 
 function lbkSaveInfoGoStep2(){
   const name=document.getElementById('lbkName')?.value.trim();
   const phone=document.getElementById('lbkPhone')?.value.trim();
-  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); return; }
+  if(!name||!phone){
+    const t=document.getElementById('landingToast');
+    t.textContent='⚠️ Ingresa tu nombre y teléfono primero.';
+    t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;max-width:320px;pointer-events:none;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.4);color:#FF4757;transform:translateX(0);transition:transform 0.4s ease;';
+    setTimeout(()=>{ t.style.transform='translateX(200%)'; },3000);
+    return;
+  }
   lbk.name=name; lbk.phone=phone;
   lbk.email=document.getElementById('lbkEmail')?.value.trim()||'';
   lbk.service=document.getElementById('lbkService')?.value||'';
@@ -1017,7 +1029,13 @@ function lbkSaveInfoGoStep2(){
 function lbkSaveInfoAndSubmit(mode){
   const name=document.getElementById('lbkName')?.value.trim();
   const phone=document.getElementById('lbkPhone')?.value.trim();
-  if(!name||!phone){ alert('Por favor ingresa nombre y teléfono.'); return; }
+  if(!name||!phone){
+    const t=document.getElementById('landingToast');
+    t.textContent='⚠️ Ingresa tu nombre y teléfono primero.';
+    t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;max-width:320px;pointer-events:none;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.4);color:#FF4757;transform:translateX(0);transition:transform 0.4s ease;';
+    setTimeout(()=>{ t.style.transform='translateX(200%)'; },3000);
+    return;
+  }
   lbk.name=name; lbk.phone=phone;
   lbk.email=document.getElementById('lbkEmail')?.value.trim()||'';
   lbk.service=document.getElementById('lbkService')?.value||'';
@@ -1102,13 +1120,15 @@ function lbkTimeHTML(d){
     <div class="lbk-time-grid">
       ${slots.map(t=>`<div class="lbk-time-slot${lbk.time===t?' selected':''}" onclick="lbkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
+    ${(d.whatsapp||d.phone)?`
+    <button class="lbk-wa-btn" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> ${lbk.time?'Confirmar por WhatsApp ✓':'Enviar por WhatsApp (sin hora exacta)'}</button>
+    <div class="lbk-or">o confirma la cita en el sistema</div>`:''}
     <div class="lbk-nav-row">
       <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
       <button class="lbk-next" onclick="submitLbk('confirm')" ${lbk.time?'':'disabled'}>
-        ${lbk.time?'<i class="fas fa-check-circle"></i> Confirmar Cita':'Selecciona un horario'}
+        ${lbk.time?'<i class="fas fa-check-circle"></i> Confirmar Cita':'Selecciona un horario primero'}
       </button>
-    </div>
-    ${(d.whatsapp||d.phone)&&lbk.time?`<button class="lbk-wa-btn" style="margin-top:0.5rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp</button>`:''}`;
+    </div>`;
 }
 
 function lbkNavCal(dir){
@@ -1131,7 +1151,7 @@ function lbkPickTime(t,el){
   const btn=document.querySelector('#lbkPanel .lbk-next');
   if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Confirmar Cita';}
   const waBtn=document.querySelector('#lbkPanel .lbk-wa-btn');
-  if(waBtn) waBtn.style.display='flex';
+  if(waBtn){ waBtn.style.display='flex'; waBtn.innerHTML=`<i class="fab fa-whatsapp"></i> Confirmar por WhatsApp ✓`; }
 }
 function lbkStep1(){lbk.step=1;if(botData)renderLbkStep(botData);}
 function lbkStep2(){lbk.step=2;if(botData)renderLbkStep(botData);}
