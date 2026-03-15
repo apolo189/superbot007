@@ -10,7 +10,7 @@
 /* ═══════ CSS VARIABLES (overridden by bot data) ═══════ */
 :root {
   --p: #f24207; --s: #FF6584; --a: #43E97B;
-  --dark: #000000; --card: #0D0D1A; --border: rgba(242,66,7,0.25);
+  --dark: #000000; --card: #080808; --border: rgba(242,66,7,0.35);
   --text: #FFFFFF; --muted: #9999BB;
   --grad: linear-gradient(135deg, var(--p), var(--s));
 }
@@ -676,7 +676,7 @@ function initPage(){
   document.documentElement.style.setProperty('--s',    s);
   document.documentElement.style.setProperty('--a',    a);
   document.documentElement.style.setProperty('--dark', bg);
-  document.documentElement.style.setProperty('--card', '#0D0D1A');
+  document.documentElement.style.setProperty('--card', '#080808');
   document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
   // Force body background directly (var() doesn't always rerender dynamically)
   document.body.style.background = bg;
