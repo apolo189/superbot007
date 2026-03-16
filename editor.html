@@ -346,9 +346,9 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
             <div class="color-preview-row"><div class="color-swatch" id="sw_accentColor" style="background:#43E97B"></div><span style="font-size:0.63rem;color:var(--muted)" id="ct_accentColor">#43E97B</span></div>
           </div>
           <div>
-            <div class="field-label">Fondo <button class="fa-btn restore" onclick="restoreColor('bgColor','#0A0A1A')">↺</button></div>
-            <input type="color" class="e-color" id="c_bgColor" value="#0A0A1A" oninput="onColorChange('bgColor',this.value)">
-            <div class="color-preview-row"><div class="color-swatch" id="sw_bgColor" style="background:#0A0A1A"></div><span style="font-size:0.63rem;color:var(--muted)" id="ct_bgColor">#0A0A1A</span></div>
+            <div class="field-label">Fondo <button class="fa-btn restore" onclick="restoreColor('bgColor','#000000')">↺</button></div>
+            <input type="color" class="e-color" id="c_bgColor" value="#000000" oninput="onColorChange('bgColor',this.value)">
+            <div class="color-preview-row"><div class="color-swatch" id="sw_bgColor" style="background:#000000"></div><span style="font-size:0.63rem;color:var(--muted)" id="ct_bgColor">#000000</span></div>
           </div>
         </div>
         <div class="sec-divider"></div>
@@ -658,7 +658,7 @@ function populateForm(){
   setColor('primaryColor',  d.primaryColor  || '#6C63FF');
   setColor('secondaryColor',d.secondaryColor || '#FF6584');
   setColor('accentColor',   d.accentColor   || '#43E97B');
-  setColor('bgColor',       d.bgColor       || '#0A0A1A');
+  setColor('bgColor',       d.bgColor       || '#000000');
   setVal('heroTitle',    d.heroTitle    || d.businessName || '');
   setVal('heroSubtitle', d.heroSubtitle || d.description  || '');
   setVal('ctaText',      d.ctaText      || 'Reservar Ahora');
@@ -769,7 +769,7 @@ function pushColorToPreview(){
       primaryColor:   editedData.primaryColor   || '#6C63FF',
       secondaryColor: editedData.secondaryColor || '#FF6584',
       accentColor:    editedData.accentColor    || '#43E97B',
-      bgColor:        editedData.bgColor        || '#0A0A1A'
+      bgColor:        editedData.bgColor        || '#000000'
     };
     f.contentWindow.postMessage({type:'UPDATE_COLORS', colors}, '*');
   }catch(e){/* iframe may be blocked */}
@@ -784,7 +784,7 @@ function restoreColor(field,def){
   toast('↺ Color restaurado','info');
 }
 function restoreAllColors(){
-  const defs={primaryColor:'#6C63FF',secondaryColor:'#FF6584',accentColor:'#43E97B',bgColor:'#0A0A1A'};
+  const defs={primaryColor:'#6C63FF',secondaryColor:'#FF6584',accentColor:'#43E97B',bgColor:'#000000'};
   Object.entries(defs).forEach(([f,v])=>restoreColor(f,v));
   toast('↺ Colores restaurados','info');
 }

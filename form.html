@@ -293,7 +293,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
       <div class="color-item"><label>Primario</label><input type="color" id="primaryColor" value="#6C63FF" oninput="document.getElementById('primaryHex').value=this.value"><input type="text" id="primaryHex" value="#6C63FF" onchange="syncColor('primary')"></div>
       <div class="color-item"><label>Secundario</label><input type="color" id="secondaryColor" value="#FF6584" oninput="document.getElementById('secondaryHex').value=this.value"><input type="text" id="secondaryHex" value="#FF6584" onchange="syncColor('secondary')"></div>
       <div class="color-item"><label>Acento</label><input type="color" id="accentColor" value="#43E97B" oninput="document.getElementById('accentHex').value=this.value"><input type="text" id="accentHex" value="#43E97B" onchange="syncColor('accent')"></div>
-      <div class="color-item"><label>Fondo</label><input type="color" id="bgColorPick" value="#0A0A1A" oninput="document.getElementById('bgColorHex').value=this.value"><input type="text" id="bgColorHex" value="#0A0A1A" onchange="document.getElementById('bgColorPick').value=this.value" placeholder="#0A0A1A"></div>
+      <div class="color-item"><label>Fondo</label><input type="color" id="bgColorPick" value="#000000" oninput="document.getElementById('bgColorHex').value=this.value"><input type="text" id="bgColorHex" value="#000000" onchange="document.getElementById('bgColorPick').value=this.value" placeholder="#000000"></div>
     </div>
   </div>
   <hr class="section-div">
@@ -910,7 +910,7 @@ function collect(){
     businessName:g('businessName'),businessType:g('businessType'),businessCity:g('businessCity'),
     description:g('description'),heroTitle:g('heroTitle'),heroSubtitle:g('heroSubtitle'),
     welcomeMsg:g('welcomeMsg')||'¡Hola! ¿En qué puedo ayudarte?',botAvatar:g('botAvatar'),
-    primaryColor:g('primaryHex')||'#6C63FF',secondaryColor:g('secondaryHex')||'#FF6584',accentColor:g('accentHex')||'#43E97B',bgColor:g('bgColorHex')||'#0A0A1A',
+    primaryColor:g('primaryHex')||'#6C63FF',secondaryColor:g('secondaryHex')||'#FF6584',accentColor:g('accentHex')||'#43E97B',bgColor:g('bgColorHex')||'#000000',
     logoURL:g('logoURL'),heroImageURL:g('heroImageURL'),
     servicesTitle:g('servicesTitle')||'Nuestros Servicios',servicesSubtitle:g('servicesSubtitle'),
     galleryTitle:g('galleryTitle')||'Nuestro Trabajo',
