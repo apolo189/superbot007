@@ -195,21 +195,8 @@ tr:hover td{background:rgba(255,255,255,0.018);}
 <div class="overlay" id="mainOverlay"><div class="spinner"></div><p style="color:var(--text);font-size:0.9rem;" id="ovTxt">Cargando...</p></div>
 <div id="adminToast"></div>
 
-<!-- ════ AUTH GATE ════ -->
-<div id="authGate">
-  <div class="auth-box">
-    <div class="auth-logo">🔐</div>
-    <div class="auth-title">Admin Panel</div>
-    <div class="auth-sub">Super Bot 007 — Control Total</div>
-    <input class="auth-input" id="authPassInput" type="password" placeholder="Contraseña de administrador"
-           onkeydown="if(event.key==='Enter') checkAuth()">
-    <button class="auth-btn" onclick="checkAuth()"><i class="fas fa-unlock-alt"></i> Entrar al Panel</button>
-    <div class="auth-error" id="authError"></div>
-  </div>
-</div>
-
 <!-- ════ TOPBAR ════ -->
-<div class="topbar" id="mainTopbar" style="display:none">
+<div class="topbar" id="mainTopbar">
   <div class="topbar-logo">
     <span>🤖 Super Bot 007</span>
     <span class="admin-badge">ADMIN</span>
@@ -228,7 +215,7 @@ tr:hover td{background:rgba(255,255,255,0.018);}
 </div>
 
 <!-- ════ MAIN CONTENT ════ -->
-<div class="content" id="mainContent" style="display:none">
+<div class="content" id="mainContent">
 
   <!-- KPIs -->
   <div class="kpi-grid" id="kpiGrid">
@@ -453,38 +440,9 @@ console.log('✅ Firebase Admin ready');
 // ══════════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════════
-const ADMIN_PASS_KEY = 'sb007_admin_pass';
-const DEFAULT_PASS   = 'admin007';
-
-function checkAuth(){
-  const pass = document.getElementById('authPassInput').value;
-  const stored = localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASS;
-  if(pass === stored){
-    document.getElementById('authGate').style.display='none';
-    document.getElementById('mainTopbar').style.display='flex';
-    document.getElementById('mainContent').style.display='block';
-    initAdmin();
-  } else {
-    document.getElementById('authError').textContent = '❌ Contraseña incorrecta. Inténtalo de nuevo.';
-    document.getElementById('authPassInput').value = '';
-  }
-}
-function logout(){
-  document.getElementById('mainTopbar').style.display='none';
-  document.getElementById('mainContent').style.display='none';
-  document.getElementById('authGate').style.display='flex';
-  document.getElementById('authPassInput').value='';
-  document.getElementById('authError').textContent='';
-}
-function changeAdminPass(){
-  const np = document.getElementById('newPassInput').value.trim();
-  if(!np){ toast('Ingresa una contraseña','error'); return; }
-  localStorage.setItem(ADMIN_PASS_KEY, np);
-  toast('Contraseña actualizada ✅','success');
-  document.getElementById('newPassInput').value='';
-}
-// Allow Enter key on auth
-document.getElementById('authPassInput').addEventListener('keydown',e=>{if(e.key==='Enter') checkAuth();});
+// NO AUTH — direct access
+function logout(){ window.location.href='hub.html'; }
+initAdmin();
 
 // ══════════════════════════════════════════════
 // STATE

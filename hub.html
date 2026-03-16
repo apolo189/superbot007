@@ -148,19 +148,8 @@ html,body{min-height:100%;font-family:'Inter',sans-serif;background:#000;color:v
 
 <canvas id="bgCanvas"></canvas>
 
-<!-- LOCK SCREEN -->
-<div id="lockScreen">
-  <div class="lock-icon">🔐</div>
-  <div class="lock-title">Super Bot 007 — Hub</div>
-  <div class="lock-sub">Ingresa tu PIN de acceso</div>
-  <input class="lock-input" id="pinInput" type="password" placeholder="••••••" maxlength="10"
-    onkeydown="if(event.key==='Enter') checkPin()">
-  <button class="lock-btn" onclick="checkPin()"><i class="fas fa-unlock-alt"></i> Entrar</button>
-  <div class="lock-error" id="lockError">PIN incorrecto. Intenta de nuevo.</div>
-</div>
-
 <!-- MAIN HUB -->
-<div id="mainContent">
+<div id="mainContent" style="display:block">
 
   <!-- HEADER -->
   <div class="hub-header">
@@ -282,32 +271,7 @@ html,body{min-height:100%;font-family:'Inter',sans-serif;background:#000;color:v
 </script>
 
 <script>
-// ── PIN ──
-const PIN = '007007'; // Cambia este PIN si quieres
-function checkPin(){
-  const val = document.getElementById('pinInput').value;
-  const err = document.getElementById('lockError');
-  if(val === PIN){
-    sessionStorage.setItem('hub_auth','1');
-    document.getElementById('lockScreen').style.opacity='0';
-    setTimeout(()=>{
-      document.getElementById('lockScreen').style.display='none';
-      document.getElementById('mainContent').style.display='block';
-      initHub();
-    },400);
-    err.classList.remove('show');
-  } else {
-    err.classList.add('show');
-    document.getElementById('pinInput').value='';
-    document.getElementById('pinInput').style.borderColor='#FF4757';
-    setTimeout(()=>document.getElementById('pinInput').style.borderColor='',1500);
-  }
-}
-// Auto-login if already authenticated this session
-if(sessionStorage.getItem('hub_auth')==='1'){
-  document.getElementById('lockScreen').style.display='none';
-  document.getElementById('mainContent').style.display='block';
-}
+// ── NO AUTH — direct access ──
 
 // ── DATETIME ──
 function updateClock(){
@@ -326,7 +290,7 @@ function initHub(){
   if(window._fbReady) loadData();
   setTimeout(()=>{ if(!window._fbReady) loadData(); }, 2500);
 }
-if(sessionStorage.getItem('hub_auth')==='1') initHub();
+initHub();
 
 // ── LOAD DATA ──
 async function loadData(){
