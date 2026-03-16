@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Bot 007 — Anuncio Maestro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  font-family:'Inter',sans-serif;
+  background:#0a0a1a;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(100,60,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,60,255,0.04) 1px, transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+.bg-orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:0.12;pointer-events:none;z-index:0;}
+.orb-1{width:600px;height:600px;background:#f24207;top:-200px;left:-100px;}
+.orb-2{width:500px;height:500px;background:#7c3aed;bottom:-150px;right:-100px;}
+.orb-3{width:300px;height:300px;background:#06b6d4;top:50%;left:50%;transform:translate(-50%,-50%);}
+
+/* ── MAIN WRAP ── */
+.wrap{
+  position:relative;z-index:1;
+  max-width:680px;
+  margin:0 auto;
+  padding:2rem 1.2rem 4rem;
+}
+
+/* ══════════════════════════════════════
+   STEP 1 — GANCHO
+══════════════════════════════════════ */
+.gancho{
+  text-align:center;
+  padding:2.5rem 1rem 2rem;
+  animation:fadeUp 0.5s ease both;
+}
+.gancho-eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.35rem 1rem;
+  background:rgba(242,66,7,0.12);
+  border:1px solid rgba(242,66,7,0.35);
+  border-radius:50px;
+  font-size:0.72rem;font-weight:800;
+  color:#f24207;text-transform:uppercase;letter-spacing:0.1em;
+  margin-bottom:1.4rem;
+}
+.gancho-eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#f24207;box-shadow:0 0 6px #f24207;
+  animation:blink 1.4s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.gancho-logo{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(1.6rem,5vw,2.6rem);
+  font-weight:900;letter-spacing:5px;
+  margin-bottom:0.5rem;
+}
+.gancho-logo .r{
+  color:#f24207;
+  text-shadow:0 0 24px rgba(242,66,7,0.55);
+}
+
+.gancho-headline{
+  font-size:clamp(1.5rem,5vw,2.8rem);
+  font-weight:900;line-height:1.2;
+  margin-bottom:0.8rem;
+}
+.gancho-headline .grad{
+  background:linear-gradient(135deg,#f24207,#FF6584,#f24207);
+  background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 3s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+.gancho-sub{
+  font-size:1rem;color:rgba(255,255,255,0.55);
+  line-height:1.7;max-width:480px;margin:0 auto 1.5rem;
+}
+.gancho-hook{
+  display:inline-block;
+  background:rgba(242,66,7,0.1);
+  border:1px solid rgba(242,66,7,0.3);
+  border-left:3px solid #f24207;
+  border-radius:0 12px 12px 0;
+  padding:0.8rem 1.2rem;
+  font-size:1.05rem;font-weight:800;
+  color:#fff;text-align:left;
+  margin-bottom:0.5rem;
+  max-width:480px;
+  width:100%;
+}
+.gancho-hook .red{color:#f24207;}
+
+/* ══════════════════════════════════════
+   STEP 2 — FEATURES
+══════════════════════════════════════ */
+.features-block{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:1.8rem 1.5rem;
+  margin-bottom:1.2rem;
+  animation:fadeUp 0.5s 0.1s ease both;
+}
+.block-label{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.68rem;font-weight:800;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;letter-spacing:0.12em;
+  margin-bottom:1.2rem;
+}
+.block-label .step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(242,66,7,0.15);
+  border:1px solid rgba(242,66,7,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.62rem;font-weight:900;color:#f24207;
+  flex-shrink:0;
+}
+.block-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
+
+.feat-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.75rem;
+}
+@media(max-width:480px){.feat-list{grid-template-columns:1fr;}}
+
+.feat-item{
+  display:flex;align-items:flex-start;gap:0.7rem;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;
+  padding:0.9rem;
+  transition:all 0.3s;
+}
+.feat-item:hover{border-color:rgba(242,66,7,0.3);transform:translateY(-2px);}
+.feat-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.feat-text{}
+.feat-name{font-size:0.82rem;font-weight:800;margin-bottom:0.18rem;}
+.feat-desc{font-size:0.7rem;color:rgba(255,255,255,0.4);line-height:1.4;}
+
+/* ══════════════════════════════════════
+   STEP 3 — CREDIBILIDAD
+══════════════════════════════════════ */
+.credibility-block{
+  background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(124,58,237,0.06));
+  border:1px solid rgba(6,182,212,0.2);
+  border-radius:20px;
+  padding:1.5rem;
+  margin-bottom:1.2rem;
+  animation:fadeUp 0.5s 0.2s ease both;
+}
+.cred-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;
+  margin-top:1rem;
+}
+@media(max-width:400px){.cred-grid{grid-template-columns:1fr;}}
+.cred-item{
+  text-align:center;
+  background:rgba(255,255,255,0.03);
+  border-radius:12px;padding:0.8rem 0.5rem;
+}
+.cred-icon{font-size:1.4rem;margin-bottom:0.4rem;}
+.cred-title{font-size:0.78rem;font-weight:800;color:#fff;margin-bottom:0.15rem;}
+.cred-sub{font-size:0.65rem;color:rgba(255,255,255,0.4);}
+
+/* ══════════════════════════════════════
+   STEP 4 — PRECIO (el golpe)
+══════════════════════════════════════ */
+.price-block{
+  background:linear-gradient(135deg,rgba(242,66,7,0.08),rgba(255,101,132,0.05));
+  border:1px solid rgba(242,66,7,0.25);
+  border-radius:20px;
+  padding:1.8rem 1.5rem;
+  margin-bottom:1.2rem;
+  text-align:center;
+  animation:fadeUp 0.5s 0.3s ease both;
+  position:relative;overflow:hidden;
+}
+.price-block::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(242,66,7,0.15),transparent 70%);
+  pointer-events:none;
+}
+.price-whisper{
+  font-size:0.8rem;color:rgba(255,255,255,0.4);
+  margin-bottom:0.4rem;font-weight:600;
+}
+.price-everything{
+  font-size:clamp(0.85rem,2.5vw,1rem);
+  color:rgba(255,255,255,0.7);
+  margin-bottom:0.6rem;line-height:1.8;
+}
+.price-everything span{
+  display:inline-block;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:0.1rem 0.5rem;
+  font-weight:700;margin:0.1rem;font-size:0.82rem;
+}
+.price-divider{
+  display:flex;align-items:center;gap:0.8rem;
+  margin:0.8rem 0;color:rgba(255,255,255,0.2);font-size:0.75rem;
+}
+.price-divider::before,.price-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08);}
+.price-amount{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(3rem,10vw,5rem);
+  font-weight:900;line-height:1;
+  background:linear-gradient(135deg,#f24207,#FF6584);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:0.2rem;
+}
+.price-period{font-size:0.88rem;color:rgba(255,255,255,0.45);margin-bottom:0.4rem;}
+.price-compare{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.75rem;color:rgba(255,255,255,0.35);
+}
+.price-compare s{color:rgba(255,255,255,0.2);}
+.price-compare .save{
+  background:rgba(67,233,123,0.12);
+  border:1px solid rgba(67,233,123,0.3);
+  color:#43E97B;border-radius:20px;
+  padding:0.15rem 0.6rem;font-weight:800;font-size:0.7rem;
+}
+.price-includes{
+  margin-top:1rem;
+  display:flex;flex-wrap:wrap;gap:0.4rem;justify-content:center;
+}
+.pi{
+  display:flex;align-items:center;gap:0.3rem;
+  font-size:0.7rem;font-weight:700;
+  color:rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:0.25rem 0.6rem;border-radius:20px;
+}
+.pi i{color:#43E97B;font-size:0.65rem;}
+
+/* ══════════════════════════════════════
+   STEP 5 — URGENCIA
+══════════════════════════════════════ */
+.urgency-block{
+  background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(242,66,7,0.06));
+  border:1px solid rgba(251,191,36,0.25);
+  border-radius:20px;
+  padding:1.5rem;
+  margin-bottom:1.2rem;
+  animation:fadeUp 0.5s 0.35s ease both;
+}
+.urgency-top{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:0.8rem;
+  margin-bottom:1rem;
+}
+.urgency-label{
+  display:flex;align-items:center;gap:0.5rem;
+  font-size:0.82rem;font-weight:800;color:#fbbf24;
+}
+.urgency-label i{animation:pulse-y 1s infinite;}
+@keyframes pulse-y{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+.timer-wrap{display:flex;gap:0.4rem;align-items:center;}
+.timer-box{
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(251,191,36,0.3);
+  border-radius:8px;
+  padding:0.4rem 0.6rem;
+  text-align:center;min-width:46px;
+}
+.timer-num{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.2rem;font-weight:900;
+  color:#fbbf24;line-height:1;
+  display:block;
+}
+.timer-lbl{font-size:0.55rem;color:rgba(255,255,255,0.3);font-weight:700;text-transform:uppercase;}
+.timer-sep{font-size:1.2rem;color:rgba(251,191,36,0.5);font-weight:900;margin-bottom:8px;}
+
+.price-compare-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;
+}
+.pcard{
+  border-radius:14px;padding:1rem;text-align:center;
+}
+.pcard-today{
+  background:linear-gradient(135deg,rgba(242,66,7,0.15),rgba(255,101,132,0.1));
+  border:2px solid rgba(242,66,7,0.5);
+}
+.pcard-monday{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  opacity:0.6;
+}
+.pcard-tag{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem;}
+.pcard-today .pcard-tag{color:#f24207;}
+.pcard-monday .pcard-tag{color:rgba(255,255,255,0.3);}
+.pcard-price{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.6rem;font-weight:900;line-height:1;margin-bottom:0.2rem;
+}
+.pcard-today .pcard-price{
+  background:linear-gradient(135deg,#f24207,#FF6584);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.pcard-monday .pcard-price{color:rgba(255,255,255,0.3);}
+.pcard-sub{font-size:0.65rem;color:rgba(255,255,255,0.35);}
+.pcard-today .pcard-sub{color:rgba(255,255,255,0.6);}
+
+/* ══════════════════════════════════════
+   STEP 6 — LA GANANCIA
+══════════════════════════════════════ */
+.ganancia-block{
+  background:linear-gradient(135deg,rgba(67,233,123,0.07),rgba(6,182,212,0.05));
+  border:1px solid rgba(67,233,123,0.2);
+  border-radius:20px;
+  padding:1.8rem 1.5rem;
+  margin-bottom:1.5rem;
+  animation:fadeUp 0.5s 0.4s ease both;
+}
+.ganancia-math{
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(67,233,123,0.15);
+  border-radius:14px;
+  padding:1.2rem 1.4rem;
+  margin-top:1rem;
+  font-size:0.85rem;line-height:2;
+}
+.math-row{display:flex;justify-content:space-between;align-items:center;}
+.math-row.divider{border-top:1px solid rgba(255,255,255,0.08);margin-top:0.3rem;padding-top:0.3rem;}
+.math-label{color:rgba(255,255,255,0.55);font-weight:600;}
+.math-val{font-weight:800;}
+.math-val.neg{color:#FF6584;}
+.math-val.pos{color:#43E97B;font-size:1rem;}
+.math-val.big{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.3rem;color:#43E97B;
+}
+.ganancia-hook{
+  margin-top:1rem;
+  text-align:center;
+  font-size:0.9rem;font-weight:800;
+  color:#fff;
+}
+.ganancia-hook span{
+  background:linear-gradient(135deg,#43E97B,#06b6d4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+/* ══════════════════════════════════════
+   FREE TRIAL BANNER
+══════════════════════════════════════ */
+.free-banner{
+  background:linear-gradient(135deg,rgba(67,233,123,0.1),rgba(6,182,212,0.08));
+  border:1px solid rgba(67,233,123,0.3);
+  border-radius:16px;
+  padding:1.2rem 1.4rem;
+  display:flex;align-items:center;gap:0.8rem;
+  margin-bottom:1.5rem;
+  animation:fadeUp 0.5s 0.45s ease both;
+  flex-wrap:wrap;
+}
+.free-icon{font-size:1.8rem;flex-shrink:0;}
+.free-text{}
+.free-title{font-size:0.92rem;font-weight:800;color:#43E97B;margin-bottom:0.15rem;}
+.free-sub{font-size:0.75rem;color:rgba(255,255,255,0.45);line-height:1.5;}
+
+/* ══════════════════════════════════════
+   CTA FINAL
+══════════════════════════════════════ */
+.cta-final{
+  animation:fadeUp 0.5s 0.5s ease both;
+}
+.btn-main{
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  width:100%;
+  padding:1.1rem 2rem;
+  background:linear-gradient(135deg,#f24207,#FF6584);
+  border:none;border-radius:16px;
+  color:#fff;font-weight:900;font-size:1.05rem;
+  cursor:pointer;text-decoration:none;
+  box-shadow:0 8px 30px rgba(242,66,7,0.45);
+  transition:all 0.3s;
+  margin-bottom:0.8rem;
+  letter-spacing:0.02em;
+}
+.btn-main:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(242,66,7,0.6);}
+.btn-main .arrow{
+  width:28px;height:28px;background:rgba(255,255,255,0.2);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;flex-shrink:0;
+}
+.btn-sub{
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  width:100%;padding:0.85rem;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px;
+  color:rgba(255,255,255,0.5);font-size:0.85rem;font-weight:600;
+  cursor:pointer;text-decoration:none;
+  transition:all 0.3s;margin-bottom:1.2rem;
+}
+.btn-sub:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.8);}
+
+.trust-strip{
+  display:flex;flex-wrap:wrap;gap:0.8rem 1.5rem;
+  justify-content:center;
+  padding-top:1rem;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.trust-item{
+  display:flex;align-items:center;gap:0.35rem;
+  font-size:0.72rem;color:rgba(255,255,255,0.3);font-weight:600;
+}
+.trust-item i{color:#43E97B;font-size:0.65rem;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════
+     STEP 1 — GANCHO
+══════════════════════════════════════ -->
+<div class="gancho">
+  <div class="gancho-eyebrow">
+    <span class="dot"></span>
+    🔴 Para dueños de negocios
+  </div>
+  <div class="gancho-logo">SUPER <span class="r">BOT</span> 007</div>
+  <h1 class="gancho-headline">
+    ¿Solo tienes<br/>
+    <span class="grad">página en Facebook?</span>
+  </h1>
+  <p class="gancho-sub">
+    En <strong style="color:#fff;">10 minutos</strong> puedes tener
+    un negocio digital completo que trabaja por ti
+    mientras duermes.
+  </p>
+  <div class="gancho-hook">
+    🤯 Todo lo que necesitas para <span class="red">vender 24/7</span><br/>
+    por menos de lo que gastas en café al mes.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STEP 2 — FEATURES
+══════════════════════════════════════ -->
+<div class="features-block">
+  <div class="block-label">
+    <div class="step-num">2</div>
+    Todo lo que obtienes
+  </div>
+  <div class="feat-list">
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(242,66,7,0.12);color:#f24207;">
+        <i class="fas fa-robot"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Bot de IA 24/7</div>
+        <div class="feat-desc">Responde, agenda y vende solo — sin que estés presente</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(79,172,254,0.12);color:#4facfe;">
+        <i class="fas fa-globe"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Landing Page Pro</div>
+        <div class="feat-desc">Tu web profesional lista para compartir en redes</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(255,101,132,0.12);color:#FF6584;">
+        <i class="fas fa-id-card"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Tarjeta Digital + QR</div>
+        <div class="feat-desc">Compártela en segundos por WhatsApp</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(67,233,123,0.12);color:#43E97B;">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">WhatsApp Automático</div>
+        <div class="feat-desc">Respuestas instantáneas a tus clientes</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(251,191,36,0.12);color:#fbbf24;">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Citas Online</div>
+        <div class="feat-desc">Tus clientes agendan solos — sin llamadas</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(168,85,247,0.12);color:#a855f7;">
+        <i class="fas fa-paint-brush"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Editor Visual</div>
+        <div class="feat-desc">Edita todo tú mismo — sin código</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(6,182,212,0.12);color:#06b6d4;">
+        <i class="fas fa-server"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">Hosting Incluido</div>
+        <div class="feat-desc">No pagas hosting, no pagas dominio — nada extra</div>
+      </div>
+    </div>
+
+    <div class="feat-item">
+      <div class="feat-icon" style="background:rgba(251,146,60,0.12);color:#fb923c;">
+        <i class="fas fa-magic"></i>
+      </div>
+      <div class="feat-text">
+        <div class="feat-name">IA lo genera todo</div>
+        <div class="feat-desc">Llena un formulario. Listo en 10 minutos.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STEP 3 — CREDIBILIDAD
+══════════════════════════════════════ -->
+<div class="credibility-block">
+  <div class="block-label">
+    <div class="step-num">3</div>
+    Ya funcionando — sin trucos
+  </div>
+  <div class="cred-grid">
+    <div class="cred-item">
+      <div class="cred-icon">⚡</div>
+      <div class="cred-title">Sin código</div>
+      <div class="cred-sub">100% visual, sin programar nada</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-icon">🌐</div>
+      <div class="cred-title">Hosting gratis</div>
+      <div class="cred-sub">Todo incluido, sin sorpresas</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-icon">🤖</div>
+      <div class="cred-title">GPT-4 incluido</div>
+      <div class="cred-sub">La IA más avanzada del mundo</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-icon">📱</div>
+      <div class="cred-title">Mobile-first</div>
+      <div class="cred-sub">Perfecto en celular y desktop</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-icon">🔒</div>
+      <div class="cred-title">Seguro</div>
+      <div class="cred-sub">Firebase + SSL incluido</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-icon">🇪🇸</div>
+      <div class="cred-title">En español</div>
+      <div class="cred-sub">Soporte en tu idioma</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STEP 4 — EL GOLPE PSICOLÓGICO
+══════════════════════════════════════ -->
+<div class="price-block">
+  <div class="block-label" style="justify-content:center;margin-bottom:0.8rem;">
+    <div class="step-num">4</div>
+    ¿Cuánto cuesta todo esto?
+  </div>
+  <div class="price-whisper">Bot + Landing + Tarjeta + WA + Citas + Editor + Hosting</div>
+  <div class="price-everything">
+    <span>Bot IA</span> <span>Landing Page</span> <span>Tarjeta + QR</span>
+    <span>WhatsApp</span> <span>Citas</span> <span>Editor</span> <span>Hosting</span>
+  </div>
+  <div class="price-divider">todo eso, por solo</div>
+  <div class="price-amount">$10.99</div>
+  <div class="price-period">al mes — todo incluido</div>
+  <div class="price-compare">
+    <s>Netflix: $15.99/mes</s>
+    &nbsp;·&nbsp;
+    <span class="save">Tú pagas menos 💡</span>
+  </div>
+  <div class="price-includes">
+    <div class="pi"><i class="fas fa-check"></i> Sin contrato</div>
+    <div class="pi"><i class="fas fa-check"></i> Cancela cuando quieras</div>
+    <div class="pi"><i class="fas fa-check"></i> Sin cargos ocultos</div>
+    <div class="pi"><i class="fas fa-check"></i> Actualizaciones incluidas</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STEP 5 — URGENCIA
+══════════════════════════════════════ -->
+<div class="urgency-block">
+  <div class="block-label">
+    <div class="step-num">5</div>
+    Precio de lanzamiento — termina pronto
+  </div>
+  <div class="urgency-top">
+    <div class="urgency-label">
+      <i class="fas fa-fire"></i>
+      Este precio desaparece en:
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-box">
+        <span class="timer-num" id="tH">23</span>
+        <span class="timer-lbl">hrs</span>
+      </div>
+      <span class="timer-sep">:</span>
+      <div class="timer-box">
+        <span class="timer-num" id="tM">47</span>
+        <span class="timer-lbl">min</span>
+      </div>
+      <span class="timer-sep">:</span>
+      <div class="timer-box">
+        <span class="timer-num" id="tS">12</span>
+        <span class="timer-lbl">seg</span>
+      </div>
+    </div>
+  </div>
+  <div class="price-compare-row">
+    <div class="pcard pcard-today">
+      <div class="pcard-tag">⚡ Activa HOY</div>
+      <div class="pcard-price">$10.99</div>
+      <div class="pcard-sub">/mes · precio lanzamiento</div>
+    </div>
+    <div class="pcard pcard-monday">
+      <div class="pcard-tag">😬 El lunes</div>
+      <div class="pcard-price">$14.99</div>
+      <div class="pcard-sub">/mes · precio normal</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STEP 6 — LA GANANCIA
+══════════════════════════════════════ -->
+<div class="ganancia-block">
+  <div class="block-label">
+    <div class="step-num">6</div>
+    Espera... ¿esto se paga solo?
+  </div>
+  <p style="font-size:0.88rem;color:rgba(255,255,255,0.6);line-height:1.7;">
+    Con tu plan obtienes <strong style="color:#fff;">5 bots en total.</strong>
+    1 para ti. 4 para configurar a quien quieras
+    — familia, amigos, clientes — al precio que tú decidas.
+  </p>
+  <div class="ganancia-math">
+    <div class="math-row">
+      <span class="math-label">Tu inversión hoy</span>
+      <span class="math-val neg">− $10.99</span>
+    </div>
+    <div class="math-row">
+      <span class="math-label">Cobras por 1 bot a un amigo</span>
+      <span class="math-val" style="color:#fff;">+ $50</span>
+    </div>
+    <div class="math-row">
+      <span class="math-label">Cobras por 2 bots más</span>
+      <span class="math-val" style="color:#fff;">+ $100</span>
+    </div>
+    <div class="math-row divider">
+      <span class="math-label" style="color:#43E97B;font-weight:800;">Tu ganancia neta</span>
+      <span class="math-val big">+ $139</span>
+    </div>
+  </div>
+  <div class="ganancia-hook">
+    Tu bot no es un gasto.<br/>
+    <span>Es una inversión que se paga sola. 🚀</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FREE TRIAL
+══════════════════════════════════════ -->
+<div class="free-banner">
+  <div class="free-icon">🎁</div>
+  <div class="free-text">
+    <div class="free-title">Pruébalo GRATIS primero — sin tarjeta</div>
+    <div class="free-sub">
+      Crea tu bot completo, diseña tu landing page y tu tarjeta digital.
+      Ve cómo queda. Si te gusta y quieres activarlo para el mundo...
+      son solo $10.99. Si no, no pagas nada.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CTA FINAL
+══════════════════════════════════════ -->
+<div class="cta-final">
+  <a href="https://apolo189.github.io/superbot007/form.html" target="_blank" class="btn-main">
+    <i class="fas fa-rocket"></i>
+    CREAR MI BOT GRATIS AHORA
+    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+  </a>
+  <a href="https://apolo189.github.io/superbot007/index.html" target="_blank" class="btn-sub">
+    <i class="fas fa-play-circle"></i>
+    Ver demo primero
+  </a>
+  <div class="trust-strip">
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Sin tarjeta de crédito</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Listo en 10 minutos</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Cancela cuando quieras</div>
+    <div class="trust-item"><i class="fas fa-check-circle"></i> Soporte en español</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── COUNTDOWN TIMER ──
+// Calcula hasta medianoche del día actual
+function getTarget(){
+  const now = new Date();
+  const target = new Date();
+  target.setHours(23,59,59,0);
+  if(now > target) target.setDate(target.getDate()+1);
+  return target;
+}
+function updateTimer(){
+  const now = new Date();
+  const diff = getTarget() - now;
+  if(diff <= 0){ document.getElementById('tH').textContent='00'; document.getElementById('tM').textContent='00'; document.getElementById('tS').textContent='00'; return; }
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('tH').textContent = String(h).padStart(2,'0');
+  document.getElementById('tM').textContent = String(m).padStart(2,'0');
+  document.getElementById('tS').textContent = String(s).padStart(2,'0');
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
