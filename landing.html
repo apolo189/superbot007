@@ -16,7 +16,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; }
+body { font-family: 'Inter', sans-serif; background: #000000 !important; color: var(--text); overflow-x: hidden; }
 
 /* ─── LOADING ─── */
 #loadingScreen {
@@ -66,7 +66,7 @@ nav {
 /* Animated gradient fallback */
 .hero-grad {
   position: absolute; inset: 0; z-index: 0;
-  background: linear-gradient(135deg, #000000, #0A001A, #00000F, #0A0000);
+  background: linear-gradient(135deg, #000000, #050005, #000005, #050000);
   background-size: 400% 400%;
   animation: gradShift 12s ease infinite;
 }
@@ -666,8 +666,8 @@ function showNoBot(){
 // ══════ INIT PAGE ══════
 function initPage(){
   const d = botData;
-  // CSS Variables
-  const bg = '#000000'; // Always pure black background
+  // CSS Variables — background ALWAYS pure black
+  const bg = '#000000';
   const p  = d.primaryColor   || '#f24207';
   const s  = d.secondaryColor || '#FF6584';
   const a  = d.accentColor    || '#43E97B';
@@ -675,12 +675,16 @@ function initPage(){
   document.documentElement.style.setProperty('--p',    p);
   document.documentElement.style.setProperty('--s',    s);
   document.documentElement.style.setProperty('--a',    a);
-  document.documentElement.style.setProperty('--dark', bg);
+  document.documentElement.style.setProperty('--dark', '#000000');
   document.documentElement.style.setProperty('--card', '#000000');
   document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
-  // Force body background directly (var() doesn't always rerender dynamically)
-  document.body.style.background = bg;
-  document.documentElement.style.background = bg;
+  // Force body background directly — ignore any stored bgColor
+  document.body.style.setProperty('background', '#000000', 'important');
+  document.documentElement.style.setProperty('background', '#000000', 'important');
+  // Also force all sections black
+  document.querySelectorAll('section, #hero, #services, #products, #gallery, #testimonials, #faq, #booking, #about, #contact, footer').forEach(el => {
+    el.style.setProperty('background', '#000000', 'important');
+  });
 
   // Meta
   document.getElementById('pageTitle').textContent = (d.businessName||'') + ' – Super Bot 007';
