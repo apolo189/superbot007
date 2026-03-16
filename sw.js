@@ -1,28 +1,29 @@
-// Super Bot 007 — Service Worker v2.0 (cache buster)
-const CACHE_VERSION = 'sb007-v2-' + Date.now();
-const CACHE_NAME = CACHE_VERSION;
+// Super Bot 007 — Service Worker NUCLEAR CLEANER v3.0
+// This SW destroys itself and all caches immediately
 
-// On install — skip waiting to activate immediately
 self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// On activate — delete ALL old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
+    // Delete ALL caches
     caches.keys().then(keys =>
-      Promise.all(keys.map(key => {
-        console.log('[SW] Deleting old cache:', key);
-        return caches.delete(key);
-      }))
-    ).then(() => self.clients.claim())
+      Promise.all(keys.map(key => caches.delete(key)))
+    ).then(() => {
+      // Unregister self
+      return self.registration.unregister();
+    }).then(() => self.clients.claim())
+     .then(() => {
+       // Force reload all clients
+       return self.clients.matchAll({ type: 'window' });
+     }).then(clients => {
+       clients.forEach(client => client.navigate(client.url));
+     })
   );
 });
 
-// Fetch — always go to network, never serve from cache
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    fetch(e.request, { cache: 'no-store' })
-      .catch(() => caches.match(e.request))
-  );
+  // Always fetch from network, never cache
+  e.respondWith(fetch(e.request, { cache: 'no-store' }));
 });
