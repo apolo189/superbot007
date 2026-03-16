@@ -358,7 +358,7 @@ function injectHTML(){
           <span class="sb7-up-badge">⚡ Tu bot está listo</span>
         </div>
         <div class="sb7-up-title">
-          Solo falta <span class="grad">encenderlo</span>
+          Solo falta <span class="grad">activarlo</span>
         </div>
         <div class="sb7-up-sub">
           Construiste algo increíble. ¿Lo activas ahora<br/>
