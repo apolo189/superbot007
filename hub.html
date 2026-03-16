@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(r){ r.unregister(); });
+    });
+  }
+  if(window.caches){
+    caches.keys().then(function(keys){
+      keys.forEach(function(k){ caches.delete(k); });
+    });
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -425,6 +439,6 @@ function toast(msg,dur=2500){
   window.addEventListener('resize',()=>{ resize(); draw(); });
 })();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/superbot007/sw.js?v=1773685032").then(()=>console.log("[SW] registered")).catch(e=>console.log("[SW] error",e));}</script>
+
 </body>
 </html>
