@@ -893,12 +893,13 @@ function _startAgent(){
     addBotMsg('❌ No se especificó Bot ID. Usa <strong>?id=TU_BOT_ID</strong> en la URL.');
     return;
   }
-  document.getElementById('landingBtn').href = `landing.html?id=${botId}`;
+  // Fix absolute URLs for GitHub Pages
+  const pageBase = location.origin + location.pathname.replace('agent.html','');
+  document.getElementById('landingBtn').href = `${pageBase}landing.html?id=${botId}`;
   // Digital Card button
   const cardBtnL = document.getElementById('cardBtnLeft');
   if(cardBtnL){
-    const cardBase = location.origin + location.pathname.replace('agent.html','');
-    cardBtnL.href = `${cardBase}card.html?id=${botId}`;
+    cardBtnL.href = `${pageBase}card.html?id=${botId}`;
     cardBtnL.style.display = 'flex';
   }
   loadBot();
@@ -1099,21 +1100,63 @@ function initChat(){
       addBotMsgTypewriter(serviceIntros[Math.floor(Math.random()*serviceIntros.length)], actions);
     }, 1600);
   }
-}
+
+  // FAQ card in chat — visible after 3 seconds if FAQs exist
+  if(Array.isArray(d.faqs) && d.faqs.length > 0){
+    setTimeout(()=>{
+      const isEN = (d.botLanguage === 'en' || d.botLanguage === 'bilingual');
+      const faqTitle = isEN ? '❓ Frequently Asked Questions' : '❓ Preguntas Frecuentes';
+      const faqHint  = isEN ? 'Tap any question to ask me directly 👇' : 'Toca cualquier pregunta para preguntarme 👇';
+      // Build FAQ buttons HTML
+      const faqBtns = d.faqs.slice(0,6).map(f=>
+        `<button onclick="sendQuick('${f.q.replace(/'/g,"\\'")}');this.closest('.faq-chat-card').remove();"
+          style="display:block;width:100%;text-align:left;padding:0.45rem 0.7rem;margin-bottom:0.35rem;
+          background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;
+          color:#c8c8ff;font-size:0.78rem;cursor:pointer;transition:all 0.2s;"
+          onmouseover="this.style.background='rgba(108,99,255,0.2)'"
+          onmouseout="this.style.background='rgba(108,99,255,0.08)'">
+          ❓ ${f.q}
+        </button>`
+      ).join('');
+      // Inject as HTML message
+      const msgEl = document.createElement('div');
+      msgEl.className = 'msg bot faq-chat-card';
+      msgEl.innerHTML = `
+        <div class="msg-avatar">🤖</div>
+        <div class="msg-bubble" style="max-width:100%;">
+          <div style="font-size:0.78rem;font-weight:700;color:#a89cff;margin-bottom:0.5rem;">${faqTitle}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.7rem;">${faqHint}</div>
+          ${faqBtns}
+        </div>`;
+      document.getElementById('messages').appendChild(msgEl);
+      msgEl.scrollIntoView({behavior:'smooth'});
+    }, 3200);
+  }
 
 // ══════ QUICK REPLIES DYNAMIC ══════
 function buildQuickReplies(d){
   const qb = document.getElementById('quickBtns');
   qb.innerHTML = '';
 
-  // Core quick replies
-  const baseReplies = [
+  // Detect language
+  const lang = d.botLanguage || 'es';
+  const isEN = lang === 'en' || lang === 'bilingual';
+
+  // Core quick replies — bilingual
+  const baseReplies = isEN ? [
+    { label: '✂️ Services',   msg: 'What services do you offer?' },
+    { label: '💰 Pricing',    msg: 'What are your prices?' },
+    { label: '📅 Appointment',msg: 'I want to book an appointment' },
+    { label: '🕐 Hours',      msg: 'What are your hours?' },
+    { label: '📍 Location',   msg: 'Where are you located?' },
+    { label: '💳 Payments',   msg: 'What payment methods do you accept?' },
+  ] : [
     { label: '✂️ Servicios', msg: '¿Qué servicios ofrecen?' },
-    { label: '💰 Precios', msg: '¿Cuáles son sus precios?' },
-    { label: '📅 Cita', msg: 'Quiero agendar una cita' },
-    { label: '🕐 Horarios', msg: '¿Cuáles son sus horarios?' },
+    { label: '💰 Precios',   msg: '¿Cuáles son sus precios?' },
+    { label: '📅 Cita',      msg: 'Quiero agendar una cita' },
+    { label: '🕐 Horarios',  msg: '¿Cuáles son sus horarios?' },
     { label: '📍 Ubicación', msg: '¿Dónde están ubicados?' },
-    { label: '💳 Pagos', msg: '¿Cuáles son sus métodos de pago?' },
+    { label: '💳 Pagos',     msg: '¿Cuáles son sus métodos de pago?' },
   ];
 
   baseReplies.forEach(r=>{
@@ -1128,7 +1171,7 @@ function buildQuickReplies(d){
   if(d.products && d.products.length > 0){
     const btn = document.createElement('button');
     btn.className = 'quick-btn products-btn';
-    btn.innerHTML = '🛒 Productos';
+    btn.innerHTML = isEN ? '🛒 Products' : '🛒 Productos';
     btn.onclick = ()=>showProductsInChat();
     qb.appendChild(btn);
   }
