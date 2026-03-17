@@ -200,6 +200,17 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 }
 .cart-topbar-count.show { display: flex; }
 
+/* LANG TOGGLE BUTTON */
+.lang-btn {
+  width: auto; min-width: 44px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(108,99,255,0.1);
+  color: var(--text); cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.5px; gap: 0.25rem; padding: 0 0.5rem;
+  transition: all 0.2s;
+}
+.lang-btn:hover { border-color: var(--p); background: rgba(108,99,255,0.2); color: var(--p); }
+
 /* QUICK BUTTONS */
 .quick-btns {
   display: flex; gap: 0.4rem; padding: 0.5rem 0.9rem;
@@ -651,6 +662,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-topbar-count" id="cartTopbarCount">0</span>
         </button>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language">🌐 <span id="langBtnLabel">EN</span></button>
         <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
         <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
       </div>
@@ -826,6 +838,8 @@ let messages = [];
 let isTyping = false;
 let appointmentMode = false;
 let cart = [];
+// UI language override: null = use botData.botLanguage, 'en' or 'es'
+let uiLangOverride = null;
 const botId = new URLSearchParams(location.search).get('id');
 
 // ══════ PARTICLES (black deep bg) ══════
@@ -933,6 +947,11 @@ async function loadBot(){
 
 function initChat(){
   const d = botData;
+
+  // Set lang toggle button to show opposite (what clicking it will switch TO)
+  const currentLang = d.botLanguage || 'es';
+  const langBtn = document.getElementById('langBtnLabel');
+  if(langBtn) langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
 
   // Colors
   if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
@@ -1528,6 +1547,7 @@ function buildSystemPrompt(){
   const d = botData;
   const isEN = d.botLanguage === 'en';
   const isPT = d.botLanguage === 'pt';
+  const isBilingual = d.botLanguage === 'bilingual' || d.botLanguage === 'auto';
 
   // Build lists in chosen language
   const noService  = isEN ? 'Services coming soon.' : isPT ? 'Serviços em breve.' : 'Próximamente se añadirán servicios.';
@@ -1588,6 +1608,65 @@ ABSOLUTE RULES:
 2. TRUTH: NEVER make up prices, services or info. If you don't know, say so and suggest WhatsApp.
 3. BREVITY: 1-3 lines for simple questions. More detail only if the customer asks.
 4. SALES: For appointments → form on the right 👉. For products → cart button 🛒 above. For payments → PayPal and WhatsApp.
+5. CONTEXT: Remember the entire conversation. Don't ask what they already told you.
+6. EMOJIS: Maximum 2 per reply, only if they add warmth or clarity.
+7. CLOSING: End with ONE open question to keep the dialogue going.
+8. EMPATHY: If the customer is frustrated, empathize FIRST, inform after.
+9. SHOPPING: Gently guide towards the cart, payment methods and how easy the process is.
+10. HUMANITY: Celebrate with the customer when something excites them. Be genuine.`;
+    messages = [{ role: 'system', content: sysPrompt }];
+    return;
+  }
+
+  // ── BILINGUAL PROMPT (auto-detect user language) ─────────────────────────────
+  if(isBilingual){
+    const sysPrompt = `You are the virtual assistant of "${d.businessName}", a ${d.businessType||'business'}${d.businessCity?' in '+d.businessCity:''}.
+
+CRITICAL LANGUAGE RULE (most important rule of all):
+- DETECT the language the customer writes in.
+- If they write in ENGLISH → respond ENTIRELY in English.
+- If they write in SPANISH → respond ENTIRELY in Spanish.
+- If they write in PORTUGUESE → respond ENTIRELY in Portuguese.
+- NEVER mix languages. NEVER reply in a different language than what the customer used.
+- Match their language from the VERY FIRST message.
+
+PERSONALITY:
+You are like a real person who works there: friendly, enthusiastic, genuinely helpful, with your own personality.
+- Talk like texting a trusted friend, NOT like a FAQ page or a robot.
+- Be warm and approachable. If the customer seems frustrated, switch to an empathetic tone.
+- ALWAYS vary your expressions. Never repeat the same greeting twice.
+- If the customer shares their name, use it naturally in the conversation.
+- Ask ONE question at a time, never a list of questions.
+
+BUSINESS INFORMATION:
+Description: ${d.description||'A business dedicated to providing the best service.'}
+
+SERVICES:
+${services||noService}
+
+PRODUCTS:
+${products||noProduct}
+
+HOURS: ${hours||noHours}
+
+CONTACT:
+- Phone: ${d.phone||consultWord}
+- WhatsApp: ${d.whatsapp||consultWord}
+- Email: ${d.email||consultWord}
+- Address: ${d.address||consultWord}
+- Website: ${d.website||noAvail}
+- PayPal: ${d.paypalEmail||d.paypalLink||noConfig}
+
+FREQUENTLY ASKED QUESTIONS:
+${faqs||noFaq}
+
+SPECIAL INSTRUCTIONS: ${d.botInstruction||noInstr}
+
+ABSOLUTE RULES:
+1. LANGUAGE: Detect and ALWAYS reply in the SAME language the customer writes in (English, Spanish, or Portuguese).
+2. TRUTH: NEVER make up prices, services or info. If you don't know, say so and offer WhatsApp contact.
+3. BREVITY: 1-3 lines for simple questions. More detail only if the customer asks.
+4. SALES: For appointments → form on the right 👉. For products → cart 🛒. For payments → PayPal and WhatsApp.
 5. CONTEXT: Remember the entire conversation. Don't ask what they already told you.
 6. EMOJIS: Maximum 2 per reply, only if they add warmth or clarity.
 7. CLOSING: End with ONE open question to keep the dialogue going.
@@ -2078,6 +2157,26 @@ function clearChat(){
     const welcome = botData.welcomeMsg || `¡Hola de nuevo! 👋 Soy el asistente de **${botData.businessName}**. ¿En qué te puedo ayudar? 😊`;
     addBotMsgTypewriter(welcome);
   }
+}
+
+// ══════ LANGUAGE TOGGLE ══════
+function toggleChatLang(){
+  // Determine current effective language
+  const curLang = uiLangOverride || (botData ? botData.botLanguage : 'es') || 'es';
+  // Toggle between 'en' and 'es'
+  uiLangOverride = (curLang === 'en') ? 'es' : 'en';
+  // Update button label
+  const btn = document.getElementById('langBtnLabel');
+  if(btn) btn.textContent = uiLangOverride === 'en' ? 'ES' : 'EN';
+  // Temporarily override botData.botLanguage so buildSystemPrompt uses new lang
+  if(botData) botData.botLanguage = uiLangOverride;
+  // Rebuild system prompt with new language
+  buildSystemPrompt();
+  // Show confirmation message
+  const msg = uiLangOverride === 'en'
+    ? '🌐 Switched to English! I\'ll respond in English from now on.'
+    : '🌐 ¡Cambiado a Español! Responderé en español de ahora en adelante.';
+  addBotMsgTypewriter(msg);
 }
 
 // ══════ TOAST ══════

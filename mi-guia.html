@@ -270,6 +270,7 @@ html,body{
   <a class="sb-item" onclick="show('problemas')"><i class="fas fa-tools"></i> Si Algo Falla</a>
   <a class="sb-item" onclick="show('claves')"><i class="fas fa-key"></i> Mis Claves</a>
   <a class="sb-item" onclick="show('pendiente')"><i class="fas fa-list-check"></i> Pendiente</a>
+  <a class="sb-item" onclick="show('misbots')"><i class="fas fa-robot"></i> Mis Bots</a>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -847,7 +848,70 @@ y tienes $100-$200 extra en el bolsillo.
     </div>
   </div>
 
+  <!-- ════════════ MIS BOTS ════════════ -->
+  <div class="section" id="sec-misbots">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-robot"></i> Mis Bots</div>
+      <div class="sec-title">Todos los Bots Creados 🤖</div>
+      <div class="sec-sub">Aquí aparecen todos los bots que se han creado en Super Bot 007. Puedes buscar por ID, nombre o tipo de negocio.</div>
+    </div>
+
+    <!-- Search bar -->
+    <div style="display:flex;gap:0.7rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <input id="botSearchInput" type="text" placeholder="🔍  Buscar por ID, nombre o negocio..."
+        oninput="filterBots()"
+        style="flex:1;min-width:200px;padding:0.75rem 1rem;border-radius:10px;
+               background:rgba(255,255,255,0.05);border:1px solid rgba(108,99,255,0.3);
+               color:#e8e8ff;font-size:0.9rem;outline:none;"
+      >
+      <button onclick="loadAllBots()" style="padding:0.75rem 1.2rem;border-radius:10px;
+        background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.4);
+        color:#a89cff;cursor:pointer;font-size:0.85rem;font-weight:700;">
+        <i class="fas fa-sync-alt"></i> Recargar
+      </button>
+    </div>
+
+    <!-- Stats bar -->
+    <div id="botsStats" style="display:none;font-size:0.8rem;color:#7777aa;margin-bottom:1rem;"></div>
+
+    <!-- Bots grid -->
+    <div id="botsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;">
+      <div style="text-align:center;padding:2rem;color:#7777aa;">
+        <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>
+        Cargando bots desde Firebase...
+      </div>
+    </div>
+
+    <div id="noBotsMsg" style="display:none;text-align:center;padding:2rem;color:#7777aa;">
+      <i class="fas fa-search" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>
+      No se encontraron bots con ese criterio.
+    </div>
+  </div>
+
 </div><!-- /main -->
+
+<!-- Firebase for bots panel -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, getDocs, orderBy, query } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+const cfg = {
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+};
+const app = initializeApp(cfg, 'misbots');
+const db  = getFirestore(app);
+window._guiaDb = db;
+window._guiaCol = collection;
+window._guiaDocs = getDocs;
+window._guiaQuery = query;
+window._guiaOrder = orderBy;
+window._guiaReady = true;
+document.dispatchEvent(new CustomEvent('guiaFbReady'));
+</script>
 
 <script>
 function show(id){
@@ -858,6 +922,7 @@ function show(id){
   if(sec) sec.classList.add('active');
   if(nav) nav.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
+  if(id === 'misbots' && !window._botsLoaded) loadAllBots();
 }
 
 function copyText(id, btn){
@@ -869,6 +934,134 @@ function copyText(id, btn){
     btn.classList.add('copied');
     setTimeout(()=>{btn.textContent='Copiar';btn.classList.remove('copied');},2000);
   });
+}
+
+// ══════ BOTS PANEL ══════
+let _allBots = [];
+
+async function loadAllBots(){
+  const grid = document.getElementById('botsGrid');
+  const stats = document.getElementById('botsStats');
+  grid.innerHTML = `<div style="text-align:center;padding:2rem;color:#7777aa;grid-column:1/-1;">
+    <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>
+    Cargando bots desde Firebase...
+  </div>`;
+
+  const tryLoad = async () => {
+    if(!window._guiaDb) return false;
+    try {
+      const q = window._guiaQuery(
+        window._guiaCol(window._guiaDb, 'bots'),
+        window._guiaOrder('createdAt', 'desc')
+      );
+      const snap = await window._guiaDocs(q);
+      _allBots = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      window._botsLoaded = true;
+      renderBots(_allBots);
+      return true;
+    } catch(e) {
+      // Try without orderBy if index missing
+      try {
+        const snap2 = await window._guiaDocs(window._guiaCol(window._guiaDb, 'bots'));
+        _allBots = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Sort manually
+        _allBots.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        window._botsLoaded = true;
+        renderBots(_allBots);
+        return true;
+      } catch(e2) {
+        grid.innerHTML = `<div style="text-align:center;padding:2rem;color:#ff6584;grid-column:1/-1;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>
+          Error cargando bots: ${e2.message}
+        </div>`;
+        return false;
+      }
+    }
+  };
+
+  if(window._guiaReady){
+    await tryLoad();
+  } else {
+    document.addEventListener('guiaFbReady', tryLoad, { once: true });
+    setTimeout(tryLoad, 3000);
+  }
+}
+
+function renderBots(bots){
+  const grid = document.getElementById('botsGrid');
+  const stats = document.getElementById('botsStats');
+  const noMsg = document.getElementById('noBotsMsg');
+  const base = 'https://apolo189.github.io/superbot007/';
+
+  stats.style.display = 'block';
+  stats.innerHTML = `🤖 <strong>${bots.length}</strong> bot${bots.length!==1?'s':''} encontrado${bots.length!==1?'s':''}`;
+
+  if(bots.length === 0){
+    grid.innerHTML = '';
+    noMsg.style.display = 'block';
+    return;
+  }
+  noMsg.style.display = 'none';
+
+  grid.innerHTML = bots.map(b => {
+    const name    = b.businessName || b.name || '(sin nombre)';
+    const type    = b.businessType || '';
+    const phone   = b.phone || b.whatsapp || '';
+    const created = b.createdAt?.seconds
+      ? new Date(b.createdAt.seconds*1000).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})
+      : '—';
+    const avatar  = b.botAvatar
+      ? `<img src="${b.botAvatar}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
+      : `<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6C63FF,#FF6584);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🤖</div>`;
+    const langBadge = b.botLanguage === 'bilingual' ? '🌐 Bilingüe'
+                    : b.botLanguage === 'en' ? '🇺🇸 English'
+                    : b.botLanguage === 'pt' ? '🇧🇷 Português'
+                    : '🇪🇸 Español';
+    return `
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(108,99,255,0.2);border-radius:14px;padding:1rem;transition:border-color 0.2s;"
+         onmouseover="this.style.borderColor='rgba(108,99,255,0.5)'" onmouseout="this.style.borderColor='rgba(108,99,255,0.2)'">
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;">
+        ${avatar}
+        <div style="flex:1;overflow:hidden;">
+          <div style="font-weight:700;font-size:0.92rem;color:#e8e8ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${name}">${name}</div>
+          <div style="font-size:0.72rem;color:#7777aa;">${type}</div>
+        </div>
+        <span style="font-size:0.65rem;background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.3);border-radius:6px;padding:2px 6px;color:#a89cff;">${langBadge}</span>
+      </div>
+      <div style="font-family:monospace;font-size:0.7rem;color:#7777aa;background:rgba(0,0,0,0.3);border-radius:6px;padding:4px 8px;margin-bottom:0.8rem;word-break:break-all;">
+        ID: <span style="color:#a89cff;">${b.id}</span>
+      </div>
+      ${phone ? `<div style="font-size:0.75rem;color:#7777aa;margin-bottom:0.8rem;">📱 ${phone}</div>` : ''}
+      <div style="font-size:0.7rem;color:#555577;margin-bottom:0.8rem;">📅 Creado: ${created}</div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <a href="${base}agent.html?id=${b.id}" target="_blank"
+           style="flex:1;text-align:center;padding:6px;border-radius:8px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.3);color:#a89cff;font-size:0.72rem;text-decoration:none;font-weight:600;">
+          🤖 Bot
+        </a>
+        <a href="${base}landing.html?id=${b.id}" target="_blank"
+           style="flex:1;text-align:center;padding:6px;border-radius:8px;background:rgba(67,233,123,0.08);border:1px solid rgba(67,233,123,0.25);color:#43E97B;font-size:0.72rem;text-decoration:none;font-weight:600;">
+          🌐 Landing
+        </a>
+        <a href="${base}editor.html?id=${b.id}" target="_blank"
+           style="flex:1;text-align:center;padding:6px;border-radius:8px;background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.25);color:#ffa500;font-size:0.72rem;text-decoration:none;font-weight:600;">
+          ✏️ Editor
+        </a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterBots(){
+  const q = document.getElementById('botSearchInput').value.toLowerCase().trim();
+  if(!q){ renderBots(_allBots); return; }
+  const filtered = _allBots.filter(b =>
+    (b.id||'').toLowerCase().includes(q) ||
+    (b.businessName||b.name||'').toLowerCase().includes(q) ||
+    (b.businessType||'').toLowerCase().includes(q) ||
+    (b.phone||'').includes(q) ||
+    (b.email||'').toLowerCase().includes(q)
+  );
+  renderBots(filtered);
 }
 </script>
 </body>
