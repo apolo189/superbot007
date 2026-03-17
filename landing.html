@@ -555,8 +555,32 @@ img.img-broken {
 <!-- CHAT WIDGET -->
 <div class="chat-widget">
   <div class="chat-bubble" id="chatBubble" style="display:none"></div>
-  <button class="chat-fab" id="chatFab" onclick="openChat()">🤖</button>
+  <button class="chat-fab" id="chatFab" onclick="toggleChat()">🤖</button>
 </div>
+
+<!-- CHAT IFRAME POPUP -->
+<div id="chatPopup" style="
+  display:none;
+  position:fixed;
+  bottom:90px;
+  right:1.5rem;
+  width:370px;
+  height:580px;
+  z-index:9000;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.1);
+  animation:chatPopIn 0.3s ease;
+">
+  <iframe id="chatIframe" src="" style="width:100%;height:100%;border:none;"></iframe>
+</div>
+<style>
+@keyframes chatPopIn{
+  from{opacity:0;transform:translateY(20px) scale(0.95);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+</style>
 
 <!-- TOAST -->
 <div id="landingToast" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;transform:translateX(200%);transition:transform 0.4s ease;max-width:320px;pointer-events:none;"></div>
@@ -1419,11 +1443,31 @@ function initCounters(){
 }
 
 // ══════ CHAT ══════
-function openChat(){
+let chatOpen = false;
+function toggleChat(){
   const id = new URLSearchParams(location.search).get('id');
-  if(id) window.open(`agent.html?id=${id}`, '_blank');
-  else alert('Chatbot no configurado.');
+  if(!id){ alert('Chatbot no configurado.'); return; }
+  const popup = document.getElementById('chatPopup');
+  const iframe = document.getElementById('chatIframe');
+  chatOpen = !chatOpen;
+  if(chatOpen){
+    // Load iframe only first time
+    if(!iframe.src || iframe.src === window.location.href || iframe.src === 'about:blank'){
+      iframe.src = `agent.html?id=${id}`;
+    }
+    popup.style.display = 'block';
+    document.getElementById('chatFab').innerHTML = '<i class="fas fa-times" style="font-size:1.4rem"></i>';
+  } else {
+    popup.style.display = 'none';
+    document.getElementById('chatFab').innerHTML = document.getElementById('chatFab')._origContent || '🤖';
+  }
 }
+// Save original fab content after bot loads
+document.addEventListener('DOMContentLoaded',()=>{
+  const fab = document.getElementById('chatFab');
+  if(fab) fab._origContent = fab.innerHTML;
+});
+function openChat(){ toggleChat(); }
 
 // ══════ NAV MENU ══════
 function toggleMenu(){
