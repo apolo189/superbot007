@@ -1282,19 +1282,40 @@ function buildQuickReplies(d){
   qb.style.display = 'flex';
 
   // FAQ buttons — go in their OWN separate row below, never overlapping right panel
+  // Default FAQs shown when the bot has no custom FAQs configured
+  const isEN = (d.botLanguage||'es')==='en';
+  const defaultFaqs = isEN ? [
+    { q: '🌐 How do I add the bot to my website?',   a: 'Copy the embed code from the Tutorial section and paste it before </body> on your page.' },
+    { q: '🔗 Where do I share my bot link?',          a: 'Your bot link is: agent.html?id=YOUR-ID — share it on WhatsApp, Instagram or your bio.' },
+    { q: '💳 How do I share my digital card?',        a: 'Share this link: card.html?id=YOUR-ID — works on WhatsApp, email and QR codes.' },
+    { q: '🚀 What do I need to go LIVE?',             a: 'Pay the plan, your bot activates automatically. Then share your 3 links!' },
+    { q: '📲 Is there an app to download?',           a: 'No download needed — everything is in the cloud. Your links work on any device.' },
+    { q: '✏️ How do I edit my bot?',                  a: 'Open the Visual Editor (editor.html?id=YOUR-ID) to change text, colors, services and more.' }
+  ] : [
+    { q: '🌐 ¿Cómo inserto el bot en mi página web?', a: 'Copia el código embed del Tutorial y pégalo antes del </body> de tu sitio web.' },
+    { q: '🔗 ¿Dónde comparto mi link del bot?',       a: 'Tu link es: agent.html?id=TU-ID — compártelo por WhatsApp, Instagram o tu bio.' },
+    { q: '💳 ¿Cómo comparto mi tarjeta digital?',     a: 'Comparte este link: card.html?id=TU-ID — funciona por WhatsApp, email y código QR.' },
+    { q: '🚀 ¿Qué hago para estar en VIVO?',          a: 'Paga el plan, tu bot se activa automáticamente. ¡Luego comparte tus 3 links!' },
+    { q: '📲 ¿Hay algo que descargar?',               a: 'No necesitas descargar nada — todo está en la nube. Tus links funcionan en cualquier dispositivo.' },
+    { q: '✏️ ¿Cómo edito mi bot?',                   a: 'Abre el Editor Visual (editor.html?id=TU-ID) para cambiar textos, colores, servicios y más.' }
+  ];
+
   const faqRow = document.getElementById('faqBtns');
-  if(faqRow && Array.isArray(d.faqs) && d.faqs.length > 0){
+  if(faqRow){
+    // Use custom FAQs if available, otherwise show default helpful FAQs
+    const faqSource = (Array.isArray(d.faqs) && d.faqs.length > 0) ? d.faqs : defaultFaqs;
     faqRow.innerHTML = '';
+
     // Label prefix
     const lbl = document.createElement('span');
     lbl.style.cssText = 'font-size:0.65rem;color:var(--muted);font-weight:700;white-space:nowrap;align-self:center;padding-right:0.3rem;flex-shrink:0;';
     lbl.textContent = '❓ FAQ:';
     faqRow.appendChild(lbl);
 
-    d.faqs.slice(0,6).forEach(f=>{
+    faqSource.slice(0,6).forEach(f=>{
       const btn = document.createElement('button');
       btn.className = 'quick-btn faq-btn';
-      btn.textContent = f.q.length > 30 ? f.q.substring(0,28)+'…' : f.q;
+      btn.textContent = f.q.length > 32 ? f.q.substring(0,30)+'…' : f.q;
       btn.title = f.q;
       btn.onclick = ()=>sendQuick(f.q); // stays visible — no remove()
       faqRow.appendChild(btn);
@@ -1971,8 +1992,33 @@ CONTACTO:
 - Web: ${d.website||noAvail}
 - PayPal: ${d.paypalEmail||d.paypalLink||noConfig}
 
-PREGUNTAS FRECUENTES:
+PREGUNTAS FRECUENTES DEL NEGOCIO:
 ${faqs||noFaq}
+
+PREGUNTAS FRECUENTES DE LA PLATAFORMA SUPER BOT 007 (responde SIEMPRE estas):
+Q: ¿Cómo inserto el bot en mi página web?
+A: Copia este código y pégalo antes del </body> de tu página web:\n<iframe src="https://apolo189.github.io/superbot007/agent.html?id=TU-BOT-ID" style="position:fixed;bottom:20px;right:20px;width:380px;height:580px;border:none;border-radius:18px;z-index:9999;"></iframe>\nCambia TU-BOT-ID por tu ID real.
+
+Q: ¿Dónde comparto el link de mi bot?
+A: Tu link del bot es: https://apolo189.github.io/superbot007/agent.html?id=TU-BOT-ID — compártelo por WhatsApp, Instagram, Facebook, tu bio o email.
+
+Q: ¿Cómo comparto mi tarjeta digital?
+A: Comparte este link: https://apolo189.github.io/superbot007/card.html?id=TU-BOT-ID — funciona en WhatsApp, email, y puedes convertirlo en código QR en cualquier generador gratuito.
+
+Q: ¿Qué tengo que hacer para estar en VIVO (live)?
+A: Solo 3 pasos: 1) Paga tu plan en PayPal 2) Tu bot se activa automáticamente 3) Comparte tus 3 links: Bot, Landing Page y Tarjeta Digital. ¡Listo!
+
+Q: ¿Hay algo que descargar o instalar?
+A: No necesitas descargar nada. Todo está en la nube. Tus links funcionan en cualquier celular, tablet o computadora, sin apps ni instalaciones.
+
+Q: ¿Cómo edito mi bot después de crearlo?
+A: Abre el Editor Visual: https://apolo189.github.io/superbot007/editor.html?id=TU-BOT-ID — ahí cambias textos, colores, servicios, productos, fotos y más.
+
+Q: ¿Cuáles son mis 3 links principales?
+A: 🤖 Bot: agent.html?id=TU-ID | 🌐 Landing: landing.html?id=TU-ID | 💳 Tarjeta: card.html?id=TU-ID
+
+Q: ¿Cómo comparto mi landing page?
+A: Tu landing page está en: https://apolo189.github.io/superbot007/landing.html?id=TU-BOT-ID — compártela en redes sociales, anuncios o tu bio de Instagram.
 
 INSTRUCCIONES ESPECIALES: ${d.botInstruction||noInstr}
 
