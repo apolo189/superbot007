@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup — Super Bot 007 Demo Bot</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+.box{background:#0a0a0a;border:1px solid rgba(242,66,7,0.3);border-radius:20px;padding:2rem;max-width:500px;width:100%;}
+h1{font-size:1.2rem;font-weight:900;margin-bottom:0.5rem;color:#f24207;}
+p{font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;line-height:1.6;}
+label{display:block;font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.05em;}
+input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.7rem 1rem;color:#fff;font-size:0.82rem;margin-bottom:1rem;outline:none;}
+input:focus{border-color:#f24207;}
+button{width:100%;background:#f24207;border:none;border-radius:12px;padding:0.9rem;color:#fff;font-size:0.9rem;font-weight:900;cursor:pointer;transition:all 0.2s;}
+button:hover{background:#d63a06;}
+button:disabled{background:rgba(255,255,255,0.1);cursor:not-allowed;}
+.log{margin-top:1.2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;font-size:0.75rem;line-height:1.8;color:rgba(255,255,255,0.5);min-height:80px;white-space:pre-wrap;}
+.success{color:#43E97B;font-weight:800;font-size:0.85rem;margin-top:1rem;}
+.link-box{background:rgba(67,233,123,0.06);border:1px solid rgba(67,233,123,0.2);border-radius:10px;padding:1rem;margin-top:0.8rem;font-size:0.75rem;line-height:2;}
+.link-box a{color:#43E97B;word-break:break-all;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🤖 Setup — Tu Bot de Super Bot 007</h1>
+  <p>Este script crea tu bot personal en Firebase con toda la información de Super Bot 007. Solo necesitas tu OpenAI API Key.</p>
+
+  <label>OpenAI API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-proj-..." />
+
+  <button id="btn" onclick="createBot()">🚀 Crear mi bot ahora</button>
+
+  <div class="log" id="log">Esperando...</div>
+  <div id="result"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+const app = initializeApp({
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+});
+const db = getFirestore(app);
+
+window.createBot = async function(){
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const log = document.getElementById('log');
+  const btn = document.getElementById('btn');
+  const result = document.getElementById('result');
+
+  if(!apiKey || !apiKey.startsWith('sk-')){
+    log.textContent = '❌ API Key inválida. Debe empezar con sk-';
+    return;
+  }
+
+  btn.disabled = true;
+  log.textContent = '⏳ Conectando a Firebase...\n';
+
+  const botId = 'SUPERBOT007-DEMO';
+
+  const botData = {
+    // ── IDENTITY
+    businessName: "Super Bot 007",
+    businessType: "SaaS / AI Chatbot Platform",
+    businessCity: "Miami, FL",
+    botLanguage: "en",
+    createdAt: Date.now(),
+    active: true,
+
+    // ── DESCRIPTION
+    description: "Super Bot 007 is an all-in-one AI-powered platform that gives any small business their own AI chatbot, professional landing page, digital business card, online appointment system, and visual editor — all for just $10.99/month. No coding required. Ready in 10 minutes.",
+
+    heroTitle: "Super Bot 007",
+    heroSubtitle: "Your AI Business Assistant — Ready in 10 Minutes",
+    welcomeMsg: "Hey! 👋 I'm the Super Bot 007 assistant. Looking to automate your business? I can tell you everything about what we offer. What would you like to know?",
+
+    // ── CONTACT
+    phone: "9143644377",
+    whatsapp: "9143644377",
+    email: "support@superbot007.com",
+    website: "https://apolo189.github.io/superbot007/index.html",
+    address: "Miami, FL — Serving all of USA & Latin America",
+    instagram: "",
+    facebook: "",
+
+    // ── COLORS
+    primaryColor: "#f24207",
+    secondaryColor: "#FF6584",
+    accentColor: "#43E97B",
+    bgColor: "#000000",
+
+    // ── OPENAI
+    openaiKey: apiKey,
+    gptModel: "gpt-4o-mini",
+
+    // ── SPECIAL INSTRUCTIONS
+    botInstruction: `You are the sales assistant for Super Bot 007. Your job is to explain the product clearly, handle objections, and guide people to create their free bot at https://apolo189.github.io/superbot007/form.html
+
+LANGUAGE RULE: Detect the language the user writes in and ALWAYS respond in that same language. If they write in English → respond in English. If they write in Spanish → respond in Spanish. If they switch languages → you switch too.
+
+KEY TALKING POINTS:
+- Super Bot 007 gives small businesses: AI chatbot + landing page + digital card + appointments + visual editor
+- FREE plan: create and preview everything (no credit card needed)
+- PRO plan: $10.99/month — everything goes LIVE, hosting included
+- Competitors: ManyChat $15/mo (chatbot only), Chatfuel $19.99/mo (chatbot only), HighLevel $97/mo
+- We give 5 tools for less than the price of a coffee per week
+- No coding needed. Works in 10 minutes.
+- The WhatsApp button connects clients directly to the business owner's WhatsApp number
+
+OBJECTION HANDLING:
+- "Is it really free?" → Yes, 100% free to create and preview. You only pay $10.99/mo when you want to go live.
+- "What about WhatsApp automation?" → The WhatsApp button connects your clients directly to your personal WhatsApp. Full WhatsApp automation (AI responds in WA) is coming in v2.0.
+- "Do I need a developer?" → No. If you can use Facebook, you can use Super Bot 007.
+- "What about payments?" → You can add your PayPal or Stripe link in your landing page. Full payment integration inside the bot is coming in v2.0.
+- "I already have a website" → Our landing page is built specifically to CONVERT customers + it comes with an AI chatbot built in. Most websites don't have that.
+
+ALWAYS end by guiding them to: https://apolo189.github.io/superbot007/form.html`,
+
+    // ── SERVICES / PLANS
+    services: [
+      {
+        name: "FREE Plan",
+        price: "$0 forever",
+        desc: "Create up to 5 bots. Preview your landing page, digital card, and AI chatbot. Use the visual editor. No credit card required."
+      },
+      {
+        name: "PRO Plan",
+        price: "$10.99/month",
+        desc: "Everything in FREE + public links, hosting included, appointments open, QR functional, AI bot live 24/7, WhatsApp button active, WhatsApp support."
+      },
+      {
+        name: "Agency Plan",
+        price: "Contact us",
+        desc: "More than 5 bots? We have custom plans for agencies and resellers. Contact us on WhatsApp."
+      }
+    ],
+
+    // ── FAQS
+    faqs: [
+      {q: "Do I need coding skills?", a: "Zero. If you can use Facebook, you can use Super Bot 007. Everything is done through simple forms and buttons."},
+      {q: "¿Necesito saber programar?", a: "Para nada. Si sabes usar Facebook, puedes usar Super Bot 007. Todo se hace desde formularios simples."},
+      {q: "What does the WhatsApp button do?", a: "The WhatsApp button opens a direct chat with the business owner's personal WhatsApp number. It's a shortcut so clients can contact them easily. Full WhatsApp AI automation is coming in v2.0."},
+      {q: "Is hosting included?", a: "Yes! Hosting is included in the PRO plan at $10.99/month. You don't pay anything extra."},
+      {q: "How long does it take to create a bot?", a: "Between 2 and 10 minutes. Fill the form, our AI generates everything automatically — chatbot, landing page, and digital card."},
+      {q: "Can I add my PayPal or Stripe?", a: "Yes, you can add your payment link to your landing page. Full in-bot payment integration is coming in v2.0."},
+      {q: "What happens if I cancel?", a: "Your bots go back to demo mode. Your data is NOT deleted. Reactivate anytime by subscribing again."},
+      {q: "How much does the AI cost?", a: "You bring your own OpenAI API key. The cost is roughly $0.002 per conversation — less than a penny. OpenAI gives you free credits to start."}
+    ],
+
+    // ── HOURS
+    hours: {
+      Monday:    {open:true,  from:'09:00', to:'21:00'},
+      Tuesday:   {open:true,  from:'09:00', to:'21:00'},
+      Wednesday: {open:true,  from:'09:00', to:'21:00'},
+      Thursday:  {open:true,  from:'09:00', to:'21:00'},
+      Friday:    {open:true,  from:'09:00', to:'21:00'},
+      Saturday:  {open:true,  from:'10:00', to:'18:00'},
+      Sunday:    {open:false, from:'', to:''}
+    },
+
+    products: [],
+    galleryURLs: [],
+    testimonials: [
+      {name:"Maria G.", stars:5, text:"I created my salon bot in 8 minutes. My clients book appointments 24/7 now. Best $10.99 I ever spent!"},
+      {name:"Carlos R.", stars:5, text:"I was only on Facebook before. Now I have a website, digital card, and AI chatbot. Incredible value."},
+      {name:"Jennifer L.", stars:5, text:"Set up 3 bots for my clients and charged them $100 each. Paid for my subscription 30x over."}
+    ]
+  };
+
+  log.textContent += '✅ Bot data prepared\n';
+  log.textContent += '⏳ Saving to Firebase...\n';
+
+  try {
+    await setDoc(doc(db, 'bots', botId), botData);
+    log.textContent += '✅ Bot saved successfully!\n';
+    log.textContent += `📌 Bot ID: ${botId}\n`;
+
+    result.innerHTML = `
+      <div class="success">🎉 ¡Tu bot está listo, parsero!</div>
+      <div class="link-box">
+        <strong>🤖 Tu Bot (el que responde):</strong><br/>
+        <a href="agent.html?id=${botId}" target="_blank">agent.html?id=${botId}</a><br/><br/>
+        <strong>🌐 Tu Landing Page:</strong><br/>
+        <a href="landing.html?id=${botId}" target="_blank">landing.html?id=${botId}</a><br/><br/>
+        <strong>💳 Tu Tarjeta Digital:</strong><br/>
+        <a href="card.html?id=${botId}" target="_blank">card.html?id=${botId}</a><br/><br/>
+        <strong>✏️ Tu Editor:</strong><br/>
+        <a href="editor.html?id=${botId}" target="_blank">editor.html?id=${botId}</a>
+      </div>
+    `;
+  } catch(e) {
+    log.textContent += `❌ Error: ${e.message}\n`;
+    btn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>
