@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayuda & Tutorial — Super Bot 007</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  font-family:'Inter',sans-serif;
+  background:#000;color:#fff;
+  min-height:100vh;overflow-x:hidden;
+  overflow-y:scroll;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;
+  width:250px;
+  background:#080808;
+  border-right:1px solid rgba(242,66,7,0.15);
+  z-index:100;overflow-y:auto;
+  padding:1.5rem 0 2rem;
+  scrollbar-width:none;
+}
+.sidebar::-webkit-scrollbar{display:none;}
+@media(max-width:768px){
+  .sidebar{
+    position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;
+    height:60px;border-right:none;border-top:1px solid rgba(242,66,7,0.15);
+    display:flex;align-items:center;padding:0;overflow-x:auto;overflow-y:hidden;
+  }
+}
+
+.sb-logo{
+  font-family:'Orbitron',sans-serif;
+  font-size:0.85rem;font-weight:900;letter-spacing:3px;
+  padding:0 1.2rem 1.2rem;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  margin-bottom:0.8rem;color:#fff;
+}
+.sb-logo span{color:#f24207;}
+.sb-logo small{display:block;font-family:'Inter',sans-serif;font-size:0.6rem;font-weight:500;color:rgba(255,255,255,0.3);letter-spacing:1px;margin-top:0.2rem;}
+@media(max-width:768px){.sb-logo{display:none;}}
+
+.sb-section{
+  font-size:0.58rem;font-weight:800;color:rgba(255,255,255,0.2);
+  text-transform:uppercase;letter-spacing:0.12em;
+  padding:0.8rem 1.2rem 0.3rem;
+}
+@media(max-width:768px){.sb-section{display:none;}}
+
+.sb-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.6rem 1.2rem;
+  font-size:0.76rem;font-weight:700;
+  color:rgba(255,255,255,0.4);
+  cursor:pointer;transition:all 0.2s;
+  border-left:2px solid transparent;
+  text-decoration:none;white-space:nowrap;
+}
+.sb-item:hover{color:#fff;background:rgba(255,255,255,0.03);}
+.sb-item.active{color:#f24207;border-left-color:#f24207;background:rgba(242,66,7,0.06);}
+.sb-item i{width:16px;text-align:center;font-size:0.8rem;flex-shrink:0;}
+@media(max-width:768px){
+  .sb-item{border-left:none;border-bottom:2px solid transparent;padding:0 0.9rem;flex-direction:column;gap:0.2rem;font-size:0.58rem;height:60px;justify-content:center;}
+  .sb-item.active{border-bottom-color:#f24207;border-left:none;}
+  .sb-item i{font-size:0.95rem;width:auto;}
+}
+
+/* ── MAIN ── */
+.main{margin-left:250px;padding:2rem 1.5rem 6rem;max-width:860px;}
+@media(max-width:768px){.main{margin-left:0;padding:1.2rem 1rem 80px;}}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+.topbar-title{font-family:'Orbitron',sans-serif;font-size:clamp(1rem,3vw,1.3rem);font-weight:900;}
+.topbar-title span{color:#f24207;}
+.topbar-badge{display:flex;align-items:center;gap:0.4rem;padding:0.35rem 0.9rem;background:rgba(67,233,123,0.08);border:1px solid rgba(67,233,123,0.25);border-radius:50px;font-size:0.7rem;font-weight:700;color:#43E97B;}
+.dot{width:6px;height:6px;border-radius:50%;background:#43E97B;box-shadow:0 0 6px #43E97B;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* ── SECTION ── */
+.section{display:none;animation:fadeUp 0.3s ease both;}
+.section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-header{margin-bottom:1.8rem;}
+.sec-tag{display:inline-flex;align-items:center;gap:0.4rem;padding:0.28rem 0.8rem;background:rgba(242,66,7,0.08);border:1px solid rgba(242,66,7,0.2);border-radius:50px;font-size:0.65rem;font-weight:800;color:#f24207;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.7rem;}
+.sec-title{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:900;margin-bottom:0.4rem;}
+.sec-sub{font-size:0.85rem;color:rgba(255,255,255,0.45);line-height:1.7;}
+
+/* ── TUTORIAL STEPS ── */
+.tutorial-steps{display:flex;flex-direction:column;gap:1rem;margin-top:0.5rem;}
+.tstep{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;overflow:hidden;
+  transition:all 0.25s;
+}
+.tstep:hover{border-color:rgba(242,66,7,0.25);}
+.tstep-header{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;cursor:pointer;
+}
+.tstep-num{
+  width:36px;height:36px;border-radius:12px;
+  background:rgba(242,66,7,0.12);
+  border:1px solid rgba(242,66,7,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.8rem;font-weight:900;color:#f24207;flex-shrink:0;
+}
+.tstep-num.green{background:rgba(67,233,123,0.12);border-color:rgba(67,233,123,0.3);color:#43E97B;}
+.tstep-num.blue{background:rgba(79,172,254,0.12);border-color:rgba(79,172,254,0.3);color:#4facfe;}
+.tstep-num.purple{background:rgba(168,85,247,0.12);border-color:rgba(168,85,247,0.3);color:#a855f7;}
+.tstep-title{font-size:0.9rem;font-weight:800;flex:1;}
+.tstep-arrow{color:rgba(255,255,255,0.2);font-size:0.75rem;transition:transform 0.2s;}
+.tstep.open .tstep-arrow{transform:rotate(90deg);color:#f24207;}
+.tstep-body{
+  display:none;
+  padding:0 1.2rem 1.2rem;
+  border-top:1px solid rgba(255,255,255,0.05);
+  margin-top:0;padding-top:1rem;
+}
+.tstep.open .tstep-body{display:block;}
+
+.tstep-desc{font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:1rem;}
+
+/* ── MINI STEPS ── */
+.mini-steps{display:flex;flex-direction:column;gap:0.5rem;margin:0.8rem 0;}
+.mini-step{
+  display:flex;align-items:flex-start;gap:0.8rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px;padding:0.7rem 0.9rem;
+}
+.mini-num{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(242,66,7,0.1);
+  border:1px solid rgba(242,66,7,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.62rem;font-weight:900;color:#f24207;flex-shrink:0;margin-top:1px;
+}
+.mini-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.6;}
+.mini-text strong{color:#fff;}
+
+/* ── TIP BOX ── */
+.tip{
+  display:flex;gap:0.7rem;align-items:flex-start;
+  padding:0.8rem 1rem;border-radius:10px;
+  margin:0.8rem 0;font-size:0.76rem;line-height:1.65;
+}
+.tip-green{background:rgba(67,233,123,0.06);border:1px solid rgba(67,233,123,0.2);}
+.tip-yellow{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);}
+.tip-red{background:rgba(242,66,7,0.06);border:1px solid rgba(242,66,7,0.2);}
+.tip-blue{background:rgba(79,172,254,0.06);border:1px solid rgba(79,172,254,0.2);}
+.tip i{font-size:0.9rem;flex-shrink:0;margin-top:2px;}
+.tip-green i{color:#43E97B;} .tip-yellow i{color:#fbbf24;} .tip-red i{color:#f24207;} .tip-blue i{color:#4facfe;}
+
+/* ── CODE BOX ── */
+.code-box{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:0.8rem 1rem;
+  font-family:monospace;font-size:0.78rem;
+  color:#43E97B;line-height:1.7;margin:0.7rem 0;
+  word-break:break-all;
+}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:0.6rem;}
+.faq-item{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;overflow:hidden;
+  transition:border-color 0.2s;
+}
+.faq-item:hover{border-color:rgba(242,66,7,0.2);}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.2rem;cursor:pointer;gap:1rem;
+}
+.faq-q-text{font-size:0.85rem;font-weight:700;flex:1;}
+.faq-icon{color:rgba(255,255,255,0.2);font-size:0.75rem;transition:transform 0.2s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);color:#f24207;}
+.faq-a{
+  display:none;
+  padding:0 1.2rem 1rem;
+  font-size:0.8rem;color:rgba(255,255,255,0.55);
+  line-height:1.75;
+  border-top:1px solid rgba(255,255,255,0.05);
+  padding-top:0.9rem;
+}
+.faq-item.open .faq-a{display:block;}
+.faq-a strong{color:#fff;}
+.faq-a a{color:#f24207;text-decoration:none;}
+
+/* ── FEATURE GRID ── */
+.feature-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:0.7rem;margin:1rem 0;
+}
+.feat-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;padding:1rem;
+}
+.feat-icon{font-size:1.4rem;margin-bottom:0.5rem;}
+.feat-name{font-size:0.82rem;font-weight:800;margin-bottom:0.3rem;}
+.feat-desc{font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.6;}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:rgba(255,255,255,0.05);margin:1.5rem 0;}
+
+/* ── BTN ── */
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.55rem 1.2rem;border-radius:10px;
+  font-size:0.78rem;font-weight:800;
+  text-decoration:none;cursor:pointer;
+  transition:all 0.2s;margin-right:0.4rem;margin-top:0.5rem;
+}
+.btn-red{background:rgba(242,66,7,0.12);border:1px solid rgba(242,66,7,0.3);color:#f24207;}
+.btn-red:hover{background:rgba(242,66,7,0.22);color:#fff;}
+.btn-green{background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.3);color:#43E97B;}
+.btn-green:hover{background:rgba(67,233,123,0.2);color:#fff;}
+.btn-blue{background:rgba(79,172,254,0.1);border:1px solid rgba(79,172,254,0.3);color:#4facfe;}
+.btn-blue:hover{background:rgba(79,172,254,0.2);color:#fff;}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.65rem;font-weight:800;}
+.badge-green{background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.25);color:#43E97B;}
+.badge-red{background:rgba(242,66,7,0.1);border:1px solid rgba(242,66,7,0.25);color:#f24207;}
+.badge-yellow{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);color:#fbbf24;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-logo">SUPER <span>BOT</span> 007<small>Centro de Ayuda</small></div>
+
+  <div class="sb-section">Tutoriales</div>
+  <a class="sb-item active" onclick="show('inicio')"><i class="fas fa-rocket"></i> Empezar aquí</a>
+  <a class="sb-item" onclick="show('crear')"><i class="fas fa-plus-circle"></i> Crear mi bot</a>
+  <a class="sb-item" onclick="show('landing')"><i class="fas fa-globe"></i> Mi Landing Page</a>
+  <a class="sb-item" onclick="show('tarjeta')"><i class="fas fa-id-card"></i> Tarjeta Digital</a>
+  <a class="sb-item" onclick="show('editor')"><i class="fas fa-paint-brush"></i> Usar el Editor</a>
+  <a class="sb-item" onclick="show('citas')"><i class="fas fa-calendar"></i> Citas Online</a>
+  <a class="sb-item" onclick="show('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+
+  <div class="sb-section">Ayuda</div>
+  <a class="sb-item" onclick="show('faq')"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</a>
+  <a class="sb-item" onclick="show('pagos')"><i class="fas fa-credit-card"></i> Precios y Pagos</a>
+  <a class="sb-item" onclick="show('problemas')"><i class="fas fa-tools"></i> Solución de Problemas</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="topbar">
+    <div class="topbar-title">🆘 Centro de <span>Ayuda</span></div>
+    <div class="topbar-badge"><span class="dot"></span> Super Bot 007</div>
+  </div>
+
+  <!-- ════ EMPEZAR AQUÍ ════ -->
+  <div class="section active" id="sec-inicio">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-rocket"></i> Bienvenido</div>
+      <div class="sec-title">¡Bienvenido a Super Bot 007! 👋</div>
+      <div class="sec-sub">Aquí encuentras todo lo que necesitas para configurar y usar tu bot. Sin tecnicismos. Paso a paso.</div>
+    </div>
+
+    <div class="tip tip-green">
+      <i class="fas fa-check-circle"></i>
+      <div><strong>No necesitas saber programar.</strong> Todo se hace desde formularios simples. Si sabes usar Facebook, sabes usar Super Bot 007.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec-tag"><i class="fas fa-star"></i> ¿Qué incluye tu bot?</div>
+    <div style="height:0.8rem"></div>
+    <div class="feature-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <div class="feat-name">Agente IA 24/7</div>
+        <div class="feat-desc">Responde preguntas de tus clientes automáticamente, todo el día.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-name">Landing Page</div>
+        <div class="feat-desc">Tu página web profesional con servicios, galería y contacto.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💳</div>
+        <div class="feat-name">Tarjeta Digital</div>
+        <div class="feat-desc">Tu presentación digital con código QR para compartir.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📅</div>
+        <div class="feat-name">Citas Online</div>
+        <div class="feat-desc">Tus clientes agendan cita solos desde tu landing page.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">✏️</div>
+        <div class="feat-name">Editor Visual</div>
+        <div class="feat-desc">Cambia colores, textos e imágenes sin tocar código.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <div class="feat-name">Botón WhatsApp</div>
+        <div class="feat-desc">Tus clientes te contactan por WhatsApp con un clic.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec-tag"><i class="fas fa-map"></i> ¿Por dónde empiezo?</div>
+    <div style="height:0.8rem"></div>
+    <div class="tutorial-steps">
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">1</div>
+          <div class="tstep-title">Primero — Crea tu bot (5-10 minutos)</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Todo empieza llenando el formulario de creación. Ahí pones la información de tu negocio y en minutos tienes tu bot listo.</div>
+          <a class="btn btn-red" href="form.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ir al formulario</a>
+          <a class="btn btn-green" onclick="show('crear')"><i class="fas fa-book"></i> Ver tutorial completo</a>
+        </div>
+      </div>
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num green">2</div>
+          <div class="tstep-title">Segundo — Personaliza con el Editor</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Una vez creado tu bot, puedes cambiar colores, imágenes, textos y más desde el editor visual sin necesitar a nadie.</div>
+          <a class="btn btn-green" onclick="show('editor')"><i class="fas fa-book"></i> Ver tutorial del editor</a>
+        </div>
+      </div>
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num blue">3</div>
+          <div class="tstep-title">Tercero — Activa y comparte</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Cuando estés listo, activa tu plan PRO y tus links se vuelven públicos. Comparte tu landing page, tarjeta y bot con tus clientes.</div>
+          <a class="btn btn-blue" onclick="show('pagos')"><i class="fas fa-dollar-sign"></i> Ver planes y precios</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ CREAR BOT ════ -->
+  <div class="section" id="sec-crear">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-plus-circle"></i> Tutorial</div>
+      <div class="sec-title">Cómo crear tu bot 🤖</div>
+      <div class="sec-sub">Guía paso a paso desde cero. Tarda entre 5 y 10 minutos.</div>
+    </div>
+
+    <div class="tip tip-blue">
+      <i class="fas fa-info-circle"></i>
+      <div><strong>Antes de empezar necesitas:</strong> El nombre de tu negocio, tus servicios con precios, tu número de WhatsApp y una API Key de OpenAI (te explicamos cómo conseguirla abajo).</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">1</div>
+          <div class="tstep-title">Abre el formulario de creación</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Ve al formulario — es donde todo empieza. Tiene varias secciones que se llenan en orden.</div>
+          <a class="btn btn-red" href="form.html" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir formulario</a>
+          <div class="tip tip-yellow" style="margin-top:0.8rem;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>No cierres el formulario a la mitad — si lo cierras pierdes lo que escribiste.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">2</div>
+          <div class="tstep-title">Sección 1 — Información del negocio</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Llena estos campos:</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">A</div><div class="mini-text"><strong>Nombre del negocio</strong> — Ej: "Barbería El Rey"</div></div>
+            <div class="mini-step"><div class="mini-num">B</div><div class="mini-text"><strong>Tipo de negocio</strong> — Barbería, restaurante, clínica, etc.</div></div>
+            <div class="mini-step"><div class="mini-num">C</div><div class="mini-text"><strong>Ciudad</strong> — Donde está tu negocio</div></div>
+            <div class="mini-step"><div class="mini-num">D</div><div class="mini-text"><strong>Descripción</strong> — 2-3 líneas sobre qué haces. Ej: "Barbería profesional especializada en cortes modernos y clásicos."</div></div>
+            <div class="mini-step"><div class="mini-num">E</div><div class="mini-text"><strong>WhatsApp</strong> — Tu número con código de país. Ej: +1 305 555 0000</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">3</div>
+          <div class="tstep-title">Sección 2 — Diseño y colores</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Aquí personalizas cómo se ve tu landing page y tarjeta digital.</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">A</div><div class="mini-text"><strong>Color principal</strong> — El color de tu marca. Haz clic en el cuadro de color para elegir.</div></div>
+            <div class="mini-step"><div class="mini-num">B</div><div class="mini-text"><strong>Logo</strong> — Sube una imagen PNG o JPG. Si no tienes logo, déjalo vacío — igual queda bien.</div></div>
+            <div class="mini-step"><div class="mini-num">C</div><div class="mini-text"><strong>Foto de portada</strong> — La imagen principal de tu página. Puede ser foto de tu local, productos o tú mismo.</div></div>
+          </div>
+          <div class="tip tip-green">
+            <i class="fas fa-lightbulb"></i>
+            <div><strong>Tip:</strong> Usa imágenes horizontales (paisaje) para la portada. Tamaño recomendado: 1200x600 píxeles.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">4</div>
+          <div class="tstep-title">Sección 3 — Tus servicios</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Agrega hasta 8 servicios. El bot los conocerá y los mencionará cuando tus clientes pregunten.</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text"><strong>Nombre del servicio</strong> — Ej: "Corte de cabello"</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text"><strong>Descripción</strong> — Ej: "Corte profesional con lavado incluido"</div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text"><strong>Precio</strong> — Ej: "$15"</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Haz clic en <strong>"+ Agregar servicio"</strong> para añadir más.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">5</div>
+          <div class="tstep-title">Sección 4 — API Key de OpenAI (la IA del bot)</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Esta es la "inteligencia" de tu bot. Necesitas una clave de OpenAI para que el bot responda con IA.</div>
+          <div class="tip tip-yellow">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div><strong>¿Por qué necesito esto?</strong> OpenAI es la empresa detrás de ChatGPT. Tu bot usa esa misma tecnología para responder inteligente.</div>
+          </div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">Ve a <strong>platform.openai.com</strong> y crea una cuenta gratis.</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Ve a <strong>API Keys</strong> → <strong>"Create new secret key"</strong></div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Copia la clave — empieza con <strong>sk-...</strong></div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Pégala en el formulario donde dice "OpenAI API Key"</div></div>
+          </div>
+          <div class="tip tip-blue">
+            <i class="fas fa-info-circle"></i>
+            <div><strong>¿Es gratis?</strong> OpenAI te da créditos gratis para empezar. Cuando se acaben pagas directamente a ellos — son centavos por conversación.</div>
+          </div>
+          <a class="btn btn-blue" href="https://platform.openai.com/api-keys" target="_blank"><i class="fas fa-external-link-alt"></i> Ir a OpenAI</a>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num green">6</div>
+          <div class="tstep-title">¡Enviar y listo!</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Cuando llenes todo, haz clic en el botón de enviar. En segundos recibirás tu <strong>BOT ID</strong> único.</div>
+          <div class="tip tip-green">
+            <i class="fas fa-check-circle"></i>
+            <div><strong>¡Guarda tu BOT ID!</strong> Es como el número de tu bot. Lo necesitas para acceder a todo: tu landing page, tarjeta digital y editor. Ej: <code style="color:#43E97B;">SB007-X7Y8Z9</code></div>
+          </div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Tu bot de IA está listo y responde preguntas</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Tu landing page está generada</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Tu tarjeta digital está lista</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ LANDING PAGE ════ -->
+  <div class="section" id="sec-landing">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-globe"></i> Tutorial</div>
+      <div class="sec-title">Tu Landing Page 🌐</div>
+      <div class="sec-sub">Tu página web profesional — se genera sola cuando creas el bot.</div>
+    </div>
+
+    <div class="tip tip-green">
+      <i class="fas fa-check-circle"></i>
+      <div><strong>No necesitas hacer nada extra.</strong> La landing page se crea automáticamente con la información que pusiste en el formulario.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Qué tiene mi landing page?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Hero section</strong> — Tu foto de portada, nombre del negocio y botón de contacto</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Servicios</strong> — Todos tus servicios con precios</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Sistema de citas</strong> — Tus clientes agendan solos</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Botón de WhatsApp</strong> — Para contactarte directo</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Bot de IA</strong> — Chat flotante que responde 24/7</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Info de contacto</strong> — Teléfono, dirección, redes sociales</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Cómo accedo a mi landing page?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Usa tu BOT ID para construir el link:</div>
+          <div class="code-box">https://apolo189.github.io/superbot007/landing.html?id=TU-BOT-ID</div>
+          <div class="tip tip-yellow">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>En el plan <strong>GRATIS</strong> tu landing está en modo demo — visible pero con marca de agua. Con el plan <strong>PRO</strong> se activa públicamente sin restricciones.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Cómo cambio algo en mi landing page?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Todo se cambia desde el Editor Visual — no necesitas tocar código.</div>
+          <a class="btn btn-green" onclick="show('editor')"><i class="fas fa-paint-brush"></i> Ver tutorial del editor</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ TARJETA DIGITAL ════ -->
+  <div class="section" id="sec-tarjeta">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-id-card"></i> Tutorial</div>
+      <div class="sec-title">Tu Tarjeta Digital 💳</div>
+      <div class="sec-sub">Tu presentación profesional en formato digital — con código QR incluido.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Qué es la tarjeta digital?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Es como una tarjeta de presentación física — pero digital. La compartes como link o imprimes el QR para que la gente la escanee.</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Tu foto o logo del negocio</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Nombre, cargo y negocio</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Botón de WhatsApp directo</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Links a tus redes sociales</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Código QR para compartir</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Botón para guardar contacto (VCF)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Cómo comparto mi tarjeta?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Tienes 3 formas de compartirla:</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text"><strong>Por link</strong> — Copia el link y mándalo por WhatsApp, Facebook, email, donde quieras.</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text"><strong>Por QR</strong> — Imprime el QR y ponlo en tu local, flyers, o muéstralo en tu teléfono para que lo escaneen.</div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text"><strong>Por WhatsApp</strong> — Usa el botón de "Compartir por WhatsApp" dentro de la tarjeta.</div></div>
+          </div>
+          <div class="code-box">https://apolo189.github.io/superbot007/card.html?id=TU-BOT-ID</div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Cómo cambio la foto de mi tarjeta?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Desde el editor visual puedes cambiar la foto de perfil de la tarjeta.</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">Ve al <strong>Editor Visual</strong> con tu BOT ID</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Busca la sección <strong>"Tarjeta Digital"</strong></div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Haz clic en <strong>"Cambiar foto"</strong> y sube tu imagen</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Haz clic en <strong>"Guardar"</strong> — listo</div></div>
+          </div>
+          <div class="tip tip-green">
+            <i class="fas fa-lightbulb"></i>
+            <div><strong>Tip:</strong> Usa una foto cuadrada (1:1) para la tarjeta. Tu cara debe verse bien de cerca. Fondo limpio funciona mejor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ EDITOR ════ -->
+  <div class="section" id="sec-editor">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-paint-brush"></i> Tutorial</div>
+      <div class="sec-title">Usar el Editor Visual ✏️</div>
+      <div class="sec-sub">Cambia colores, imágenes y textos sin tocar una sola línea de código.</div>
+    </div>
+
+    <div class="tip tip-blue">
+      <i class="fas fa-info-circle"></i>
+      <div><strong>Para entrar al editor necesitas tu BOT ID.</strong> Lo recibiste cuando creaste tu bot. Si lo perdiste, contáctanos.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">1</div>
+          <div class="tstep-title">Cómo abrir el editor</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="code-box">https://apolo189.github.io/superbot007/editor.html?id=TU-BOT-ID</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">Copia el link de arriba</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Reemplaza <strong>TU-BOT-ID</strong> por tu ID real. Ej: <code style="color:#43E97B;">editor.html?id=SB007-X7Y8Z9</code></div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Abre el link en tu navegador</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">2</div>
+          <div class="tstep-title">Cómo cambiar los colores</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">En el editor busca la sección <strong>"Colores"</strong> o <strong>"Diseño"</strong></div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Haz clic en el cuadro de color que quieres cambiar</div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Se abre un selector de color — elige el que quieras</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Verás el cambio en la <strong>vista previa</strong> de la derecha al instante</div></div>
+            <div class="mini-step"><div class="mini-num">5</div><div class="mini-text">Haz clic en <strong>"Guardar"</strong> para confirmar los cambios</div></div>
+          </div>
+          <div class="tip tip-yellow">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>Si no haces clic en <strong>"Guardar"</strong> los cambios se pierden al cerrar el editor.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">3</div>
+          <div class="tstep-title">Cómo cambiar o subir imágenes</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">En el editor encuentra el campo de imagen que quieres cambiar (portada, logo, galería, etc.)</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Haz clic en el botón <strong>"Subir imagen"</strong> o en la imagen actual</div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Selecciona la imagen de tu computadora o teléfono</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Espera que cargue — verás la nueva imagen en la vista previa</div></div>
+            <div class="mini-step"><div class="mini-num">5</div><div class="mini-text">Haz clic en <strong>"Guardar"</strong></div></div>
+          </div>
+          <div class="tip tip-green">
+            <i class="fas fa-lightbulb"></i>
+            <div>
+              <strong>Formatos aceptados:</strong> JPG, PNG, WEBP<br/>
+              <strong>Tamaño máximo:</strong> 5MB por imagen<br/>
+              <strong>Recomendado para portada:</strong> 1200x600px horizontal<br/>
+              <strong>Recomendado para logo:</strong> 400x400px cuadrado
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">4</div>
+          <div class="tstep-title">Cómo cambiar textos y servicios</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">En el editor encuentra el campo de texto que quieres editar</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Haz clic en el campo y escribe el nuevo texto</div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Para servicios: edita nombre, descripción y precio de cada uno</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Haz clic en <strong>"Guardar"</strong> — los cambios se aplican a tu landing page y bot automáticamente</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num green">5</div>
+          <div class="tstep-title">Ver los cambios en tu landing page</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Después de guardar, abre tu landing page en una nueva pestaña para ver cómo quedó.</div>
+          <div class="tip tip-yellow">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>Si no ves los cambios, presiona <strong>Ctrl + Shift + R</strong> (Windows) o <strong>Cmd + Shift + R</strong> (Mac) para limpiar el caché del navegador.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ CITAS ════ -->
+  <div class="section" id="sec-citas">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-calendar"></i> Tutorial</div>
+      <div class="sec-title">Sistema de Citas Online 📅</div>
+      <div class="sec-sub">Tus clientes agendan cita solos — tú recibes la notificación.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Cómo funciona?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">El cliente entra a tu landing page</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Hace clic en <strong>"Agendar cita"</strong></div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Elige el servicio, fecha y hora disponible</div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Pone su nombre y teléfono</div></div>
+            <div class="mini-step"><div class="mini-num">5</div><div class="mini-text">¡La cita queda guardada! Tú la ves en el Dashboard</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Dónde veo las citas agendadas?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Todas las citas aparecen en el Dashboard.</div>
+          <a class="btn btn-blue" href="dashboard.html" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir Dashboard</a>
+          <div class="tip tip-blue">
+            <i class="fas fa-info-circle"></i>
+            <div>En el plan <strong>PRO</strong> las citas están abiertas al público. En el plan <strong>GRATIS</strong> el sistema de citas está en modo demo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ WHATSAPP ════ -->
+  <div class="section" id="sec-whatsapp">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fab fa-whatsapp"></i> Tutorial</div>
+      <div class="sec-title">WhatsApp en tu bot 💬</div>
+      <div class="sec-sub">Cómo funciona el botón de WhatsApp y para qué sirve.</div>
+    </div>
+
+    <div class="tip tip-green">
+      <i class="fas fa-check-circle"></i>
+      <div><strong>Buenas noticias:</strong> El botón de WhatsApp funciona desde el primer día — sin configuración extra.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Para qué sirve el botón de WhatsApp?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">El botón de WhatsApp en tu landing page y tarjeta digital abre un chat directo con <strong>tu número de WhatsApp personal</strong> cuando alguien hace clic.</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">El cliente hace clic en el botón de WhatsApp</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Se abre WhatsApp directamente con tu número</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">El cliente puede escribirte, mandarte fotos, hacer pedidos o cerrar una venta</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Tú respondes cuando puedas desde tu teléfono</div></div>
+          </div>
+          <div class="tip tip-blue">
+            <i class="fas fa-info-circle"></i>
+            <div><strong>En resumen:</strong> Es un atajo directo para que tus clientes te contacten por WhatsApp sin tener que buscar tu número.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Puedo integrar mi PayPal o Stripe para cobrar por WhatsApp?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Por ahora el botón de WhatsApp conecta directamente contigo para que cierres la venta de forma personal. Si quieres cobrar online puedes:</div>
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text"><strong>Mandar tu link de PayPal/Stripe</strong> directamente por el chat de WhatsApp cuando el cliente esté listo para pagar.</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-text"><strong>Poner tu link de pago</strong> en la descripción de tu landing page usando el editor.</div></div>
+          </div>
+          <div class="tip tip-yellow">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>La integración automática de pagos dentro del bot es una función que estamos desarrollando para la <strong>versión 2.0</strong>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">?</div>
+          <div class="tstep-title">¿Puedo cambiar el número de WhatsApp?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">1</div><div class="mini-text">Ve al <strong>Editor Visual</strong> con tu BOT ID</div></div>
+            <div class="mini-step"><div class="mini-num">2</div><div class="mini-step"><div class="mini-num">2</div><div class="mini-text">Busca el campo <strong>"WhatsApp"</strong></div></div></div>
+            <div class="mini-step"><div class="mini-num">3</div><div class="mini-text">Escribe tu nuevo número con código de país. Ej: <strong>+1 305 555 0000</strong></div></div>
+            <div class="mini-step"><div class="mini-num">4</div><div class="mini-text">Haz clic en <strong>"Guardar"</strong></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ FAQ ════ -->
+  <div class="section" id="sec-faq">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-question-circle"></i> FAQ</div>
+      <div class="sec-title">Preguntas Frecuentes ❓</div>
+      <div class="sec-sub">Las preguntas que más nos hacen — respondidas de forma clara y honesta.</div>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🤖 ¿Necesito saber programar para usar Super Bot 007?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          <strong>No.</strong> Para nada. Si sabes usar Facebook o WhatsApp, puedes usar Super Bot 007. Todo se hace desde formularios y botones. El código lo manejamos nosotros.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🌐 ¿Necesito comprar un dominio o hosting?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          <strong>No.</strong> El hosting está incluido en el plan PRO. Tu landing page y bot viven en nuestros servidores. No pagas nada extra por hosting.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">💬 ¿Qué hace exactamente el botón de WhatsApp?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          El botón de WhatsApp abre un chat directo con <strong>tu número de WhatsApp personal</strong>. Es un atajo para que tus clientes te contacten fácilmente. <strong>Tú respondes desde tu teléfono normalmente.</strong> No es un bot de WhatsApp automático — es simplemente un botón de contacto directo.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">💳 ¿Puedo integrar PayPal o Stripe para cobrar?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Puedes poner tu link de PayPal o Stripe en tu landing page y mandarlo por WhatsApp cuando un cliente quiera pagar. La integración de pagos <strong>automática dentro del bot</strong> es una función que viene en la versión 2.0. Por ahora el flujo es: cliente interactúa con el bot → te escribe por WhatsApp → tú le mandas el link de pago.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🤖 ¿El bot responde solo o tengo que estar pendiente?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          <strong>El bot de IA en tu landing page responde solo 24/7.</strong> Cuando un visitante abre el chat en tu página web, la IA responde automáticamente usando la información de tu negocio. Tú no tienes que hacer nada. <br/><br/>El WhatsApp es diferente — ese es tu número personal y ahí sí respondes tú.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🔑 ¿Qué es la API Key de OpenAI y tengo que pagarla?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          La API Key de OpenAI es lo que le da inteligencia a tu bot. OpenAI (la empresa de ChatGPT) cobra por el uso de su IA. <strong>Tú pagas directamente a OpenAI — no a nosotros.</strong><br/><br/>El costo es muy bajo: aproximadamente <strong>$0.002 por conversación</strong>. Para empezar OpenAI te da créditos gratis. La mayoría de negocios pequeños pagan menos de $5 al mes.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">📱 ¿El bot funciona en teléfonos celulares?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          <strong>Sí, 100%.</strong> Tu landing page, tarjeta digital y bot están optimizados para móviles. Se ven perfectos en iPhone y Android.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🔢 ¿Cuántos bots puedo crear?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          <strong>Plan GRATIS:</strong> hasta 5 bots en modo demo.<br/>
+          <strong>Plan PRO $10.99/mes:</strong> hasta 5 bots activos y públicos.<br/><br/>
+          ¿Tienes más de 5 clientes? Contáctanos para el plan de agencia.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">❌ ¿Qué pasa si cancelo mi suscripción?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Si cancelas, tus bots pasan a modo demo. Tus datos <strong>no se borran</strong> — siguen guardados. Si en el futuro quieres reactivar, solo vuelves a pagar y todo vuelve a funcionar como antes.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🔒 ¿Es seguro poner la información de mi negocio?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Sí. Tu información se guarda en <strong>Firebase de Google</strong> — una de las bases de datos más seguras del mundo. No compartimos tu información con nadie.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">⏱️ ¿Cuánto tarda en crearse el bot?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Entre <strong>2 y 5 minutos</strong> desde que envías el formulario. La IA genera todo automáticamente — el bot, la landing page y la tarjeta digital al mismo tiempo.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">🆘 ¿Qué hago si necesito ayuda?</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Escríbenos directamente por WhatsApp — respondemos en menos de 24 horas. También puedes revisar la sección <strong>"Solución de Problemas"</strong> en este centro de ayuda para los problemas más comunes.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════ PRECIOS Y PAGOS ════ -->
+  <div class="section" id="sec-pagos">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-credit-card"></i> Precios</div>
+      <div class="sec-title">Precios y Pagos 💰</div>
+      <div class="sec-sub">Simple, sin letra chica, sin sorpresas.</div>
+    </div>
+
+    <div class="tutorial-steps">
+      <div class="tstep open">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num">$</div>
+          <div class="tstep-title">Plan GRATIS — Para probar</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Crear hasta 5 bots completos</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Ver preview de landing page, tarjeta y bot</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Usar el editor visual</div></div>
+            <div class="mini-step"><div class="mini-num">✗</div><div class="mini-text" style="color:rgba(255,255,255,0.3);">Links públicos (solo demo)</div></div>
+            <div class="mini-step"><div class="mini-num">✗</div><div class="mini-text" style="color:rgba(255,255,255,0.3);">Citas abiertas al público</div></div>
+            <div class="mini-step"><div class="mini-num">✗</div><div class="mini-text" style="color:rgba(255,255,255,0.3);">Hosting incluido</div></div>
+          </div>
+          <div class="tip tip-green">
+            <i class="fas fa-check-circle"></i>
+            <div><strong>Sin tarjeta de crédito. Sin compromisos.</strong> Prueba todo gratis antes de decidir.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num green">$</div>
+          <div class="tstep-title">Plan PRO — $10.99/mes <span class="badge badge-red" style="margin-left:0.5rem;">Precio de lanzamiento</span></div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="mini-steps">
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Todo lo del plan gratis</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Hasta 5 bots activos y públicos</strong></div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Hosting incluido</strong> — sin costos extra</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Links reales</strong> — sin marca de agua</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Citas online</strong> abiertas al público</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>Bot de IA 24/7</strong> respondiendo a tus clientes</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text"><strong>QR funcional</strong> para tu tarjeta digital</div></div>
+            <div class="mini-step"><div class="mini-num">✓</div><div class="mini-text">Soporte directo por WhatsApp</div></div>
+          </div>
+          <div class="tip tip-red">
+            <i class="fas fa-fire"></i>
+            <div><strong>Precio de lanzamiento $10.99/mes.</strong> Este precio es temporal — sube pronto. Los que entran ahora mantienen este precio para siempre.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tstep">
+        <div class="tstep-header" onclick="toggleStep(this)">
+          <div class="tstep-num blue">?</div>
+          <div class="tstep-title">¿Cómo pago?</div>
+          <i class="fas fa-chevron-right tstep-arrow"></i>
+        </div>
+        <div class="tstep-body">
+          <div class="tstep-desc">Aceptamos PayPal. Cuando estés listo para activar tu plan PRO, haz clic en el botón de upgrade y te llevamos al pago seguro.</div>
+          <div class="tip tip-blue">
+            <i class="fas fa-info-circle"></i>
+            <div>¿Tienes preguntas sobre el pago? Escríbenos por WhatsApp y te ayudamos personalmente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ PROBLEMAS ════ -->
+  <div class="section" id="sec-problemas">
+    <div class="sec-header">
+      <div class="sec-tag"><i class="fas fa-tools"></i> Soporte</div>
+      <div class="sec-title">Solución de Problemas 🔧</div>
+      <div class="sec-sub">Los problemas más comunes y cómo resolverlos en 2 minutos.</div>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">😤 El bot no responde nada</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Casi siempre es la <strong>API Key de OpenAI</strong>. Revisa esto en orden:<br/><br/>
+          1. Ve a <a href="https://platform.openai.com/settings/billing" target="_blank">platform.openai.com → Billing</a><br/>
+          2. Verifica que tengas créditos disponibles<br/>
+          3. Si están en $0 — agrega créditos (mínimo $5)<br/>
+          4. Si la key es nueva, espera 5 minutos y vuelve a intentar<br/><br/>
+          Si el problema sigue, escríbenos por WhatsApp.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">😤 Mi landing page no carga</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          1. Verifica que el link tenga tu BOT ID correcto<br/>
+          2. Espera 5 minutos — a veces el servidor tarda en actualizar<br/>
+          3. Prueba con <strong>Ctrl + Shift + R</strong> para limpiar el caché<br/>
+          4. Intenta abrir el link en modo incógnito (Ctrl + Shift + N)<br/><br/>
+          Si sigue sin cargar escríbenos.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">😤 Perdí mi BOT ID</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          No te preocupes. Escríbenos por WhatsApp con el <strong>nombre de tu negocio</strong> y lo recuperamos para ti en minutos.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">😤 Guardé cambios en el editor pero no se ven</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          1. Verifica que hiciste clic en el botón <strong>"Guardar"</strong> — no solo cerrar el editor<br/>
+          2. Espera 1-2 minutos<br/>
+          3. Abre tu landing page y presiona <strong>Ctrl + Shift + R</strong><br/>
+          4. Si sigue igual, vuelve al editor y guarda de nuevo
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">😤 El botón de WhatsApp no funciona</div>
+          <i class="fas fa-plus faq-icon"></i>
+        </div>
+        <div class="faq-a">
+          Verifica que tu número de WhatsApp esté bien escrito en el editor.<br/><br/>
+          Formato correcto: <strong>+1 305 555 0000</strong> (con código de país, sin guiones)<br/>
+          Formato incorrecto: <strong>305-555-0000</strong> o <strong>3055550000</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="text-align:center;padding:1.5rem 0;">
+      <div style="font-size:1.5rem;margin-bottom:0.5rem;">🆘</div>
+      <div style="font-size:0.9rem;font-weight:800;margin-bottom:0.3rem;">¿No encontraste tu problema aquí?</div>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:1rem;">Escríbenos directamente — respondemos en menos de 24 horas.</div>
+      <a class="btn btn-green" href="https://wa.me/15005550006" target="_blank"><i class="fab fa-whatsapp"></i> Escribir por WhatsApp</a>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── Navigation
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  const sec = document.getElementById('sec-'+id);
+  const nav = document.querySelector('[onclick="show(\''+id+'\')"]');
+  if(sec) sec.classList.add('active');
+  if(nav) nav.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Toggle Tutorial Steps
+function toggleStep(header){
+  const step = header.closest('.tstep');
+  step.classList.toggle('open');
+}
+
+// ── Toggle FAQ
+function toggleFaq(qEl){
+  const item = qEl.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
