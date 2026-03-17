@@ -1351,7 +1351,19 @@ function buildContact(d){
     wa.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar WhatsApp';
     info.appendChild(wa);
   }
-}
+
+  // PayPal Button — shown when paypalLink is configured
+  const ppLink = d.paypalLink || d.paypalEmail;
+  if(ppLink){
+    const pp = document.createElement('a');
+    pp.href = ppLink.startsWith('http') ? ppLink : `https://paypal.me/${ppLink}`;
+    pp.target = '_blank';
+    pp.style.cssText = 'display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;background:linear-gradient(135deg,#003087,#009cde);border:none;border-radius:50px;color:white;font-weight:700;font-size:0.95rem;cursor:pointer;text-decoration:none;transition:all 0.3s;margin-top:0.7rem;justify-content:center;';
+    pp.innerHTML = '<i class="fab fa-paypal"></i> Pagar con PayPal';
+    pp.onmouseover = ()=>{ pp.style.transform='translateY(-2px)'; pp.style.boxShadow='0 6px 20px rgba(0,112,186,0.4)'; };
+    pp.onmouseout  = ()=>{ pp.style.transform=''; pp.style.boxShadow=''; };
+    info.appendChild(pp);
+  }
 
 // ══════ HOURS ══════
 function buildHours(hours){

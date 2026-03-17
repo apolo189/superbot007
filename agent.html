@@ -635,6 +635,10 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <div class="social-links" id="socialLinks"></div>
     </div>
     <div class="panel-actions" id="panelActions">
+      <!-- PayPal Button — shown when paypalLink exists -->
+      <a class="panel-action-btn" id="paypalBtnLeft" href="#" target="_blank" style="display:none;background:linear-gradient(135deg,rgba(0,112,186,0.2),rgba(0,56,118,0.15));border:1px solid rgba(0,112,186,0.45);color:#1E9BF0;">
+        <i class="fab fa-paypal"></i> Pagar con PayPal — $10.99
+      </a>
       <a class="panel-action-btn landing" id="landingBtn" href="#" target="_blank">
         <i class="fas fa-globe"></i> Ver Landing Page
       </a>
@@ -644,6 +648,19 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <a class="panel-action-btn wa" id="waBtnLeft" href="#" target="_blank" style="display:none">
         <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
+      <!-- FAQ + Tutorial Button -->
+      <a class="panel-action-btn" href="ayuda.html" target="_blank"
+         style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.35);color:#a89cff;">
+        <i class="fas fa-book-open"></i> FAQ &amp; Tutorial
+      </a>
+    </div>
+
+    <!-- FAQ PANEL (collapsible) -->
+    <div id="faqPanel" style="display:none;padding:0 1rem 1rem;">
+      <div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">
+        <i class="fas fa-question-circle" style="color:var(--p);"></i> Preguntas Frecuentes
+      </div>
+      <div id="faqList"></div>
     </div>
   </div>
 
@@ -1011,6 +1028,33 @@ function initChat(){
     const waL = document.getElementById('waBtnLeft');
     waL.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola! Me gustaría más información.')}`;
     waL.style.display='flex';
+  }
+
+  // PayPal button
+  const ppLink = d.paypalLink || d.paypalEmail;
+  if(ppLink){
+    const ppBtn = document.getElementById('paypalBtnLeft');
+    if(ppBtn){
+      ppBtn.href = ppLink.startsWith('http') ? ppLink : `https://paypal.me/${ppLink}`;
+      ppBtn.style.display = 'flex';
+      // Update label with actual price if available
+      const price = (d.services&&d.services[0]&&d.services[0].price) ? d.services[0].price : '$10.99';
+      ppBtn.innerHTML = `<i class="fab fa-paypal"></i> Pagar con PayPal — ${price}`;
+    }
+  }
+
+  // FAQ panel in left sidebar
+  if(Array.isArray(d.faqs) && d.faqs.length > 0){
+    const faqPanel = document.getElementById('faqPanel');
+    const faqList  = document.getElementById('faqList');
+    faqList.innerHTML = d.faqs.map(f=>`
+      <div style="margin-bottom:0.6rem;padding:0.55rem 0.7rem;background:rgba(108,99,255,0.06);
+           border:1px solid rgba(108,99,255,0.13);border-radius:8px;cursor:pointer;"
+           onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'block':'none'">
+        <div style="font-size:0.76rem;font-weight:700;color:var(--text);">❓ ${f.q}</div>
+        <div class="faq-ans" style="display:none;font-size:0.73rem;color:var(--muted);margin-top:0.4rem;line-height:1.5;">💬 ${f.a}</div>
+      </div>`).join('');
+    faqPanel.style.display = 'block';
   }
 
   // Right panel booking form
