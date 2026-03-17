@@ -218,6 +218,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   overflow-x: auto; flex-shrink: 0;
   background: rgba(5,5,15,0.6);
   border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-wrap: nowrap;
 }
 .quick-btns::-webkit-scrollbar { height: 0; }
 .quick-btn {
@@ -231,6 +232,16 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   background: rgba(255,101,132,0.1); border-color: rgba(255,101,132,0.3); color: var(--s);
 }
 .quick-btn.products-btn:hover { background: rgba(255,101,132,0.2); border-color: var(--s); color: white; }
+/* FAQ quick buttons — same bar, different accent color */
+.quick-btn.faq-btn {
+  background: rgba(255,200,0,0.07); border-color: rgba(255,200,0,0.25); color: #FFD700;
+}
+.quick-btn.faq-btn:hover { background: rgba(255,200,0,0.18); border-color: #FFD700; color: white; }
+/* Divider between service buttons and FAQ buttons */
+.quick-btns-divider {
+  width: 1px; flex-shrink: 0; background: rgba(255,255,255,0.12);
+  margin: 0.15rem 0.2rem; align-self: stretch;
+}
 
 /* MESSAGES */
 .messages {
@@ -1102,56 +1113,7 @@ function initChat(){
     }, 1600);
   }
 
-  // FAQ card in chat — visible after 3 seconds if FAQs exist
-  if(Array.isArray(d.faqs) && d.faqs.length > 0){
-    setTimeout(()=>{
-      const isEN = (d.botLanguage === 'en' || d.botLanguage === 'bilingual');
-      const faqTitle = isEN ? '❓ Frequently Asked Questions' : '❓ Preguntas Frecuentes';
-      const faqHint  = isEN ? 'Tap any question to ask me directly 👇' : 'Toca cualquier pregunta para preguntarme 👇';
-
-      // Inject FAQ card safely using DOM (no inline onclick with quotes)
-      const msgEl = document.createElement('div');
-      msgEl.className = 'msg bot faq-chat-card';
-
-      const avatar = document.createElement('div');
-      avatar.className = 'msg-avatar';
-      avatar.textContent = '🤖';
-
-      const bubble = document.createElement('div');
-      bubble.className = 'msg-bubble';
-      bubble.style.cssText = 'max-width:100%;';
-
-      const title = document.createElement('div');
-      title.style.cssText = 'font-size:0.78rem;font-weight:700;color:#a89cff;margin-bottom:0.5rem;';
-      title.textContent = faqTitle;
-
-      const hint = document.createElement('div');
-      hint.style.cssText = 'font-size:0.72rem;color:var(--muted);margin-bottom:0.7rem;';
-      hint.textContent = faqHint;
-
-      bubble.appendChild(title);
-      bubble.appendChild(hint);
-
-      // Create buttons safely
-      d.faqs.slice(0,6).forEach(f=>{
-        const btn = document.createElement('button');
-        btn.style.cssText = 'display:block;width:100%;text-align:left;padding:0.45rem 0.7rem;margin-bottom:0.35rem;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;color:#c8c8ff;font-size:0.78rem;cursor:pointer;transition:all 0.2s;';
-        btn.textContent = '❓ ' + f.q;
-        btn.onmouseover = ()=>{ btn.style.background='rgba(108,99,255,0.2)'; };
-        btn.onmouseout  = ()=>{ btn.style.background='rgba(108,99,255,0.08)'; };
-        btn.onclick = ()=>{
-          sendQuick(f.q);
-          document.querySelectorAll('.faq-chat-card').forEach(el=>el.remove());
-        };
-        bubble.appendChild(btn);
-      });
-
-      msgEl.appendChild(avatar);
-      msgEl.appendChild(bubble);
-      document.getElementById('messages').appendChild(msgEl);
-      msgEl.scrollIntoView({behavior:'smooth'});
-    }, 3200);
-  }
+  // FAQs are shown as persistent buttons in the quick-bar (added inside buildQuickReplies)
 
 } // end initChat
 
@@ -1196,6 +1158,23 @@ function buildQuickReplies(d){
     btn.innerHTML = isEN ? '🛒 Products' : '🛒 Productos';
     btn.onclick = ()=>showProductsInChat();
     qb.appendChild(btn);
+  }
+
+  // FAQ buttons — permanent in the bar, click sends the question but buttons STAY
+  if(Array.isArray(d.faqs) && d.faqs.length > 0){
+    // Visual divider
+    const div = document.createElement('div');
+    div.className = 'quick-btns-divider';
+    qb.appendChild(div);
+
+    d.faqs.slice(0,6).forEach(f=>{
+      const btn = document.createElement('button');
+      btn.className = 'quick-btn faq-btn';
+      btn.textContent = '❓ ' + (f.q.length > 28 ? f.q.substring(0,26)+'…' : f.q);
+      btn.title = f.q; // full question on hover tooltip
+      btn.onclick = ()=>sendQuick(f.q); // stays visible — no remove()
+      qb.appendChild(btn);
+    });
   }
 
   qb.style.display = 'flex';
