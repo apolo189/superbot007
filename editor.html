@@ -552,7 +552,6 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 const cfg = {
   apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
   authDomain:"super-bot-007.firebaseapp.com",
@@ -563,16 +562,36 @@ const cfg = {
 };
 const app = initializeApp(cfg);
 const db  = getFirestore(app);
-const storage = getStorage(app);
 window._db = db;
 window._fbDoc = doc;
 window._fbGetDoc = getDoc;
 window._fbUpdateDoc = updateDoc;
-// Upload base64 image to Firebase Storage, return public URL
+
+// Upload image to GitHub repo → serve via GitHub Pages (permanent URL)
 window._uploadImageToStorage = async function(base64DataUrl, botId, fieldName){
-  const storageRef = ref(storage, `bots/${botId}/${fieldName}_${Date.now()}.jpg`);
-  await uploadString(storageRef, base64DataUrl, 'data_url');
-  return await getDownloadURL(storageRef);
+  // Extract pure base64 (strip data:image/jpeg;base64, prefix)
+  const base64 = base64DataUrl.split(',')[1];
+  const ext = base64DataUrl.includes('image/png') ? 'png' : 'jpg';
+  const fileName = `uploads/${botId}_${fieldName}_${Date.now()}.${ext}`;
+
+  // GitHub API — push file to repo branch ESTIMADO-PRO-DEMO
+  const REPO  = 'apolo189/superbot007';
+  const BRANCH = 'ESTIMADO-PRO-DEMO';
+  // Proxy through our Cloudflare Worker to avoid CORS and hide token
+  const WORKER_URL = 'https://superbot007-paypal.luisomorgado4.workers.dev/upload-image';
+
+  const res = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ base64, fileName, botId, fieldName })
+  });
+  if(!res.ok){
+    const err = await res.text();
+    throw new Error('Upload error: ' + err);
+  }
+  const json = await res.json();
+  if(!json.url) throw new Error('No URL returned');
+  return json.url;
 };
 </script>
 

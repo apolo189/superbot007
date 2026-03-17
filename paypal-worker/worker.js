@@ -151,8 +151,82 @@ export default {
       return new Response(JSON.stringify({
         status: 'ok',
         service: 'superbot007-paypal-webhook',
-        version: '1.0.0'
+        version: '1.1.0'
       }), { headers: { ...CORS, 'Content-Type': 'application/json' } });
+    }
+
+    // ── Image Upload endpoint → pushes to GitHub repo ──
+    // POST /upload-image { base64, fileName, botId, fieldName }
+    if (request.method === 'POST' && url.pathname === '/upload-image') {
+      try {
+        const { base64, fileName, botId, fieldName } = await request.json();
+        if (!base64 || !fileName) {
+          return new Response(JSON.stringify({ ok: false, error: 'base64 and fileName required' }), {
+            status: 400, headers: { ...CORS, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const GITHUB_TOKEN = env.GITHUB_TOKEN || '';
+        const REPO   = 'apolo189/superbot007';
+        const BRANCH = 'ESTIMADO-PRO-DEMO';
+
+        if (!GITHUB_TOKEN) {
+          return new Response(JSON.stringify({ ok: false, error: 'GITHUB_TOKEN not configured' }), {
+            status: 500, headers: { ...CORS, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const GITHUB_HEADERS = {
+          'Authorization': `token ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'SuperBot007-Worker/1.0'
+        };
+
+        // Check if file already exists (need SHA to update)
+        let sha = undefined;
+        const checkRes = await fetch(
+          `https://api.github.com/repos/${REPO}/contents/${fileName}?ref=${BRANCH}`,
+          { headers: GITHUB_HEADERS }
+        );
+        if (checkRes.ok) {
+          const existing = await checkRes.json();
+          sha = existing.sha;
+        }
+
+        // Upload file to GitHub
+        const body = {
+          message: `upload: image for bot ${botId} field ${fieldName}`,
+          content: base64,
+          branch: BRANCH
+        };
+        if (sha) body.sha = sha;
+
+        const uploadRes = await fetch(
+          `https://api.github.com/repos/${REPO}/contents/${fileName}`,
+          {
+            method: 'PUT',
+            headers: GITHUB_HEADERS,
+            body: JSON.stringify(body)
+          }
+        );
+
+        if (!uploadRes.ok) {
+          const err = await uploadRes.text();
+          throw new Error('GitHub API error: ' + err);
+        }
+
+        // Return GitHub Pages public URL
+        const publicUrl = `https://apolo189.github.io/superbot007/${fileName}`;
+        return new Response(JSON.stringify({ ok: true, url: publicUrl }), {
+          headers: { ...CORS, 'Content-Type': 'application/json' }
+        });
+
+      } catch (e) {
+        return new Response(JSON.stringify({ ok: false, error: e.message }), {
+          status: 500, headers: { ...CORS, 'Content-Type': 'application/json' }
+        });
+      }
     }
 
     // ── Manual activation endpoint (for admin use) ──
