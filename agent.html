@@ -249,6 +249,54 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   margin: 0.15rem 0.2rem; align-self: stretch;
 }
 
+/* ══════ TUTORIAL PANEL ══════ */
+.tut-step {
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 10px; margin-bottom: 0.6rem;
+  overflow: hidden; background: rgba(108,99,255,0.04);
+}
+.tut-step-hdr {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.6rem 0.8rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.tut-step-hdr:hover { background: rgba(108,99,255,0.1); }
+.tut-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 800;
+  background: rgba(242,66,7,0.15); border: 1px solid rgba(242,66,7,0.4); color: #f24207;
+}
+.tut-num-green { background: rgba(67,233,123,0.12); border-color: rgba(67,233,123,0.3); color: #43E97B; }
+.tut-num-blue  { background: rgba(79,172,254,0.12); border-color: rgba(79,172,254,0.3); color: #4facfe; }
+.tut-num-yellow{ background: rgba(255,200,0,0.12);  border-color: rgba(255,200,0,0.3);  color: #FFD700; }
+.tut-title { font-size: 0.8rem; font-weight: 700; flex: 1; }
+.tut-arrow { color: rgba(255,255,255,0.25); font-size: 0.7rem; transition: transform 0.2s; }
+.tut-step.open .tut-arrow { transform: rotate(90deg); color: var(--p); }
+.tut-body { display: none; padding: 0.6rem 0.8rem 0.8rem 2.5rem; }
+.tut-step.open .tut-body { display: block; }
+.tut-body p { font-size: 0.78rem; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 0.6rem; }
+.tut-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.75rem;
+  font-weight: 700; text-decoration: none; cursor: pointer;
+  border: 1px solid; transition: all 0.2s; margin-top: 0.2rem;
+}
+.tut-btn-red    { background: rgba(242,66,7,0.12);  border-color: rgba(242,66,7,0.4);  color: #f24207; }
+.tut-btn-green  { background: rgba(67,233,123,0.1); border-color: rgba(67,233,123,0.3);color: #43E97B; }
+.tut-btn-blue   { background: rgba(79,172,254,0.1); border-color: rgba(79,172,254,0.3);color: #4facfe; }
+.tut-btn-purple { background: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3);color: #a89cff; }
+.tut-btn:hover  { filter: brightness(1.3); transform: translateY(-1px); }
+.tut-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
+.tut-link-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 0.4rem 0.7rem; gap: 0.5rem;
+}
+.tut-link-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); min-width: 60px; }
+.tut-link-url   { font-size: 0.68rem; color: #a89cff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tut-link-copy  { font-size: 0.68rem; background: none; border: none; color: var(--muted); cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 4px; transition: all 0.2s; flex-shrink: 0; }
+.tut-link-copy:hover { background: rgba(108,99,255,0.2); color: white; }
 /* MESSAGES */
 .messages {
   flex: 1; overflow-y: auto; padding: 1rem 1.1rem;
@@ -698,8 +746,69 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
           <span class="cart-topbar-count" id="cartTopbarCount">0</span>
         </button>
         <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language">🌐 <span id="langBtnLabel">EN</span></button>
+        <button class="topbar-btn" onclick="toggleTutorialPanel()" title="Tutorial" id="tutorialTopBtn"><i class="fas fa-book-open"></i></button>
         <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
         <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
+      </div>
+    </div>
+
+    <!-- Tutorial Panel (inline, toggle) -->
+    <div id="tutorialPanel" style="display:none;background:rgba(8,8,22,0.98);border-bottom:1px solid rgba(108,99,255,0.25);padding:1rem 1.1rem;overflow-y:auto;max-height:55vh;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+        <div style="font-size:0.82rem;font-weight:800;color:#a89cff;"><i class="fas fa-book-open" style="margin-right:0.4rem;"></i>📖 Tutorial — Cómo usar Super Bot 007</div>
+        <button onclick="toggleTutorialPanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="tut-step" id="tut1">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut1')">
+          <span class="tut-num">1</span>
+          <span class="tut-title">Crea tu bot (5–10 min)</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Llena el formulario con el nombre de tu negocio, servicios, WhatsApp y API Key de OpenAI. En minutos tienes tu bot listo.</p>
+          <a href="form.html" target="_blank" class="tut-btn tut-btn-red"><i class="fas fa-external-link-alt"></i> Abrir formulario</a>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="tut-step" id="tut2">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut2')">
+          <span class="tut-num tut-num-green">2</span>
+          <span class="tut-title">Personaliza con el Editor</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Cambia colores, fotos, textos y más. Necesitas tu BOT ID (lo recibiste al crear el bot).</p>
+          <a id="editorTutBtn" href="editor.html" target="_blank" class="tut-btn tut-btn-green"><i class="fas fa-paint-brush"></i> Abrir editor</a>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="tut-step" id="tut3">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut3')">
+          <span class="tut-num tut-num-blue">3</span>
+          <span class="tut-title">Tus 3 links públicos</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Cada bot tiene 3 links para compartir con tus clientes:</p>
+          <div class="tut-links" id="tutLinks"></div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="tut-step" id="tut4">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut4')">
+          <span class="tut-num tut-num-yellow">4</span>
+          <span class="tut-title">¿Necesitas ayuda?</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Guía completa con tutoriales paso a paso, preguntas frecuentes y solución de problemas.</p>
+          <a href="ayuda.html" target="_blank" class="tut-btn tut-btn-purple"><i class="fas fa-life-ring"></i> Abrir Centro de Ayuda</a>
+        </div>
       </div>
     </div>
 
@@ -2242,6 +2351,52 @@ async function submitApptFormWA(formId){
 function cancelBookingForm(msgId){ document.getElementById(msgId)?.remove(); appointmentMode=false; addBotMsgTypewriter('Sin problema 😊 ¿En qué más puedo ayudarte?'); scrollToBottom(); }
 
 // ══════ CLEAR CHAT ══════
+// ══════ TUTORIAL PANEL ══════
+function toggleTutorialPanel(){
+  const panel = document.getElementById('tutorialPanel');
+  const btn   = document.getElementById('tutorialTopBtn');
+  const open  = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'block' : 'none';
+  if(btn) btn.style.color = open ? 'var(--p)' : '';
+  // Populate links with real bot ID when opening
+  if(open && botData){
+    const base = 'https://apolo189.github.io/superbot007/';
+    const id   = new URLSearchParams(location.search).get('id') || '';
+    const links = [
+      { label:'🤖 Bot',      url: base+'agent.html?id='+id },
+      { label:'🌐 Landing',  url: base+'landing.html?id='+id },
+      { label:'💳 Tarjeta',  url: base+'card.html?id='+id },
+      { label:'✏️ Editor',   url: base+'editor.html?id='+id },
+    ];
+    const container = document.getElementById('tutLinks');
+    if(container && !container.dataset.built){
+      container.dataset.built = '1';
+      links.forEach(lk=>{
+        const row = document.createElement('div');
+        row.className = 'tut-link-row';
+        row.innerHTML = `
+          <span class="tut-link-label">${lk.label}</span>
+          <span class="tut-link-url">${lk.url}</span>
+          <button class="tut-link-copy" onclick="copyTutLink(this,'${lk.url}')"><i class="fas fa-copy"></i></button>`;
+        container.appendChild(row);
+      });
+    }
+    // Update editor link with bot id
+    const edBtn = document.getElementById('editorTutBtn');
+    if(edBtn && id) edBtn.href = base+'editor.html?id='+id;
+  }
+}
+function toggleTutStep(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('open');
+}
+function copyTutLink(btn, url){
+  navigator.clipboard.writeText(url).then(()=>{
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(()=>{ btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+  });
+}
+
 function clearChat(){
   document.getElementById('messages').innerHTML='';
   appointmentMode = false;
