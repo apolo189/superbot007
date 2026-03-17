@@ -128,8 +128,9 @@ section { position: relative; z-index: 1; }
   transform-style: preserve-3d; cursor: pointer;
 }
 .service-card:hover { transform: translateY(-8px) rotateX(3deg); border-color: var(--p); box-shadow: 0 20px 50px rgba(242,66,7,0.15); }
-.svc-img { width: 100%; height: 180px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.svc-img { width: 100%; height: 180px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
 .svc-img img { width: 100%; height: 100%; object-fit: cover; }
+.svc-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .svc-body { padding: 1.4rem; }
 .svc-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
 .svc-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
@@ -855,9 +856,15 @@ function buildAbout(d){
 
   // Avatar/hero image as about image
   const imgWrap = document.getElementById('aboutImgWrap');
-  const heroImg = d.heroImageURL || d.avatarURL || d.logoURL || '';
+  const heroImg = d.heroVideoURL || d.heroImageURL || d.avatarURL || d.logoURL || '';
   if(heroImg){
-    imgWrap.innerHTML = `<img src="${heroImg}" class="about-img" alt="${d.businessName||''}" onerror="this.style.display='none'">` ;
+    // Check if it's a video URL
+    const isVideo = heroImg.includes('genspark.ai/api/files') || heroImg.match(/\.(mp4|webm|mov)$/i);
+    if(isVideo){
+      imgWrap.innerHTML = `<video src="${heroImg}" class="about-img" autoplay loop muted playsinline style="object-fit:cover;" onerror="this.style.display='none'"></video>`;
+    } else {
+      imgWrap.innerHTML = `<img src="${heroImg}" class="about-img" alt="${d.businessName||''}" onerror="this.style.display='none'">` ;
+    }
   } else {
     // emoji by business type
     const typeEmojis = { salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',construc:'🏗️',dog:'🐶',fitness:'🏋️' };
@@ -915,8 +922,14 @@ function buildServices(services){
     const card = document.createElement('div');
     card.className = 'service-card reveal';
     card.style.transitionDelay = (i*0.1)+'s';
+    // Check if service image is a video
+    const svcMedia = s.image || '';
+    const svcIsVideo = svcMedia && (svcMedia.includes('genspark.ai/api/files') || svcMedia.match(/\.(mp4|webm|mov)$/i));
+    const svcMediaHtml = svcIsVideo
+      ? `<video src="${svcMedia}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`
+      : (svcMedia ? `<img src="${svcMedia}" alt="${s.name}" onerror="handleImgError(this,'${icons[i%icons.length]}')">` : icons[i%icons.length]);
     card.innerHTML = `
-      <div class="svc-img">${s.image?`<img src="${s.image}" alt="${s.name}" onerror="handleImgError(this,'${icons[i%icons.length]}')">`:icons[i%icons.length]}</div>
+      <div class="svc-img">${svcMediaHtml}</div>
       <div class="svc-body">
         <div class="svc-name">${s.name||''}</div>
         <div class="svc-desc">${s.desc||''}</div>
