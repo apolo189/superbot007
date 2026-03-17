@@ -1107,27 +1107,46 @@ function initChat(){
       const isEN = (d.botLanguage === 'en' || d.botLanguage === 'bilingual');
       const faqTitle = isEN ? '❓ Frequently Asked Questions' : '❓ Preguntas Frecuentes';
       const faqHint  = isEN ? 'Tap any question to ask me directly 👇' : 'Toca cualquier pregunta para preguntarme 👇';
-      // Build FAQ buttons HTML
-      const faqBtns = d.faqs.slice(0,6).map(f=>
-        `<button onclick="sendQuick('${f.q.replace(/'/g,"\\'")}');this.closest('.faq-chat-card').remove();"
-          style="display:block;width:100%;text-align:left;padding:0.45rem 0.7rem;margin-bottom:0.35rem;
-          background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;
-          color:#c8c8ff;font-size:0.78rem;cursor:pointer;transition:all 0.2s;"
-          onmouseover="this.style.background='rgba(108,99,255,0.2)'"
-          onmouseout="this.style.background='rgba(108,99,255,0.08)'">
-          ❓ ${f.q}
-        </button>`
-      ).join('');
-      // Inject as HTML message
+
+      // Inject FAQ card safely using DOM (no inline onclick with quotes)
       const msgEl = document.createElement('div');
       msgEl.className = 'msg bot faq-chat-card';
-      msgEl.innerHTML = `
-        <div class="msg-avatar">🤖</div>
-        <div class="msg-bubble" style="max-width:100%;">
-          <div style="font-size:0.78rem;font-weight:700;color:#a89cff;margin-bottom:0.5rem;">${faqTitle}</div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.7rem;">${faqHint}</div>
-          ${faqBtns}
-        </div>`;
+
+      const avatar = document.createElement('div');
+      avatar.className = 'msg-avatar';
+      avatar.textContent = '🤖';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.style.cssText = 'max-width:100%;';
+
+      const title = document.createElement('div');
+      title.style.cssText = 'font-size:0.78rem;font-weight:700;color:#a89cff;margin-bottom:0.5rem;';
+      title.textContent = faqTitle;
+
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:0.72rem;color:var(--muted);margin-bottom:0.7rem;';
+      hint.textContent = faqHint;
+
+      bubble.appendChild(title);
+      bubble.appendChild(hint);
+
+      // Create buttons safely
+      d.faqs.slice(0,6).forEach(f=>{
+        const btn = document.createElement('button');
+        btn.style.cssText = 'display:block;width:100%;text-align:left;padding:0.45rem 0.7rem;margin-bottom:0.35rem;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:8px;color:#c8c8ff;font-size:0.78rem;cursor:pointer;transition:all 0.2s;';
+        btn.textContent = '❓ ' + f.q;
+        btn.onmouseover = ()=>{ btn.style.background='rgba(108,99,255,0.2)'; };
+        btn.onmouseout  = ()=>{ btn.style.background='rgba(108,99,255,0.08)'; };
+        btn.onclick = ()=>{
+          sendQuick(f.q);
+          document.querySelectorAll('.faq-chat-card').forEach(el=>el.remove());
+        };
+        bubble.appendChild(btn);
+      });
+
+      msgEl.appendChild(avatar);
+      msgEl.appendChild(bubble);
       document.getElementById('messages').appendChild(msgEl);
       msgEl.scrollIntoView({behavior:'smooth'});
     }, 3200);
