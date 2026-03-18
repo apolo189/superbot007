@@ -737,8 +737,15 @@ function initPage(){
   // Logo
   if(d.logoURL){ const l=document.getElementById('navLogo'); l.src=d.logoURL; l.style.display='block'; l.onerror=()=>{ l.style.display='none'; }; }
 
-  // Hero BG
-  if(d.heroImageURL){ const bg=document.getElementById('heroBg'); bg.style.backgroundImage=`url('${d.heroImageURL}')`; }
+  // Hero BG — usa heroImage (editor) o heroImageURL (legacy)
+  const heroBgUrl = d.heroImage || d.heroImageURL || '';
+  if(heroBgUrl && !heroBgUrl.match(/\.(mp4|webm|mov)$/i)){
+    const bg=document.getElementById('heroBg');
+    bg.style.backgroundImage=`url('${heroBgUrl}')`;
+    bg.style.backgroundSize='cover';
+    bg.style.backgroundPosition='center';
+    bg.style.opacity='0.35';
+  }
 
   // Hero typewriter (fires immediately — no need to scroll)
   typewrite(d.heroTitle||d.businessName||'', 'heroTitleEl');
@@ -880,7 +887,8 @@ function buildAbout(d){
 
   // Avatar/hero image as about image
   const imgWrap = document.getElementById('aboutImgWrap');
-  const heroImg = d.heroVideoURL || d.heroImageURL || d.avatarURL || d.logoURL || '';
+  // heroImage = campo del editor | heroImageURL = campo legacy | heroVideoURL = video animado
+  const heroImg = d.heroImage || d.heroImageURL || d.heroVideoURL || d.avatarURL || d.logoURL || '';
   if(heroImg){
     // Check if it's a video URL
     const isVideo = heroImg.includes('genspark.ai/api/files') || heroImg.match(/\.(mp4|webm|mov)$/i);
