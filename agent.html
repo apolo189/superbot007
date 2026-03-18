@@ -1283,7 +1283,7 @@ function buildQuickReplies(d){
 
   // FAQ buttons — go in their OWN separate row below, never overlapping right panel
   // Default FAQs shown when the bot has no custom FAQs configured
-  const isEN = (d.botLanguage||'es')==='en';
+  // isEN already declared above — reuse it
   const defaultFaqs = isEN ? [
     { q: '🌐 How do I add the bot to my website?',   a: 'Copy the embed code from the Tutorial section and paste it before </body> on your page.' },
     { q: '🔗 Where do I share my bot link?',          a: 'Your bot link is: agent.html?id=YOUR-ID — share it on WhatsApp, Instagram or your bio.' },
