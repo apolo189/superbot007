@@ -72,8 +72,8 @@ nav {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden; padding: 6rem 2rem 4rem;
   text-align: center;
-  background: var(--dark, #000000) !important;
-  transition: background 0.5s ease;
+  background: var(--dark, #000000);
+  transition: background 0.6s ease;
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
@@ -95,7 +95,7 @@ nav {
 .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.1rem; background: rgba(242,66,7,0.12); border: 1px solid var(--border); border-radius: 50px; font-size: 0.78rem; font-weight: 600; color: var(--p); margin-bottom: 1.8rem; animation: fadeUp 0.8s ease both; }
 .hero-title { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.2rem; animation: fadeUp 0.8s 0.1s ease both; }
 .hero-title .highlight { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero-subtitle { font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(240,240,255,0.8); max-width: 560px; margin: 0 auto 2.5rem; line-height: 1.7; animation: fadeUp 0.8s 0.2s ease both; }
+.hero-subtitle { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--muted, rgba(240,240,255,0.8)); max-width: 560px; margin: 0 auto 2.5rem; line-height: 1.7; animation: fadeUp 0.8s 0.2s ease both; }
 .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
 .btn-primary { padding: 0.9rem 2.2rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 20px rgba(242,66,7,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 35px rgba(242,66,7,0.50); }
@@ -407,8 +407,8 @@ img.img-broken {
       <a href="#services" class="btn-outline" id="heroCta2"><i class="fas fa-sparkles"></i> Ver Servicios</a>
     </div>
     <div style="margin-top:1.2rem;animation:fadeUp 0.8s 0.5s ease both">
-      <a id="heroPriceCta" href="#booking" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.8rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:50px;color:var(--text);font-size:0.88rem;font-weight:600;text-decoration:none;backdrop-filter:blur(8px);transition:all 0.3s;">
-        <i class="fas fa-bolt" style="color:var(--a)"></i> <span id="heroPriceCtaText">¡Empieza ahora por $10.99/mes!</span>
+      <a id="heroPriceCta" href="#services" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.8rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:50px;color:var(--text);font-size:0.88rem;font-weight:600;text-decoration:none;backdrop-filter:blur(8px);transition:all 0.3s;">
+        <i class="fas fa-rocket" style="color:var(--a)"></i> <span id="heroPriceCtaText">¡Empieza ahora por $10.99/mes!</span>
       </a>
     </div>
     <div class="hero-stats" id="heroStats">
@@ -418,6 +418,19 @@ img.img-broken {
     </div>
   </div>
 </section>
+
+<!-- STICKY CTA BAR — visible after hero scrolls out -->
+<div id="stickyCta" style="
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  background:var(--grad);color:#fff;text-align:center;
+  padding:0.6rem 1rem;font-size:0.9rem;font-weight:700;
+  display:none;align-items:center;justify-content:center;gap:1rem;
+  box-shadow:0 2px 12px rgba(0,0,0,0.3);transition:opacity 0.3s;
+">
+  <span id="stickyCtaText">🚀 ¡Empieza ahora por $10.99/mes!</span>
+  <a id="stickyCtaBtn" href="#services" style="background:#fff;color:var(--p);padding:0.35rem 1.1rem;border-radius:50px;font-weight:800;font-size:0.85rem;text-decoration:none;white-space:nowrap;">Ver Planes</a>
+  <button onclick="document.getElementById('stickyCta').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0 0.2rem;line-height:1">✕</button>
+</div>
 
 <!-- SERVICES -->
 <section id="services">
@@ -499,6 +512,12 @@ img.img-broken {
       <h2 class="section-title reveal" id="testimonialsTitleEl">Lo Que Dicen Nuestros Clientes</h2>
     </div>
     <div class="test-grid" id="testGrid"></div>
+    <!-- CTA after testimonials -->
+    <div class="text-center reveal" style="margin-top:2.5rem">
+      <a id="testimonialCta" href="#booking" class="btn-primary" style="font-size:1rem;padding:1rem 2.5rem">
+        <i class="fas fa-calendar-check"></i> <span id="testimonialCtaText">Agenda tu cita ahora</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -510,6 +529,15 @@ img.img-broken {
       <h2 class="section-title reveal" id="faqTitleEl">Preguntas Frecuentes</h2>
     </div>
     <div class="faq-list" id="faqList"></div>
+    <!-- CTA after FAQ -->
+    <div class="reveal" style="margin-top:3rem;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;text-align:center">
+      <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:0.6rem;color:var(--text)">¿Listo para comenzar?</h3>
+      <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.95rem" id="faqCtaSub">Únete a cientos de negocios que ya usan Super Bot 007</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a id="faqCtaBooking" href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span id="faqCtaBook">Agendar ahora</span></a>
+        <a id="faqCtaServices" href="#services" class="btn-outline"><i class="fas fa-rocket"></i> <span id="faqCtaSvcText">Ver planes</span></a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -747,13 +775,40 @@ function initPage(){
   // Hero price CTA — show PayPal price or default $10.99
   const priceCtaEl = document.getElementById('heroPriceCtaText');
   const priceCtaLink = document.getElementById('heroPriceCta');
+  const stickyCtaText = document.getElementById('stickyCtaText');
+  const stickyCtaBtn = document.getElementById('stickyCtaBtn');
   const botPaypal = d.paypalLink || d.paypal || '';
-  if(priceCtaEl){
-    priceCtaEl.textContent = t('¡Empieza ahora por $10.99/mes!','Start now for $10.99/mo!');
-  }
-  if(priceCtaLink && botPaypal){
-    priceCtaLink.href = botPaypal;
+  const proService = (d.services||[]).find(s=>(s.name||'').toLowerCase().includes('pro'));
+  const proPaypal = proService?.paypalLink || proService?.paypal || botPaypal;
+  const proPrice = proService?.price || '$10.99/mes';
+  const priceLabel = t(`¡Empieza ahora por ${proPrice}!`,`Start now for ${proPrice}!`);
+  if(priceCtaEl) priceCtaEl.textContent = priceLabel;
+  if(stickyCtaText) stickyCtaText.textContent = `🚀 ${priceLabel}`;
+  if(priceCtaLink && proPaypal){
+    priceCtaLink.href = proPaypal;
     priceCtaLink.target = '_blank';
+  }
+  if(stickyCtaBtn && proPaypal){
+    stickyCtaBtn.href = proPaypal;
+    stickyCtaBtn.target = '_blank';
+  }
+  // Testimonial & FAQ CTAs
+  const testimonialCtaText = document.getElementById('testimonialCtaText');
+  if(testimonialCtaText) testimonialCtaText.textContent = t('Agenda tu cita ahora','Book your appointment');
+  const faqCtaSub = document.getElementById('faqCtaSub');
+  if(faqCtaSub) faqCtaSub.textContent = t('Únete a cientos de negocios que ya usan Super Bot 007','Join hundreds of businesses already using Super Bot 007');
+  const faqCtaBook = document.getElementById('faqCtaBook');
+  if(faqCtaBook) faqCtaBook.textContent = t('Agendar ahora','Book now');
+  const faqCtaSvcText = document.getElementById('faqCtaSvcText');
+  if(faqCtaSvcText) faqCtaSvcText.textContent = t('Ver planes','View plans');
+  // Sticky CTA — show when hero is out of view
+  const _hero = document.getElementById('hero');
+  if(_hero){
+    const _stickyBar = document.getElementById('stickyCta');
+    const _stickyObs = new IntersectionObserver(entries=>{
+      if(_stickyBar) _stickyBar.style.display = entries[0].isIntersecting ? 'none' : 'flex';
+    }, {threshold:0.1});
+    _stickyObs.observe(_hero);
   }
   // Booking subtitle
   const bkSub = document.getElementById('bookingSubtitle');
@@ -1045,7 +1100,7 @@ function buildServices(services){
         <div class="svc-desc">${s.desc||''}</div>
         ${s.price?`<div class="svc-price">${s.price}</div>`:''}
         <button class="svc-book" onclick="handleSvcBook('${s.paypalLink||s.paypal||''}','${s.price||''}','${s.name||''}')">
-          <i class="fas fa-calendar-plus"></i> ${_t('Agendar','Book')}
+          <i class="fas fa-${s.paypalLink||s.paypal?'shopping-cart':'calendar-plus'}"></i> ${(s.paypalLink||s.paypal)?_t('Comprar','Buy Now'):_t('Agendar','Book')}
         </button>
       </div>`;
     grid.appendChild(card);
