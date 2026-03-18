@@ -365,8 +365,11 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
           </div>
           <div>
             <div class="field-label">Fondo <button class="fa-btn restore" onclick="restoreColor('bgColor','#000000')">↺</button></div>
-            <input type="color" class="e-color" id="c_bgColor" value="#000000" oninput="onColorChange('bgColor',this.value)">
-            <div class="color-preview-row"><div class="color-swatch" id="sw_bgColor" style="background:#000000"></div><span style="font-size:0.63rem;color:var(--muted)" id="ct_bgColor">#000000</span></div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px" id="bgColorPalette">
+              <!-- Curated dark palette — all look great with the design -->
+            </div>
+            <div class="color-preview-row" style="margin-top:6px"><div class="color-swatch" id="sw_bgColor" style="background:#000000"></div><span style="font-size:0.63rem;color:var(--muted)" id="ct_bgColor">#000000</span></div>
+            <div style="font-size:0.62rem;color:var(--muted);margin-top:4px;opacity:0.7">💡 Colores optimizados para el diseño</div>
           </div>
         </div>
         <div class="sec-divider"></div>
@@ -711,7 +714,8 @@ function populateForm(){
   setColor('primaryColor',  d.primaryColor  || '#6C63FF');
   setColor('secondaryColor',d.secondaryColor || '#FF6584');
   setColor('accentColor',   d.accentColor   || '#43E97B');
-  setColor('bgColor',       d.bgColor       || '#000000');
+  initBgPalette();
+  selectBgColor(d.bgColor || '#000000');
   setVal('heroTitle',    d.heroTitle    || d.businessName || '');
   setVal('heroSubtitle', d.heroSubtitle || d.description  || '');
   setVal('ctaText',      d.ctaText      || 'Reservar Ahora');
@@ -745,6 +749,57 @@ function setVal(id, v){ const el=document.getElementById('f_'+id); if(el) el.val
 function setColor(f,v){
   const c=document.getElementById('c_'+f), s=document.getElementById('sw_'+f), t=document.getElementById('ct_'+f);
   if(c) c.value=v; if(s) s.style.background=v; if(t) t.textContent=v;
+  // Update palette selection highlight
+  if(f==='bgColor'){
+    document.querySelectorAll('#bgColorPalette .bg-swatch').forEach(el=>{
+      el.style.outline = el.dataset.color===v ? '3px solid var(--p)' : '2px solid transparent';
+      el.style.transform = el.dataset.color===v ? 'scale(1.15)' : 'scale(1)';
+    });
+  }
+}
+
+// ── BG COLOR PALETTE ──
+const BG_PALETTE = [
+  {color:'#000000', label:'Negro'},
+  {color:'#0D0D1A', label:'Noche'},
+  {color:'#0A0A2E', label:'Marino'},
+  {color:'#0D1117', label:'GitHub'},
+  {color:'#111111', label:'Carbón'},
+  {color:'#1A1A2E', label:'Azul noche'},
+  {color:'#16213E', label:'Océano'},
+  {color:'#1B1B2F', label:'Índigo'},
+  {color:'#0F2027', label:'Teal oscuro'},
+  {color:'#1a0533', label:'Morado'},
+  {color:'#1C0A00', label:'Café oscuro'},
+  {color:'#0D2137', label:'Azul acero'},
+  {color:'#1a2a1a', label:'Verde bosque'},
+  {color:'#2D1B69', label:'Violeta'},
+  {color:'#1a1a1a', label:'Gris oscuro'},
+];
+function initBgPalette(){
+  const grid = document.getElementById('bgColorPalette');
+  if(!grid) return;
+  grid.innerHTML = BG_PALETTE.map(({color,label})=>`
+    <div class="bg-swatch" data-color="${color}" title="${label}"
+      style="width:100%;aspect-ratio:1;border-radius:8px;background:${color};cursor:pointer;
+             border:2px solid rgba(255,255,255,0.15);transition:all 0.2s;
+             outline:2px solid transparent;outline-offset:2px;"
+      onclick="selectBgColor('${color}')"></div>
+  `).join('');
+}
+function selectBgColor(color){
+  editedData.bgColor = color;
+  const s=document.getElementById('sw_bgColor'), t=document.getElementById('ct_bgColor');
+  if(s) s.style.background=color; if(t) t.textContent=color;
+  // Update palette highlights
+  document.querySelectorAll('#bgColorPalette .bg-swatch').forEach(el=>{
+    const sel = el.dataset.color===color;
+    el.style.outline = sel ? '3px solid var(--p)' : '2px solid transparent';
+    el.style.transform = sel ? 'scale(1.15)' : 'scale(1)';
+  });
+  markUnsaved();
+  pushColorToPreview();
+  scheduleAutoSave();
 }
 
 // ── SECTION NAV ──
@@ -863,6 +918,7 @@ function restoreColor(field,def){
   const v=originalData?.[field]||def;
   editedData[field]=v;
   setColor(field,v);
+  if(field==='bgColor') selectBgColor(v);
   markUnsaved();
   pushColorToPreview();
   scheduleAutoSave();
