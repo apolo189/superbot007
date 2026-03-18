@@ -1078,30 +1078,24 @@ function parseBot(raw){
 
 async function loadBot(){
   try{
-    console.log('⏳ loadBot: waiting for db...');
     await waitFor(()=>window.db);
-    console.log('✅ loadBot: db ready, fetching bot...');
     const snap = await window.fbGetDoc(window.fbDoc(window.db,'bots',botId));
-    console.log('✅ loadBot: snap received, exists=', snap.exists());
     if(!snap.exists()){
       document.getElementById('initBanner').textContent='';
       addBotMsg('❌ Bot no encontrado. Verifica el ID.');
       return;
     }
     botData = parseBot(snap.data());
-    console.log('✅ loadBot: bot parsed, calling initChat...');
     initChat();
-    console.log('✅ loadBot: initChat complete');
   }catch(e){
     document.getElementById('initBanner').textContent='';
     addBotMsg('Error al cargar: '+e.message);
-    console.error('❌ loadBot error:', e);
+    console.error(e);
   }
 }
 
 function initChat(){
   const d = botData;
-  console.log('🚀 initChat: starting for', d.businessName);
 
   // Set lang toggle button to show opposite (what clicking it will switch TO)
   const currentLang = d.botLanguage || 'es';
@@ -1212,7 +1206,6 @@ function initChat(){
 
   // Hide init banner
   document.getElementById('initBanner').style.display='none';
-  console.log('✅ initChat: banner hidden, showing welcome...');
 
   // Welcome message with typewriter
   const welcomeVariants = [
