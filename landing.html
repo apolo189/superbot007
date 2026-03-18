@@ -1583,12 +1583,26 @@ function openPayPalModal(paypalLink, price, serviceName){
     '</div>';
   document.body.appendChild(modal);
 
+  // Build direct PayPal checkout URL using email (no paypal.me needed)
+  const paypalEmail = 'luisomorgado4@gmail.com';
+  const directUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick' +
+    '&business=' + encodeURIComponent(paypalEmail) +
+    '&item_name=' + encodeURIComponent(serviceName) +
+    '&amount=' + priceNum.toFixed(2) +
+    '&currency_code=USD' +
+    '&return=' + encodeURIComponent('https://apolo189.github.io/superbot007/landing.html') +
+    '&cancel_return=' + encodeURIComponent('https://apolo189.github.io/superbot007/landing.html');
+
   if(window.paypal){
     window.paypal.Buttons({
       style:{ layout:'vertical', color:'gold', shape:'pill', label:'pay', height:48 },
       createOrder: function(data, actions){
         return actions.order.create({
-          purchase_units:[{ description: serviceName, amount:{ value: priceNum.toFixed(2), currency_code:'USD' } }]
+          purchase_units:[{
+            description: serviceName,
+            amount:{ value: priceNum.toFixed(2), currency_code:'USD' },
+            payee:{ email_address: paypalEmail }
+          }]
         });
       },
       onApprove: function(data, actions){
@@ -1596,25 +1610,27 @@ function openPayPalModal(paypalLink, price, serviceName){
           document.getElementById('ppModal').remove();
           const ok = document.createElement('div');
           ok.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center';
-          const name = details.payer && details.payer.name ? details.payer.name.given_name : 'Cliente';
+          const pName = details.payer && details.payer.name ? details.payer.name.given_name : 'Cliente';
           ok.innerHTML = '<div style="background:#fff;border-radius:24px;padding:3rem;text-align:center;max-width:360px">' +
             '<div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>' +
-            '<h3 style="color:#1a1a2e;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem">Pago exitoso</h3>' +
-            '<p style="color:#555;margin-bottom:1.5rem">Gracias <strong>' + name + '</strong>! Tu plan está activo. Recibirás un correo de confirmación.</p>' +
-            '<button onclick="this.closest(\'div\').parentElement.remove()" style="background:linear-gradient(135deg,#f24207,#FF6584);border:none;border-radius:50px;color:white;padding:0.9rem 2.5rem;font-weight:700;cursor:pointer;font-size:1rem">Ir al editor &#x2192;</button>' +
+            '<h3 style="color:#1a1a2e;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem">¡Pago exitoso!</h3>' +
+            '<p style="color:#555;margin-bottom:1.5rem">Gracias <strong>' + pName + '</strong>! Tu plan está activo.</p>' +
+            '<button onclick="this.closest(\'div\').parentElement.remove()" style="background:linear-gradient(135deg,#f24207,#FF6584);border:none;border-radius:50px;color:white;padding:0.9rem 2.5rem;font-weight:700;cursor:pointer;font-size:1rem">¡Perfecto! &#x2192;</button>' +
             '</div>';
           document.body.appendChild(ok);
         });
       },
       onError: function(err){
         console.error('PayPal error', err);
-        document.getElementById('ppBtnContainer').innerHTML = '<p style="color:red;text-align:center">Error con PayPal. Intenta de nuevo.</p>';
+        // Fallback to direct URL on SDK error
+        window.open(directUrl, '_blank');
+        document.getElementById('ppModal').remove();
       }
     }).render('#ppBtnContainer');
   } else {
-    // Fallback: direct link button
+    // SDK not loaded — use direct PayPal URL
     document.getElementById('ppBtnContainer').innerHTML =
-      '<a href="' + paypalLink + '" target="_blank" style="display:block;background:#003087;color:white;text-align:center;padding:1rem;border-radius:50px;font-weight:700;text-decoration:none;font-size:1rem"><i class=\'fab fa-paypal\'></i> Continuar en PayPal</a>';
+      '<a href="' + directUrl + '" target="_blank" style="display:block;background:#003087;color:white;text-align:center;padding:1rem;border-radius:50px;font-weight:700;text-decoration:none;font-size:1.05rem"><i class="fab fa-paypal"></i> Pagar con PayPal</a>';
   }
 }
 
