@@ -24,6 +24,8 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<!-- PayPal JS SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=ASHSUcHyv7E9qIejvI95SVrYM1ZxzUSIVZcsC7oh9njrL4rqNqxrqrN1juy1XZzIHF8TRA2zeBsWa3jy&currency=USD&intent=capture"></script>
 <style>
 /* ═══════ CSS VARIABLES (overridden by bot data) ═══════ */
 :root {
@@ -567,6 +569,46 @@ img.img-broken {
     <div class="contact-grid">
       <div class="contact-info reveal left" id="contactInfo"></div>
       <div class="hours-list reveal right" id="hoursList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- AFFILIATE SECTION -->
+<section id="affiliate" style="background:var(--dark);border-top:1px solid var(--border)">
+  <div class="section-wrap">
+    <div class="text-center reveal" style="margin-bottom:3rem">
+      <div class="section-tag"><i class="fas fa-dollar-sign"></i> Programa de Afiliados</div>
+      <h2 class="section-title" style="font-size:2rem">💰 Gana Dinero Vendiendo Super Bot 007</h2>
+      <p class="section-sub" style="max-width:620px;margin:0 auto">Refiere negocios y gana comisión por cada cliente. Sin inversión, sin límites.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:3rem">
+      <div class="reveal" style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🔗</div>
+        <h3 style="font-weight:800;margin-bottom:0.5rem;color:var(--text)">1. Comparte tu link</h3>
+        <p style="color:var(--muted);font-size:0.88rem">Recibe un link único y compártelo en redes, WhatsApp o email.</p>
+      </div>
+      <div class="reveal" style="background:var(--card);border:2px solid var(--p);border-radius:20px;padding:2rem;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🤖</div>
+        <h3 style="font-weight:800;margin-bottom:0.5rem;color:var(--p)">2. Ellos crean su bot</h3>
+        <p style="color:var(--muted);font-size:0.88rem">El cliente se registra y paga usando tu link — el sistema lo detecta solo.</p>
+      </div>
+      <div class="reveal" style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">💵</div>
+        <h3 style="font-weight:800;margin-bottom:0.5rem;color:var(--text)">3. Cobras tu comisión</h3>
+        <p style="color:var(--muted);font-size:0.88rem">Ganas comisión recurrente cada mes. Ingreso pasivo real.</p>
+      </div>
+    </div>
+    <div class="reveal" style="background:var(--grad);border-radius:24px;padding:3rem;text-align:center">
+      <h3 style="font-size:1.7rem;font-weight:900;color:white;margin-bottom:0.5rem">¿Cuánto puedo ganar?</h3>
+      <p style="color:rgba(255,255,255,0.85);margin-bottom:2rem">Con 10 referidos activos puedes generar ingresos consistentes cada mes.</p>
+      <div style="display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-bottom:2rem">
+        <div><div style="font-size:2.5rem;font-weight:900;color:white">30%</div><div style="color:rgba(255,255,255,0.8);font-size:0.88rem">Comisión por venta</div></div>
+        <div><div style="font-size:2.5rem;font-weight:900;color:white">∞</div><div style="color:rgba(255,255,255,0.8);font-size:0.88rem">Sin límite de referidos</div></div>
+        <div><div style="font-size:2.5rem;font-weight:900;color:white">$0</div><div style="color:rgba(255,255,255,0.8);font-size:0.88rem">Inversión inicial</div></div>
+      </div>
+      <a href="#contact" style="display:inline-flex;align-items:center;gap:0.6rem;background:white;color:var(--p);padding:1rem 2.5rem;border-radius:50px;font-weight:800;font-size:1rem;text-decoration:none;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+        <i class="fas fa-rocket"></i> Quiero ser afiliado
+      </a>
     </div>
   </div>
 </section>
@@ -1201,12 +1243,21 @@ function buildGallery(urls){
 }
 
 // ══════ TESTIMONIALS ══════
+// Real face photos for testimonials
+const TEST_PHOTOS = [
+  'https://randomuser.me/api/portraits/women/44.jpg',
+  'https://randomuser.me/api/portraits/men/32.jpg',
+  'https://randomuser.me/api/portraits/women/68.jpg'
+];
 function buildTestimonials(tests){
   const grid = document.getElementById('testGrid');
   grid.innerHTML = '';
   if(!tests.length){ document.getElementById('testimonials').style.display='none'; return; }
-  tests.forEach((t,i)=>{
+  // Cap at 3 for clean even grid
+  const show = tests.slice(0,3);
+  show.forEach((t,i)=>{
     const stars = '⭐'.repeat(t.stars||5);
+    const photo = TEST_PHOTOS[i] || TEST_PHOTOS[0];
     const card = document.createElement('div');
     card.className = 'test-card reveal';
     card.style.transitionDelay = (i*0.12)+'s';
@@ -1214,7 +1265,7 @@ function buildTestimonials(tests){
       <div class="test-quote">"</div>
       <div class="test-text">${t.text||''}</div>
       <div class="test-author">
-        <div class="test-avatar">${(t.name||'?')[0].toUpperCase()}</div>
+        <img src="${photo}" alt="${t.name||''}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--p);flex-shrink:0" onerror="this.style.display='none'">
         <div><div class="test-name">${t.name||''}</div><div class="test-stars">${stars}</div></div>
       </div>`;
     grid.appendChild(card);
@@ -1510,11 +1561,68 @@ async function submitLbk(mode){
 function submitBooking(){ submitLbk('wa'); }
 
 // ══════ SERVICE BOOK BUTTON ══════
+// ══════ PAYPAL CHECKOUT MODAL (real SDK button) ══════
+function openPayPalModal(paypalLink, price, serviceName){
+  const existing = document.getElementById('ppModal');
+  if(existing) existing.remove();
+  const priceNum = parseFloat((price||'').replace(/[^0-9.]/g,'')) || 10.99;
+  const modal = document.createElement('div');
+  modal.id = 'ppModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  modal.innerHTML =
+    '<div style="background:#fff;border-radius:24px;padding:2rem;max-width:420px;width:100%;position:relative">' +
+    '<button onclick="document.getElementById(\'ppModal\').remove()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#999">&#x2715;</button>' +
+    '<div style="text-align:center;margin-bottom:1.5rem">' +
+    '<div style="font-size:2.5rem;margin-bottom:0.5rem">🤖</div>' +
+    '<h3 style="font-size:1.2rem;font-weight:800;color:#1a1a2e;margin-bottom:0.3rem">' + serviceName + '</h3>' +
+    '<div style="font-size:2rem;font-weight:900;color:#f24207">' + price + '</div>' +
+    '<p style="color:#888;font-size:0.82rem;margin-top:0.3rem">Pago 100% seguro con PayPal</p>' +
+    '</div>' +
+    '<div id="ppBtnContainer" style="min-height:55px"></div>' +
+    '<p style="text-align:center;color:#bbb;font-size:0.72rem;margin-top:1rem"><i class="fas fa-lock"></i> Cifrado SSL · Sin compartir datos bancarios</p>' +
+    '</div>';
+  document.body.appendChild(modal);
+
+  if(window.paypal){
+    window.paypal.Buttons({
+      style:{ layout:'vertical', color:'gold', shape:'pill', label:'pay', height:48 },
+      createOrder: function(data, actions){
+        return actions.order.create({
+          purchase_units:[{ description: serviceName, amount:{ value: priceNum.toFixed(2), currency_code:'USD' } }]
+        });
+      },
+      onApprove: function(data, actions){
+        return actions.order.capture().then(function(details){
+          document.getElementById('ppModal').remove();
+          const ok = document.createElement('div');
+          ok.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:flex;align-items:center;justify-content:center';
+          const name = details.payer && details.payer.name ? details.payer.name.given_name : 'Cliente';
+          ok.innerHTML = '<div style="background:#fff;border-radius:24px;padding:3rem;text-align:center;max-width:360px">' +
+            '<div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>' +
+            '<h3 style="color:#1a1a2e;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem">Pago exitoso</h3>' +
+            '<p style="color:#555;margin-bottom:1.5rem">Gracias <strong>' + name + '</strong>! Tu plan está activo. Recibirás un correo de confirmación.</p>' +
+            '<button onclick="this.closest(\'div\').parentElement.remove()" style="background:linear-gradient(135deg,#f24207,#FF6584);border:none;border-radius:50px;color:white;padding:0.9rem 2.5rem;font-weight:700;cursor:pointer;font-size:1rem">Ir al editor &#x2192;</button>' +
+            '</div>';
+          document.body.appendChild(ok);
+        });
+      },
+      onError: function(err){
+        console.error('PayPal error', err);
+        document.getElementById('ppBtnContainer').innerHTML = '<p style="color:red;text-align:center">Error con PayPal. Intenta de nuevo.</p>';
+      }
+    }).render('#ppBtnContainer');
+  } else {
+    // Fallback: direct link button
+    document.getElementById('ppBtnContainer').innerHTML =
+      '<a href="' + paypalLink + '" target="_blank" style="display:block;background:#003087;color:white;text-align:center;padding:1rem;border-radius:50px;font-weight:700;text-decoration:none;font-size:1rem"><i class=\'fab fa-paypal\'></i> Continuar en PayPal</a>';
+  }
+}
+
 function handleSvcBook(paypalLink, price, serviceName){
   const wa = (botData?.whatsapp || botData?.phone || '19143644377').replace(/\D/g,'');
-  // 1. Service has its own PayPal link → BUY directly
+  // 1. Service has a PayPal link → open REAL PayPal modal
   if(paypalLink && paypalLink.startsWith('http')){
-    window.open(paypalLink, '_blank'); return;
+    openPayPalModal(paypalLink, price, serviceName); return;
   }
   // 2. Price is $0 / free → just scroll to booking (demo/free plan)
   const priceStr = (price||'').toLowerCase();
@@ -1547,6 +1655,7 @@ function buildContact(d){
   info.innerHTML = '';
   const items = [
     d.phone && {icon:'fas fa-phone',label:_t('Teléfono','Phone'),val:d.phone},
+    d.whatsapp && {icon:'fab fa-whatsapp',label:'WhatsApp',val:`<a href="https://wa.me/${d.whatsapp.replace(/\D/g,'')}" target="_blank" style="color:#25D366;font-weight:600">+${d.whatsapp.replace(/\D/g,'')}</a>`},
     d.email && {icon:'fas fa-envelope',label:'Email',val:d.email},
     d.address && {icon:'fas fa-map-marker-alt',label:_t('Dirección','Address'),val:d.address},
     d.website && {icon:'fas fa-globe',label:_t('Sitio Web','Website'),val:`<a href="${d.website}" target="_blank" style="color:var(--p)">${d.website}</a>`},
