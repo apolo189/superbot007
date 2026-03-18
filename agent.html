@@ -747,7 +747,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-topbar-count" id="cartTopbarCount">0</span>
         </button>
-        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language">🌐 <span id="langBtnLabel">EN</span></button>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language">🌐 <span id="langBtnLabel">ES</span></button>
         <button class="topbar-btn" onclick="toggleTutorialPanel()" title="Tutorial" id="tutorialTopBtn"><i class="fas fa-book-open"></i></button>
         <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
         <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
@@ -1100,7 +1100,8 @@ function initChat(){
   // Set lang toggle button to show opposite (what clicking it will switch TO)
   const currentLang = d.botLanguage || 'es';
   const langBtn = document.getElementById('langBtnLabel');
-  if(langBtn) langBtn.textContent = currentLang === 'en' ? 'ES' : 'EN';
+  // Show CURRENT language on the button (click to toggle)
+  if(langBtn) langBtn.textContent = currentLang === 'en' ? 'EN' : 'ES';
 
   // Colors
   if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
@@ -2468,9 +2469,9 @@ function toggleChatLang(){
   const curLang = uiLangOverride || (botData ? botData.botLanguage : 'es') || 'es';
   // Toggle between 'en' and 'es'
   uiLangOverride = (curLang === 'en') ? 'es' : 'en';
-  // Update button label
+  // Update button label to show the NOW-ACTIVE language
   const btn = document.getElementById('langBtnLabel');
-  if(btn) btn.textContent = uiLangOverride === 'en' ? 'ES' : 'EN';
+  if(btn) btn.textContent = uiLangOverride === 'en' ? 'EN' : 'ES';
   // Temporarily override botData.botLanguage so buildSystemPrompt uses new lang
   if(botData) botData.botLanguage = uiLangOverride;
   // Rebuild system prompt with new language

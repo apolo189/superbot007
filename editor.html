@@ -430,6 +430,18 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
           <textarea class="e-textarea" id="f_description" placeholder="Descripción del negocio..." oninput="markUnsaved();editedData.description=this.value"></textarea>
         </div>
         <div class="field-group">
+          <div class="field-label">🌐 Idioma del Bot <button class="fa-btn restore" onclick="restoreField('botLanguage')">↺</button></div>
+          <select class="e-input" id="f_botLanguage" onchange="markUnsaved();editedData.botLanguage=this.value;scheduleAutoSave()" style="cursor:pointer">
+            <option value="es">🇪🇸 Español — responde siempre en Español</option>
+            <option value="en">🇺🇸 English — always replies in English</option>
+            <option value="pt">🇧🇷 Português — responde sempre em Português</option>
+            <option value="bilingual">🌍 Bilingüe — detecta el idioma del cliente</option>
+          </select>
+          <div style="font-size:0.72rem;color:var(--muted,#888);margin-top:4px;padding:0 2px">
+            <i class="fas fa-info-circle"></i> El bot responderá en el idioma seleccionado. "Bilingüe" detecta automáticamente si el cliente escribe en Español o Inglés.
+          </div>
+        </div>
+        <div class="field-group">
           <div class="field-label">Logo / Avatar <div class="field-actions"><button class="fa-btn restore" onclick="restoreField('botAvatar')">↺</button><button class="fa-btn del" onclick="clearField('botAvatar','avatarPrev')">✕</button></div></div>
           <div class="img-upload-area">
             <input type="file" accept="image/*" onchange="uploadImg(this,'botAvatar','avatarPrev','f_botAvatar')">
@@ -730,6 +742,7 @@ function populateForm(){
   setVal('businessType', d.businessType || '');
   setVal('businessCity', d.businessCity || '');
   setVal('description',  d.description  || '');
+  setVal('botLanguage',  d.botLanguage  || 'es');
   setVal('botAvatar',    d.botAvatar    || '');
   syncImgPrev(d.botAvatar||'','avatarPrev');
   setVal('phone',       d.phone       || '');
