@@ -72,6 +72,8 @@ nav {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden; padding: 6rem 2rem 4rem;
   text-align: center;
+  background: var(--dark, #000000) !important;
+  transition: background 0.5s ease;
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
@@ -400,9 +402,14 @@ img.img-broken {
     <div class="hero-badge"><i class="fas fa-star"></i> <span id="businessTypeBadge">Tu Negocio</span></div>
     <h1 class="hero-title"><span id="heroTitleEl" class="highlight"></span><span class="tw-cursor"></span></h1>
     <p class="hero-subtitle" id="heroSubtitleEl"></p>
-    <div class="hero-actions">
-      <a href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> Agendar Cita</a>
-      <a href="#services" class="btn-outline"><i class="fas fa-sparkles"></i> Ver Servicios</a>
+    <div class="hero-actions" id="heroActions">
+      <a href="#booking" class="btn-primary" id="heroCta1"><i class="fas fa-calendar-check"></i> Agendar Cita</a>
+      <a href="#services" class="btn-outline" id="heroCta2"><i class="fas fa-sparkles"></i> Ver Servicios</a>
+    </div>
+    <div style="margin-top:1.2rem;animation:fadeUp 0.8s 0.5s ease both">
+      <a id="heroPriceCta" href="#booking" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.7rem 1.8rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:50px;color:var(--text);font-size:0.88rem;font-weight:600;text-decoration:none;backdrop-filter:blur(8px);transition:all 0.3s;">
+        <i class="fas fa-bolt" style="color:var(--a)"></i> <span id="heroPriceCtaText">¡Empieza ahora por $10.99/mes!</span>
+      </a>
     </div>
     <div class="hero-stats" id="heroStats">
       <div class="stat"><div class="stat-num" data-target="500">0</div><div class="stat-label">Clientes Felices</div></div>
@@ -732,10 +739,22 @@ function initPage(){
   // Nav CTA
   const navCta = document.querySelector('.nav-cta');
   if(navCta) navCta.textContent = t('Agendar Cita','Book Now');
-  // Hero buttons
-  const heroBtns = document.querySelectorAll('.hero-btns a');
-  if(heroBtns[0]) heroBtns[0].innerHTML = `<i class="fas fa-calendar-check"></i> ${t('Agendar Cita','Book Now')}`;
-  if(heroBtns[1]) heroBtns[1].innerHTML = `<i class="fas fa-sparkles"></i> ${t('Ver Servicios','Our Services')}`;
+  // Hero buttons — use IDs now
+  const heroCta1 = document.getElementById('heroCta1');
+  const heroCta2 = document.getElementById('heroCta2');
+  if(heroCta1) heroCta1.innerHTML = `<i class="fas fa-calendar-check"></i> ${t('Agendar Cita','Book Now')}`;
+  if(heroCta2) heroCta2.innerHTML = `<i class="fas fa-sparkles"></i> ${t('Ver Servicios','Our Services')}`;
+  // Hero price CTA — show PayPal price or default $10.99
+  const priceCtaEl = document.getElementById('heroPriceCtaText');
+  const priceCtaLink = document.getElementById('heroPriceCta');
+  const botPaypal = d.paypalLink || d.paypal || '';
+  if(priceCtaEl){
+    priceCtaEl.textContent = t('¡Empieza ahora por $10.99/mes!','Start now for $10.99/mo!');
+  }
+  if(priceCtaLink && botPaypal){
+    priceCtaLink.href = botPaypal;
+    priceCtaLink.target = '_blank';
+  }
   // Booking subtitle
   const bkSub = document.getElementById('bookingSubtitle');
   if(bkSub) bkSub.textContent = t('Elige fecha, horario y listo — te confirmamos al instante','Pick a date & time — we confirm instantly');
@@ -1025,7 +1044,7 @@ function buildServices(services){
         <div class="svc-name">${s.name||''}</div>
         <div class="svc-desc">${s.desc||''}</div>
         ${s.price?`<div class="svc-price">${s.price}</div>`:''}
-        <button class="svc-book" onclick="scrollTo({top:document.getElementById('booking').offsetTop-80,behavior:'smooth'})">
+        <button class="svc-book" onclick="handleSvcBook('${s.paypalLink||s.paypal||''}','${s.price||''}','${s.name||''}')">
           <i class="fas fa-calendar-plus"></i> ${_t('Agendar','Book')}
         </button>
       </div>`;
@@ -1425,8 +1444,31 @@ async function submitLbk(mode){
 
 function submitBooking(){ submitLbk('wa'); }
 
+// ══════ SERVICE BOOK BUTTON ══════
+function handleSvcBook(paypalLink, price, serviceName){
+  // If service has PayPal link → open it
+  if(paypalLink && paypalLink.startsWith('http')){
+    window.open(paypalLink, '_blank'); return;
+  }
+  // If bot has PayPal link → open it
+  const botPaypal = botData?.paypalLink || botData?.paypal || '';
+  if(botPaypal && botPaypal.startsWith('http')){
+    window.open(botPaypal, '_blank'); return;
+  }
+  // If bot has WhatsApp → send booking message
+  const wa = (botData?.whatsapp || botData?.phone || '').replace(/\D/g,'');
+  if(wa){
+    const msg = _t(
+      `Hola ${botData?.businessName||''}! Me interesa el servicio: *${serviceName}*${price?' ('+price+')':''}. ¿Podría agendar una cita?`,
+      `Hi ${botData?.businessName||''}! I'm interested in: *${serviceName}*${price?' ('+price+')':''}. Can I book an appointment?`
+    );
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank'); return;
+  }
+  // Fallback → scroll to booking
+  document.getElementById('booking')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
 
-// ══════ CONTACT ══════
+
 function buildContact(d){
   const info = document.getElementById('contactInfo');
   info.innerHTML = '';

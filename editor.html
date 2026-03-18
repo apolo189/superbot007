@@ -760,21 +760,30 @@ function setColor(f,v){
 
 // ── BG COLOR PALETTE ──
 const BG_PALETTE = [
+  // Row 1 — Deep darks (original safe options)
   {color:'#000000', label:'Negro'},
   {color:'#0D0D1A', label:'Noche'},
   {color:'#0A0A2E', label:'Marino'},
-  {color:'#0D1117', label:'GitHub'},
-  {color:'#111111', label:'Carbón'},
   {color:'#1A1A2E', label:'Azul noche'},
-  {color:'#16213E', label:'Océano'},
   {color:'#1B1B2F', label:'Índigo'},
+  // Row 2 — Rich darks
   {color:'#0F2027', label:'Teal oscuro'},
   {color:'#1a0533', label:'Morado'},
   {color:'#1C0A00', label:'Café oscuro'},
-  {color:'#0D2137', label:'Azul acero'},
   {color:'#1a2a1a', label:'Verde bosque'},
   {color:'#2D1B69', label:'Violeta'},
-  {color:'#1a1a1a', label:'Gris oscuro'},
+  // Row 3 — Modern mid tones
+  {color:'#1e3a5f', label:'Azul acero'},
+  {color:'#2d4a3e', label:'Verde esmeralda'},
+  {color:'#3d2645', label:'Morado medio'},
+  {color:'#1a3a2a', label:'Verde oscuro'},
+  {color:'#2a1f3d', label:'Uva'},
+  // Row 4 — Trendy pastels (con opacidad oscura para que funcione)
+  {color:'#1a2535', label:'Slate azul'},
+  {color:'#252535', label:'Gris azulado'},
+  {color:'#1e2d1e', label:'Sage oscuro'},
+  {color:'#2e1e2e', label:'Mauve oscuro'},
+  {color:'#1e2828', label:'Teal oscuro'},
 ];
 function initBgPalette(){
   const grid = document.getElementById('bgColorPalette');
