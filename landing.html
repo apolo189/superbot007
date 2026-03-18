@@ -97,8 +97,8 @@ nav {
 .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
 .btn-primary { padding: 0.9rem 2.2rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 20px rgba(242,66,7,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 35px rgba(242,66,7,0.50); }
-.btn-outline { padding: 0.9rem 2.2rem; background: transparent; border: 2px solid var(--border); border-radius: 50px; color: var(--text); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
-.btn-outline:hover { border-color: var(--p); color: var(--p); }
+.btn-outline { padding: 0.9rem 2.2rem; background: transparent; border: 2px solid var(--text); border-radius: 50px; color: var(--text); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; opacity: 0.85; }
+.btn-outline:hover { border-color: var(--p); color: var(--p); opacity: 1; }
 .hero-stats { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; animation: fadeUp 0.8s 0.4s ease both; }
 .stat { text-align: center; }
 .stat-num { font-size: 1.8rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -126,6 +126,7 @@ section { position: relative; z-index: 1; }
   background: var(--card); border: 1px solid var(--border); border-radius: 20px;
   overflow: hidden; transition: all 0.4s cubic-bezier(.25,.8,.25,1);
   transform-style: preserve-3d; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 .service-card:hover { transform: translateY(-8px) rotateX(3deg); border-color: var(--p); box-shadow: 0 20px 50px rgba(242,66,7,0.15); }
 .svc-img { width: 100%; height: 180px; object-fit: cover; background: var(--input-bg, #000000); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
@@ -141,7 +142,7 @@ section { position: relative; z-index: 1; }
 /* ─── PRODUCTS ─── */
 #products { background: var(--dark); }
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
-.prod-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s; }
+.prod-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .prod-card:hover { transform: translateY(-6px); box-shadow: 0 18px 45px rgba(255,101,132,0.15); border-color: var(--s); }
 .prod-img { width: 100%; height: 200px; object-fit: cover; background: var(--input-bg, #000000); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
 .prod-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -185,7 +186,7 @@ section { position: relative; z-index: 1; }
 /* ─── TESTIMONIALS ─── */
 #testimonials { background: var(--dark); }
 .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-.test-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem; position: relative; transition: all 0.3s; }
+.test-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem; position: relative; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .test-card:hover { transform: translateY(-6px); border-color: var(--p); box-shadow: 0 16px 40px rgba(242,66,7,0.12); }
 .test-quote { font-size: 2.5rem; line-height: 1; color: var(--p); opacity: 0.4; margin-bottom: 0.5rem; }
 .test-text { font-size: 0.92rem; color: rgba(240,240,255,0.85); line-height: 1.7; margin-bottom: 1.2rem; }
@@ -197,7 +198,7 @@ section { position: relative; z-index: 1; }
 /* ─── FAQ ─── */
 #faq { background: var(--dark); }
 .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.8rem; }
-.faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .faq-q { padding: 1.2rem 1.5rem; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1rem; transition: all 0.3s; color: var(--text); }
 .faq-q:hover { color: var(--p); }
 .faq-q .arrow { font-size: 0.8rem; color: var(--p); transition: transform 0.3s; flex-shrink: 0; }
@@ -755,12 +756,13 @@ function initPage(){
   const _isLightBg = bg.startsWith('#') && _hexToLum(bg) > 128;
   const textColor  = _isLightBg ? '#111111' : '#FFFFFF';
   const mutedColor = _isLightBg ? '#444466' : '#9999BB';
-  // Card: slightly different from bg so cards are visible
-  const cardBg     = _isLightBg ? '#FFFFFF' : 'rgba(255,255,255,0.04)';
-  const cardSolid  = _isLightBg ? '#FFFFFF' : '#111111';
-  const borderCol  = _isLightBg ? 'rgba(0,0,0,0.15)' : `rgba(242,66,7,0.4)`;
+  // Card: MUST be visually different from bg
+  // Light bg (#fff) → card is light gray (#F0F0F5) with shadow
+  // Dark bg (#000) → card is dark gray (#1A1A2A)
+  const cardSolid  = _isLightBg ? '#F0F0F5' : '#1A1A2A';
+  const borderCol  = _isLightBg ? 'rgba(0,0,0,0.12)' : 'rgba(242,66,7,0.4)';
   const dividerCol = _isLightBg ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)';
-  const inputBg    = _isLightBg ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)';
+  const inputBg    = _isLightBg ? '#FFFFFF' : 'rgba(255,255,255,0.05)';
   // Hero: use bgColor as hero gradient base, light overlay for light bg
   const r16 = parseInt(bg.slice(1,3)||'00',16), g16 = parseInt(bg.slice(3,5)||'00',16), b16 = parseInt(bg.slice(5,7)||'00',16);
   const heroGradBg  = `linear-gradient(135deg, ${bg}, rgba(${r16},${g16},${b16},0.85), ${bg})`;
@@ -784,7 +786,7 @@ function initPage(){
   // Apply background color from Firebase
   document.body.style.setProperty('background', bg, 'important');
   document.documentElement.style.setProperty('background', bg, 'important');
-  // Also apply to all sections including hero
+  // Apply bg to all sections — but NOT cards/children (they use var(--card))
   document.querySelectorAll('section, #hero, #services, #products, #gallery, #testimonials, #faq, #booking, #about, #contact, footer').forEach(el => {
     el.style.setProperty('background', bg, 'important');
   });
@@ -1611,10 +1613,10 @@ window.addEventListener('message', (e)=>{
       // Adaptive text/card colors based on bg brightness
       const _hexToLum2 = h => { try{ const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16); return 0.299*r+0.587*g+0.114*b; }catch(e){return 0;} };
       const _isLight2 = c.bgColor.startsWith('#') && _hexToLum2(c.bgColor) > 128;
-      const _card2    = _isLight2 ? '#FFFFFF' : '#111111';
-      const _border2  = _isLight2 ? 'rgba(0,0,0,0.15)' : 'rgba(242,66,7,0.4)';
+      const _card2    = _isLight2 ? '#F0F0F5' : '#1A1A2A';
+      const _border2  = _isLight2 ? 'rgba(0,0,0,0.12)' : 'rgba(242,66,7,0.4)';
       const _divider2 = _isLight2 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)';
-      const _input2   = _isLight2 ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)';
+      const _input2   = _isLight2 ? '#FFFFFF' : 'rgba(255,255,255,0.05)';
       // Hero gradient based on bgColor
       const _r2=parseInt(c.bgColor.slice(1,3)||'00',16), _g2=parseInt(c.bgColor.slice(3,5)||'00',16), _b2=parseInt(c.bgColor.slice(5,7)||'00',16);
       const _heroGrad2  = `linear-gradient(135deg, ${c.bgColor}, rgba(${_r2},${_g2},${_b2},0.85), ${c.bgColor})`;
