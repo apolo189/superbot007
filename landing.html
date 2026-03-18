@@ -1095,15 +1095,22 @@ function buildServices(services){
     const svcIsVideo = svcMedia && (svcMedia.includes('genspark.ai/api/files') || svcMedia.match(/\.(mp4|webm|mov)$/i));
     const svcMediaHtml = svcIsVideo
       ? `<video src="${svcMedia}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`
-      : (svcMedia ? `<img src="${svcMedia}" alt="${s.name}" onerror="handleImgError(this,'${icons[i%icons.length]}')">` : icons[i%icons.length]);
+      : (svcMedia ? `<img src="${svcMedia}" alt="${s.name}" loading="lazy" onerror="handleImgError(this,'${icons[i%icons.length]}')">` : `<div style="font-size:3rem">${icons[i%icons.length]}</div>`);
+    // Smart button label based on price/type
+    const _priceLC = (s.price||'').toLowerCase();
+    const _hasPaypal = !!(s.paypalLink||s.paypal);
+    const _isFree = _priceLC.includes('free') || (_priceLC.includes('0') && _priceLC.includes('forever'));
+    const _isContact = _priceLC.includes('contact') || _priceLC.includes('custom');
+    const _btnIcon = _hasPaypal ? 'shopping-cart' : (_isFree ? 'rocket' : (_isContact ? 'whatsapp fab' : 'shopping-cart'));
+    const _btnLabel = _hasPaypal ? _t('Comprar','Buy Now') : (_isFree ? _t('Empezar gratis','Get Started') : (_isContact ? _t('Contáctanos','Contact Us') : _t('Adquirir','Get Plan')));
     card.innerHTML = `
       <div class="svc-img">${svcMediaHtml}</div>
       <div class="svc-body">
         <div class="svc-name">${s.name||''}</div>
-        <div class="svc-desc">${s.desc||''}</div>
+        <div class="svc-desc">${s.desc||s.description||''}</div>
         ${s.price?`<div class="svc-price">${s.price}</div>`:''}
         <button class="svc-book" onclick="handleSvcBook('${s.paypalLink||s.paypal||''}','${s.price||''}','${s.name||''}')">
-          <i class="fas fa-${s.paypalLink||s.paypal?'shopping-cart':'calendar-plus'}"></i> ${(s.paypalLink||s.paypal)?_t('Comprar','Buy Now'):_t('Agendar','Book')}
+          <i class="fas fa-${_btnIcon}"></i> ${_btnLabel}
         </button>
       </div>`;
     grid.appendChild(card);
@@ -1504,25 +1511,33 @@ function submitBooking(){ submitLbk('wa'); }
 
 // ══════ SERVICE BOOK BUTTON ══════
 function handleSvcBook(paypalLink, price, serviceName){
-  // If service has PayPal link → open it
+  const wa = (botData?.whatsapp || botData?.phone || '19143644377').replace(/\D/g,'');
+  // 1. Service has its own PayPal link → BUY directly
   if(paypalLink && paypalLink.startsWith('http')){
     window.open(paypalLink, '_blank'); return;
   }
-  // If bot has PayPal link → open it
-  const botPaypal = botData?.paypalLink || botData?.paypal || '';
-  if(botPaypal && botPaypal.startsWith('http')){
-    window.open(botPaypal, '_blank'); return;
+  // 2. Price is $0 / free → just scroll to booking (demo/free plan)
+  const priceStr = (price||'').toLowerCase();
+  if(priceStr.includes('0') && priceStr.includes('forever') || priceStr === '$0'){
+    document.getElementById('booking')?.scrollIntoView({behavior:'smooth', block:'start'}); return;
   }
-  // If bot has WhatsApp → send booking message
-  const wa = (botData?.whatsapp || botData?.phone || '').replace(/\D/g,'');
-  if(wa){
+  // 3. Price says "contact" → open WhatsApp with inquiry
+  if(priceStr.includes('contact') || priceStr.includes('custom') || priceStr.includes('agencia')){
     const msg = _t(
-      `Hola ${botData?.businessName||''}! Me interesa el servicio: *${serviceName}*${price?' ('+price+')':''}. ¿Podría agendar una cita?`,
-      `Hi ${botData?.businessName||''}! I'm interested in: *${serviceName}*${price?' ('+price+')':''}. Can I book an appointment?`
+      `Hola! Me interesa el *${serviceName}*. ¿Pueden darme más información sobre los planes personalizados?`,
+      `Hi! I'm interested in *${serviceName}*. Can you give me more info about custom plans?`
     );
     window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank'); return;
   }
-  // Fallback → scroll to booking
+  // 4. Has a paid price → open WhatsApp to purchase / ask
+  if(wa){
+    const msg = _t(
+      `Hola! Quiero adquirir el plan *${serviceName}*${price?' por '+price:''}. ¿Cómo procedo?`,
+      `Hi! I'd like to get the *${serviceName}* plan${price?' for '+price:''}. How do I proceed?`
+    );
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank'); return;
+  }
+  // 5. Fallback → scroll to booking
   document.getElementById('booking')?.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
