@@ -493,11 +493,16 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
   <!-- ══════ RIGHT: PREVIEW (70%) ══════ -->
   <div class="preview-panel">
     <div class="preview-topbar">
-      <span class="preview-label">👁️ PREVIEW EN VIVO</span>
+      <span class="preview-label">👁️ PREVIEW</span>
+      <!-- Toggle Landing / Bot -->
+      <div style="display:flex;gap:0.3rem;flex-shrink:0">
+        <button id="toggleLandingBtn" class="preview-icon-btn active" onclick="switchPreview('landing')" title="Ver Landing Page" style="width:auto;padding:0 0.55rem;font-size:0.62rem;font-weight:700">🌐 Landing</button>
+        <button id="toggleBotBtn" class="preview-icon-btn" onclick="switchPreview('bot')" title="Ver Bot" style="width:auto;padding:0 0.55rem;font-size:0.62rem;font-weight:700">🤖 Bot</button>
+      </div>
       <div class="preview-url-bar" id="previewUrl">landing.html?id=...</div>
       <button class="preview-icon-btn" onclick="reloadPreview()" title="Recargar"><i class="fas fa-sync-alt"></i></button>
       <button class="preview-icon-btn" onclick="openInNewTab()" title="Abrir en nueva pestaña" style="font-size:0.72rem;color:var(--a);border-color:rgba(67,233,123,0.3)"><i class="fas fa-external-link-alt"></i></button>
-      <button class="preview-icon-btn active" onclick="setDevice('desktop',this)" title="Desktop"><i class="fas fa-desktop"></i></button>
+      <button class="preview-icon-btn active" id="devDesktopBtn" onclick="setDevice('desktop',this)" title="Desktop"><i class="fas fa-desktop"></i></button>
       <button class="preview-icon-btn" onclick="setDevice('tablet',this)" title="Tablet"><i class="fas fa-tablet-alt"></i></button>
       <button class="preview-icon-btn" onclick="setDevice('mobile',this)" title="Mobile"><i class="fas fa-mobile-alt"></i></button>
     </div>
@@ -751,6 +756,17 @@ function showSection(id, btn){
 }
 
 // ── PREVIEW ──
+// Track preview mode: 'landing' or 'bot'
+let _previewMode = 'landing';
+
+function switchPreview(mode){
+  _previewMode = mode;
+  document.getElementById('toggleLandingBtn').classList.toggle('active', mode==='landing');
+  document.getElementById('toggleBotBtn').classList.toggle('active', mode==='bot');
+  // Re-enable device buttons if switching back to landing
+  loadPreviewFrame();
+}
+
 function loadPreviewFrame(){
   const f=document.getElementById('previewFrame'), l=document.getElementById('previewLoading');
   const fallback=document.getElementById('iframeFallback');
@@ -758,14 +774,23 @@ function loadPreviewFrame(){
   fallback.style.display='none';
   f.style.display='block';
 
-  const url = 'landing.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
+  let url, label;
+  if(_previewMode === 'bot'){
+    // Load bot (agent.html) directly — no nested iframe
+    url   = 'https://apolo189.github.io/superbot007/agent.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
+    label = 'agent.html?id=' + botId;
+  } else {
+    url   = 'landing.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
+    label = 'landing.html?id=' + botId;
+  }
   f.src = url;
-  document.getElementById('previewUrl').textContent = 'landing.html?id=' + botId;
+  document.getElementById('previewUrl').textContent = label;
 
   let loaded = false;
   f.onload = ()=>{
     loaded = true;
     l.classList.remove('show');
+    if(_previewMode === 'bot') return; // cross-origin, always OK
     try{
       const doc = f.contentDocument || f.contentWindow?.document;
       if(!doc || !doc.body || doc.body.innerHTML.trim()===''){
@@ -774,8 +799,12 @@ function loadPreviewFrame(){
     }catch(e){ showFallback(); }
   };
   f.onerror = ()=>{ loaded=true; l.classList.remove('show'); showFallback(); };
-  // After 4s with no content → show fallback
-  setTimeout(()=>{ l.classList.remove('show'); if(!loaded) showFallback(); }, 4000);
+  // Landing: fallback after 4s; Bot: fallback after 15s (Firebase needs time)
+  const t = _previewMode==='bot' ? 15000 : 4000;
+  setTimeout(()=>{
+    l.classList.remove('show');
+    if(!loaded && _previewMode!=='bot') showFallback();
+  }, t);
 }
 
 function showFallback(){
@@ -787,12 +816,17 @@ function showFallback(){
 
 function openInNewTab(){
   if(!botId){ toast('⚠️ No hay Bot ID cargado','error'); return; }
-  window.open('landing.html?id='+encodeURIComponent(botId),'_blank');
+  if(_previewMode === 'bot'){
+    window.open('https://apolo189.github.io/superbot007/agent.html?id='+encodeURIComponent(botId),'_blank');
+  } else {
+    window.open('landing.html?id='+encodeURIComponent(botId),'_blank');
+  }
 }
 
 function reloadPreview(){ loadPreviewFrame(); toast('🔄 Preview recargado','info'); }
 function setDevice(mode,btn){
-  document.querySelectorAll('.preview-icon-btn').forEach(b=>b.classList.remove('active'));
+  // Only remove active from device buttons (desktop/tablet/mobile), not landing/bot toggles
+  document.querySelectorAll('.preview-icon-btn:not(#toggleLandingBtn):not(#toggleBotBtn)').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const w=document.getElementById('previewWrap');
   w.className='preview-frame-wrap'+(mode!=='desktop'?' '+mode:'');
