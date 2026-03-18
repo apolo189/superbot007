@@ -573,7 +573,7 @@ img.img-broken {
   border:1px solid rgba(255,255,255,0.1);
   animation:chatPopIn 0.3s ease;
 ">
-  <iframe id="chatIframe" src="" style="width:100%;height:100%;border:none;"></iframe>
+  <iframe id="chatIframe" src="" style="width:100%;height:100%;border:none;" allow="microphone; camera; clipboard-write" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 <style>
 @keyframes chatPopIn{
@@ -1451,9 +1451,11 @@ function toggleChat(){
   const iframe = document.getElementById('chatIframe');
   chatOpen = !chatOpen;
   if(chatOpen){
-    // Load iframe only first time
-    if(!iframe.src || iframe.src === window.location.href || iframe.src === 'about:blank'){
-      iframe.src = `agent.html?id=${id}`;
+    // Load iframe only first time — always use absolute URL
+    if(!iframe.src || iframe.src === window.location.href || iframe.src === 'about:blank' || iframe.src === ''){
+      // Build absolute URL based on current host
+      const base = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+      iframe.src = base + `agent.html?id=${id}`;
     }
     popup.style.display = 'block';
     document.getElementById('chatFab').innerHTML = '<i class="fas fa-times" style="font-size:1.4rem"></i>';
