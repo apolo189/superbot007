@@ -901,25 +901,20 @@ function uploadImg(input,field,prevId,inputId){
       canvas.getContext('2d').drawImage(imgEl,0,0,w,h);
       const dataUrl=canvas.toDataURL('image/jpeg',0.80);
 
-      // Step 2: upload to Firebase Storage → get permanent public URL
+      // Step 2: upload via Cloudflare Worker → GitHub Pages public URL
       try{
-        toast('☁️ Subiendo a Firebase Storage...','info');
+        toast('☁️ Subiendo imagen al servidor... (15-20 seg)','info');
         await waitFor(()=>window._uploadImageToStorage);
         const publicUrl = await window._uploadImageToStorage(dataUrl, botId, field);
-        // Save the public HTTPS URL (not base64) — no Firestore size limit issue
+        // Save the public HTTPS URL — no Firestore size limit issue
         editedData[field]=publicUrl;
         if(inputId) document.getElementById(inputId).value=publicUrl;
         syncImgPrev(publicUrl,prevId);
         markUnsaved();
-        toast('✅ Imagen subida correctamente','success');
+        toast('✅ ¡Imagen lista! Haz click en "Guardar" para aplicar','success');
       }catch(err){
-        console.error('Storage upload failed:',err);
-        // Fallback: store compressed base64 (may fail if too big)
-        editedData[field]=dataUrl;
-        if(inputId) document.getElementById(inputId).value='[imagen local]';
-        syncImgPrev(dataUrl,prevId);
-        markUnsaved();
-        toast('⚠️ Guardado local (sin Storage): '+err.message,'error');
+        console.error('Upload failed:',err);
+        toast('❌ Error subiendo imagen: '+err.message,'error');
       }
     };
     imgEl.src=e.target.result;

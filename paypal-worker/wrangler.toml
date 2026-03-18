@@ -1,7 +1,7 @@
 name = "superbot007-paypal"
 main = "worker.js"
 compatibility_date = "2024-01-01"
-account_id = "f8af3ec5a9b3b2cf9e9f0f2c76c3fa94"
+account_id = "bacef02447c4158d74bd20cc1eb0443f"
 
 [vars]
 PAYPAL_CLIENT_ID = "AUVdPqYB7o1U8VBwrjEfxNIKW0uKp2hFSIECnk51iA5QfBFpbEFLuU8sLnBk5JkV-kkyS9yBBi0Jk"
