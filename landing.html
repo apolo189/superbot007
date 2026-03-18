@@ -128,7 +128,7 @@ section { position: relative; z-index: 1; }
   transform-style: preserve-3d; cursor: pointer;
 }
 .service-card:hover { transform: translateY(-8px) rotateX(3deg); border-color: var(--p); box-shadow: 0 20px 50px rgba(242,66,7,0.15); }
-.svc-img { width: 100%; height: 180px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
+.svc-img { width: 100%; height: 180px; object-fit: cover; background: var(--input-bg, #000000); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; }
 .svc-img img { width: 100%; height: 100%; object-fit: cover; }
 .svc-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .svc-body { padding: 1.4rem; }
@@ -143,7 +143,7 @@ section { position: relative; z-index: 1; }
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
 .prod-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s; }
 .prod-card:hover { transform: translateY(-6px); box-shadow: 0 18px 45px rgba(255,101,132,0.15); border-color: var(--s); }
-.prod-img { width: 100%; height: 200px; object-fit: cover; background: #000000; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+.prod-img { width: 100%; height: 200px; object-fit: cover; background: var(--input-bg, #000000); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
 .prod-img img { width: 100%; height: 100%; object-fit: cover; }
 .prod-body { padding: 1.2rem; }
 .prod-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
@@ -155,12 +155,12 @@ section { position: relative; z-index: 1; }
 .cart-btn { position: fixed; bottom: 2rem; left: 2rem; z-index: 500; width: 56px; height: 56px; background: var(--grad); border: none; border-radius: 50%; color: white; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 20px rgba(242,66,7,0.45); display: none; align-items: center; justify-content: center; transition: all 0.3s; }
 .cart-btn:hover { transform: scale(1.12); }
 .cart-count { position: absolute; top: -4px; right: -4px; background: var(--s); width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-.cart-drawer { position: fixed; right: 0; top: 0; bottom: 0; width: 360px; background: #000000; border-left: 1px solid var(--border); z-index: 600; transform: translateX(100%); transition: transform 0.4s cubic-bezier(.25,.8,.25,1); display: flex; flex-direction: column; padding: 1.5rem; gap: 1rem; }
+.cart-drawer { position: fixed; right: 0; top: 0; bottom: 0; width: 360px; background: var(--card, #000000); border-left: 1px solid var(--border); z-index: 600; transform: translateX(100%); transition: transform 0.4s cubic-bezier(.25,.8,.25,1); display: flex; flex-direction: column; padding: 1.5rem; gap: 1rem; }
 .cart-drawer.open { transform: translateX(0); }
 .cart-title { font-size: 1.2rem; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
 .cart-close { background: none; border: none; color: var(--muted); font-size: 1.4rem; cursor: pointer; }
 .cart-items { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; }
-.cart-item { display: flex; gap: 0.8rem; align-items: center; background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.7rem; }
+.cart-item { display: flex; gap: 0.8rem; align-items: center; background: var(--input-bg, rgba(255,255,255,0.04)); border-radius: 12px; padding: 0.7rem; }
 .cart-item img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
 .cart-item-info { flex: 1; }
 .cart-item-name { font-size: 0.88rem; font-weight: 600; }
@@ -236,17 +236,17 @@ section { position: relative; z-index: 1; }
 .lbk-cal-day.empty { cursor:default; }
 .lbk-cal-day.closed { color:rgba(255,71,87,0.3); cursor:not-allowed; text-decoration:line-through; }
 .lbk-time-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
-.lbk-time-slot { padding:0.5rem 0.3rem; text-align:center; border:1px solid var(--border); border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.18s; background:rgba(255,255,255,0.02); }
+.lbk-time-slot { padding:0.5rem 0.3rem; text-align:center; border:1px solid var(--border); border-radius:10px; font-size:0.8rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.18s; background:var(--input-bg, rgba(255,255,255,0.02)); }
 .lbk-time-slot:hover { border-color:var(--p); color:var(--p); background:rgba(242,66,7,0.08); }
 .lbk-time-slot.selected { background:linear-gradient(135deg,var(--p),var(--s)); color:white; border-color:transparent; box-shadow:0 2px 10px rgba(242,66,7,0.35); }
-.lbk-input, .lbk-select, .lbk-textarea { width:100%; padding:0.75rem 1rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; outline:none; margin-bottom:0.85rem; transition:all 0.3s; }
+.lbk-input, .lbk-select, .lbk-textarea { width:100%; padding:0.75rem 1rem; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid var(--border); border-radius:12px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; outline:none; margin-bottom:0.85rem; transition:all 0.3s; }
 .lbk-input:focus, .lbk-select:focus, .lbk-textarea:focus { border-color:var(--p); background:rgba(242,66,7,0.08); }
 .lbk-input::placeholder, .lbk-textarea::placeholder { color:var(--muted); }
-.lbk-select option { background:#000000; }
+.lbk-select option { background:var(--card, #000000); color:var(--text, #fff); }
 .lbk-textarea { resize:none; }
 .lbk-badge { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(67,233,123,0.1); border:1px solid rgba(67,233,123,0.25); border-radius:20px; padding:0.3rem 0.8rem; font-size:0.8rem; font-weight:700; color:var(--a); margin:0 0.3rem 0.8rem 0; }
 .lbk-nav-row { display:flex; gap:0.6rem; margin-top:1rem; }
-.lbk-back { flex:0 0 auto; padding:0.75rem 1rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; color:var(--muted); font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
+.lbk-back { flex:0 0 auto; padding:0.75rem 1rem; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid var(--border); border-radius:12px; color:var(--muted); font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
 .lbk-back:hover { border-color:var(--p); color:var(--text); }
 .lbk-next { flex:1; padding:0.75rem; background:linear-gradient(135deg,var(--p),var(--s)); border:none; border-radius:12px; color:white; font-weight:800; font-size:0.9rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(242,66,7,0.35); }
 .lbk-next:hover { opacity:0.9; transform:translateY(-2px); }
@@ -270,7 +270,7 @@ section { position: relative; z-index: 1; }
 @media(max-width:768px){ .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 .about-img-wrap { position: relative; }
 .about-img { width: 100%; border-radius: 24px; object-fit: cover; aspect-ratio: 4/3; display: block; }
-.about-img-placeholder { width: 100%; aspect-ratio: 4/3; border-radius: 24px; background: #000000; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+.about-img-placeholder { width: 100%; aspect-ratio: 4/3; border-radius: 24px; background: var(--input-bg, #000000); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
 .about-img-placeholder span { font-size: 4rem; }
 .about-img-placeholder p { font-size: 0.85rem; color: var(--muted); }
 .about-badge { position: absolute; bottom: -16px; right: -16px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 0.8rem 1.2rem; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
@@ -297,7 +297,7 @@ section { position: relative; z-index: 1; }
 .contact-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .contact-val { font-weight: 600; font-size: 0.95rem; }
 .hours-list { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
-.hour-line { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; }
+.hour-line { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--divider, rgba(255,255,255,0.04)); font-size: 0.88rem; }
 .hour-line:last-child { border-bottom: none; }
 .hour-day { font-weight: 600; }
 .hour-time { color: var(--muted); }
@@ -754,18 +754,24 @@ function initPage(){
   const _hexToLum = h => { const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16); return 0.299*r+0.587*g+0.114*b; };
   const _isLightBg = bg.startsWith('#') && _hexToLum(bg) > 128;
   const textColor  = _isLightBg ? '#111111' : '#FFFFFF';
-  const mutedColor = _isLightBg ? '#555577' : '#9999BB';
-  const cardBg     = _isLightBg ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.04)';
-  const borderCol  = _isLightBg ? `rgba(${parseInt(p.slice(1,3),16)},${parseInt(p.slice(3,5),16)},${parseInt(p.slice(5,7),16)},0.3)` : `rgba(242,66,7,0.4)`;
+  const mutedColor = _isLightBg ? '#444466' : '#9999BB';
+  // Card: slightly different from bg so cards are visible
+  const cardBg     = _isLightBg ? '#FFFFFF' : 'rgba(255,255,255,0.04)';
+  const cardSolid  = _isLightBg ? '#FFFFFF' : '#111111';
+  const borderCol  = _isLightBg ? 'rgba(0,0,0,0.15)' : `rgba(242,66,7,0.4)`;
+  const dividerCol = _isLightBg ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)';
+  const inputBg    = _isLightBg ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)';
   // Apply CSS variables
   document.documentElement.style.setProperty('--p',    p);
   document.documentElement.style.setProperty('--s',    s);
   document.documentElement.style.setProperty('--a',    a);
   document.documentElement.style.setProperty('--dark', bg);
-  document.documentElement.style.setProperty('--card', bg);
+  document.documentElement.style.setProperty('--card', cardSolid);
   document.documentElement.style.setProperty('--text', textColor);
   document.documentElement.style.setProperty('--muted', mutedColor);
   document.documentElement.style.setProperty('--border', borderCol);
+  document.documentElement.style.setProperty('--divider', dividerCol);
+  document.documentElement.style.setProperty('--input-bg', inputBg);
   document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
   // Apply background color from Firebase
   document.body.style.setProperty('background', bg, 'important');
@@ -1597,10 +1603,17 @@ window.addEventListener('message', (e)=>{
       // Adaptive text/card colors based on bg brightness
       const _hexToLum2 = h => { try{ const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16); return 0.299*r+0.587*g+0.114*b; }catch(e){return 0;} };
       const _isLight2 = c.bgColor.startsWith('#') && _hexToLum2(c.bgColor) > 128;
+      const _card2    = _isLight2 ? '#FFFFFF' : '#111111';
+      const _border2  = _isLight2 ? 'rgba(0,0,0,0.15)' : 'rgba(242,66,7,0.4)';
+      const _divider2 = _isLight2 ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.04)';
+      const _input2   = _isLight2 ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.05)';
       document.documentElement.style.setProperty('--dark', c.bgColor);
-      document.documentElement.style.setProperty('--card', c.bgColor);
+      document.documentElement.style.setProperty('--card', _card2);
       document.documentElement.style.setProperty('--text', _isLight2 ? '#111111' : '#FFFFFF');
-      document.documentElement.style.setProperty('--muted', _isLight2 ? '#555577' : '#9999BB');
+      document.documentElement.style.setProperty('--muted', _isLight2 ? '#444466' : '#9999BB');
+      document.documentElement.style.setProperty('--border', _border2);
+      document.documentElement.style.setProperty('--divider', _divider2);
+      document.documentElement.style.setProperty('--input-bg', _input2);
       document.body.style.setProperty('background', c.bgColor, 'important');
       document.documentElement.style.setProperty('background', c.bgColor, 'important');
       document.querySelectorAll('section, #hero, #services, #products, #gallery, #testimonials, #faq, #booking, #about, #contact, footer').forEach(el => {
