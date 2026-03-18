@@ -34,7 +34,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-html, body { font-family: 'Inter', sans-serif; background: #000000 !important; color: var(--text); overflow-x: hidden; }
+html, body { font-family: 'Inter', sans-serif; background: var(--dark, #000000); color: var(--text); overflow-x: hidden; }
 
 /* ─── LOADING ─── */
 #loadingScreen {
@@ -625,6 +625,8 @@ function handleImgError(img, fallbackEmoji){
 let botData = null;
 let cart = JSON.parse(localStorage.getItem('sb007cart') || '[]');
 const botId = new URLSearchParams(location.search).get('id');
+// Global language helper — set in initPage(), used in all build functions
+function _t(es, en){ const lang = botData?.botLanguage||'es'; return (lang==='en'||lang==='bilingual') ? en : es; }
 
 // ══════ PARTICLES ══════
 (function(){
@@ -709,24 +711,68 @@ function showNoBot(){
 // ══════ INIT PAGE ══════
 function initPage(){
   const d = botData;
-  // CSS Variables — background ALWAYS pure black
-  const bg = '#000000';
+  const lang = d.botLanguage || 'es';
+  const isEN = lang === 'en' || lang === 'bilingual';
+
+  // ── Translation helper ──
+  function t(es, en){ return isEN ? en : es; }
+
+  // ── Translate all nav & static UI ──
+  const navLinks = document.querySelector('.nav-links');
+  if(navLinks){
+    navLinks.innerHTML = `
+      <li><a href="#services">${t('Servicios','Services')}</a></li>
+      <li><a href="#about">${t('Nosotros','About')}</a></li>
+      <li id="navProductsLi" style="display:none"><a href="#products" id="navProducts">${t('Productos','Products')}</a></li>
+      <li><a href="#gallery">${t('Galería','Gallery')}</a></li>
+      <li><a href="#booking">${t('Citas','Booking')}</a></li>
+      <li><a href="#contact">${t('Contacto','Contact')}</a></li>`;
+  }
+  // Nav CTA
+  const navCta = document.querySelector('.nav-cta');
+  if(navCta) navCta.textContent = t('Agendar Cita','Book Now');
+  // Hero buttons
+  const heroBtns = document.querySelectorAll('.hero-btns a');
+  if(heroBtns[0]) heroBtns[0].innerHTML = `<i class="fas fa-calendar-check"></i> ${t('Agendar Cita','Book Now')}`;
+  if(heroBtns[1]) heroBtns[1].innerHTML = `<i class="fas fa-sparkles"></i> ${t('Ver Servicios','Our Services')}`;
+  // Booking subtitle
+  const bkSub = document.getElementById('bookingSubtitle');
+  if(bkSub) bkSub.textContent = t('Elige fecha, horario y listo — te confirmamos al instante','Pick a date & time — we confirm instantly');
+  // Chat bubble default
+  document.getElementById('chatBubble').textContent = d.welcomeMsg || t('¡Hola! ¿En qué puedo ayudarte?','Hi! How can I help you?');
+  // Footer nav
+  const footerNavLinks = document.querySelectorAll('footer .footer-nav a');
+  const footerLabels = [t('Servicios','Services'), t('Nosotros','About'), t('Galería','Gallery'), t('Citas','Booking'), t('Contacto','Contact')];
+  footerNavLinks.forEach((a, i) => { if(footerLabels[i]) a.textContent = footerLabels[i]; });
+
+  // CSS Variables — use bgColor from Firebase, default black
+  const bg = d.bgColor || '#000000';
   const p  = d.primaryColor   || '#f24207';
   const s  = d.secondaryColor || '#FF6584';
   const a  = d.accentColor    || '#43E97B';
+  // Determine if background is light or dark for text contrast
+  const _hexToLum = h => { const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16); return 0.299*r+0.587*g+0.114*b; };
+  const _isLightBg = bg.startsWith('#') && _hexToLum(bg) > 128;
+  const textColor  = _isLightBg ? '#111111' : '#FFFFFF';
+  const mutedColor = _isLightBg ? '#555577' : '#9999BB';
+  const cardBg     = _isLightBg ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.04)';
+  const borderCol  = _isLightBg ? `rgba(${parseInt(p.slice(1,3),16)},${parseInt(p.slice(3,5),16)},${parseInt(p.slice(5,7),16)},0.3)` : `rgba(242,66,7,0.4)`;
   // Apply CSS variables
   document.documentElement.style.setProperty('--p',    p);
   document.documentElement.style.setProperty('--s',    s);
   document.documentElement.style.setProperty('--a',    a);
-  document.documentElement.style.setProperty('--dark', '#000000');
-  document.documentElement.style.setProperty('--card', '#000000');
+  document.documentElement.style.setProperty('--dark', bg);
+  document.documentElement.style.setProperty('--card', bg);
+  document.documentElement.style.setProperty('--text', textColor);
+  document.documentElement.style.setProperty('--muted', mutedColor);
+  document.documentElement.style.setProperty('--border', borderCol);
   document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${p},${s})`);
-  // Force body background directly — ignore any stored bgColor
-  document.body.style.setProperty('background', '#000000', 'important');
-  document.documentElement.style.setProperty('background', '#000000', 'important');
-  // Also force all sections black
+  // Apply background color from Firebase
+  document.body.style.setProperty('background', bg, 'important');
+  document.documentElement.style.setProperty('background', bg, 'important');
+  // Also apply to all sections
   document.querySelectorAll('section, #hero, #services, #products, #gallery, #testimonials, #faq, #booking, #about, #contact, footer').forEach(el => {
-    el.style.setProperty('background', '#000000', 'important');
+    el.style.setProperty('background', bg, 'important');
   });
 
   // Meta
@@ -753,7 +799,7 @@ function initPage(){
 
   // Services
   buildServices(d.services||[]);
-  document.getElementById('servicesTitleEl').textContent = d.servicesTitle||'Nuestros Servicios';
+  document.getElementById('servicesTitleEl').textContent = d.servicesTitle || t('Nuestros Servicios','Our Services');
   document.getElementById('servicesSubEl').textContent = d.servicesSubtitle||'';
 
   // Products
@@ -768,7 +814,7 @@ function initPage(){
   buildAbout(d);
 
   // Gallery
-  document.getElementById('galleryTitleEl').textContent = d.galleryTitle||'Nuestro Trabajo';
+  document.getElementById('galleryTitleEl').textContent = d.galleryTitle||t('Nuestro Trabajo','Our Work');
   buildGallery(d.galleryURLs||[]);
 
   // Testimonials
@@ -788,14 +834,14 @@ function initPage(){
   buildHours(d.hours||{});
 
   // ── Register ALL section titles for typewriter-on-scroll ──
-  _sectionTWMap['servicesTitleEl']    = d.servicesTitle    || 'Nuestros Servicios';
-  _sectionTWMap['productsTitleEl']    = 'Nuestros Productos';
-  _sectionTWMap['aboutTitle']         = '¿Quiénes Somos? — ' + (d.businessName||'');
-  _sectionTWMap['galleryTitleEl']     = d.galleryTitle     || 'Nuestro Trabajo';
-  _sectionTWMap['testimonialsTitleEl']= 'Lo Que Dicen Nuestros Clientes';
-  _sectionTWMap['faqTitleEl']         = 'Preguntas Frecuentes';
-  _sectionTWMap['bookingTitle']       = d.bookingTitle     || 'Agenda Tu Cita';
-  _sectionTWMap['contactTitleEl']     = 'Contacto & Horarios';
+  _sectionTWMap['servicesTitleEl']    = d.servicesTitle    || t('Nuestros Servicios','Our Services');
+  _sectionTWMap['productsTitleEl']    = t('Nuestros Productos','Our Products');
+  _sectionTWMap['aboutTitle']         = t('¿Quiénes Somos?','About Us') + ' — ' + (d.businessName||'');
+  _sectionTWMap['galleryTitleEl']     = d.galleryTitle     || t('Nuestro Trabajo','Our Work');
+  _sectionTWMap['testimonialsTitleEl']= t('Lo Que Dicen Nuestros Clientes','What Our Clients Say');
+  _sectionTWMap['faqTitleEl']         = t('Preguntas Frecuentes','Frequently Asked Questions');
+  _sectionTWMap['bookingTitle']       = d.bookingTitle     || t('Agenda Tu Cita','Book an Appointment');
+  _sectionTWMap['contactTitleEl']     = t('Contacto & Horarios','Contact & Hours');
   initSectionTypewriters();
 
   // Footer
@@ -810,7 +856,7 @@ function initPage(){
   }
 
   // Chat widget
-  document.getElementById('chatBubble').textContent = d.welcomeMsg||'¡Hola! ¿En qué puedo ayudarte?';
+  document.getElementById('chatBubble').textContent = d.welcomeMsg || t('¡Hola! ¿En qué puedo ayudarte?','Hi! How can I help you?');
   if(d.botAvatar){ document.getElementById('chatFab').innerHTML=`<img src="${d.botAvatar}" alt="bot" onerror="this.parentElement.innerHTML='🤖'">`; }
   setTimeout(()=>{ document.getElementById('chatBubble').style.display='block'; setTimeout(()=>{ document.getElementById('chatBubble').style.display='none'; },5000); },2000);
 
@@ -882,15 +928,13 @@ function initSectionTypewriters(){
 // ══════ BUILD ABOUT ══════
 function buildAbout(d){
   // Title
-  document.getElementById('aboutTitle').textContent = '¿Quiénes Somos? — ' + (d.businessName||'');
-  document.getElementById('aboutDesc').textContent = d.description || 'Somos un equipo apasionado dedicado a ofrecer el mejor servicio a cada uno de nuestros clientes.';
+  document.getElementById('aboutTitle').textContent = _t('¿Quiénes Somos?','About Us') + ' — ' + (d.businessName||'');
+  document.getElementById('aboutDesc').textContent = d.description || _t('Somos un equipo apasionado dedicado a ofrecer el mejor servicio a cada uno de nuestros clientes.','We are a passionate team dedicated to providing the best service to each of our clients.');
 
   // Avatar/hero image as about image
   const imgWrap = document.getElementById('aboutImgWrap');
-  // heroImage = campo del editor | heroImageURL = campo legacy | heroVideoURL = video animado
   const heroImg = d.heroImage || d.heroImageURL || d.heroVideoURL || d.avatarURL || d.logoURL || '';
   if(heroImg){
-    // Check if it's a video URL
     const isVideo = heroImg.includes('genspark.ai/api/files') || heroImg.match(/\.(mp4|webm|mov)$/i);
     if(isVideo){
       imgWrap.innerHTML = `<video src="${heroImg}" class="about-img" autoplay loop muted playsinline style="object-fit:cover;" onerror="this.style.display='none'"></video>`;
@@ -898,13 +942,12 @@ function buildAbout(d){
       imgWrap.innerHTML = `<img src="${heroImg}" class="about-img" alt="${d.businessName||''}" onerror="this.style.display='none'">` ;
     }
   } else {
-    // emoji by business type
     const typeEmojis = { salon:'💇',spa:'🧖',restaurant:'🍽️',gym:'💪',veterinar:'🐾',caf:'☕',pizza:'🍕',delivery:'🚚',nail:'💅',barber:'✂️',construc:'🏗️',dog:'🐶',fitness:'🏋️' };
     const type = (d.businessType||'').toLowerCase();
     let emoji = '🏢';
     for(const [k,v] of Object.entries(typeEmojis)){ if(type.includes(k)){ emoji=v; break; } }
     document.getElementById('aboutEmoji').textContent = emoji;
-    document.getElementById('aboutImgHint').textContent = d.businessName||'Nuestro Negocio';
+    document.getElementById('aboutImgHint').textContent = d.businessName || _t('Nuestro Negocio','Our Business');
   }
 
   // Year badge
@@ -915,12 +958,12 @@ function buildAbout(d){
   const featEl = document.getElementById('aboutFeatures');
   const svcs = Array.isArray(d.services) ? d.services.slice(0,3) : [];
   const genericFeats = [
-    { icon:'⭐', title:'Calidad Garantizada', desc:'Nos comprometemos con la excelencia en cada servicio.' },
-    { icon:'👥', title:'Equipo Profesional', desc:'Personal capacitado y con experiencia en el rubro.' },
-    { icon:'❤️', title:'Clientes Primero', desc:'Tu satisfacción es nuestra mayor prioridad.' },
+    { icon:'⭐', title:_t('Calidad Garantizada','Guaranteed Quality'), desc:_t('Nos comprometemos con la excelencia en cada servicio.','We are committed to excellence in every service.') },
+    { icon:'👥', title:_t('Equipo Profesional','Professional Team'), desc:_t('Personal capacitado y con experiencia en el rubro.','Trained staff with experience in the field.') },
+    { icon:'❤️', title:_t('Clientes Primero','Clients First'), desc:_t('Tu satisfacción es nuestra mayor prioridad.','Your satisfaction is our top priority.') },
   ];
   const feats = svcs.length >= 2
-    ? svcs.map(s=>({ icon:'✓', title:s.name||'', desc:s.desc||'Servicio de alta calidad.' }))
+    ? svcs.map(s=>({ icon:'✓', title:s.name||'', desc:s.desc||_t('Servicio de alta calidad.','High quality service.') }))
     : genericFeats;
   featEl.innerHTML = feats.map(f=>`
     <div class="about-feat">
@@ -933,9 +976,9 @@ function buildAbout(d){
   const numSvcs = Array.isArray(d.services)?d.services.length:0;
   const numProds = Array.isArray(d.products)?d.products.length:0;
   const stats = [
-    numSvcs  ? { num: numSvcs+'+'  , label:'Servicios' } : { num:'100%', label:'Calidad' },
-    numProds ? { num: numProds+'+'  , label:'Productos' } : { num:'24/7', label:'Disponible' },
-    d.phone||d.whatsapp ? { num:'📞', label:'Te llamamos' } : { num:'❤️', label:'Con amor' },
+    numSvcs  ? { num: numSvcs+'+'  , label:_t('Servicios','Services') } : { num:'100%', label:_t('Calidad','Quality') },
+    numProds ? { num: numProds+'+'  , label:_t('Productos','Products') } : { num:'24/7', label:_t('Disponible','Available') },
+    d.phone||d.whatsapp ? { num:'📞', label:_t('Te llamamos','Call us') } : { num:'❤️', label:_t('Con amor','With love') },
   ];
   statsEl.innerHTML = stats.map(s=>`
     <div class="about-stat">
@@ -948,7 +991,7 @@ function buildAbout(d){
 function buildServices(services){
   const grid = document.getElementById('servicesGrid');
   grid.innerHTML = '';
-  if(!services.length){ grid.innerHTML='<p style="color:var(--muted);text-align:center;width:100%">No hay servicios configurados.</p>'; return; }
+  if(!services.length){ grid.innerHTML=`<p style="color:var(--muted);text-align:center;width:100%">${_t('No hay servicios configurados.','No services configured yet.')}</p>`; return; }
   const icons = ['💇','💆','💅','🌟','✨','🎨','🪄','💫'];
   services.forEach((s,i)=>{
     const card = document.createElement('div');
@@ -967,7 +1010,7 @@ function buildServices(services){
         <div class="svc-desc">${s.desc||''}</div>
         ${s.price?`<div class="svc-price">${s.price}</div>`:''}
         <button class="svc-book" onclick="scrollTo({top:document.getElementById('booking').offsetTop-80,behavior:'smooth'})">
-          <i class="fas fa-calendar-plus"></i> Agendar
+          <i class="fas fa-calendar-plus"></i> ${_t('Agendar','Book')}
         </button>
       </div>`;
     grid.appendChild(card);
@@ -1119,7 +1162,8 @@ function renderLbkStep(d){
 }
 
 function lbkStepsHTML(step){
-  const icons=['👤','📅','🕐'], names=['Datos','Fecha','Hora'];
+  const icons=['👤','📅','🕐'];
+  const names=[_t('Datos','Info'),_t('Fecha','Date'),_t('Hora','Time')];
   return `<div class="lbk-steps">
     ${icons.map((ic,i)=>{
       const cls=i+1<step?'done':i+1===step?'active':'';
@@ -1134,16 +1178,16 @@ function lbkInfoHTML(d){
   const hasWA = !!(d.whatsapp||d.phone);
   return `${lbkStepsHTML(1)}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">Nombre *</label>
-      <input class="lbk-input" id="lbkName" type="text" placeholder="Tu nombre completo" value="${lbk.name}" style="margin-bottom:0"></div>
-      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">Teléfono *</label>
+      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">${_t('Nombre *','Name *')}</label>
+      <input class="lbk-input" id="lbkName" type="text" placeholder="${_t('Tu nombre completo','Your full name')}" value="${lbk.name}" style="margin-bottom:0"></div>
+      <div><label style="font-size:0.78rem;color:var(--muted);display:block;margin-bottom:0.3rem;">${_t('Teléfono *','Phone *')}</label>
       <input class="lbk-input" id="lbkPhone" type="tel" placeholder="555-123-4567" value="${lbk.phone}" style="margin-bottom:0"></div>
     </div>
-    <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (opcional)" value="${lbk.email}" style="margin-top:0.7rem">
-    <select class="lbk-select" id="lbkService"><option value="">Selecciona un servicio...</option>${svcs}</select>
-    <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="Notas adicionales...">${lbk.note}</textarea>
+    <input class="lbk-input" id="lbkEmail" type="email" placeholder="Email (${_t('opcional','optional')})" value="${lbk.email}" style="margin-top:0.7rem">
+    <select class="lbk-select" id="lbkService"><option value="">${_t('Selecciona un servicio...','Select a service...')}</option>${svcs}</select>
+    <textarea class="lbk-textarea" id="lbkNote" rows="2" placeholder="${_t('Notas adicionales...','Additional notes...')}">${lbk.note}</textarea>
     <div class="lbk-nav-row">
-      <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> Elegir Fecha y Hora →</button>
+      <button class="lbk-next" onclick="lbkSaveInfoGoStep2()"><i class="fas fa-calendar-alt"></i> ${_t('Elegir Fecha y Hora →','Choose Date & Time →')}</button>
     </div>`;
 }
 
@@ -1152,7 +1196,7 @@ function lbkSaveInfoGoStep2(){
   const phone=document.getElementById('lbkPhone')?.value.trim();
   if(!name||!phone){
     const t=document.getElementById('landingToast');
-    t.textContent='⚠️ Ingresa tu nombre y teléfono primero.';
+    t.textContent=_t('⚠️ Ingresa tu nombre y teléfono primero.','⚠️ Please enter your name and phone number.');;
     t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;max-width:320px;pointer-events:none;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.4);color:#FF4757;transform:translateX(0);transition:transform 0.4s ease;';
     setTimeout(()=>{ t.style.transform='translateX(200%)'; },3000);
     return;
@@ -1169,7 +1213,7 @@ function lbkSaveInfoAndSubmit(mode){
   const phone=document.getElementById('lbkPhone')?.value.trim();
   if(!name||!phone){
     const t=document.getElementById('landingToast');
-    t.textContent='⚠️ Ingresa tu nombre y teléfono primero.';
+    t.textContent=_t('⚠️ Ingresa tu nombre y teléfono primero.','⚠️ Please enter your name and phone number.');
     t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;padding:0.9rem 1.4rem;border-radius:12px;font-weight:600;font-size:0.88rem;max-width:320px;pointer-events:none;background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.4);color:#FF4757;transform:translateX(0);transition:transform 0.4s ease;';
     setTimeout(()=>{ t.style.transform='translateX(200%)'; },3000);
     return;
@@ -1182,8 +1226,11 @@ function lbkSaveInfoAndSubmit(mode){
 }
 
 function lbkCalHTML(d){
-  const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const DOWS=['Do','Lu','Ma','Mi','Ju','Vi','Sa'];
+  const isEN = botData?.botLanguage==='en'||botData?.botLanguage==='bilingual';
+  const MONTHS = isEN
+    ? ['January','February','March','April','May','June','July','August','September','October','November','December']
+    : ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DOWS = isEN ? ['Su','Mo','Tu','We','Th','Fr','Sa'] : ['Do','Lu','Ma','Mi','Ju','Vi','Sa'];
   const DOW_KEY=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
   const y=lbk.calY, m=lbk.calM;
   const firstDay=new Date(y,m,1).getDay();
@@ -1211,7 +1258,7 @@ function lbkCalHTML(d){
   }
   const prevDis=(y===today.getFullYear()&&m<=today.getMonth());
   return `${lbkStepsHTML(2)}
-    <div class="lbk-section-title">📅 Elige una fecha</div>
+    <div class="lbk-section-title">📅 ${_t('Elige una fecha','Choose a date')}</div>
     <div class="lbk-cal-nav">
       <button onclick="lbkNavCal(-1)" ${prevDis?'disabled style="opacity:0.3;cursor:not-allowed"':''}>‹</button>
       <span class="lbk-cal-month">${MONTHS[m]} ${y}</span>
@@ -1222,9 +1269,9 @@ function lbkCalHTML(d){
       ${cells}
     </div>
     <div class="lbk-nav-row">
-      <button class="lbk-back" onclick="lbkStep1()">← Atrás</button>
+      <button class="lbk-back" onclick="lbkStep1()">← ${_t('Atrás','Back')}</button>
       <button class="lbk-next" onclick="lbkStep3()" ${lbk.date?'':'disabled'}>
-        ${lbk.date?'Siguiente →':'Selecciona una fecha'}
+        ${lbk.date?_t('Siguiente →','Next →'):_t('Selecciona una fecha','Select a date')}
       </button>
     </div>`;
 }
@@ -1255,20 +1302,20 @@ function lbkTimeHTML(d){
   const hasContact = !!(d.whatsapp||d.phone);
   return `${lbkStepsHTML(3)}
     <div class="lbk-badge">📅 ${dy}/${mo}/${yr}</div>
-    <div class="lbk-section-title">🕐 Elige un horario</div>
+    <div class="lbk-section-title">🕐 ${_t('Elige un horario','Choose a time')}</div>
     <div class="lbk-time-grid">
       ${slots.map(t=>`<div class="lbk-time-slot${lbk.time===t?' selected':''}" onclick="lbkPickTime('${t}',this)">${t}</div>`).join('')}
     </div>
     <div id="lbkConfirmBtns" style="${lbk.time?'':'display:none'}">
-      <button class="lbk-wa-btn" style="margin-top:0.8rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> Confirmar por WhatsApp ✓</button>
+      <button class="lbk-wa-btn" style="margin-top:0.8rem" onclick="submitLbk('wa')"><i class="fab fa-whatsapp"></i> ${_t('Confirmar por WhatsApp ✓','Confirm via WhatsApp ✓')}</button>
       <div class="lbk-nav-row" style="margin-top:0.5rem">
-        <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
+        <button class="lbk-back" onclick="lbkStep2()">← ${_t('Atrás','Back')}</button>
       </div>
     </div>
     <div id="lbkBackOnly" style="${lbk.time?'display:none':''}">
       <div class="lbk-nav-row" style="margin-top:0.6rem">
-        <button class="lbk-back" onclick="lbkStep2()">← Atrás</button>
-        <button class="lbk-next" disabled>Selecciona un horario</button>
+        <button class="lbk-back" onclick="lbkStep2()">← ${_t('Atrás','Back')}</button>
+        <button class="lbk-next" disabled>${_t('Selecciona un horario','Select a time slot')}</button>
       </div>
     </div>`;
 }
@@ -1284,7 +1331,7 @@ function lbkPickDate(ds,el){
   document.querySelectorAll('.lbk-cal-day.selected').forEach(d=>d.classList.remove('selected'));
   el.classList.add('selected');
   const btn=document.querySelector('#lbkPanel .lbk-next');
-  if(btn){btn.disabled=false;btn.textContent='Siguiente →';}
+  if(btn){btn.disabled=false;btn.textContent=_t('Siguiente →','Next →');}
 }
 function lbkPickTime(t,el){
   lbk.time=t;
@@ -1338,13 +1385,13 @@ async function submitLbk(mode){
   }catch(e){ console.log('Notif WA:', e.message); }
   if(mode==='wa'){
     const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
-    let msg=`Hola ${botData?.businessName||''}! Me llamo *${name}*\n📞 ${phone}`;
+    let msg=`${_t('Hola','Hello')} ${botData?.businessName||''}! ${_t('Me llamo','My name is')} *${name}*\n📞 ${phone}`;
     if(email) msg+=`\n📧 ${email}`;
-    if(service) msg+=`\n✂️ Servicio: *${service}*`;
-    if(date){const[yr,mo,dy]=date.split('-');msg+=`\n📅 Fecha: *${dy}/${mo}/${yr}*`;}
-    if(time) msg+=`\n🕐 Hora: *${time}*`;
+    if(service) msg+=`\n✂️ ${_t('Servicio','Service')}: *${service}*`;
+    if(date){const[yr,mo,dy]=date.split('-');msg+=`\n📅 ${_t('Fecha','Date')}: *${dy}/${mo}/${yr}*`;}
+    if(time) msg+=`\n🕐 ${_t('Hora','Time')}: *${time}*`;
     if(note) msg+=`\n📝 ${note}`;
-    msg+=`\n\n_Reserva via Super Bot 007_`;
+    msg+=`\n\n_${_t('Reserva via','Booking via')} Super Bot 007_`;
     window.open(wa?`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
   }
   const panel=document.getElementById('lbkPanel');
@@ -1352,10 +1399,10 @@ async function submitLbk(mode){
     const[yr,mo,dy]=(date||'--').split('-');
     panel.innerHTML=`<div class="lbk-success">
       <div class="lbk-check">📲</div>
-      <h3>¡Abriendo WhatsApp!</h3>
-      <p>¡Hola <strong>${name}</strong>!${service?' — <strong>'+service+'</strong>':''}${date?' 📅 <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' 🕐 <strong>'+time+'</strong>':''}.</p>
-      <p style="font-size:0.85rem;opacity:0.7">Presiona <strong>Enviar</strong> en WhatsApp para confirmar tu cita.</p>
-      <button class="lbk-reset" onclick="initLandingBooking(botData)">📅 Nueva Cita</button>
+      <h3>${_t('¡Abriendo WhatsApp!','Opening WhatsApp!')}</h3>
+      <p>${_t('¡Hola','Hello')} <strong>${name}</strong>!${service?' — <strong>'+service+'</strong>':''}${date?' 📅 <strong>'+dy+'/'+mo+'/'+yr+'</strong>':''}${time?' 🕐 <strong>'+time+'</strong>':''}.</p>
+      <p style="font-size:0.85rem;opacity:0.7">${_t('Presiona <strong>Enviar</strong> en WhatsApp para confirmar tu cita.','Press <strong>Send</strong> in WhatsApp to confirm your appointment.')}</p>
+      <button class="lbk-reset" onclick="initLandingBooking(botData)">📅 ${_t('Nueva Cita','New Appointment')}</button>
     </div>`;
   }
 }
@@ -1368,10 +1415,10 @@ function buildContact(d){
   const info = document.getElementById('contactInfo');
   info.innerHTML = '';
   const items = [
-    d.phone && {icon:'fas fa-phone',label:'Teléfono',val:d.phone},
+    d.phone && {icon:'fas fa-phone',label:_t('Teléfono','Phone'),val:d.phone},
     d.email && {icon:'fas fa-envelope',label:'Email',val:d.email},
-    d.address && {icon:'fas fa-map-marker-alt',label:'Dirección',val:d.address},
-    d.website && {icon:'fas fa-globe',label:'Sitio Web',val:`<a href="${d.website}" target="_blank" style="color:var(--p)">${d.website}</a>`},
+    d.address && {icon:'fas fa-map-marker-alt',label:_t('Dirección','Address'),val:d.address},
+    d.website && {icon:'fas fa-globe',label:_t('Sitio Web','Website'),val:`<a href="${d.website}" target="_blank" style="color:var(--p)">${d.website}</a>`},
   ].filter(Boolean);
   items.forEach(item=>{
     info.innerHTML += `<div class="contact-item"><div class="contact-icon"><i class="${item.icon}"></i></div><div><div class="contact-label">${item.label}</div><div class="contact-val">${item.val}</div></div></div>`;
@@ -1392,9 +1439,9 @@ function buildContact(d){
   // WhatsApp Button
   if(d.whatsapp){
     const wa = document.createElement('a');
-    wa.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent('Hola! Me gustaría obtener más información.')}`;
+    wa.href = `https://wa.me/${d.whatsapp}?text=${encodeURIComponent(_t('Hola! Me gustaría obtener más información.','Hello! I would like more information.'))}`;
     wa.target = '_blank'; wa.className = 'whatsapp-btn';
-    wa.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar WhatsApp';
+    wa.innerHTML = `<i class="fab fa-whatsapp"></i> ${_t('Enviar WhatsApp','Send WhatsApp')}`;
     info.appendChild(wa);
   }
 
@@ -1405,7 +1452,7 @@ function buildContact(d){
     pp.href = ppLink.startsWith('http') ? ppLink : `https://paypal.me/${ppLink}`;
     pp.target = '_blank';
     pp.style.cssText = 'display:flex;align-items:center;gap:0.7rem;padding:0.8rem 1.5rem;background:linear-gradient(135deg,#003087,#009cde);border:none;border-radius:50px;color:white;font-weight:700;font-size:0.95rem;cursor:pointer;text-decoration:none;transition:all 0.3s;margin-top:0.7rem;justify-content:center;';
-    pp.innerHTML = '<i class="fab fa-paypal"></i> Pagar con PayPal';
+    pp.innerHTML = `<i class="fab fa-paypal"></i> ${_t('Pagar con PayPal','Pay with PayPal')}`;
     pp.onmouseover = ()=>{ pp.style.transform='translateY(-2px)'; pp.style.boxShadow='0 6px 20px rgba(0,112,186,0.4)'; };
     pp.onmouseout  = ()=>{ pp.style.transform=''; pp.style.boxShadow=''; };
     info.appendChild(pp);
@@ -1415,17 +1462,52 @@ function buildContact(d){
 // ══════ HOURS ══════
 function buildHours(hours){
   const list = document.getElementById('hoursList');
-  list.innerHTML = '<h3 style="font-weight:700;margin-bottom:1rem;font-size:1.05rem;">🕐 Horario</h3>';
-  const days = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-  days.forEach(day=>{
-    const h = hours[day];
+  if(!list) return;
+
+  // Normalize: support lowercase keys (monday), capitalized (Monday), and Spanish (Lunes)
+  const ES_LABELS = {
+    'monday':'Lunes','tuesday':'Martes','wednesday':'Miércoles',
+    'thursday':'Jueves','friday':'Viernes','saturday':'Sábado','sunday':'Domingo',
+    'Monday':'Lunes','Tuesday':'Martes','Wednesday':'Miércoles',
+    'Thursday':'Jueves','Friday':'Viernes','Saturday':'Sábado','Sunday':'Domingo',
+    'Lunes':'Lunes','Martes':'Martes','Miércoles':'Miércoles',
+    'Jueves':'Jueves','Viernes':'Viernes','Sábado':'Sábado','Domingo':'Domingo'
+  };
+  const EN_LABELS = {
+    'monday':'Monday','tuesday':'Tuesday','wednesday':'Wednesday',
+    'thursday':'Thursday','friday':'Friday','saturday':'Saturday','sunday':'Sunday',
+    'Monday':'Monday','Tuesday':'Tuesday','Wednesday':'Wednesday',
+    'Thursday':'Thursday','Friday':'Friday','Saturday':'Saturday','Sunday':'Sunday',
+    'Lunes':'Monday','Martes':'Tuesday','Miércoles':'Wednesday',
+    'Jueves':'Thursday','Viernes':'Friday','Sábado':'Saturday','Domingo':'Sunday'
+  };
+  // Canonical order (lowercase first — matches Firebase storage)
+  const ORDER = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday',
+                 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+                 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+
+  const lang = (botData && (botData.botLanguage === 'en' || botData.botLanguage === 'bilingual')) ? 'en' : 'es';
+  const CLOSED_LABEL = lang === 'en' ? 'Closed' : 'Cerrado';
+  const TITLE_LABEL  = lang === 'en' ? '🕐 Schedule' : '🕐 Horario';
+  const EMPTY_LABEL  = lang === 'en' ? 'Schedule not configured.' : 'Horario no configurado.';
+
+  list.innerHTML = `<h3 style="font-weight:700;margin-bottom:1rem;font-size:1.05rem;color:var(--text);">${TITLE_LABEL}</h3>`;
+  let shown = 0;
+  const seen = new Set();
+  ORDER.forEach(key=>{
+    const h = hours[key];
     if(!h) return;
+    const displayLabel = lang === 'en' ? (EN_LABELS[key]||key) : (ES_LABELS[key]||key);
+    if(seen.has(displayLabel)) return;
+    seen.add(displayLabel);
+    shown++;
+    const isOpen = h.open === true || h.open === 'true' || h.open === 1;
     list.innerHTML += `<div class="hour-line">
-      <span class="hour-day">${day}</span>
-      ${h.open ? `<span class="hour-time">${h.from} – ${h.to}</span>` : '<span class="hour-closed">Cerrado</span>'}
+      <span class="hour-day">${displayLabel}</span>
+      ${isOpen ? `<span class="hour-time">${h.from||''} – ${h.to||''}</span>` : `<span class="hour-closed">${CLOSED_LABEL}</span>`}
     </div>`;
   });
-  if(Object.keys(hours).length===0) list.innerHTML += '<p style="color:var(--muted);font-size:0.88rem;">Horario no configurado.</p>';
+  if(shown === 0) list.innerHTML += `<p style="color:var(--muted);font-size:0.88rem;">${EMPTY_LABEL}</p>`;
 }
 
 // ══════ SCROLL REVEAL ══════
@@ -1510,10 +1592,25 @@ window.addEventListener('message', (e)=>{
     if(c.primaryColor)   document.documentElement.style.setProperty('--p', c.primaryColor);
     if(c.secondaryColor) document.documentElement.style.setProperty('--s', c.secondaryColor);
     if(c.accentColor)    document.documentElement.style.setProperty('--a', c.accentColor);
-    // Always keep background pure black
-    document.documentElement.style.setProperty('--dark', '#000000');
-    document.body.style.background = '#000000';
-    document.documentElement.style.background = '#000000';
+    // Apply background color from editor
+    if(c.bgColor){
+      // Adaptive text/card colors based on bg brightness
+      const _hexToLum2 = h => { try{ const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16); return 0.299*r+0.587*g+0.114*b; }catch(e){return 0;} };
+      const _isLight2 = c.bgColor.startsWith('#') && _hexToLum2(c.bgColor) > 128;
+      document.documentElement.style.setProperty('--dark', c.bgColor);
+      document.documentElement.style.setProperty('--card', c.bgColor);
+      document.documentElement.style.setProperty('--text', _isLight2 ? '#111111' : '#FFFFFF');
+      document.documentElement.style.setProperty('--muted', _isLight2 ? '#555577' : '#9999BB');
+      document.body.style.setProperty('background', c.bgColor, 'important');
+      document.documentElement.style.setProperty('background', c.bgColor, 'important');
+      document.querySelectorAll('section, #hero, #services, #products, #gallery, #testimonials, #faq, #booking, #about, #contact, footer').forEach(el => {
+        el.style.setProperty('background', c.bgColor, 'important');
+      });
+      if(botData) botData.bgColor = c.bgColor;
+    }
+    if(c.grad){
+      document.documentElement.style.setProperty('--grad', c.grad);
+    }
   }
   if(e.data.type === 'UPDATE_FIELD'){
     const {field, value} = e.data;

@@ -847,11 +847,14 @@ function pushColorToPreview(){
   try{
     const f=document.getElementById('previewFrame');
     if(!f || !f.contentWindow) return;
+    const p = editedData.primaryColor   || '#6C63FF';
+    const s = editedData.secondaryColor || '#FF6584';
     const colors={
-      primaryColor:   editedData.primaryColor   || '#6C63FF',
-      secondaryColor: editedData.secondaryColor || '#FF6584',
+      primaryColor:   p,
+      secondaryColor: s,
       accentColor:    editedData.accentColor    || '#43E97B',
-      bgColor:        editedData.bgColor        || '#000000'
+      bgColor:        editedData.bgColor        || '#000000',
+      grad:           `linear-gradient(135deg,${p},${s})`
     };
     f.contentWindow.postMessage({type:'UPDATE_COLORS', colors}, '*');
   }catch(e){/* iframe may be blocked */}
