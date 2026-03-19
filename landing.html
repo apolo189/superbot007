@@ -1711,6 +1711,9 @@ function openPayPalModal(paypalLink, price, serviceName){
     }).render('#ppBtnContainer');
   }
 
+  renderPayPalBtn();
+}
+
 function handleSvcBook(paypalLink, price, serviceName){
   const wa = (botData?.whatsapp || botData?.phone || '19143644377').replace(/\D/g,'');
   // 1. Service has a PayPal link → open REAL PayPal modal
