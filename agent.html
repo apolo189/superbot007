@@ -2101,18 +2101,46 @@ function setAvatarThinking(active){
 }
 
 // ══════ GPT CALL ══════
+const PROXY_URL = 'https://superbot007-proxy.luiso-morgado.workers.dev';
+
 async function callGPT(msgs){
-  const key = botData?.openaiKey;
   const model = botData?.gptModel || 'gpt-4o-mini';
-  if(!key) return fallbackResponse(msgs[msgs.length-1].content);
-  const res = await fetch('https://api.openai.com/v1/chat/completions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body: JSON.stringify({ model, messages: msgs, max_tokens:520, temperature:0.82 })
+  
+  // Try Cloudflare Worker proxy first (key is safe server-side)
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages: msgs, max_tokens: 520, temperature: 0.82 }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (res.ok) {
+      const data = await res.json();
+      const content = data.choices?.[0]?.message?.content?.trim();
+      if (content) return content;
+    }
+  } catch(e) {
+    console.warn('Proxy unavailable, using direct fallback:', e.message);
+  }
+  
+  // Direct fallback (uses bot's own key from Firebase, or platform key)
+  const key = botData?.openaiKey || '';
+  if (!key) throw new Error('No API key available');
+  
+  const res2 = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({ model, messages: msgs, max_tokens: 520, temperature: 0.82 })
   });
-  if(!res.ok){ const err=await res.json(); throw new Error(err.error?.message||'API error'); }
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim();
+  if (!res2.ok) {
+    const err = await res2.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'API error ' + res2.status);
+  }
+  const data2 = await res2.json();
+  return data2.choices?.[0]?.message?.content?.trim();
 }
 
 // ══════ FALLBACK RESPONSES (más humanas) ══════
