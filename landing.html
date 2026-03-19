@@ -384,15 +384,15 @@ img.img-broken {
     <img id="navLogo" src="" alt="Logo" style="display:none">
     <span id="navName">Cargando...</span>
   </div>
-  <ul class="nav-links">
-    <li><a href="#services">Servicios</a></li>
-    <li><a href="#about">Nosotros</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services" id="navServices">Servicios</a></li>
+    <li><a href="#about" id="navAbout">Nosotros</a></li>
     <li><a href="#products" id="navProducts" style="display:none">Productos</a></li>
-    <li><a href="#gallery">Galería</a></li>
-    <li><a href="#booking">Citas</a></li>
-    <li><a href="#contact">Contacto</a></li>
+    <li><a href="#gallery" id="navGallery">Galería</a></li>
+    <li><a href="#booking" id="navBooking">Citas</a></li>
+    <li><a href="#contact" id="navContact">Contacto</a></li>
   </ul>
-  <a href="#booking" class="nav-cta">Agendar Cita</a>
+  <a href="#booking" class="nav-cta" id="navCta">Agendar Cita</a>
   <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
 
@@ -414,9 +414,9 @@ img.img-broken {
       </a>
     </div>
     <div class="hero-stats" id="heroStats">
-      <div class="stat"><div class="stat-num" data-target="500">0</div><div class="stat-label">Clientes Felices</div></div>
-      <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label">Años de Experiencia</div></div>
-      <div class="stat"><div class="stat-num" data-target="98">0</div><div class="stat-label">% Satisfacción</div></div>
+      <div class="stat"><div class="stat-num" data-target="500">0</div><div class="stat-label" id="statLabel1">Clientes Felices</div></div>
+      <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label" id="statLabel2">Años de Experiencia</div></div>
+      <div class="stat"><div class="stat-num" data-target="98">0</div><div class="stat-label" id="statLabel3">% Satisfacción</div></div>
     </div>
   </div>
 </section>
@@ -461,7 +461,7 @@ img.img-broken {
         </div>
       </div>
       <div class="about-text reveal right">
-        <div class="section-tag"><i class="fas fa-info-circle"></i> Acerca de Nosotros</div>
+        <div class="section-tag"><i class="fas fa-info-circle"></i> <span id="aboutTagEl">Acerca de Nosotros</span></div>
         <h2 class="section-title" id="aboutTitle">¿Quiénes Somos?</h2>
         <p class="about-desc" id="aboutDesc">Somos un equipo apasionado dedicado a ofrecer el mejor servicio.</p>
         <div class="about-features" id="aboutFeatures"></div>
@@ -499,7 +499,7 @@ img.img-broken {
 <section id="gallery">
   <div class="section-wrap">
     <div class="text-center">
-      <div class="section-tag reveal"><i class="fas fa-images"></i> Galería</div>
+      <div class="section-tag reveal"><i class="fas fa-images"></i> <span id="galleryTagEl">Galería</span></div>
       <h2 class="section-title reveal" id="galleryTitleEl">Nuestro Trabajo</h2>
     </div>
     <div class="gallery-masonry" id="galleryGrid"></div>
@@ -510,7 +510,7 @@ img.img-broken {
 <section id="testimonials">
   <div class="section-wrap">
     <div class="text-center">
-      <div class="section-tag reveal"><i class="fas fa-heart"></i> Testimonios</div>
+      <div class="section-tag reveal"><i class="fas fa-heart"></i> <span id="testimonialsTagEl">Testimonios</span></div>
       <h2 class="section-title reveal" id="testimonialsTitleEl">Lo Que Dicen Nuestros Clientes</h2>
     </div>
     <div class="test-grid" id="testGrid"></div>
@@ -527,13 +527,13 @@ img.img-broken {
 <section id="faq">
   <div class="section-wrap">
     <div class="text-center">
-      <div class="section-tag reveal"><i class="fas fa-question-circle"></i> FAQ</div>
+      <div class="section-tag reveal"><i class="fas fa-question-circle"></i> <span id="faqTagEl">FAQ</span></div>
       <h2 class="section-title reveal" id="faqTitleEl">Preguntas Frecuentes</h2>
     </div>
     <div class="faq-list" id="faqList"></div>
     <!-- CTA after FAQ -->
     <div class="reveal" style="margin-top:3rem;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;text-align:center">
-      <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:0.6rem;color:var(--text)">¿Listo para comenzar?</h3>
+      <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:0.6rem;color:var(--text)" id="faqReadyTitle">¿Listo para comenzar?</h3>
       <p style="color:var(--muted);margin-bottom:1.5rem;font-size:0.95rem" id="faqCtaSub">Únete a cientos de negocios que ya usan Super Bot 007</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
         <a id="faqCtaBooking" href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span id="faqCtaBook">Agendar ahora</span></a>
@@ -547,7 +547,7 @@ img.img-broken {
 <section id="booking">
   <div class="section-wrap">
     <div class="text-center">
-      <div class="section-tag reveal"><i class="fas fa-calendar-alt"></i> Reservas</div>
+      <div class="section-tag reveal"><i class="fas fa-calendar-alt"></i> <span id="bookingTagEl">Reservas</span></div>
       <h2 class="section-title reveal" id="bookingTitle">Agenda Tu Cita</h2>
       <p class="section-sub reveal" id="bookingSubtitle">Elige fecha, horario y listo — te confirmamos al instante</p>
     </div>
@@ -563,7 +563,7 @@ img.img-broken {
 <section id="contact">
   <div class="section-wrap">
     <div class="text-center" style="margin-bottom:3rem;">
-      <div class="section-tag reveal"><i class="fas fa-map-marker-alt"></i> Encuéntranos</div>
+      <div class="section-tag reveal"><i class="fas fa-map-marker-alt"></i> <span id="contactTagEl">Encuéntranos</span></div>
       <h2 class="section-title reveal" id="contactTitleEl">Contacto & Horarios</h2>
     </div>
     <div class="contact-grid">
@@ -579,9 +579,9 @@ img.img-broken {
 
     <!-- Header -->
     <div class="text-center reveal" style="margin-bottom:3rem">
-      <div class="section-tag"><i class="fas fa-briefcase"></i> Programa Reseller</div>
-      <h2 class="section-title" style="font-size:2.1rem">🚀 Lanza Tu Propia Agencia de Bots de IA</h2>
-      <p class="section-sub" style="max-width:640px;margin:0 auto">
+      <div class="section-tag"><i class="fas fa-briefcase"></i> <span id="resellerTagEl">Programa Reseller</span></div>
+      <h2 class="section-title" id="resellerTitleEl" style="font-size:2.1rem">🚀 Lanza Tu Propia Agencia de Bots de IA</h2>
+      <p class="section-sub" id="resellerSubEl" style="max-width:640px;margin:0 auto">
         Vende Super Bot 007 con tu marca y tus precios. Tú te quedas el 100% de lo que cobres a tus clientes. Sin código, sin servidor, sin complicaciones.
       </p>
     </div>
@@ -906,6 +906,23 @@ function initPage(){
   // Booking subtitle
   const bkSub = document.getElementById('bookingSubtitle');
   if(bkSub) bkSub.textContent = t('Elige fecha, horario y listo — te confirmamos al instante','Pick a date & time — we confirm instantly');
+  // Hero stats labels
+  const s1=document.getElementById('statLabel1'); if(s1) s1.textContent=t('Clientes Felices','Happy Clients');
+  const s2=document.getElementById('statLabel2'); if(s2) s2.textContent=t('Años de Experiencia','Years of Experience');
+  const s3=document.getElementById('statLabel3'); if(s3) s3.textContent=t('% Satisfacción','% Satisfaction');
+  // Section tags
+  const gtag=document.getElementById('galleryTagEl'); if(gtag) gtag.textContent=t('Galería','Gallery');
+  const ttag=document.getElementById('testimonialsTagEl'); if(ttag) ttag.textContent=t('Testimonios','Testimonials');
+  const ftag=document.getElementById('faqTagEl'); if(ftag) ftag.textContent=t('FAQ','FAQ');
+  const bktag=document.getElementById('bookingTagEl'); if(bktag) bktag.textContent=t('Reservas','Reservations');
+  const ctag=document.getElementById('contactTagEl'); if(ctag) ctag.textContent=t('Encuéntranos','Find Us');
+  const atag=document.getElementById('aboutTagEl'); if(atag) atag.textContent=t('Acerca de Nosotros','About Us');
+  const rtag=document.getElementById('resellerTagEl'); if(rtag) rtag.textContent=t('Programa Reseller','Reseller Program');
+  // Section titles hardcoded
+  const rtitle=document.getElementById('resellerTitleEl'); if(rtitle) rtitle.textContent=t('🚀 Lanza Tu Propia Agencia de Bots de IA','🚀 Launch Your Own AI Bot Agency');
+  const rsub=document.getElementById('resellerSubEl'); if(rsub) rsub.textContent=t('Vende Super Bot 007 con tu marca y tus precios. Tú te quedas el 100% de lo que cobres a tus clientes. Sin código, sin servidor, sin complicaciones.','Sell Super Bot 007 under your brand and your prices. You keep 100% of what you charge your clients. No code, no server, no hassle.');
+  const tmtitle=document.getElementById('testimonialsTitleEl'); if(tmtitle) tmtitle.textContent=t('Lo Que Dicen Nuestros Clientes','What Our Clients Say');
+  const faqready=document.getElementById('faqReadyTitle'); if(faqready) faqready.textContent=t('¿Listo para comenzar?','Ready to get started?');
   // Chat bubble default
   document.getElementById('chatBubble').textContent = d.welcomeMsg || t('¡Hola! ¿En qué puedo ayudarte?','Hi! How can I help you?');
   // Footer nav

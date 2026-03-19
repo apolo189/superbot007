@@ -562,6 +562,13 @@ const params=new URLSearchParams(location.search);
 const botId=params.get('id')||'';
 let botData=null;
 const base=location.origin+location.pathname.replace('card.html','');
+// Translation helper — reads botData.botLanguage
+function ct(es,en,pt){
+  const lang=(botData?.botLanguage||'es').toLowerCase();
+  if(lang==='en') return en;
+  if(lang==='pt'||lang==='pt-br') return pt||es;
+  return es;
+}
 
 function toast(msg,type='success'){
   const t=document.getElementById('cardToast');
@@ -803,10 +810,10 @@ function buildActionRow(d){
   row.innerHTML='';
   const btns=[];
   if(d.phone)
-    btns.push({cls:'call',icon:'fas fa-phone',lbl:'Llamar',href:`tel:${d.phone}`});
+    btns.push({cls:'call',icon:'fas fa-phone',lbl:ct('Llamar','Call','Ligar'),href:`tel:${d.phone}`});
   if(d.whatsapp||d.phone){
     const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
-    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría más información.`);
+    const msg=encodeURIComponent(ct(`Hola ${d.businessName||''}! Me gustaría más información.`,`Hi ${d.businessName||''}! I'd like more information.`,`Olá ${d.businessName||''}! Gostaria de mais informações.`));
     btns.push({cls:'wa',icon:'fab fa-whatsapp',lbl:'WhatsApp',href:`https://wa.me/${wa}?text=${msg}`});
   }
   if(d.email)
@@ -846,7 +853,7 @@ function buildServices(d){
 
   // Typewriter on divider title
   const divEl=document.getElementById('svcDivider');
-  queueTW(divEl,'⚡ Servicios',26,300);
+  queueTW(divEl,ct('⚡ Servicios','⚡ Services','⚡ Serviços'),26,300);
 
   const emo={entren:'💪',spinning:'🚴',yoga:'🧘',funcional:'🏋️',zumba:'💃',
              pilates:'🤸',boxeo:'🥊',natacion:'🏊',corte:'✂️',color:'🎨',
@@ -919,10 +926,10 @@ function buildCTA(d){
   sec.innerHTML='';
   if(d.whatsapp||d.phone){
     const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
-    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`);
-    sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> Agendar por WhatsApp</a>`;
+    const msg=encodeURIComponent(ct(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`,`Hi ${d.businessName||''}! I'd like to schedule an appointment.`,`Olá ${d.businessName||''}! Gostaria de agendar uma consulta.`));
+    sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> ${ct('Agendar por WhatsApp','Book via WhatsApp','Agendar pelo WhatsApp')}</a>`;
   }
-  sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> Chatear con el Bot</a>`;
+  sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> ${ct('Chatear con el Bot','Chat with the Bot','Conversar com o Bot')}</a>`;
   // "Ver sitio" → real website if configured, otherwise landing page
   if(d.website){
     const ws = d.website.trim();
@@ -932,7 +939,7 @@ function buildCTA(d){
       sec.innerHTML+=`<a class="cta-btn secondary" href="${wsUrl}" target="_blank"><i class="fas fa-globe"></i> Visitar sitio web</a>`;
     }
   }
-  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-file-alt"></i> Ver Landing Page</a>`;
+  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-file-alt"></i> ${ct('Ver Landing Page','View Landing Page','Ver Página de Apresentação')}</a>`;
 }
 
 // ═══════════════════════════════════════
@@ -984,7 +991,7 @@ function downloadVCF(){
   a.href=url; a.download=`${name.replace(/\s+/g,'-')}.vcf`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  toast('📇 Contacto guardado!');
+  toast(ct('📇 Contacto guardado!','📇 Contact saved!','📇 Contato salvo!'));
 }
 
 // ═══════════════════════════════════════
