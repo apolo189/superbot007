@@ -302,14 +302,17 @@ section { position: relative; z-index: 1; }
 .gallery-back {
   position: absolute;
   inset: 0;
+  min-height: 180px;
   transform: rotateY(180deg);
-  background: linear-gradient(135deg, var(--card, #1a0a2e) 0%, rgba(201,125,110,0.25) 100%);
+  background: linear-gradient(135deg, var(--card, #1a0a2e) 0%, rgba(201,125,110,0.35) 100%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1.4rem;
   text-align: center;
-  border: 1px solid rgba(201,125,110,0.3);
+  border: 1px solid rgba(201,125,110,0.4);
+  box-shadow: inset 0 0 40px rgba(201,125,110,0.1);
 }
 .gallery-back-icon {
   font-size: 2.2rem;
@@ -1630,21 +1633,22 @@ function buildGallery(urls){
     div.onclick = ()=> window.open(url,'_blank');
     grid.appendChild(div);
   });
-  // Auto-flip: stagger each card, flip for 3s then unflip, repeat every 8s
-  setTimeout(()=>{
-    const items = grid.querySelectorAll('.gallery-item');
-    items.forEach((item, idx) => {
-      setInterval(()=>{
-        item.classList.add('is-flipped');
-        setTimeout(()=> item.classList.remove('is-flipped'), 3000);
-      }, 8000 + idx * 1200);
-      // Initial stagger so they don't all flip at once on load
+  // Auto-flip: each card flips independently on its own loop
+  // flip duration = 1.4s CSS transition, stays flipped 3s, total cycle = 9s per card
+  const FLIP_STAY    = 3200;  // ms card stays showing the back
+  const FLIP_CYCLE   = 9000;  // ms between flip starts (per card)
+  const STAGGER      = 1100;  // ms offset between each card
+  const items = grid.querySelectorAll('.gallery-item');
+  function scheduleFlip(item, delay){
+    setTimeout(function loop(){
+      item.classList.add('is-flipped');
       setTimeout(()=>{
-        item.classList.add('is-flipped');
-        setTimeout(()=> item.classList.remove('is-flipped'), 3000);
-      }, 3000 + idx * 1200);
-    });
-  }, 2000);
+        item.classList.remove('is-flipped');
+        setTimeout(loop, FLIP_CYCLE);   // next flip after cycle
+      }, FLIP_STAY);
+    }, delay);
+  }
+  items.forEach((item, idx) => scheduleFlip(item, 2500 + idx * STAGGER));
 }
 
 // ══════ TESTIMONIALS ══════
