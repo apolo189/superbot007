@@ -269,24 +269,86 @@ section { position: relative; z-index: 1; }
 .gallery-masonry { columns: 4; column-gap: 1rem; }
 @media(max-width:900px){ .gallery-masonry { columns: 3; } }
 @media(max-width:600px){ .gallery-masonry { columns: 2; } }
+
+/* Flip card wrapper — sits inside .gallery-item */
 .gallery-item {
   break-inside: avoid; margin-bottom: 1rem; border-radius: 14px;
-  overflow: hidden; cursor: pointer; position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(.25,.8,.25,1), box-shadow 0.5s ease;
+  cursor: pointer; position: relative;
+  perspective: 1000px;
 }
-/* Light sweep shimmer over gallery images — slow, elegant */
-.gallery-item::before {
+.gallery-flip {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  border-radius: 14px;
+}
+/* Flipped state — triggered by JS class */
+.gallery-item.is-flipped .gallery-flip {
+  transform: rotateY(180deg);
+}
+/* Both faces */
+.gallery-front,
+.gallery-back {
+  border-radius: 14px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.gallery-front {
+  display: block;
+  width: 100%;
+}
+.gallery-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, var(--card, #1a0a2e) 0%, rgba(201,125,110,0.25) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.4rem;
+  text-align: center;
+  border: 1px solid rgba(201,125,110,0.3);
+}
+.gallery-back-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.gallery-back-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text, #fff);
+  line-height: 1.5;
+  opacity: 0.9;
+}
+/* Front image — slow Ken Burns zoom */
+.gallery-front img {
+  width: 100%; display: block;
+  animation: floatImg 32s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+.gallery-item:nth-child(2n) .gallery-front img { animation-duration: 38s; animation-delay: -10s; }
+.gallery-item:nth-child(3n) .gallery-front img { animation-duration: 35s; animation-delay: -20s; }
+.gallery-item:nth-child(4n) .gallery-front img { animation-duration: 40s; animation-delay: -6s; }
+@keyframes floatImg {
+  0%   { transform: scale(1.0); }
+  100% { transform: scale(1.13); }
+}
+/* Light shimmer sweep — on the flip wrapper */
+.gallery-flip::before {
   content: '';
-  position: absolute; inset: 0; z-index: 2;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.13) 50%, transparent 60%);
+  position: absolute; inset: 0; z-index: 3;
+  border-radius: 14px;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
   background-size: 200% 100%;
   animation: shimmerSweep 20s ease-in-out infinite;
   pointer-events: none;
 }
-.gallery-item:nth-child(2n)::before { animation-delay: -6s; }
-.gallery-item:nth-child(3n)::before { animation-delay: -12s; }
-.gallery-item:nth-child(4n)::before { animation-delay: -3s; }
+.gallery-item:nth-child(2n) .gallery-flip::before { animation-delay: -6s; }
+.gallery-item:nth-child(3n) .gallery-flip::before { animation-delay: -12s; }
+.gallery-item:nth-child(4n) .gallery-flip::before { animation-delay: -3s; }
 @keyframes shimmerSweep {
   0%   { background-position: 200% 0; opacity: 0; }
   15%  { opacity: 0.7; }
@@ -294,25 +356,6 @@ section { position: relative; z-index: 1; }
   65%  { opacity: 0; }
   100% { background-position: -200% 0; opacity: 0; }
 }
-.gallery-item img {
-  width: 100%; display: block;
-  animation: floatImg 32s ease-in-out infinite alternate;
-  transform-origin: center center;
-  transition: transform 3s ease-in-out;
-}
-.gallery-item:nth-child(2n) img  { animation-duration: 38s; animation-delay: -10s; }
-.gallery-item:nth-child(3n) img  { animation-duration: 35s; animation-delay: -20s; }
-.gallery-item:nth-child(4n) img  { animation-duration: 40s; animation-delay: -6s; }
-@keyframes floatImg {
-  0%   { transform: scale(1.0); }
-  100% { transform: scale(1.13); }
-}
-.gallery-item:hover {
-  transform: perspective(800px) rotateX(4deg) rotateY(-4deg) scale(1.06);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(242,66,7,0.2);
-}
-.gallery-item .overlay-hover { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1rem; }
-.gallery-item:hover .overlay-hover { opacity: 1; }
 
 /* ─── TESTIMONIALS ─── */
 #testimonials { background: var(--dark); }
@@ -1569,14 +1612,39 @@ function buildGallery(urls){
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '';
   if(!urls.length){ document.getElementById('gallery').style.display='none'; return; }
+  const icons = ['🌸','✨','💆','🌿','🧴','💎','🌺','🪷','💅','🌻'];
   urls.forEach((url,i)=>{
     const div = document.createElement('div');
     div.className = 'gallery-item reveal';
     div.style.transitionDelay = (i*0.08)+'s';
-    div.innerHTML = `<img src="${url}" alt="Galería ${i+1}" loading="lazy" onerror="handleImgError(this,'🖼️')"><div class="overlay-hover"></div>`;
+    div.innerHTML = `
+      <div class="gallery-flip">
+        <div class="gallery-front">
+          <img src="${url}" alt="Galería ${i+1}" loading="lazy" onerror="handleImgError(this,'🖼️')">
+        </div>
+        <div class="gallery-back">
+          <span class="gallery-back-icon">${icons[i % icons.length]}</span>
+          <span class="gallery-back-label">Bella Organics</span>
+        </div>
+      </div>`;
     div.onclick = ()=> window.open(url,'_blank');
     grid.appendChild(div);
   });
+  // Auto-flip: stagger each card, flip for 3s then unflip, repeat every 8s
+  setTimeout(()=>{
+    const items = grid.querySelectorAll('.gallery-item');
+    items.forEach((item, idx) => {
+      setInterval(()=>{
+        item.classList.add('is-flipped');
+        setTimeout(()=> item.classList.remove('is-flipped'), 3000);
+      }, 8000 + idx * 1200);
+      // Initial stagger so they don't all flip at once on load
+      setTimeout(()=>{
+        item.classList.add('is-flipped');
+        setTimeout(()=> item.classList.remove('is-flipped'), 3000);
+      }, 3000 + idx * 1200);
+    });
+  }, 2000);
 }
 
 // ══════ TESTIMONIALS ══════
