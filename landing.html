@@ -512,6 +512,115 @@ img.img-broken {
   border-radius: 8px; color: var(--muted); font-size: 1.8rem;
   width: 100%; height: 100%; min-height: 80px;
 }
+
+/* ══════════════════════════════════════════
+   WOW EFFECTS — PURELY VISUAL, ADDITIVE
+   ══════════════════════════════════════════ */
+
+/* 1. GLASSMORPHISM on service cards */
+.service-card {
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(14px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.4) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+.service-card:hover {
+  background: rgba(255,255,255,0.07) !important;
+  border: 1px solid rgba(var(--p-rgb,242,66,7), 0.55) !important;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5),
+              0 0 40px rgba(242,66,7,0.18),
+              inset 0 1px 0 rgba(255,255,255,0.12) !important;
+}
+
+/* 2. GLASSMORPHISM on product cards */
+.prod-card {
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07) !important;
+}
+.prod-card:hover {
+  border-color: rgba(255,101,132,0.5) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 0 30px rgba(255,101,132,0.18) !important;
+}
+
+/* 3. GLASSMORPHISM on testimonial cards */
+.test-card {
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07) !important;
+}
+
+/* 4. CURSOR TRAIL DOT */
+#cursor-trail {
+  position: fixed; pointer-events: none; z-index: 99999;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(242,66,7,0.9) 0%, rgba(242,66,7,0) 70%);
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, opacity 0.3s ease;
+  mix-blend-mode: screen;
+}
+#cursor-trail-outer {
+  position: fixed; pointer-events: none; z-index: 99998;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid rgba(242,66,7,0.45);
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease, left 0.18s ease, top 0.18s ease;
+  mix-blend-mode: screen;
+}
+
+/* 5. COUNTER pulse when it finishes */
+@keyframes counterPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.stat-num.popped { animation: counterPop 0.4s ease; }
+.about-stat-num.popped { animation: counterPop 0.4s ease; }
+
+/* 6. HERO TITLE word-by-word reveal */
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) rotateX(-20deg);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-word.revealed {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+.hero-subtitle-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+}
+.hero-subtitle-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 7. GLOW PULSE on CTA buttons */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(242,66,7,0.35); }
+  50%       { box-shadow: 0 4px 40px rgba(242,66,7,0.7), 0 0 60px rgba(242,66,7,0.25); }
+}
+.btn-primary { animation: glowPulse 3s ease-in-out infinite; }
+
+/* 8. SECTION DIVIDER animated gradient line */
+.wow-divider {
+  width: 60px; height: 3px; margin: 0 auto 0.5rem;
+  background: var(--grad);
+  border-radius: 2px;
+  animation: dividerExpand 2s ease-in-out infinite alternate;
+}
+@keyframes dividerExpand {
+  0%   { width: 40px; opacity: 0.6; }
+  100% { width: 90px; opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -1338,11 +1447,15 @@ function buildAbout(d){
     numProds ? { num: numProds+'+'  , label:_t('Productos','Products') } : { num:'24/7', label:_t('Disponible','Available') },
     d.phone||d.whatsapp ? { num:'📞', label:_t('Te llamamos','Call us') } : { num:'❤️', label:_t('Con amor','With love') },
   ];
-  statsEl.innerHTML = stats.map(s=>`
-    <div class="about-stat">
-      <div class="about-stat-num">${s.num}</div>
+  statsEl.innerHTML = stats.map(s=>{
+    const numVal = parseInt(s.num);
+    const isNum = !isNaN(numVal) && numVal > 0;
+    const suffix = String(s.num).includes('%') ? '%' : String(s.num).includes('+') ? '+' : (isNum && numVal > 99 ? '+' : '');
+    return `<div class="about-stat">
+      <div class="about-stat-num"${isNum ? ` data-target="${numVal}" data-suffix="${suffix}"` : ''}>${s.num}</div>
       <div class="about-stat-label">${s.label}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ══════ SERVICES ══════
@@ -2239,6 +2352,183 @@ window.addEventListener('message', (e)=>{
     if(field === 'faqs') buildFaq && buildFaq(botData);
   }
 });
+
+/* ══════════════════════════════════════════
+   WOW EFFECTS — PURE VISUAL, NO LOGIC TOUCHED
+   ══════════════════════════════════════════ */
+
+// ── 1. SCROLL-TRIGGERED COUNTERS (fires when element enters viewport) ──
+function initCountersOnScroll(){
+  const nums = document.querySelectorAll('.stat-num[data-target], .about-stat-num[data-target]');
+  if(!nums.length) return;
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      obs.unobserve(entry.target);
+      const el = entry.target;
+      const target = parseInt(el.getAttribute('data-target'));
+      const suffix = el.getAttribute('data-suffix') || (target > 99 ? '+' : '%');
+      const dur = 1800; // ms
+      const steps = 60;
+      const interval = dur / steps;
+      let current = 0;
+      // easeOutQuart for snappy feel
+      const ease = t => 1 - Math.pow(1-t, 4);
+      let frame = 0;
+      const timer = setInterval(()=>{
+        frame++;
+        const progress = ease(Math.min(frame/steps, 1));
+        current = Math.round(target * progress);
+        el.textContent = current + suffix;
+        if(frame >= steps){
+          el.textContent = target + suffix;
+          el.classList.add('popped');
+          setTimeout(()=>el.classList.remove('popped'), 400);
+          clearInterval(timer);
+        }
+      }, interval);
+    });
+  }, { threshold: 0.5 });
+  nums.forEach(el=>{ el.textContent = '0'; obs.observe(el); });
+}
+
+// ── 2. PARTICLES in hero (canvas already exists as #bgCanvas) ──
+function initHeroParticles(){
+  const canvas = document.getElementById('bgCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width  = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  window.addEventListener('resize',()=>{
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+  const P = [], COUNT = 70;
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--p').trim() || '#f24207';
+  // Parse r,g,b from hex or css
+  function hexToRgb(h){ h=h.replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join(''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  const [r,g,b] = primary.startsWith('#') ? hexToRgb(primary) : [242,66,7];
+  for(let i=0;i<COUNT;i++){
+    P.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*2+0.5,
+      vx: (Math.random()-0.5)*0.35,
+      vy: (Math.random()-0.5)*0.35 - 0.1,
+      alpha: Math.random()*0.5+0.1,
+      pulse: Math.random()*Math.PI*2
+    });
+  }
+  let mx=W/2, my=H/2;
+  window.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; });
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    P.forEach(p=>{
+      p.pulse += 0.018;
+      const a = p.alpha*(0.7+0.3*Math.sin(p.pulse));
+      // Subtle mouse attraction
+      const dx=mx-p.x, dy=my-p.y, dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<180){ p.vx+=dx/dist*0.012; p.vy+=dy/dist*0.012; }
+      // Speed cap
+      const spd=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if(spd>0.7){ p.vx*=0.7/spd; p.vy*=0.7/spd; }
+      p.x=(p.x+p.vx+W)%W;
+      p.y=(p.y+p.vy+H)%H;
+      // Glow
+      const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
+      grd.addColorStop(0,`rgba(${r},${g},${b},${a})`);
+      grd.addColorStop(1,`rgba(${r},${g},${b},0)`);
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r*5,0,Math.PI*2);
+      ctx.fillStyle=grd;
+      ctx.fill();
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${r},${g},${b},${Math.min(a*2,1)})`;
+      ctx.fill();
+    });
+    // Draw lines between close particles
+    for(let i=0;i<P.length;i++){
+      for(let j=i+1;j<P.length;j++){
+        const dx=P[i].x-P[j].x, dy=P[i].y-P[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<110){
+          ctx.beginPath();
+          ctx.moveTo(P[i].x,P[i].y);
+          ctx.lineTo(P[j].x,P[j].y);
+          ctx.strokeStyle=`rgba(${r},${g},${b},${0.12*(1-dist/110)})`;
+          ctx.lineWidth=0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── 3. CURSOR LIGHT TRAIL ──
+function initCursorTrail(){
+  if(window.matchMedia('(pointer:coarse)').matches) return; // skip on touch devices
+  const dot   = document.createElement('div'); dot.id='cursor-trail';
+  const ring  = document.createElement('div'); ring.id='cursor-trail-outer';
+  document.body.appendChild(ring);
+  document.body.appendChild(dot);
+  let tx=0,ty=0, rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    tx=e.clientX; ty=e.clientY;
+    dot.style.left=tx+'px'; dot.style.top=ty+'px';
+  });
+  // Ring follows with lag
+  (function animRing(){
+    rx+=(tx-rx)*0.12; ry+=(ty-ry)*0.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animRing);
+  })();
+  // Scale up on clickable elements
+  document.querySelectorAll('a,button,[role=button]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ dot.style.width='22px'; dot.style.height='22px'; ring.style.width='52px'; ring.style.height='52px'; ring.style.borderColor='rgba(242,66,7,0.8)'; });
+    el.addEventListener('mouseleave',()=>{ dot.style.width='14px'; dot.style.height='14px'; ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='rgba(242,66,7,0.45)'; });
+  });
+}
+
+// ── 4. ANIMATED DIVIDERS — inject into each section header ──
+function initWowDividers(){
+  document.querySelectorAll('.section-title').forEach(el=>{
+    if(el.previousElementSibling && el.previousElementSibling.classList.contains('wow-divider')) return;
+    const div = document.createElement('div');
+    div.className = 'wow-divider';
+    el.parentNode.insertBefore(div, el);
+  });
+}
+
+// ── 5. CINEMATIC HERO TEXT REVEAL (word by word drop-in) ──
+function initHeroReveal(){
+  // Only run once, after typewriter has already set the hero title
+  setTimeout(()=>{
+    const heroSub = document.getElementById('heroSubtitleEl') || document.querySelector('.hero-subtitle');
+    if(heroSub && !heroSub.classList.contains('hero-subtitle-reveal')){
+      heroSub.classList.add('hero-subtitle-reveal');
+      setTimeout(()=>heroSub.classList.add('revealed'), 200);
+    }
+  }, 1200);
+}
+
+// ── BOOT ALL WOW EFFECTS ──
+(function bootWow(){
+  // Wait for DOM ready
+  const ready = ()=>{
+    initHeroParticles();
+    initCursorTrail();
+    initCountersOnScroll();
+    initWowDividers();
+    initHeroReveal();
+    // Re-observe any dynamically added stat nums
+    setTimeout(initCountersOnScroll, 2500);
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ready);
+  else ready();
+})();
 </script>
 
 </body>
