@@ -2126,9 +2126,9 @@ async function callGPT(msgs){
     console.warn('Proxy unavailable, using direct fallback:', e.message);
   }
   
-  // Direct fallback (uses bot's own key from Firebase, or platform key)
-  const key = botData?.openaiKey || '';
-  if (!key) throw new Error('No API key available');
+  // Direct fallback (uses bot's own key from Firebase, or platform master key)
+  const _MASTER_KEY = atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=");
+  const key = (botData?.openaiKey && botData.openaiKey.trim()) ? botData.openaiKey.trim() : _MASTER_KEY;
   
   const res2 = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',

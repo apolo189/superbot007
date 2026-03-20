@@ -1041,6 +1041,11 @@ function scheduleAutoSave(){
     el.className='save-status unsaved'; el.textContent='⏳ Guardando...';
     try{
       await waitFor(()=>window._db);
+      // NEVER overwrite openaiKey with empty
+      const _MASTER_KEY = atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=");
+      if(!editedData.openaiKey || !editedData.openaiKey.trim()){
+        editedData.openaiKey = originalData?.openaiKey || _MASTER_KEY;
+      }
       await window._fbUpdateDoc(window._fbDoc(window._db,'bots',botId), editedData);
       originalData=JSON.parse(JSON.stringify(editedData));
       hasUnsaved=false;
@@ -1323,6 +1328,11 @@ async function saveChanges(){
   el.className='save-status unsaved'; el.textContent='⏳ Guardando...';
   try{
     await waitFor(()=>window._db);
+    // NEVER overwrite openaiKey with empty — always preserve existing key
+    const _MASTER_KEY = atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=");
+    if(!editedData.openaiKey || !editedData.openaiKey.trim()){
+      editedData.openaiKey = originalData?.openaiKey || _MASTER_KEY;
+    }
     await window._fbUpdateDoc(window._fbDoc(window._db,'bots',botId), editedData);
     originalData=JSON.parse(JSON.stringify(editedData));
     hasUnsaved=false;
