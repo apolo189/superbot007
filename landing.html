@@ -160,64 +160,104 @@ section { position: relative; z-index: 1; }
 .wave-div { width: 100%; overflow: hidden; line-height: 0; margin: -1px 0; }
 .wave-div svg { display: block; }
 
-/* ─── SERVICES ─── */
+/* ─── SERVICES — Flip Cards ─── */
 #services { background: var(--dark); }
 .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+
+/* Outer wrapper — sets the 3D perspective */
 .service-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-  overflow: hidden; transition: transform 0.4s cubic-bezier(.25,.8,.25,1), box-shadow 0.4s ease, border-color 0.3s ease;
-  transform-style: preserve-3d; cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  will-change: transform;
+  height: 360px;
+  perspective: 1000px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+/* The flipper — this is what actually rotates */
+.svc-flipper {
   position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  border-radius: 20px;
 }
-/* Light sweep shimmer on service cards */
-.service-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 180px; z-index: 3;
-  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.10) 50%, transparent 65%);
-  background-size: 200% 100%;
-  animation: shimmerSweep 22s ease-in-out infinite;
-  pointer-events: none;
-  border-radius: 20px 20px 0 0;
+/* Flip on hover */
+.service-card:hover .svc-flipper {
+  transform: rotateY(180deg);
 }
-.service-card:nth-child(2n)::after { animation-delay: -7s; }
-.service-card:nth-child(3n)::after { animation-delay: -14s; }
-.service-card:nth-child(4n)::after { animation-delay: -4s; }
-.service-card:hover {
-  transform: perspective(900px) translateY(-12px) rotateX(5deg) rotateY(-3deg) scale(1.02);
-  border-color: var(--p);
-  box-shadow: 0 25px 60px rgba(242,66,7,0.2), 0 0 30px rgba(242,66,7,0.08);
+/* Both faces share these rules */
+.svc-face-front,
+.svc-face-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
-.svc-img { width: 100%; height: 180px; object-fit: cover; background: var(--card-img-bg, rgba(128,128,128,0.12)); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; perspective: 900px; }
-.svc-img img {
-  width: 100%; height: 100%; object-fit: cover;
+/* FRONT — photo + name overlay */
+.svc-face-front {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+.svc-face-front img,
+.svc-face-front video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
   animation: zoomBreatheSvc 28s ease-in-out infinite alternate;
   transform-origin: center center;
-  transition: transform 3s ease-in-out;
 }
-.svc-img video {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  animation: zoomBreatheSvc 28s ease-in-out infinite alternate;
-  transform-origin: center center;
-  transition: transform 3s ease-in-out;
-}
-.svc-card:nth-child(2n) .svc-img img,
-.svc-card:nth-child(2n) .svc-img video { animation-duration: 34s; animation-delay: -8s; }
-.svc-card:nth-child(3n) .svc-img img,
-.svc-card:nth-child(3n) .svc-img video { animation-duration: 32s; animation-delay: -14s; }
-.svc-card:nth-child(4n) .svc-img img,
-.svc-card:nth-child(4n) .svc-img video { animation-duration: 36s; animation-delay: -5s; }
+.svc-card:nth-child(2n) .svc-face-front img { animation-duration: 34s; animation-delay: -8s; }
+.svc-card:nth-child(3n) .svc-face-front img { animation-duration: 32s; animation-delay: -14s; }
 @keyframes zoomBreatheSvc {
   0%   { transform: scale(1.0); }
-  100% { transform: scale(1.12); }
+  100% { transform: scale(1.1); }
 }
-.svc-body { padding: 1.4rem; }
-.svc-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
-.svc-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.8rem; }
-.svc-price { font-size: 1.3rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.svc-book { margin-top: 0.8rem; padding: 0.55rem 1.2rem; background: var(--grad); border: none; border-radius: 50px; color: white; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; width: 100%; }
-.svc-book:hover { opacity: 0.85; transform: translateY(-1px); }
+/* Name label on front */
+.svc-front-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 1rem 1.2rem 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.svc-front-hint {
+  font-size: 0.72rem;
+  font-weight: 400;
+  opacity: 0.7;
+  display: block;
+  margin-top: 0.15rem;
+}
+/* BACK — info + price + button */
+.svc-face-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(145deg, var(--card) 0%, rgba(201,125,110,0.18) 100%);
+  border: 1px solid rgba(201,125,110,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.8rem 1.4rem;
+  text-align: center;
+  gap: 0.7rem;
+}
+.svc-back-icon { font-size: 2.2rem; }
+.svc-name { font-size: 1.1rem; font-weight: 800; margin: 0; }
+.svc-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.6; margin: 0; }
+.svc-price {
+  font-size: 1.5rem; font-weight: 900;
+  background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.svc-book {
+  margin-top: 0.4rem; padding: 0.6rem 1.4rem;
+  background: var(--grad); border: none; border-radius: 50px;
+  color: white; font-weight: 700; font-size: 0.88rem;
+  cursor: pointer; transition: all 0.3s; width: 100%;
+}
+.svc-book:hover { opacity: 0.85; transform: translateY(-2px); }
 
 /* ─── PRODUCTS ─── */
 #products { background: var(--dark); }
@@ -264,27 +304,27 @@ section { position: relative; z-index: 1; }
 .cart-checkout:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(242,66,7,0.35); }
 @media(max-width:480px){ .cart-drawer { width: 100%; } }
 
-/* ─── GALLERY ─── */
+/* ─── GALLERY — Flip Cards ─── */
 #gallery { background: var(--dark); }
 .gallery-masonry { columns: 4; column-gap: 1rem; }
 @media(max-width:900px){ .gallery-masonry { columns: 3; } }
 @media(max-width:600px){ .gallery-masonry { columns: 2; } }
 
-/* Flip card wrapper — sits inside .gallery-item */
 .gallery-item {
-  break-inside: avoid; margin-bottom: 1rem; border-radius: 14px;
+  break-inside: avoid; margin-bottom: 1rem;
   cursor: pointer; position: relative;
-  perspective: 1000px;
+  perspective: 900px;
 }
+/* The flipper */
 .gallery-flip {
   position: relative;
   width: 100%;
   transform-style: preserve-3d;
-  transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   border-radius: 14px;
 }
-/* Flipped state — triggered by JS class */
-.gallery-item.is-flipped .gallery-flip {
+/* Flip on hover */
+.gallery-item:hover .gallery-flip {
   transform: rotateY(180deg);
 }
 /* Both faces */
@@ -295,38 +335,11 @@ section { position: relative; z-index: 1; }
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+/* FRONT — the photo */
 .gallery-front {
   display: block;
   width: 100%;
 }
-.gallery-back {
-  position: absolute;
-  inset: 0;
-  min-height: 180px;
-  transform: rotateY(180deg);
-  background: linear-gradient(135deg, var(--card, #1a0a2e) 0%, rgba(201,125,110,0.35) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.4rem;
-  text-align: center;
-  border: 1px solid rgba(201,125,110,0.4);
-  box-shadow: inset 0 0 40px rgba(201,125,110,0.1);
-}
-.gallery-back-icon {
-  font-size: 2.2rem;
-  margin-bottom: 0.6rem;
-  display: block;
-}
-.gallery-back-label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text, #fff);
-  line-height: 1.5;
-  opacity: 0.9;
-}
-/* Front image — slow Ken Burns zoom */
 .gallery-front img {
   width: 100%; display: block;
   animation: floatImg 32s ease-in-out infinite alternate;
@@ -337,21 +350,33 @@ section { position: relative; z-index: 1; }
 .gallery-item:nth-child(4n) .gallery-front img { animation-duration: 40s; animation-delay: -6s; }
 @keyframes floatImg {
   0%   { transform: scale(1.0); }
-  100% { transform: scale(1.13); }
+  100% { transform: scale(1.1); }
 }
-/* Light shimmer sweep — on the flip wrapper */
-.gallery-flip::before {
-  content: '';
-  position: absolute; inset: 0; z-index: 3;
-  border-radius: 14px;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
-  background-size: 200% 100%;
-  animation: shimmerSweep 20s ease-in-out infinite;
-  pointer-events: none;
+/* BACK — brand overlay */
+.gallery-back {
+  position: absolute;
+  inset: 0;
+  min-height: 160px;
+  transform: rotateY(180deg);
+  background: linear-gradient(145deg, rgba(26,10,46,0.97) 0%, rgba(201,125,110,0.35) 100%);
+  border: 1px solid rgba(201,125,110,0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.4rem;
+  text-align: center;
+  gap: 0.5rem;
 }
-.gallery-item:nth-child(2n) .gallery-flip::before { animation-delay: -6s; }
-.gallery-item:nth-child(3n) .gallery-flip::before { animation-delay: -12s; }
-.gallery-item:nth-child(4n) .gallery-flip::before { animation-delay: -3s; }
+.gallery-back-icon { font-size: 2rem; }
+.gallery-back-label {
+  font-size: 0.9rem; font-weight: 700;
+  color: #fff; opacity: 0.95;
+  line-height: 1.4;
+}
+.gallery-back-sub {
+  font-size: 0.75rem; color: rgba(255,255,255,0.6);
+}
 @keyframes shimmerSweep {
   0%   { background-position: 200% 0; opacity: 0; }
   15%  { opacity: 0.7; }
@@ -1515,13 +1540,13 @@ function buildServices(services){
     const card = document.createElement('div');
     card.className = 'service-card reveal';
     card.style.transitionDelay = (i*0.1)+'s';
-    // Check if service image is a video
+    // media
     const svcMedia = s.image || '';
     const svcIsVideo = svcMedia && (svcMedia.includes('genspark.ai/api/files') || svcMedia.match(/\.(mp4|webm|mov)$/i));
     const svcMediaHtml = svcIsVideo
-      ? `<video src="${svcMedia}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>`
-      : (svcMedia ? `<img src="${svcMedia}" alt="${s.name}" loading="lazy" onerror="handleImgError(this,'${icons[i%icons.length]}')">` : `<div style="font-size:3rem">${icons[i%icons.length]}</div>`);
-    // Smart button label based on price/type
+      ? `<video src="${svcMedia}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>`
+      : (svcMedia ? `<img src="${svcMedia}" alt="${s.name}" loading="lazy" onerror="handleImgError(this,'${icons[i%icons.length]}')">` : `<div style="font-size:4rem;display:flex;align-items:center;justify-content:center;height:100%">${icons[i%icons.length]}</div>`);
+    // button logic
     const _priceLC = (s.price||'').toLowerCase();
     const _hasPaypal = !!(s.paypalLink||s.paypal);
     const _isFree = _priceLC.includes('free') || (_priceLC.includes('0') && _priceLC.includes('forever'));
@@ -1529,14 +1554,23 @@ function buildServices(services){
     const _btnIcon = _hasPaypal ? 'shopping-cart' : (_isFree ? 'rocket' : (_isContact ? 'whatsapp fab' : 'shopping-cart'));
     const _btnLabel = _hasPaypal ? _t('Comprar','Buy Now') : (_isFree ? _t('Empezar gratis','Get Started') : (_isContact ? _t('Contáctanos','Contact Us') : _t('Adquirir','Get Plan')));
     card.innerHTML = `
-      <div class="svc-img">${svcMediaHtml}</div>
-      <div class="svc-body">
-        <div class="svc-name">${s.name||''}</div>
-        <div class="svc-desc">${s.desc||s.description||''}</div>
-        ${s.price?`<div class="svc-price">${s.price}</div>`:''}
-        <button class="svc-book" onclick="handleSvcBook('${s.paypalLink||s.paypal||''}','${s.price||''}','${s.name||''}')">
-          <i class="fas fa-${_btnIcon}"></i> ${_btnLabel}
-        </button>
+      <div class="svc-flipper">
+        <div class="svc-face-front">
+          ${svcMediaHtml}
+          <div class="svc-front-label">
+            ${s.name||''}
+            <span class="svc-front-hint">👆 Toca para ver más</span>
+          </div>
+        </div>
+        <div class="svc-face-back">
+          <div class="svc-back-icon">${icons[i%icons.length]}</div>
+          <div class="svc-name">${s.name||''}</div>
+          <div class="svc-desc">${s.desc||s.description||''}</div>
+          ${s.price?`<div class="svc-price">${s.price}`:''}${s.price?'</div>':''}
+          <button class="svc-book" onclick="event.stopPropagation();handleSvcBook('${s.paypalLink||s.paypal||''}','${s.price||''}','${s.name||''}')">
+            <i class="fas fa-${_btnIcon}"></i> ${_btnLabel}
+          </button>
+        </div>
       </div>`;
     grid.appendChild(card);
   });
@@ -1616,6 +1650,7 @@ function buildGallery(urls){
   grid.innerHTML = '';
   if(!urls.length){ document.getElementById('gallery').style.display='none'; return; }
   const icons = ['🌸','✨','💆','🌿','🧴','💎','🌺','🪷','💅','🌻'];
+  const labels = ['Crema Hidratante','Suero Facial','Mascarilla Detox','Kit Anti-Manchas','Aceite de Jojoba','Contorno de Ojos','Tónico Floral','Exfoliante Natural','Sérum Vitamina C','Crema de Noche'];
   urls.forEach((url,i)=>{
     const div = document.createElement('div');
     div.className = 'gallery-item reveal';
@@ -1626,29 +1661,14 @@ function buildGallery(urls){
           <img src="${url}" alt="Galería ${i+1}" loading="lazy" onerror="handleImgError(this,'🖼️')">
         </div>
         <div class="gallery-back">
-          <span class="gallery-back-icon">${icons[i % icons.length]}</span>
-          <span class="gallery-back-label">Bella Organics</span>
+          <div class="gallery-back-icon">${icons[i % icons.length]}</div>
+          <div class="gallery-back-label">${labels[i % labels.length]}</div>
+          <div class="gallery-back-sub">Bella Organics ✨</div>
         </div>
       </div>`;
     div.onclick = ()=> window.open(url,'_blank');
     grid.appendChild(div);
   });
-  // Auto-flip: each card flips independently on its own loop
-  // flip duration = 1.4s CSS transition, stays flipped 3s, total cycle = 9s per card
-  const FLIP_STAY    = 3200;  // ms card stays showing the back
-  const FLIP_CYCLE   = 9000;  // ms between flip starts (per card)
-  const STAGGER      = 1100;  // ms offset between each card
-  const items = grid.querySelectorAll('.gallery-item');
-  function scheduleFlip(item, delay){
-    setTimeout(function loop(){
-      item.classList.add('is-flipped');
-      setTimeout(()=>{
-        item.classList.remove('is-flipped');
-        setTimeout(loop, FLIP_CYCLE);   // next flip after cycle
-      }, FLIP_STAY);
-    }, delay);
-  }
-  items.forEach((item, idx) => scheduleFlip(item, 2500 + idx * STAGGER));
 }
 
 // ══════ TESTIMONIALS ══════
