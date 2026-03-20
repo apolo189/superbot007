@@ -169,7 +169,21 @@ section { position: relative; z-index: 1; }
   transform-style: preserve-3d; cursor: pointer;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   will-change: transform;
+  position: relative;
 }
+/* Light sweep shimmer on service cards */
+.service-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 180px; z-index: 3;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.15) 50%, transparent 65%);
+  background-size: 200% 100%;
+  animation: shimmerSweep 8s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: 20px 20px 0 0;
+}
+.service-card:nth-child(2n)::after { animation-delay: -2.5s; }
+.service-card:nth-child(3n)::after { animation-delay: -5s; }
+.service-card:nth-child(4n)::after { animation-delay: -1.5s; }
 .service-card:hover {
   transform: perspective(900px) translateY(-12px) rotateX(5deg) rotateY(-3deg) scale(1.02);
   border-color: var(--p);
@@ -258,6 +272,25 @@ section { position: relative; z-index: 1; }
   overflow: hidden; cursor: pointer; position: relative;
   transform-style: preserve-3d;
   transition: transform 0.5s cubic-bezier(.25,.8,.25,1), box-shadow 0.5s ease;
+}
+/* Light sweep shimmer over gallery images */
+.gallery-item::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  background-size: 200% 100%;
+  animation: shimmerSweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.gallery-item:nth-child(2n)::before { animation-delay: -2s; }
+.gallery-item:nth-child(3n)::before { animation-delay: -4s; }
+.gallery-item:nth-child(4n)::before { animation-delay: -1s; }
+@keyframes shimmerSweep {
+  0%   { background-position: 200% 0; opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { background-position: -200% 0; opacity: 1; }
+  60%  { opacity: 0; }
+  100% { background-position: -200% 0; opacity: 0; }
 }
 .gallery-item img {
   width: 100%; display: block;
@@ -373,34 +406,28 @@ section { position: relative; z-index: 1; }
 }
 .about-img {
   width: 100%; border-radius: 24px; object-fit: cover; aspect-ratio: 4/3; display: block;
-  animation: floatAbout 7s ease-in-out infinite;
+  animation: kenBurnsAbout 18s ease-in-out infinite alternate;
   transform-origin: center center;
   will-change: transform;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(242,66,7,0.1);
   transition: box-shadow 0.4s ease;
 }
 .about-img:hover {
+  animation-play-state: paused;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(242,66,7,0.25);
 }
-@keyframes floatAbout {
-  0%   { transform: translateY(0px) rotateY(0deg) rotateX(0deg) scale(1); }
-  20%  { transform: translateY(-8px) rotateY(4deg) rotateX(2deg) scale(1.02); }
-  40%  { transform: translateY(-14px) rotateY(0deg) rotateX(3deg) scale(1.04); }
-  60%  { transform: translateY(-8px) rotateY(-4deg) rotateX(2deg) scale(1.02); }
-  80%  { transform: translateY(-4px) rotateY(-2deg) rotateX(1deg) scale(1.01); }
-  100% { transform: translateY(0px) rotateY(0deg) rotateX(0deg) scale(1); }
-}
-.about-img-placeholder {
-  animation: floatAbout 7s ease-in-out infinite;
-  transform-origin: center center;
-  will-change: transform;
+@keyframes kenBurnsAbout {
+  0%   { transform: scale(1)    translateX(0%)    translateY(0%); }
+  25%  { transform: scale(1.05) translateX(-2%)   translateY(-1.5%); }
+  50%  { transform: scale(1.1)  translateX(1.5%)  translateY(-2%); }
+  75%  { transform: scale(1.07) translateX(2%)    translateY(0.5%); }
+  100% { transform: scale(1.12) translateX(-1.5%) translateY(1.5%); }
 }
 .about-img-placeholder {
   width: 100%; aspect-ratio: 4/3; border-radius: 24px;
   background: var(--card-img-bg, rgba(128,128,128,0.12));
   border: 1px solid var(--border);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
-  animation: floatAbout 7s ease-in-out infinite;
   transform-origin: center center;
   will-change: transform;
 }
