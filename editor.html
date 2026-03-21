@@ -1445,5 +1445,16 @@ function waitFor(fn,ms=5000){
 window.addEventListener('beforeunload',e=>{ if(hasUnsaved){e.preventDefault();e.returnValue='';} });
 </script>
 
+<!-- ══ WIZARD VOICE AGENT ══ -->
+<script>
+window.WIZARD_CONTEXT = {
+  page: 'editor',
+  language: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
+  agentName: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'Amanda' : 'Shirley',
+  businessType: ''
+};
+</script>
+<script src="wizard.js"></script>
+
 </body>
 </html>

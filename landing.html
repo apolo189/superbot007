@@ -2624,5 +2624,16 @@ function initHeroReveal(){
 })();
 </script>
 
+<!-- ══ WIZARD VOICE AGENT ══ -->
+<script>
+window.WIZARD_CONTEXT = {
+  page: 'landing',
+  language: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
+  agentName: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'Amanda' : 'Shirley',
+  businessType: ''
+};
+</script>
+<script src="wizard.js"></script>
+
 </body>
 </html>

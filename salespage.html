@@ -879,138 +879,59 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <div class="dline"></div>
 
 <!-- ════════════ AMANDA + SHIRLEY ════════════ -->
+<!-- ════════ AGENTS SECTION — Wizard Overlay ════════ -->
 <section id="venus" class="sec">
   <div class="vwrap">
 
     <div class="veye reveal">Agentes Inteligentes de Ventas IA</div>
-    <h2 class="vh2 reveal">Chatea con <span class="hlv">Amanda o Shirley</span><br>— Te Ayudan a Crear Tu Bot</h2>
-    <p class="vsub reveal">Dos agentes IA disponibles 24/7. Amanda habla español 🇪🇸 · Shirley habla inglés 🇺🇸<br>Hazles cualquier pregunta sobre SuperBot007 o pídeles que te guíen paso a paso.</p>
+    <h2 class="vh2 reveal">Habla con <span class="hlv">Amanda o Shirley</span><br>— Tu Guía Personal 24/7</h2>
+    <p class="vsub reveal">Dos agentes IA disponibles en todo momento. Amanda en español 🇪🇸 · Shirley in English 🇺🇸<br>Hazles cualquier pregunta — responden por <strong>texto y voz</strong>, te guían paso a paso.</p>
 
-    <!-- ══ HOW IT WORKS GUIDE ══ -->
+    <!-- ── HOW IT WORKS ── -->
     <div class="how-box reveal">
       <div class="how-title">📖 ¿Cómo funciona? / How does it work?</div>
       <div class="how-steps">
         <div class="how-step">
           <div class="how-num">1</div>
-          <div class="how-text"><strong>Elige tu agente</strong><br>Amanda 🇪🇸 español · Shirley 🇺🇸 English</div>
+          <div class="how-text"><strong>Haz clic en 🧙‍♀️</strong><br>Abajo a la derecha — el botón morado</div>
         </div>
         <div class="how-arr">→</div>
         <div class="how-step">
           <div class="how-num">2</div>
-          <div class="how-text"><strong>Escribe tu pregunta</strong><br>o aprieta el botón <span class="how-mic-ico"><i class="fas fa-microphone"></i></span> para hablar</div>
+          <div class="how-text"><strong>Escribe o habla</strong><br>Escribe tu pregunta o presiona <span class="how-mic-ico"><i class="fas fa-microphone"></i></span></div>
         </div>
         <div class="how-arr">→</div>
         <div class="how-step">
           <div class="how-num">3</div>
-          <div class="how-text"><strong>El agente responde</strong><br>y te guía para crear tu bot</div>
+          <div class="how-text"><strong>El agente responde</strong><br>Por texto y voz, en tu idioma</div>
         </div>
       </div>
-      <div class="how-note" id="howNote">
-        💡 <strong>Amanda (español):</strong> Escríbele en el cuadro de texto o aprieta 🎙️ para hablar<br>
-        💡 <strong>Shirley (English):</strong> Type in the box or press 🎙️ to speak
+      <div class="how-note">
+        💡 <strong>Amanda 🇪🇸 (Español):</strong> Aprieta el botón 🧙‍♀️ abajo a la derecha y escribe o habla en español.<br>
+        💡 <strong>Shirley 🇺🇸 (English):</strong> Press the 🧙‍♀️ button at the bottom right and type or speak in English.
       </div>
     </div>
 
-    <!-- ── AGENT SELECTOR BUTTONS ── -->
+    <!-- ── AGENT CARDS — visual only ── -->
     <div class="agent-selector reveal">
-      <button class="agent-btn active" id="btnAmanda" onclick="switchAgent('amanda')">
+      <div class="agent-btn active">
         <span class="agent-flag">🇪🇸</span>
         <span class="agent-name">Amanda</span>
         <span class="agent-badge-es">ESPAÑOL</span>
-        <span class="agent-label">👆 Toca aquí para activar a Amanda</span>
-      </button>
-      <button class="agent-btn" id="btnShirley" onclick="switchAgent('shirley')">
+        <span class="agent-label">Responde en español · Voz + texto</span>
+      </div>
+      <div class="agent-btn">
         <span class="agent-flag">🇺🇸</span>
         <span class="agent-name">Shirley</span>
         <span class="agent-badge-en">ENGLISH</span>
-        <span class="agent-label">👆 Tap here to activate Shirley</span>
-      </button>
+        <span class="agent-label">Responds in English · Voice + text</span>
+      </div>
     </div>
 
-    <!-- ── ACTIVE AGENT BANNER ── -->
-    <div class="agent-active-bar" id="agentActiveBar">
+    <!-- ── CALL TO ACTION ── -->
+    <div class="agent-active-bar reveal" style="cursor:pointer;" onclick="document.getElementById('wz-btn')?.click()">
       <span class="aab-dot"></span>
-      <span id="agentActiveText">Amanda está lista · Escríbele abajo o aprieta el micrófono 🎙️</span>
-    </div>
-
-    <!-- ── ORB (hidden visually but kept for JS compatibility) ── -->
-    <div id="vorb" style="display:none;"></div>
-    <div id="vorbBadge" style="display:none;"></div>
-    <div id="agentEmoji" style="display:none;">💜</div>
-    <div id="vorbPulse" style="display:none;"></div>
-    <div id="vring3" style="display:none;"></div>
-    <div id="vring2" style="display:none;"></div>
-    <div id="vring" style="display:none;"></div>
-
-    <div id="vwave" class="idle" style="display:none;">
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-    </div>
-    <div id="vstatus" style="display:none;">💜 Amanda lista</div>
-
-    <!-- ── CHAT WINDOW ── -->
-    <div class="vchat reveal" id="vchatBox">
-
-      <!-- Chat header -->
-      <div class="vchat-header" id="vchatHeader">
-        <div class="vch-avatar" id="vchAvatar">🤖</div>
-        <div class="vch-info">
-          <div class="vch-name" id="vchName">Amanda · Agente IA</div>
-          <div class="vch-online"><span class="vch-dot"></span> <span id="vchStatus">en línea · responde en segundos</span></div>
-        </div>
-        <div class="vch-lang" id="vchLang">🇪🇸 ES</div>
-      </div>
-
-      <!-- Messages area -->
-      <div id="vmsg"></div>
-
-      <!-- Input row -->
-      <div class="vci">
-        <button id="vbmic" onclick="toggleVoice()" title="Toca para hablar / Tap to speak">
-          <i class="fas fa-microphone" id="mic-icon"></i>
-          <span class="vmic-label" id="vmicLabel">Hablar</span>
-        </button>
-        <input type="text" id="vin" placeholder="Escríbele a Amanda aquí...">
-        <button class="vbsend" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
-      </div>
-      <div class="vci-hint" id="vciHint">
-        🎙️ <strong>Para hablar:</strong> aprieta el botón del micrófono · <strong>Para escribir:</strong> escribe aquí y aprieta enviar
-      </div>
-    </div>
-
-    <!-- ── AMANDA SUGGESTIONS (ES) ── -->
-    <div class="vsug-label reveal" id="sugLabelAmanda">💬 Preguntas rápidas para Amanda:</div>
-    <div class="vsug reveal" id="sugAmanda">
-      <button class="sg" onclick="sendSug(this)">💰 ¿Cuánto cuesta?</button>
-      <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye SuperBot007?</button>
-      <button class="sg" onclick="sendSug(this)">✂️ Tengo una barbería, ¿me sirve?</button>
-      <button class="sg" onclick="sendSug(this)">🍽️ Tengo un restaurante, ¿cómo funciona?</button>
-      <button class="sg" onclick="sendSug(this)">⚙️ ¿Cómo configuro mi bot?</button>
-      <button class="sg" onclick="sendSug(this)">🚀 Quiero crear mi bot ahora</button>
-      <button class="sg" onclick="sendSug(this)">💼 ¿Puedo crear una agencia?</button>
-      <button class="sg" onclick="sendSug(this)">⏱️ ¿Cuánto tiempo tarda en estar listo?</button>
-      <button class="sg" onclick="sendSug(this)">🎓 ¿Hay soporte si me trabo?</button>
-      <button class="sg" onclick="sendSug(this)">🔄 ¿Puedo cancelar cuando quiera?</button>
-      <button class="sg" onclick="sendSug(this)">🤝 ¿Tienen garantía de devolución?</button>
-      <button class="sg" onclick="sendSug(this)">🌍 ¿Funciona en mi país?</button>
-    </div>
-
-    <!-- ── SHIRLEY SUGGESTIONS (EN) ── -->
-    <div class="vsug-label reveal" id="sugLabelShirley" style="display:none;">💬 Quick questions for Shirley:</div>
-    <div class="vsug reveal" id="sugShirley" style="display:none;">
-      <button class="sg" onclick="sendSug(this)">💰 How much does it cost?</button>
-      <button class="sg" onclick="sendSug(this)">🤖 What does SuperBot007 include?</button>
-      <button class="sg" onclick="sendSug(this)">✂️ I have a barbershop, does it work?</button>
-      <button class="sg" onclick="sendSug(this)">🍽️ I have a restaurant, how does it work?</button>
-      <button class="sg" onclick="sendSug(this)">⚙️ How do I configure my bot?</button>
-      <button class="sg" onclick="sendSug(this)">🚀 I want to create my bot now</button>
-      <button class="sg" onclick="sendSug(this)">💼 Can I start an agency?</button>
-      <button class="sg" onclick="sendSug(this)">⏱️ How long does setup take?</button>
-      <button class="sg" onclick="sendSug(this)">🎓 Is there support if I get stuck?</button>
-      <button class="sg" onclick="sendSug(this)">🔄 Can I cancel anytime?</button>
-      <button class="sg" onclick="sendSug(this)">🤝 Is there a money-back guarantee?</button>
-      <button class="sg" onclick="sendSug(this)">🌍 Does it work in my country?</button>
+      <span>Amanda y Shirley están listas · Haz clic aquí o en el botón 🧙‍♀️ abajo a la derecha</span>
     </div>
 
   </div>
@@ -2033,5 +1954,16 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
   });
 })();
 </script>
+
+<!-- ══ WIZARD VOICE AGENT ══ -->
+<script>
+window.WIZARD_CONTEXT = {
+  page: 'sales',
+  language: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
+  agentName: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'Amanda' : 'Shirley',
+  businessType: ''
+};
+</script>
+<script src="wizard.js"></script>
 </body>
 </html>
