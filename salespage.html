@@ -81,10 +81,55 @@ img{max-width:100%;display:block;}
 /* URGENCY PILL */
 .upill{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem 1.1rem;background:rgba(242,66,7,.1);border:1px solid rgba(242,66,7,.4);border-radius:50px;font-size:.8rem;font-weight:700;color:var(--orange);margin-bottom:1.8rem;animation:fadeUp .6s ease both;}
 
-/* HERO VIDEO */
+/* HERO VIDEO (legacy) */
 .hvw{position:relative;z-index:2;width:100%;max-width:920px;border-radius:18px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.7),0 0 80px rgba(242,66,7,.18);border:1px solid rgba(242,66,7,.25);animation:fadeUp .7s .3s ease both;margin-top:1.5rem;}
 .hvw video{width:100%;display:block;}
 .hvlabel{position:absolute;top:1rem;left:1rem;background:rgba(242,66,7,.92);color:#fff;font-size:.7rem;font-weight:800;padding:.25rem .7rem;border-radius:50px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ══ HERO PHONE MOCKUP ══ */
+.phone-wrap{position:relative;z-index:2;margin-top:2rem;animation:fadeUp .7s .3s ease both;display:flex;flex-direction:column;align-items:center;}
+.phone-frame{width:320px;background:#111b21;border-radius:38px;overflow:hidden;box-shadow:0 0 0 2px #2a3942,0 0 0 4px #1a252f,0 30px 90px rgba(0,0,0,.85),0 0 80px rgba(242,66,7,.15);border:1px solid rgba(255,255,255,.07);}
+/* STATUS BAR */
+.phone-bar{display:flex;justify-content:space-between;align-items:center;padding:.5rem 1.1rem .3rem;background:#111b21;font-size:.7rem;color:#e9edef;}
+.phone-time{font-weight:700;font-size:.75rem;}
+.phone-icons{display:flex;gap:.4rem;font-size:.65rem;color:#e9edef;}
+/* WA HEADER */
+.wa-header{display:flex;align-items:center;gap:.7rem;padding:.55rem .9rem;background:#202c33;border-bottom:1px solid rgba(255,255,255,.05);}
+.wa-back{color:#00a884;font-size:.85rem;cursor:pointer;padding-right:.2rem;}
+.wa-avatar-wrap{position:relative;flex-shrink:0;}
+.wa-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.wa-online-dot{position:absolute;bottom:1px;right:1px;width:9px;height:9px;background:#00a884;border-radius:50%;border:2px solid #202c33;}
+.wa-info{flex:1;min-width:0;}
+.wa-name{font-size:.82rem;font-weight:700;color:#e9edef;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wa-status{font-size:.65rem;color:#00a884;font-weight:600;}
+.wa-actions{display:flex;gap:.8rem;color:#aebac1;font-size:.85rem;}
+/* CHAT BODY */
+.wa-body{background:#0b141a;min-height:370px;max-height:370px;overflow-y:auto;padding:.75rem .6rem;display:flex;flex-direction:column;gap:.45rem;scrollbar-width:none;}
+.wa-body::-webkit-scrollbar{display:none;}
+.wa-date-sep{text-align:center;font-size:.6rem;color:#8696a0;background:rgba(134,150,160,.15);padding:.2rem .6rem;border-radius:6px;align-self:center;margin-bottom:.3rem;}
+/* MESSAGES */
+.wm{max-width:82%;padding:.5rem .75rem .4rem;border-radius:12px;font-size:.78rem;line-height:1.45;position:relative;word-break:break-word;animation:wmpop .25s ease both;}
+@keyframes wmpop{from{opacity:0;transform:scale(.92) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.wm.out{background:#005c4b;align-self:flex-end;border-bottom-right-radius:3px;color:#e9edef;}
+.wm.in{background:#202c33;align-self:flex-start;border-bottom-left-radius:3px;color:#e9edef;}
+.wm .wm-time{font-size:.58rem;color:#8696a0;float:right;margin-left:.5rem;margin-top:.2rem;}
+.wm.out .wm-time::after{content:' ✓✓';color:#53bdeb;font-size:.6rem;}
+/* TYPING INDICATOR */
+.wa-typing{display:flex;gap:.3rem;align-items:center;padding:.55rem .75rem;background:#202c33;border-radius:12px;border-bottom-left-radius:3px;align-self:flex-start;animation:wmpop .2s ease both;}
+.wa-typing span{width:6px;height:6px;background:#8696a0;border-radius:50%;animation:watyp 1.2s infinite;}
+.wa-typing span:nth-child(2){animation-delay:.2s;}
+.wa-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes watyp{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+/* INPUT BAR */
+.wa-input-bar{display:flex;align-items:center;gap:.5rem;padding:.6rem .7rem;background:#202c33;border-top:1px solid rgba(255,255,255,.04);}
+.wa-emoji-btn,.wa-attach{color:#8696a0;font-size:.95rem;cursor:pointer;flex-shrink:0;}
+.wa-input-box{flex:1;background:#2a3942;border-radius:20px;padding:.4rem .75rem;font-size:.72rem;color:#d1d7db;min-height:24px;display:flex;align-items:center;border:none;outline:none;overflow:hidden;white-space:nowrap;}
+.wa-mic-btn{width:34px;height:34px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;cursor:pointer;flex-shrink:0;}
+/* LIVE BADGE */
+.phone-live-badge{margin-top:.85rem;display:flex;align-items:center;gap:.45rem;background:rgba(0,168,132,.12);border:1px solid rgba(0,168,132,.3);border-radius:50px;padding:.35rem 1rem;font-size:.72rem;font-weight:700;color:#00a884;letter-spacing:.04em;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#00a884;box-shadow:0 0 0 0 rgba(0,168,132,.4);animation:livepulse 1.4s infinite;}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(0,168,132,.5)}70%{box-shadow:0 0 0 7px rgba(0,168,132,0)}100%{box-shadow:0 0 0 0 rgba(0,168,132,0)}}
+@media(max-width:480px){.phone-frame{width:290px;}.wa-body{min-height:320px;max-height:320px;}}
 
 /* SCROLL DOWN ARROW */
 .scroll-arrow{margin-top:2.5rem;animation:fadeUp .7s .35s ease both;}
@@ -394,8 +439,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>
   </p>
 
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access" id="top-cta">
-    <i class="fas fa-rocket"></i> obtén acceso instantáneo
+  <a href="#venus" class="btn-access" id="top-cta" onclick="scrollToAmanda()">
+    <i class="fas fa-robot"></i> Habla con Amanda — Empieza Aquí
   </a>
 
   <div class="pay-row">
@@ -409,9 +454,41 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <i class="fas fa-shield-alt"></i> Sitios Ilimitados · Sin Costos Ocultos · Todo Incluido
   </div>
 
-  <div class="hvw">
-    <span class="hvlabel">▶ Demo en vivo</span>
-    <video autoplay loop muted playsinline src="videos/hero-superbot007.mp4"></video>
+  <!-- ══ HERO PHONE MOCKUP ══ -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <!-- STATUS BAR -->
+      <div class="phone-bar">
+        <span class="phone-time" id="phoneTime">9:41</span>
+        <span class="phone-icons"><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+      </div>
+      <!-- WHATSAPP HEADER -->
+      <div class="wa-header">
+        <div class="wa-back"><i class="fas fa-arrow-left"></i></div>
+        <div class="wa-avatar-wrap">
+          <div class="wa-avatar">🤖</div>
+          <div class="wa-online-dot"></div>
+        </div>
+        <div class="wa-info">
+          <div class="wa-name">Amanda · SuperBot007</div>
+          <div class="wa-status" id="waStatus">en línea</div>
+        </div>
+        <div class="wa-actions"><i class="fas fa-video"></i> <i class="fas fa-phone"></i></div>
+      </div>
+      <!-- CHAT AREA -->
+      <div class="wa-body" id="waBody">
+        <div class="wa-date-sep">Hoy</div>
+      </div>
+      <!-- INPUT BAR -->
+      <div class="wa-input-bar">
+        <div class="wa-emoji-btn"><i class="fas fa-smile"></i></div>
+        <div class="wa-input-box" id="waTypingInput"></div>
+        <div class="wa-attach"><i class="fas fa-paperclip"></i></div>
+        <div class="wa-mic-btn"><i class="fas fa-microphone"></i></div>
+      </div>
+    </div>
+    <!-- LIVE BADGE -->
+    <div class="phone-live-badge"><span class="live-dot"></span> En Vivo 24/7</div>
   </div>
 
   <div class="scroll-arrow">
@@ -473,8 +550,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 1 ════════════ -->
 <div class="cta-mid">
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
-    <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
@@ -542,8 +619,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
   <h2 class="cta-mid-h reveal">Activa Tu Bot IA —<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Empieza a Ganar Hoy</span></h2>
   <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
-    <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
@@ -702,8 +779,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
   <h2 class="cta-mid-h reveal">Tu Agencia IA<br>Empieza con SuperBot007</h2>
   <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $10.99/mes.</p>
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
-    <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
@@ -872,7 +949,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <li class="no"><i class="fas fa-times"></i> Link para compartir</li>
           <li class="no"><i class="fas fa-times"></i> Pagos PayPal activos</li>
         </ul>
-        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec"><i class="fas fa-rocket"></i> Empezar Gratis</a>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank"><i class="fas fa-rocket"></i> Empezar Gratis</a>
       </div>
 
       <!-- PRO — HOT -->
@@ -891,7 +968,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <li><i class="fas fa-check"></i> Motor bilingüe ES/EN</li>
           <li><i class="fas fa-check"></i> Soporte prioritario WhatsApp</li>
         </ul>
-        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn main"><i class="fas fa-bolt"></i> Activar — $10.99/mes</a>
+        <a href="#venus" class="pbtn main" onclick="scrollToAmanda()"><i class="fas fa-robot"></i> Habla con Amanda — Activa Ahora</a>
       </div>
     </div>
 
@@ -901,8 +978,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Todo lo que obtienes con SuperBot007 hoy…</h3>
       <p class="price-blurb-sub">$10.99/mes · Todo Incluido · Sin Costos Ocultos · Cancela Cuando Quieras.<br>30 Días Garantía de Devolución Completa.</p>
 
-      <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access" style="margin-bottom:1.1rem;">
-        <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+      <a href="#venus" class="btn-access" style="margin-bottom:1.1rem;" onclick="scrollToAmanda()">
+        <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
       </a>
 
       <div class="pay-row">
@@ -979,8 +1056,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
   <h2 class="cta-mid-h reveal">Activa Tu Bot IA Hoy<br>Antes de Que Suba el Precio</h2>
   <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
-    <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
@@ -1065,8 +1142,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Por solo $10.99/mes — el precio sube a $29.99 pronto, sin aviso previo.
     </p>
 
-    <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access reveal">
-      <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
+    <a href="#venus" class="btn-access reveal" onclick="scrollToAmanda()">
+      <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
     </a>
 
     <div class="pay-row" style="justify-content:center;margin-top:1rem;">
@@ -1102,7 +1179,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <strong>⚡ Solo $10.99/mes</strong>
     Precio sube pronto — no pierdas
   </div>
-  <a href="https://apolo189.github.io/superbot007/form.html" class="sbtn">Empezar Gratis →</a>
+  <a href="#venus" class="sbtn" onclick="scrollToAmanda()">Habla con Amanda →</a>
 </div>
 
 <!-- ════════════════════════════════════
@@ -1302,7 +1379,7 @@ REGLAS ESTRICTAS:
 - Siempre termina con pregunta o llamada a la acción
 - 1 emoji al final máximo
 - NUNCA inventes precios ni datos
-- NUNCA digas que no hay tutoriales — SÍ hay soporte por WhatsApp`;`
+- NUNCA digas que no hay tutoriales — SÍ hay soporte por WhatsApp`;
 
 /* ── SHIRLEY PROMPT — English ── */
 const SHIRLEY_PROMPT = `You are Shirley — sales agent for SuperBot007. You are warm, confident, friendly — like a smart friend who genuinely wants to help you succeed.
@@ -1607,6 +1684,123 @@ function addTyping(){
   c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
 }
 document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter') sendMsg(); });
+
+/* ══════════════════════════════════════════════════════
+   HERO PHONE MOCKUP — animated WhatsApp-style demo
+══════════════════════════════════════════════════════ */
+(function(){
+  /* Conversation script */
+  const SCRIPT = [
+    {role:'out', text:'Hola! Quiero saber más sobre SuperBot007 🤔', delay:1200},
+    {role:'typing', delay:1800},
+    {role:'in',  text:'¡Hola! Soy Amanda 💜 ¡Qué bueno que estás aquí! SuperBot007 es un bot IA con GPT-4 que trabaja 24/7 por tu negocio — responde clientes, vende y agenda citas solo. ¿Tienes un negocio o quieres crear uno?', delay:2600},
+    {role:'out', text:'¿Cuánto cuesta?', delay:3200},
+    {role:'typing', delay:2000},
+    {role:'in',  text:'Solo $10.99/mes 🎉 Incluye bot IA activo, landing page profesional, carrito PayPal, agenda de citas y tarjeta digital. ¡Todo en un plan! Con garantía de 30 días. ¿Quieres empezar hoy?', delay:2800},
+    {role:'out', text:'¿En cuánto tiempo está listo mi bot? ⏱️', delay:3000},
+    {role:'typing', delay:1900},
+    {role:'in',  text:'¡En solo 5 minutos! ⚡ Sin código, sin diseñador. Llenas un formulario y tu bot ya está activo. Yo misma te guío paso a paso. ¿Te ayudo a crearlo ahora?', delay:2700},
+    {role:'out', text:'Sí, quiero crear mi bot ahora! 🚀', delay:2800},
+    {role:'typing', delay:1600},
+    {role:'in',  text:'¡Perfecto! 🎯 Abriendo el formulario para ti... Son solo 7 pasos sencillos. ¡En 5 minutos tu bot IA estará listo para trabajar! 💜', delay:2400},
+    /* loop restart after long pause */
+    {role:'reset', delay:5000},
+  ];
+
+  const waBody = document.getElementById('waBody');
+  const waStatus = document.getElementById('waStatus');
+  const waTypingInput = document.getElementById('waTypingInput');
+  const phoneTimeEl = document.getElementById('phoneTime');
+
+  /* Update clock */
+  function updateClock(){
+    const n=new Date();
+    phoneTimeEl.textContent=n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+  }
+  updateClock(); setInterval(updateClock,30000);
+
+  function clearChat(){
+    waBody.innerHTML='<div class="wa-date-sep">Hoy</div>';
+  }
+
+  function addWaMsg(role, text){
+    if(role==='typing'){
+      const t=document.createElement('div');
+      t.className='wa-typing'; t.id='waTypingBubble';
+      t.innerHTML='<span></span><span></span><span></span>';
+      waBody.appendChild(t);
+      waBody.scrollTop=waBody.scrollHeight;
+      waStatus.textContent='escribiendo...';
+      return;
+    }
+    const old=document.getElementById('waTypingBubble');
+    if(old) old.remove();
+    waStatus.textContent='en línea';
+    const d=document.createElement('div');
+    d.className='wm '+(role==='out'?'out':'in');
+    const now=new Date();
+    const ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+    d.innerHTML=text+'<span class="wm-time">'+ts+'</span>';
+    waBody.appendChild(d);
+    waBody.scrollTop=waBody.scrollHeight;
+  }
+
+  /* Typing animation in input bar */
+  let typeTimeout=null;
+  function animateType(text, cb){
+    let i=0;
+    waTypingInput.textContent='';
+    function step(){
+      if(i<=text.length){
+        waTypingInput.textContent=text.slice(0,i);
+        i++;
+        typeTimeout=setTimeout(step, 38);
+      } else {
+        setTimeout(()=>{ waTypingInput.textContent=''; cb && cb(); }, 300);
+      }
+    }
+    step();
+  }
+
+  let scriptIndex=0;
+  let runTimeout=null;
+
+  function runScript(){
+    const step=SCRIPT[scriptIndex];
+    if(!step) return;
+    scriptIndex++;
+
+    if(step.role==='reset'){
+      runTimeout=setTimeout(()=>{
+        clearChat(); scriptIndex=0; runScript();
+      }, step.delay);
+      return;
+    }
+
+    if(step.role==='out'){
+      /* Animate typing in input bar then send */
+      animateType(step.text, ()=>{
+        addWaMsg('out', step.text);
+        runTimeout=setTimeout(runScript, step.delay);
+      });
+    } else if(step.role==='typing'){
+      addWaMsg('typing');
+      runTimeout=setTimeout(runScript, step.delay);
+    } else if(step.role==='in'){
+      addWaMsg('in', step.text);
+      runTimeout=setTimeout(runScript, step.delay);
+    }
+  }
+
+  /* Start after page load with a small delay */
+  setTimeout(runScript, 900);
+
+  /* Pause animation when tab is hidden to save resources */
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){ clearTimeout(typeTimeout); clearTimeout(runTimeout); }
+    else { runScript(); }
+  });
+})();
 </script>
 </body>
 </html>
