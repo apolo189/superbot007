@@ -510,6 +510,7 @@
 
   /* ── TOGGLE PANEL ── */
   function togglePanel() {
+    unlockAudio(); // unlock on first user gesture
     isOpen = !isOpen;
     const panel = document.getElementById('wz-panel');
     const btn   = document.getElementById('wz-btn');
@@ -734,6 +735,7 @@ STRICT RULES:
     if (!text || isSpeaking) return;
     text = text.trim();
     if (!text) return;
+    unlockAudio(); // ensure audio is unlocked on send gesture
 
     addUserMsg(text);
     chatHistory.push({ role: 'user', content: text });
@@ -925,10 +927,28 @@ STRICT RULES:
     }
   }
 
+  /* ── AudioContext unlock (called on first user gesture) ── */
+  let audioUnlocked = false;
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    // Create and immediately suspend a silent context to satisfy browser autoplay policy
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = ctx.createBuffer(1, 1, 22050);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.start(0);
+      ctx.resume();
+    } catch(e) {}
+  }
+
   function playBlob(blob) {
     return new Promise((resolve) => {
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
+      audio.volume = 1;
       currentAudio = audio;
       audio.onended = () => {
         isSpeaking = false;
@@ -939,13 +959,19 @@ STRICT RULES:
       audio.onerror = () => {
         isSpeaking = false;
         setSpeakingUI(false);
+        URL.revokeObjectURL(url);
         resolve();
       };
-      audio.play().catch(() => {
-        isSpeaking = false;
-        setSpeakingUI(false);
-        resolve();
-      });
+      // play() returns a Promise — catch DOMException (autoplay blocked)
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          // Autoplay blocked — silently resolve, text still shows
+          isSpeaking = false;
+          setSpeakingUI(false);
+          resolve();
+        });
+      }
     });
   }
 
@@ -967,7 +993,8 @@ STRICT RULES:
 
   /* ── MIC TOGGLE ── */
   function toggleMic() {
-    if (isSpeaking) return; // Don't allow during speech
+    unlockAudio(); // unlock on mic press
+    if (isSpeaking) return;
     if (isListening) {
       stopListening();
     } else {
