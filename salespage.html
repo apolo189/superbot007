@@ -1161,16 +1161,13 @@ function tFaq(item){
 }
 
 /* ══════════════════════════════════════════════
-   VENUS — ELEVENLABS + PERSUASIVE BILINGUAL AI
+   VENUS — OPENAI TTS (nova) + GPT-4o-mini
+   ~3-4x faster than ElevenLabs (~300-500ms)
 ══════════════════════════════════════════════ */
 
-/* ElevenLabs config */
-const EL_KEY  = atob('c2tfMWE5MWEwYTFjMjE0ZTQyMzBmOTgwNmNjNTc1NGE4MDI0ZmI1ZmJhMjM5ZDUwNzg=');
-const EL_VOICE = 'dfeOmy6Uay63tNhyO99j';
-const EL_URL   = `https://api.elevenlabs.io/v1/text-to-speech/${EL_VOICE}/stream`;
-
-/* OpenAI config */
+/* OpenAI config — used for both TTS and chat */
 const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
+const TTS_URL = 'https://api.openai.com/v1/audio/speech';
 
 /* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
 const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real person: warm, confident, clever, and genuinely excited about helping people make money.
@@ -1237,45 +1234,41 @@ async function venusSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
     .replace(/https?:\/\/\S+/g,'')
-    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪💼📊📈🛒🎯🏢📲]/g,'')
-    .replace(/\s+/g,' ').trim().slice(0,400);
+    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪📊📈🛒🏢📲]/g,'')
+    .replace(/\s+/g,' ').trim().slice(0,500);
   if(!clean) return;
 
   const orb = document.getElementById('vorb');
-  isSpeaking = true;
   setWave(true); orb.classList.add('spk');
   setSt('🔊 Venus hablando...');
 
-  const done = () => {
-    isSpeaking = false;
-    setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
-  };
+  const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
 
-  /* stop previous audio immediately */
   if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
   try {
-    const res = await fetch(EL_URL, {
-      method:'POST',
-      headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json','Accept':'audio/mpeg'},
+    /* ── OpenAI TTS — nova voice, ~300ms latency ── */
+    const res = await fetch(TTS_URL, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer '+OA_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        text: clean,
-        model_id: 'eleven_flash_v2_5',
-        voice_settings:{ stability:0.25, similarity_boost:0.90, style:0.60, use_speaker_boost:true }
+        model: 'tts-1',
+        voice: 'nova',
+        input: clean,
+        speed: 1.05
       })
     });
-    if(!res.ok) throw new Error('EL '+res.status);
+    if(!res.ok) throw new Error('TTS '+res.status);
 
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     elAudio    = new Audio(url);
-    elAudio.onended  = () => { done(); URL.revokeObjectURL(url); };
-    elAudio.onerror  = () => { done(); URL.revokeObjectURL(url); };
+    elAudio.onended = () => { done(); URL.revokeObjectURL(url); };
+    elAudio.onerror = () => { done(); URL.revokeObjectURL(url); };
     await elAudio.play();
 
   } catch(err){
-    console.warn('EL:', err); done();
-    /* Web Speech fallback */
+    console.warn('TTS error:', err); done();
     try {
       const sy = window.speechSynthesis;
       if(sy){ sy.cancel();
