@@ -101,24 +101,172 @@
   /* ── STEP SCRIPTS ── */
   const STEP_SCRIPTS = {
     es: {
-      1: '¡Perfecto! Empecemos con la información básica de tu negocio. Necesito el nombre, tipo de negocio y una descripción. ¿De qué tipo de negocio es? 🏢',
-      2: '¡Excelente! Ahora personalizamos el diseño. Elige tus colores, sube el logo y la imagen principal de tu landing page. 🎨',
-      3: '¡Genial! Agrega los servicios que ofrece tu negocio. Puedes poner nombre, precio y descripción de cada uno. ✂️',
-      4: '¿Vendes productos? Aquí los configuras con precio y puedes aceptar pagos vía PayPal. Si solo ofreces servicios, puedes omitir este paso. 🛒',
-      5: '¡Las fotos son muy importantes! Sube hasta 8 fotos de tu negocio para que los clientes vean tu trabajo. 📸',
-      6: 'Ahora agrega tu información de contacto: teléfono, WhatsApp, email y horarios de atención. 📞',
-      7: '¡Casi listo! Este es el último paso. Configura el idioma del bot y opcionalmente genera contenido con IA. Luego haz clic en "Activar Bot 007". 🤖',
-      8: '🎉 ¡Felicidades! Tu bot está 100% listo y funcionando. Copia los enlaces y compártelos con tus clientes. ¡Empezaste algo increíble!',
+      1: `¡Bienvenido! Vamos paso a paso. 🏢
+
+Paso 1 — Información del negocio:
+• Escribe el nombre de tu negocio
+• Selecciona el tipo de negocio
+• Escribe tu ciudad y país
+• Descripción: esto es clave 💡 — escribe una descripción MUY detallada de lo que ofreces. Mientras más información le das al bot, mejor responde a tus clientes.
+• Título principal Hero: la frase que verán tus clientes al entrar (ej: "Transforma tu imagen con nosotros")
+• Subtítulo Hero: una frase corta de apoyo
+• Mensaje de bienvenida del bot: lo primero que dirá tu bot al abrir
+• Avatar del bot: pega aquí la URL de la foto que quieres para tu bot
+
+¿Ya tienes el nombre de tu negocio listo?`,
+
+      2: `¡Perfecto! Paso 2 — Diseño & Colores. 🎨
+
+• Colores: tu bot ya viene con colores por defecto (fondo negro, texto blanco, rojo y verde fosforescente) — puedes cambiarlos aquí o después en el editor.
+• Logo: sube tu logo desde tu librería o pega la URL directa aquí. Si no tienes, no hay problema, se puede cambiar después en el editor.
+• Imagen Hero / Banner: sube la foto principal de tu landing desde tu librería o pega la URL. Es la imagen grande que se ve de fondo al entrar.
+• Título y subtítulo de la sección Servicios: el encabezado que aparece encima de tus servicios.
+
+Recuerda: todo — colores, imágenes y textos — se puede cambiar después en el editor visual. 😊`,
+
+      3: `Paso 3 — Servicios. ✂️
+
+Agrega cada servicio que ofrece tu negocio:
+• Nombre del servicio
+• Precio
+• Descripción del servicio
+
+💡 Tip importante: mientras más detallada sea la descripción de cada servicio, mejor responderá tu bot cuando los clientes pregunten. Incluye duración, qué incluye, para quién es, etc.
+
+Puedes agregar hasta 8 servicios. En el Paso 7 también puedes generarlos automáticamente con IA. ¡Añade al menos uno para continuar!`,
+
+      4: `Paso 4 — Productos & PayPal. 🛒
+
+¿Tu negocio vende productos online?
+• Si SÍ: agrega tu email de PayPal para recibir pagos, y el link de tu PayPal.me si tienes. Luego añade tus productos con nombre, precio e imagen.
+• Si NO vendes productos: puedes saltar este paso directamente con el botón "Galería".
+
+Máximo 8 productos. Los pagos se procesan directo por PayPal sin comisión extra. 💳`,
+
+      5: `Paso 5 — Galería de Fotos. 📸
+
+Sube hasta 8 fotos de tu negocio:
+• Haz clic en cada cuadro y sube la foto desde tu librería, o pega la URL directa de la imagen.
+• Las fotos muestran tu trabajo a los clientes — entre más reales y de calidad, mejor.
+• También puedes editar el título de la sección galería abajo.
+
+Recuerda: puedes cambiar o agregar fotos después en el editor visual. 😊`,
+
+      6: `Paso 6 — Contacto & Horarios. 📞
+
+Llena tu información de contacto:
+• Teléfono
+• WhatsApp (solo números, con código de país, ej: 13055550000)
+• Email
+• Sitio web (opcional)
+• Dirección
+
+Redes sociales — pega tus links directamente:
+• Instagram, Facebook, TikTok, YouTube
+
+Horario de atención: activa cada día y pon la hora de apertura y cierre.
+
+Todo esto lo usará el bot para responder a tus clientes. 💪`,
+
+      7: `Paso 7 — IA & Activar Bot. 🤖
+
+Este es el último paso:
+• OpenAI API Key: pega aquí tu clave de OpenAI para activar el chatbot con IA. Si no tienes, obtenla gratis en platform.openai.com/api-keys
+• Modelo GPT: GPT-4o Mini es el recomendado — rápido y económico.
+• Generar con IA: usa los botones ✨ para generar automáticamente descripción, título, servicios, testimonios y FAQs. Para mejores resultados, asegúrate de haber escrito una descripción bien detallada en el Paso 1.
+• Idioma del bot: español, inglés o portugués.
+• Instrucción especial: cualquier regla para tu bot (ej: "No hacer descuentos mayores al 10%").
+• Testimonios y FAQs: agrégalos manualmente o con IA.
+
+Cuando termines, haz clic en 🚀 Activar Bot 007 y tu bot estará listo. ¡Todo se puede cambiar después en el editor!`,
+
+      8: `🎉 ¡Felicidades! Tu bot está 100% activo y funcionando.
+
+Copia tus enlaces y compártelos con tus clientes. Recuerda que puedes cambiar cualquier cosa — colores, imágenes, textos, servicios — en el editor visual cuando quieras. ¡Empezaste algo increíble! 🚀`,
     },
     en: {
-      1: "Let's start with your business basics! I need your business name, type, and a description. What kind of business is it? 🏢",
-      2: "Excellent! Now let's personalize the design. Choose your colors, upload your logo and main banner image. 🎨",
-      3: "Great! Add the services your business offers. You can include name, price, and description for each one. ✂️",
-      4: "Do you sell products? Set them up here with pricing and accept PayPal payments. If you only offer services, you can skip this step. 🛒",
-      5: "Photos are so important! Upload up to 8 photos of your business so clients can see your work. 📸",
-      6: "Now add your contact information: phone, WhatsApp, email, and business hours. 📞",
-      7: "Almost done! This is the last step. Configure the bot language and optionally generate content with AI. Then click 'Activate Bot 007'. 🤖",
-      8: "🎉 Congratulations! Your bot is 100% ready and live! Copy the links and share them with your clients. You've started something amazing!",
+      1: `Welcome! Let's go step by step. 🏢
+
+Step 1 — Business Information:
+• Enter your business name
+• Select your business type
+• Enter your city and country
+• Description: this is KEY 💡 — write a very detailed description of what you offer. The more info you give the bot, the better it answers your clients.
+• Hero Title: the headline your clients see when they land (e.g. "Transform Your Look With Us")
+• Hero Subtitle: a short supporting line
+• Bot Welcome Message: the first thing your bot says when opened
+• Bot Avatar: paste the URL of the photo you want for your bot
+
+Do you have your business name ready?`,
+
+      2: `Great! Step 2 — Design & Colors. 🎨
+
+• Colors: your bot comes with default colors (black background, white text, red and phosphorescent green) — you can change them here or later in the editor.
+• Logo: upload your logo from your library or paste the direct URL here. No logo? No problem — you can change it later in the visual editor.
+• Hero Image / Banner: upload your main landing page photo from your library or paste the URL. This is the big background image clients see when they arrive.
+• Services section title and subtitle: the header shown above your services list.
+
+Remember: everything — colors, images, and text — can be changed anytime in the visual editor. 😊`,
+
+      3: `Step 3 — Services. ✂️
+
+Add each service your business offers:
+• Service name
+• Price
+• Service description
+
+💡 Important tip: the more detailed the description of each service, the better your bot answers when clients ask about them. Include duration, what's included, who it's for, etc.
+
+You can add up to 8 services. In Step 7 you can also auto-generate them with AI. Add at least one to continue!`,
+
+      4: `Step 4 — Products & PayPal. 🛒
+
+Does your business sell products online?
+• If YES: add your PayPal email to receive payments, and your PayPal.me link if you have one. Then add your products with name, price, and image.
+• If NO products: you can skip this step directly with the "Gallery" button.
+
+Maximum 8 products. Payments go directly through PayPal with no extra commission. 💳`,
+
+      5: `Step 5 — Photo Gallery. 📸
+
+Upload up to 8 photos of your business:
+• Click each square and upload the photo from your library, or paste the image URL directly.
+• Photos show your work to clients — the more real and high quality, the better.
+• You can also edit the gallery section title below.
+
+Remember: you can change or add photos later in the visual editor. 😊`,
+
+      6: `Step 6 — Contact & Hours. 📞
+
+Fill in your contact information:
+• Phone number
+• WhatsApp (numbers only, with country code, e.g. 13055550000)
+• Email
+• Website (optional)
+• Address
+
+Social media — paste your links directly:
+• Instagram, Facebook, TikTok, YouTube
+
+Business hours: enable each day and set your opening and closing times.
+
+Your bot uses all this info to answer your clients. 💪`,
+
+      7: `Step 7 — AI & Activate Bot. 🤖
+
+This is the last step:
+• OpenAI API Key: paste your OpenAI key here to power the AI chatbot. Don't have one? Get it free at platform.openai.com/api-keys
+• GPT Model: GPT-4o Mini is recommended — fast and affordable.
+• Generate with AI: use the ✨ buttons to auto-generate description, title, services, testimonials, and FAQs. For best results, make sure you wrote a detailed description in Step 1.
+• Bot language: Spanish, English, or Portuguese.
+• Special instruction: any rule for your bot (e.g. "No discounts over 10%").
+• Testimonials and FAQs: add them manually or with AI.
+
+When done, click 🚀 Activate Bot 007 and your bot is live. Everything can be changed later in the editor!`,
+
+      8: `🎉 Congratulations! Your bot is 100% active and live.
+
+Copy your links and share them with your clients. Remember you can change anything — colors, images, text, services — in the visual editor anytime. You've started something amazing! 🚀`,
     }
   };
 
@@ -126,13 +274,17 @@
   const PAGE_INTROS = {
     es: {
       sales: '¡Hola! Soy Amanda, tu guía de Super Bot 007. Puedo contarte todo sobre cómo crear tu bot IA, precios y cómo funciona. ¿Tienes alguna pregunta? 😊',
-      form: '¡Bienvenido al creador de bots! Estoy aquí para guiarte en cada paso. Cuando estés listo, empecemos con el Paso 1. ¿Tienes alguna duda antes de comenzar?',
-      editor: '¡Hola! Estoy aquí para ayudarte a personalizar tu landing page. Puedo sugerirte colores, textos e imágenes según tu tipo de negocio. ¿Por dónde empezamos?',
+      form: '¡Hola! Soy tu guía personal. Voy a acompañarte paso a paso para crear tu bot. Son 7 pasos sencillos y al final tu bot estará 100% listo. ¡Empecemos con el Paso 1! 🚀',
+      editor: '¡Hola! Estoy aquí para ayudarte a personalizar tu landing page. Puedes cambiar colores, imágenes y textos en tiempo real. ¿Por dónde empezamos?',
       landing: '¡Hola! Soy Amanda. Esta es tu landing page creada con Super Bot 007. ¿Te puedo ayudar con algo? 🌟',
     },
     en: {
       sales: "Hi! I'm Shirley, your Super Bot 007 guide. I can tell you everything about creating your AI bot, pricing, and how it all works. Any questions? 😊",
-      form: "Welcome to the bot creator! I'm here to guide you through every step. Whenever you're ready, let's start with Step 1. Any questions before we begin?",
+      form: "Hi! I'm your personal guide. I'll walk you through every step to build your bot. Just 7 simple steps and your bot will be 100% live at the end. Let's start with Step 1! 🚀",
+      editor: "Hi! I'm here to help you customize your landing page. You can change colors, images and text in real time. Where shall we start?",
+      landing: "Hi! I'm Shirley. This is your landing page created with Super Bot 007. Can I help you with anything? 🌟",
+    }
+  };
       editor: "Hi! I'm here to help you customize your landing page. I can suggest colors, text, and images based on your business type. Where shall we start?",
       landing: "Hi! I'm Shirley. This is your landing page created with Super Bot 007. Can I help you with anything? 🌟",
     }
