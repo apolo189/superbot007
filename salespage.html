@@ -1679,10 +1679,39 @@ function tFaq(item){
 })();
 
 /* ── Open wizard (replaces scrollToAmanda / scrollToAgent) ── */
-function scrollToAmanda(){ if(typeof window.wizardOpen==='function') window.wizardOpen(); }
-function scrollToAgent(){ if(typeof window.wizardOpen==='function') window.wizardOpen(); }
+function scrollToAmanda(){ openWizardFromVenus(); }
+function scrollToAgent(){ openWizardFromVenus(); return false; }
 function toggleVoiceInput(){ if(typeof window.wizardToggleMic==='function') window.wizardToggleMic(); }
 </script>
 
+<script>
+window.WIZARD_CONTEXT = { page:'sales', language:'en', agentName:'Shirley', businessType:'' };
+
+/* ── WIZARD BRIDGE — connects CTA buttons to the wizard overlay ── */
+function openWizardFromVenus(){
+  const btn = document.getElementById('wz-btn');
+  if(!btn) return;
+  const panel = document.getElementById('wz-panel');
+  const isAlreadyOpen = panel && panel.classList.contains('visible');
+  if(!isAlreadyOpen) btn.click();
+}
+
+function askWizard(el){
+  const q = el ? el.textContent.trim() : '';
+  openWizardFromVenus();
+  setTimeout(function(){
+    const input = document.getElementById('wz-text-inp');
+    if(input && q){
+      input.value = q;
+      if(typeof window.__wzSend === 'function') window.__wzSend();
+      else {
+        const sendBtn = document.getElementById('wz-send-btn');
+        if(sendBtn) sendBtn.click();
+      }
+    }
+  }, 650);
+}
+</script>
+<script src="wizard.js"></script>
 </body>
 </html>
