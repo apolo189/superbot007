@@ -1319,6 +1319,20 @@ STRICT RULES:
   window.__wzSend       = sendText;
   window.__wzToggleLang = toggleLang;
 
+  /* ── PUBLIC: open wizard panel (used by scrollToAmanda / CTA buttons) ── */
+  window.wizardOpen = function() {
+    if (!isOpen) {
+      const btn = document.getElementById('wz-btn');
+      if (btn) { btn.click(); }
+      else { togglePanel(); }
+    }
+  };
+
+  /* ── PUBLIC: toggle mic from outside ── */
+  window.wizardToggleMic = function() {
+    if (typeof toggleMic === 'function') toggleMic();
+  };
+
   /* ── PUBLIC: change language from outside (e.g. salespage toggle) ── */
   window.wizardSetLang = function(newLang) {
     if(newLang !== LANG) {
