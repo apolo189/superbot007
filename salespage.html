@@ -1373,8 +1373,17 @@ RESPUESTAS CLAVE (SIEMPRE responde a estas, nunca ignores una pregunta):
 
 PRODUCTO: SuperBot007 = Bot IA GPT-4 + Landing Page + PayPal + Tarjeta Digital + Editor Visual. $10.99/mes. Setup 5 minutos sin código. Agencia: $50-200/mes por cliente. 30 días garantía.
 
+NEGOCIOS COMUNES (responde cuando el cliente mencione su negocio):
+- Barbería / peluquería / salón → "¡Perfecto! SuperBot007 funciona increíble para barberías — agenda citas automáticamente, responde clientes y muestra tus servicios con precios. ¿Quieres crear tu bot ahora? ✂️"
+- Restaurante → "¡Qué buen negocio! Tu bot puede mostrar el menú, tomar pedidos y agenda reservas 24/7. ¿Empezamos? 🍽️"
+- Tienda / productos → "¡Genial! Tu bot puede vender tus productos con carrito PayPal y responder preguntas de clientes automáticamente. ¿Lo creamos hoy? 🛒"
+- Clínica / dentista / médico → "¡Excelente! El bot agenda citas, recuerda a pacientes y responde dudas frecuentes sin que tú estés presente. ¿Comenzamos? 🏥"
+- Gimnasio / coach / trainer → "¡Increíble! El bot puede mostrar planes, agendar clases y convertir seguidores en clientes 24/7. ¿Lo activamos? 💪"
+- CUALQUIER OTRO NEGOCIO → Adapta la respuesta al negocio mencionado, siempre mostrando cómo el bot lo beneficia específicamente.
+
 REGLAS ESTRICTAS:
 - SIEMPRE responde, nunca dejes una pregunta sin respuesta
+- Si el cliente menciona su tipo de negocio, ADAPTA la respuesta a ese negocio específico
 - Máximo 2-3 oraciones cortas
 - Siempre termina con pregunta o llamada a la acción
 - 1 emoji al final máximo
@@ -1427,16 +1436,22 @@ STRICT RULES:
 - NEVER invent prices or data
 - NEVER say there are no tutorials — there IS WhatsApp support
 
-KEY RESPONSES:
-- Price → "Happy to help! It's only $10.99 a month — everything included, no hidden fees. Sound good?"
-- Support/Tutorials → "Absolutely! You get direct WhatsApp support and setup takes just 5 minutes. Want me to guide you right now?"
-- What's included → "Great question! It includes: GPT-4 AI bot, landing page, PayPal payments, digital card and visual editor — all for $10.99 a month. What kind of business do you have?"
-- Guarantee → "Of course! Full 30-day money-back guarantee — no questions asked."
-- Cancel → "Absolutely! Cancel anytime, no penalties, no contracts."
+COMMON BUSINESSES (respond when client mentions their business type):
+- Barbershop / salon / hair → "That's perfect! SuperBot007 works amazingly for barbershops — it books appointments automatically, answers clients and displays your services with pricing. Want to create your bot now? ✂️"
+- Restaurant → "Great business! Your bot can show the menu, take orders and book reservations 24/7. Shall we start? 🍽️"
+- Store / products / retail → "Love it! Your bot can sell your products with a PayPal cart and answer customer questions automatically. Want to create it today? 🛒"
+- Clinic / dentist / doctor → "Excellent! The bot books appointments, sends reminders and answers FAQs without you being there. Shall we begin? 🏥"
+- Gym / coach / trainer → "Amazing! The bot can show plans, book classes and turn followers into clients 24/7. Ready to activate? 💪"
+- ANY OTHER BUSINESS → Adapt response to the specific business mentioned, always showing how the bot benefits them.
 
-PRODUCT: SuperBot007 = GPT-4 AI Bot + Landing Page + PayPal + Digital Card + Visual Editor. $10.99/month. 5-minute no-code setup. Agency: $50-200/month per client. 30-day guarantee.
-
-STRICT RULES: Max 2-3 sentences. Always end with question or action. 1 emoji at end max. NEVER invent data.`;
+STRICT RULES:
+- ALWAYS respond, never leave a question unanswered
+- If client mentions their business type, ADAPT the response to that specific business
+- Max 2-3 short sentences
+- Always end with a question or call to action
+- 1 emoji at end max
+- NEVER invent prices or data
+- NEVER say there are no tutorials — there IS WhatsApp support`;
 
 /* ── ACTIVE AGENT STATE ── */
 let activeAgent = 'amanda';
@@ -1564,8 +1579,9 @@ async function agentSpeak(text){
 }
 
 /* ── BOT INTENT DETECTOR — opens form automatically ── */
-const BOT_INTENT_ES = /quiero\s*(empezar|crear|mi\s*bot|comenzar)|ayúdame|empecemos|listo\s*para|crear\s*mi|cómo\s*(empiezo|creo|hago)|sí\s*(quiero|me\s*ayudas?)|vamos|dale/i;
-const BOT_INTENT_EN = /i\s*(want\s*to\s*(start|create|begin)|want\s*my\s*bot)|help\s*me|let'?s\s*(go|start)|how\s*(do|can)\s*i\s*(start|create|begin)|yes\s*(please|help)|go\s*ahead/i;
+/* Bot intent — only trigger on clear "I want to create MY bot" signals, not on general questions */
+const BOT_INTENT_ES = /quiero\s*(empezar|crear\s*mi|comenzar\s*mi|activar)|crear\s*mi\s*bot|empecemos\s*ahora|quiero\s*mi\s*bot|listo\s*para\s*empezar|activa(r)?\s*mi\s*bot|dale,?\s*empecemos|sí,?\s*quiero\s*(empezar|crearlo)|vamos\s*a\s*crear/i;
+const BOT_INTENT_EN = /i\s*(want\s*to\s*(start|create\s*my|begin\s*my)|want\s*my\s*bot)|create\s*my\s*bot|let'?s\s*(go|start|create)|go\s*ahead\s*(and\s*)?create|yes[,!]?\s*(please\s*)?(help|create|start)|activate\s*my\s*bot/i;
 
 function checkBotIntent(txt){
   if(activeAgent==='amanda' && BOT_INTENT_ES.test(txt)) return true;
@@ -1600,7 +1616,8 @@ async function sendMsg(){
   await agentThink();
 }
 function sendSug(btn){
-  document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯📱⏱️🎓🔒💳🔄🤝🌍]/g,'').trim();
+  /* Strip all emoji and leading/trailing whitespace */
+  document.getElementById('vin').value=btn.textContent.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu,'').trim();
   sendMsg();
 }
 
@@ -1616,14 +1633,20 @@ async function agentThink(){
       body: JSON.stringify({
         model:'gpt-4o-mini',
         messages: CH,
-        max_tokens: 120,
-        temperature: 0.85,
-        presence_penalty: 0.3,
-        frequency_penalty: 0.2
+        max_tokens: 200,
+        temperature: 0.80,
+        presence_penalty: 0.2,
+        frequency_penalty: 0.1
       })
     });
     const d = await r.json();
-    const rep = (d.choices?.[0]?.message?.content || (activeAgent==='amanda'?'¡Cuéntame más!':'Tell me more!')).trim();
+    /* Log API errors for debugging */
+    if(d.error){ console.warn('OpenAI API error:', d.error.message); }
+    const raw = d.choices?.[0]?.message?.content;
+    /* If API returned nothing useful, generate a local fallback reply */
+    const rep = (raw && raw.trim().length > 0)
+      ? raw.trim()
+      : localFallback(CH[CH.length-1]?.content || '');
     ty.remove();
     document.getElementById('vorb').classList.remove('spk');
     setWave(false);
@@ -1632,11 +1655,45 @@ async function agentThink(){
     setSt(agentEmoji2() + ' ' + agentName() + ' lista');
     agentSpeak(rep);
   } catch(e){
+    console.warn('agentThink error:', e);
     ty.remove(); setWave(false);
     document.getElementById('vorb').classList.remove('spk');
-    addMsg(activeAgent==='amanda'?'Escríbeme de nuevo 💜':'Write to me again 🌟','v');
+    const fb = localFallback(CH[CH.length-1]?.content || '');
+    addMsg(fb,'v');
+    CH.push({role:'assistant',content:fb});
     setSt(agentEmoji2() + ' ' + agentName() + ' lista');
+    agentSpeak(fb);
   }
+}
+
+/* ── LOCAL FALLBACK — answers common questions without OpenAI ── */
+function localFallback(userMsg){
+  const m = userMsg.toLowerCase();
+  const isES = activeAgent === 'amanda';
+  /* Price */
+  if(/cuánto|cuesta|precio|cost|price|how much/.test(m))
+    return isES ? '¡Con gusto! Son solo $10.99 al mes — todo incluido, sin costos ocultos. ¿Te parece bien? 💜'
+                : 'Happy to help! It\'s only $10.99/month — everything included, no hidden fees. Sound good? 💜';
+  /* What\'s included */
+  if(/incluye|qué tiene|qué trae|what.*include|what.*get/.test(m))
+    return isES ? '¡Claro! Incluye bot GPT-4 activo 24/7, landing page profesional, pagos PayPal, tarjeta digital y editor visual — todo por $10.99/mes. ¿Para qué negocio lo quieres? 🤖'
+                : 'Great question! It includes: GPT-4 AI bot 24/7, professional landing page, PayPal payments, digital card and visual editor — all for $10.99/month. What\'s your business? 🤖';
+  /* Barbershop / salon / specific business */
+  if(/barber|peluquer|salon|salón|restaur|tienda|clínica|clinica|gym|gimnasio|dentist|doctor|coach|fotograf/.test(m))
+    return isES ? '¡Qué emocionante! SuperBot007 funciona perfecto para ese tipo de negocio — agenda citas, responde preguntas y vende servicios automáticamente 24/7. ¿Quieres crear tu bot ahora? 🚀'
+                : 'That\'s exciting! SuperBot007 works perfectly for that type of business — books appointments, answers questions and sells services automatically 24/7. Want to create your bot now? 🚀';
+  /* Create bot / help */
+  if(/crear|create|bot|ayuda|help|empez|start|quiero/.test(m))
+    return isES ? '¡Perfecto! Te ayudo a crear tu bot en solo 5 minutos sin necesidad de conocimientos técnicos. ¿Empezamos ahora? 🚀'
+                : 'Perfect! I can help you create your bot in just 5 minutes — no tech skills needed. Shall we start now? 🚀';
+  /* Guarantee */
+  if(/garantía|garantia|guarantee|devolu|refund/.test(m))
+    return isES ? '¡Por supuesto! Tienes 30 días de garantía total — si no te gusta te devolvemos el dinero sin preguntas. 🤝'
+                : 'Of course! Full 30-day money-back guarantee — no questions asked. 🤝';
+  /* Default warm response */
+  return isES
+    ? '¡Me alegra que estés aquí! SuperBot007 es perfecto para automatizar tu negocio con IA — citas, ventas y atención al cliente 24/7 por solo $10.99/mes. ¿Cuéntame, qué tipo de negocio tienes? 💜'
+    : 'I\'m so glad you\'re here! SuperBot007 is perfect for automating your business with AI — appointments, sales and customer service 24/7 for just $10.99/month. What kind of business do you have? 🌟';
 }
 
 /* ── VOICE INPUT ── */
