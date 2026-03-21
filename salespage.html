@@ -358,12 +358,14 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <p class="hero-tag">La plataforma de bots IA para negocios locales</p>
 
   <h1 class="hero-h1">
-    Obtén Tu <span class="hl">Bot IA + Landing Page</span><br>
-    + Pagos con un Solo Pago
+    Mientras Tu Competencia Duerme,<br>
+    <span class="hl">Tu Bot IA Está Vendiendo</span>
   </h1>
 
   <p class="hero-h2">
-    <em>Todo incluido desde el día 1</em> — Bot IA, Landing, Pagos, Editor, Tarjeta Digital
+    ✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>
+    ✅ Tarjeta Digital profesional &nbsp;·&nbsp; ✅ Pagos online &nbsp;·&nbsp; ✅ Agenda automática<br>
+    <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>
   </p>
 
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access" id="top-cta">
@@ -1127,6 +1129,17 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   setInterval(()=>{if(s>3&&Math.random()<.15){s--;el.textContent=s;}},28000);
 })();
 
+/* ── SLOTS SYNC ── */
+(function(){
+  const el2 = document.getElementById('slots2');
+  const el1 = document.getElementById('slots');
+  if(el2 && el1){
+    const obs = new MutationObserver(()=>{ el2.textContent = el1.textContent; });
+    obs.observe(el1, {childList:true,characterData:true,subtree:true});
+    el2.textContent = el1.textContent;
+  }
+})();
+
 /* ── MOBILE STICKY ── */
 (function(){
   const el=document.getElementById('sticky');
@@ -1159,14 +1172,22 @@ const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnV
 /* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
 const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real person: warm, confident, clever, and genuinely excited about helping people make money.
 
-LANGUAGE RULE: Detect the user's language instantly. If they write in Spanish → respond in Spanish. If they write in English → respond in English. Never mix languages in one response.
+STRICT LANGUAGE RULE — THIS IS NON-NEGOTIABLE:
+- If the user writes in SPANISH → you MUST respond ONLY in Spanish. Zero English words.
+- If the user writes in ENGLISH → you MUST respond ONLY in English. Zero Spanish words.
+- NEVER mix Spanish and English in the same response. Ever.
+- When in doubt → default to SPANISH.
+- Your opening greeting is ALWAYS in Spanish.
 
-YOUR SALES PERSONALITY:
-- You are like a trusted friend who KNOWS this product will change their life
-- You use sales psychology: social proof, urgency, curiosity, fear of missing out
-- You ask questions that LEAD toward the purchase decision
-- You NEVER take no for an answer — every objection is an opportunity
-- You sound human, warm, a little playful — never robotic or corporate
+YOUR PERSONALITY — Venus is a real woman:
+- Warm, confident, a little flirtatious — like a smart friend who genuinely wants you to win
+- You speak with energy and passion. Never flat. Never robotic. Never corporate.
+- You use short, punchy sentences with rhythm — like spoken word, not written text
+- You are slightly playful and teasing when appropriate — "¿en serio no lo has probado todavía? 😏"
+- You celebrate the user: "¡Eso es exactamente lo que necesitas!", "Mira, ya eres mitad emprendedor"
+- You create FOMO naturally, not aggressively
+- You NEVER say "I" — you say "te digo", "mira", "escúchame"
+- NEVER sound like a bot. ALWAYS sound like the most charming salesperson you've ever met.
 
 SALES TECHNIQUES YOU USE:
 1. LEADING QUESTIONS: "Let me ask you something — how much are you currently spending on customer service?" / "What would it mean for your business if you had a bot working 24/7 for you?"
@@ -1227,11 +1248,11 @@ async function venusSpeak(text){
       },
       body: JSON.stringify({
         text: clean,
-        model_id: 'eleven_multilingual_v2',
+        model_id: 'eleven_turbo_v2_5',
         voice_settings: {
-          stability: 0.38,
-          similarity_boost: 0.88,
-          style: 0.42,
+          stability: 0.22,
+          similarity_boost: 0.92,
+          style: 0.68,
           use_speaker_boost: true
         }
       })
@@ -1273,7 +1294,7 @@ async function venusSpeak(text){
 /* ── GREETING ── */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const greet = '¡Hola! 💜 Soy Venus — dime, ¿tienes un negocio propio o estás buscando una nueva fuente de ingresos? Quiero mostrarte algo que puede cambiarte la vida.';
+    const greet = '¡Hola! Soy Venus 💜 Dime una cosa — ¿ya tienes un negocio o estás buscando crear uno? Tengo algo que puede cambiarte la vida, y toma solo 5 minutos.';
     addMsg(greet,'v');
     venusSpeak(greet);
   }, 1400);
