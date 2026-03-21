@@ -623,6 +623,9 @@ function goToStep(n){
   document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
   step=n; updateBar(n); window.scrollTo({top:0,behavior:'smooth'});
+  /* notify wizard of step change */
+  if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
+  if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
 }
 function nextStep(from){
   if(!validate(from)) return;
@@ -1134,13 +1137,19 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ══ WIZARD VOICE AGENT ══ -->
 <script>
-window.WIZARD_CONTEXT = {
-  page: 'form',
-  step: 1,
-  language: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en',
-  agentName: (navigator.language || 'es').toLowerCase().startsWith('es') ? 'Amanda' : 'Shirley',
-  businessType: ''
-};
+/* Sync language preference from salespage if available */
+(function(){
+  let lang = 'en';
+  try { lang = localStorage.getItem('sb007_lang') || lang; } catch(e){}
+  if(!['en','es'].includes(lang)) lang = 'en';
+  window.WIZARD_CONTEXT = {
+    page: 'form',
+    step: 1,
+    language: lang,
+    agentName: lang === 'es' ? 'Amanda' : 'Shirley',
+    businessType: ''
+  };
+})();
 </script>
 <script src="wizard.js"></script>
 </body>

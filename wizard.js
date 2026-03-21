@@ -162,55 +162,86 @@
       /* ═══ WIZARD OVERLAY ═══ */
       #wz-btn {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
+        bottom: 28px;
+        right: 28px;
         z-index: 99990;
-        width: 62px;
-        height: 62px;
+        width: 76px;
+        height: 76px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #a855f7, #7c3aed);
-        border: none;
+        background: linear-gradient(135deg, #a855f7, #6d28d9);
+        border: 3px solid rgba(255,255,255,.18);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.6rem;
-        box-shadow: 0 6px 28px rgba(168,85,247,.65), 0 0 0 0 rgba(168,85,247,.4);
-        animation: wz-pulse 2.2s ease-in-out infinite;
+        font-size: 2rem;
+        box-shadow: 0 8px 32px rgba(168,85,247,.75), 0 0 0 0 rgba(168,85,247,.4), inset 0 1px 0 rgba(255,255,255,.15);
+        animation: wz-pulse 2s ease-in-out infinite;
         transition: transform .2s, box-shadow .2s;
       }
-      #wz-btn:hover { transform: scale(1.1); }
-      #wz-btn.open  { animation: none; background: linear-gradient(135deg,#ef4444,#dc2626); }
+      #wz-btn:hover { transform: scale(1.12); box-shadow: 0 12px 42px rgba(168,85,247,.9), 0 0 0 0 rgba(168,85,247,.4); }
+      #wz-btn.open  { animation: none; background: linear-gradient(135deg,#ef4444,#dc2626); border-color: rgba(255,255,255,.2); }
+      /* Label under button */
+      #wz-btn::after {
+        content: attr(data-label);
+        position: absolute;
+        bottom: -22px;
+        left: 50%; transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: .65rem;
+        font-weight: 800;
+        letter-spacing: .06em;
+        color: rgba(168,85,247,.9);
+        text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+      }
+      #wz-btn.open::after { content: ''; }
       #wz-btn .wz-notify {
         position: absolute;
-        top: -3px; right: -3px;
-        width: 16px; height: 16px;
+        top: -2px; right: -2px;
+        width: 20px; height: 20px;
         background: #00c853;
         border-radius: 50%;
-        border: 2px solid #0a0a0f;
+        border: 3px solid #0a0a0f;
         animation: wz-ndot 1.4s infinite;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .55rem; color: #fff; font-weight: 900;
       }
       @keyframes wz-pulse {
-        0%,100% { box-shadow: 0 6px 28px rgba(168,85,247,.55), 0 0 0 0 rgba(168,85,247,.4); }
-        50%      { box-shadow: 0 6px 40px rgba(168,85,247,.8),  0 0 0 12px rgba(168,85,247,0); }
+        0%,100% { box-shadow: 0 8px 32px rgba(168,85,247,.65), 0 0 0 0 rgba(168,85,247,.5); }
+        50%      { box-shadow: 0 8px 48px rgba(168,85,247,.9),  0 0 0 16px rgba(168,85,247,0); }
       }
       @keyframes wz-ndot {
-        0%   { box-shadow: 0 0 0 0 rgba(0,200,83,.6); }
-        70%  { box-shadow: 0 0 0 8px rgba(0,200,83,0); }
+        0%   { box-shadow: 0 0 0 0 rgba(0,200,83,.7); }
+        70%  { box-shadow: 0 0 0 10px rgba(0,200,83,0); }
         100% { box-shadow: 0 0 0 0 rgba(0,200,83,0); }
       }
+      /* Step indicator on button */
+      #wz-step-badge {
+        position: absolute;
+        top: -4px; left: -4px;
+        width: 24px; height: 24px;
+        background: linear-gradient(135deg,#f59e0b,#f97316);
+        border-radius: 50%;
+        border: 2px solid #0a0a0f;
+        font-size: .65rem; font-weight: 900;
+        color: #fff;
+        display: none; align-items: center; justify-content: center;
+        font-family: 'Inter', sans-serif;
+      }
+      #wz-step-badge.show { display: flex; }
 
       /* ═══ PANEL ═══ */
       #wz-panel {
         position: fixed;
-        bottom: 100px;
-        right: 24px;
+        bottom: 118px;
+        right: 28px;
         z-index: 99989;
-        width: 360px;
+        width: 380px;
         max-width: calc(100vw - 32px);
-        max-height: 560px;
-        background: #0f0f1a;
-        border: 1px solid rgba(168,85,247,.3);
+        max-height: 580px;
+        background: linear-gradient(180deg, #0d0d1f 0%, #0a0a14 100%);
+        border: 1px solid rgba(168,85,247,.4);
         border-radius: 22px;
         box-shadow: 0 24px 80px rgba(0,0,0,.8), 0 0 60px rgba(168,85,247,.15);
         display: flex;
@@ -434,7 +465,8 @@
     const btn = document.createElement('button');
     btn.id = 'wz-btn';
     btn.setAttribute('aria-label', IS_ES() ? 'Hablar con Amanda' : 'Talk to Shirley');
-    btn.innerHTML = `🧙‍♀️<span class="wz-notify"></span>`;
+    btn.setAttribute('data-label', IS_ES() ? 'Habla conmigo' : 'Talk to me');
+    btn.innerHTML = `🧙‍♀️<span class="wz-notify">1</span><span id="wz-step-badge"></span>`;
     btn.addEventListener('click', togglePanel);
     document.body.appendChild(btn);
 
@@ -631,8 +663,70 @@ STRICT RULES:
 4. Maximum 1 emoji per response
 5. Never invent prices or data
 6. If the client mentions their business type, adapt your response
-7. When the client wants to create their bot, guide them to the form`;
+7. When the client says they want to create their bot or fill the form, tell them you are taking them there NOW and use action words like "Taking you there!" — the system handles the redirect automatically
+8. In form steps: explain EXACTLY what to fill in the current step, be specific and encouraging
+9. NEVER say "click the link" — you handle navigation automatically`;
+    } else {
+      return `You are Shirley, sales agent and personal guide for Super Bot 007.
+Personality: friendly, professional, energetic. Always in ENGLISH.
+Always respond directly to what the client is asking.
+Current page: ${PAGE}${stepInfo}${bizInfo}
+
+PRODUCT KNOWLEDGE:
+- ${kb.product}
+- Price: ${kb.price}
+- Guarantee: ${kb.guarantee}
+- Setup time: ${kb.howlong}
+- WhatsApp: ${kb.whatsapp}
+- Agency: ${kb.agency}
+- Businesses: ${kb.businesses}
+- Cancel: ${kb.cancel}
+- Security: ${kb.security}
+- International: ${kb.worldwide}
+
+BUSINESS-TYPE RESPONSES:
+- Barbershop: ${kb.barbershop}
+- Restaurant: ${kb.restaurant}
+- Clinic/medical: ${kb.clinic}
+- Gym: ${kb.gym}
+- Store: ${kb.store}
+- Beauty salon: ${kb.salon}
+- Spa: ${kb.spa}
+- Lawyer: ${kb.lawyer}
+- Real estate: ${kb.realEstate}
+- Childcare: ${kb.childcare}
+- E-commerce: ${kb.ecommerce}
+
+STRICT RULES:
+1. ALWAYS answer the client's question
+2. Maximum 2-3 short sentences
+3. End with a question or call to action
+4. Maximum 1 emoji per response
+5. Never invent prices or data
+6. If the client mentions their business type, adapt your response
+7. When the client says they want to create their bot or fill the form, tell them you are taking them there NOW — the system handles the redirect automatically
+8. In form steps: explain EXACTLY what to fill in the current step, be specific and encouraging
+9. NEVER say "click the link" — you handle navigation automatically`;
     }
+  }
+
+  /* ── FORM URL ── */
+  const FORM_URL = 'https://apolo189.github.io/superbot007/form.html';
+
+  /* ── INTENT DETECTION: wants to go to form / create bot ── */
+  function detectFormIntent(text) {
+    const t = text.toLowerCase().replace(/[¡!¿?]/g,'');
+    // Broader patterns — partial words and common short phrases
+    return (
+      /\b(listo|vamos|empezar|empecemos|empieza|empiezo|crear|crea|creo|quiero|quiero.*bot|quiero.*crear|quiero.*empezar|formulario|form|llenar|fill|start|ready|create|build|sign.*up|registr|hacer|activar|activate|hacer.*bot|start.*now|comenzar|comencemos|dale|go ahead|proceed|let.*go|let.*start|ayud|guia|guíame|guiame|start.*creat|build.*bot|now|ahora|si|sí|yes|yeah|sure|ok|okay|claro|andale|órale|orale|por.*favor|porfavor)\b/.test(t)
+      && PAGE === 'sales'
+    );
+  }
+
+  /* ── INTENT: next step in form ── */
+  function detectNextStepIntent(text) {
+    const t = text.toLowerCase().replace(/[¡!¿?]/g,'');
+    return /\b(siguiente|next|continue|continuar|listo|paso.*siguiente|siguiente.*paso|next.*step|step.*next|done|hecho|listo|ya|avanzar|sigue|go.*on|move.*on|forward|adelante|ok|okay|claro|si|sí|yes|yeah|sure)\b/.test(t);
   }
 
   /* ── SEND MESSAGE ── */
@@ -647,6 +741,43 @@ STRICT RULES:
 
     // Detect business type from user input
     detectBusinessType(text);
+
+    /* ── FORM REDIRECT INTENT (salespage only) ── */
+    if (PAGE === 'sales' && detectFormIntent(text)) {
+      const reply = IS_ES()
+        ? '¡Perfecto! 🚀 Te llevo al formulario ahora mismo. Son solo 7 pasos sencillos — yo te guío en cada uno. ¡Vamos!'
+        : '🚀 Perfect! Taking you to the form right now. Just 7 simple steps — I\'ll guide you through each one. Let\'s go!';
+      addAgentMsg(reply);
+      speak(reply);
+      setTimeout(() => { window.location.href = FORM_URL; }, 2800);
+      return;
+    }
+
+    /* ── NEXT STEP INTENT (form page only) ── */
+    if (PAGE === 'form' && detectNextStepIntent(text)) {
+      // Try multiple selectors to find the next button
+      const btn = document.querySelector(`.btn-next[onclick="nextStep(${currentStep})"]`)
+               || document.querySelector(`#step${currentStep} .btn-next`)
+               || document.querySelector('.step-card.active .btn-next');
+      if (btn) {
+        const nextStepNum = currentStep + 1;
+        const hint = STEP_SCRIPTS[LANG][nextStepNum];
+        const msg = hint
+          ? hint
+          : (IS_ES() ? `¡Genial! Paso ${nextStepNum}. 👉` : `Great! Step ${nextStepNum}. 👉`);
+        addAgentMsg(msg);
+        speak(msg);
+        setTimeout(() => btn.click(), 1500);
+        return;
+      }
+      // If already on last step
+      const lastMsg = IS_ES()
+        ? '¡Estás en el último paso! Configura tu bot y haz clic en "Activar Bot 007". 🚀'
+        : 'You\'re on the last step! Configure your bot and click "Activate Bot 007". 🚀';
+      addAgentMsg(lastMsg);
+      speak(lastMsg);
+      return;
+    }
 
     const typing = showTyping();
     setStatus(IS_ES() ? 'Pensando...' : 'Thinking...');
@@ -955,14 +1086,23 @@ STRICT RULES:
   /* ── STEP UPDATE (called by form.html when step changes) ── */
   window.wzUpdateStep = function(step) {
     currentStep = step;
-    if (isOpen && hasGreeted) {
-      const hint = STEP_SCRIPTS[LANG][step];
-      if (hint) {
-        setTimeout(() => {
-          addAgentMsg(hint);
-          speak(hint);
-        }, 800);
-      }
+    const hint = STEP_SCRIPTS[LANG][step];
+    if (!hint) return;
+
+    // If panel closed, open it and greet
+    if (!isOpen) {
+      const btn = document.getElementById('wz-btn');
+      if (btn) btn.click();
+      // Wait for open animation then show hint
+      setTimeout(() => {
+        addAgentMsg(hint);
+        speak(hint);
+      }, 700);
+    } else {
+      setTimeout(() => {
+        addAgentMsg(hint);
+        speak(hint);
+      }, 500);
     }
   };
 
@@ -994,19 +1134,26 @@ STRICT RULES:
     injectStyles();
     buildUI();
 
-    // Auto-open after 3s on sales page to catch attention
+    // Sales page: pulse after 3s to attract attention
     if (PAGE === 'sales') {
       setTimeout(() => {
         if (!isOpen) {
-          // Just show notify dot pulse — don't auto-open on mobile
           const btn = document.getElementById('wz-btn');
           if (btn) btn.style.animation = 'wz-pulse 1s ease-in-out infinite';
         }
       }, 3000);
     }
 
-    // On form page — listen for step changes via MutationObserver
+    // Form page: auto-open wizard after 1.5s and greet with step guide
     if (PAGE === 'form') {
+      setTimeout(() => {
+        if (!isOpen) {
+          const btn = document.getElementById('wz-btn');
+          if (btn) btn.click();
+        }
+      }, 1500);
+
+      // Listen for step changes via MutationObserver
       const observer = new MutationObserver(() => {
         const activeCard = document.querySelector('.step-card.active');
         if (activeCard) {
@@ -1017,8 +1164,18 @@ STRICT RULES:
           }
         }
       });
-      const main = document.querySelector('.main') || document.body;
+      const main = document.querySelector('.main, .form-wrap, form') || document.body;
       observer.observe(main, { attributes: true, subtree: true, attributeFilter: ['class'] });
+    }
+
+    // Editor page: greet with customization help
+    if (PAGE === 'editor') {
+      setTimeout(() => {
+        if (!isOpen) {
+          const btn = document.getElementById('wz-btn');
+          if (btn) btn.style.animation = 'wz-pulse 1s ease-in-out infinite';
+        }
+      }, 4000);
     }
   }
 

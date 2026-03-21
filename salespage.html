@@ -400,6 +400,38 @@ img{max-width:100%;display:block;}
 .sg:hover{background:rgba(168,85,247,.22);border-color:#a855f7;transform:translateY(-2px);}
 @keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}50%{box-shadow:0 0 0 10px rgba(255,71,87,0)}}
 
+/* ═══ WIZARD CTA BLOCK (replaces old venus chat UI) ═══ */
+.wizard-cta-block{display:flex;flex-direction:column;align-items:center;gap:1.4rem;width:100%;max-width:640px;}
+.wizard-cta-btn{
+  display:flex;align-items:center;gap:1rem;
+  width:100%;max-width:560px;
+  padding:1.2rem 1.8rem;
+  background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(109,40,217,.08));
+  border:2px solid rgba(168,85,247,.45);
+  border-radius:20px;
+  cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 8px 32px rgba(168,85,247,.18);
+  text-align:left;
+  animation:wcta-glow 2.8s ease-in-out infinite;
+}
+.wizard-cta-btn:hover{
+  border-color:#a855f7;
+  background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(109,40,217,.14));
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 14px 48px rgba(168,85,247,.38);
+}
+.wcta-emoji{font-size:2.6rem;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(168,85,247,.7));}
+.wcta-info{flex:1;}
+.wcta-name{font-size:1.08rem;font-weight:800;color:#fff;margin-bottom:.2rem;}
+.wcta-sub{font-size:.78rem;color:rgba(168,85,247,.85);font-weight:600;}
+.wcta-arrow{font-size:1.6rem;color:rgba(168,85,247,.7);flex-shrink:0;transition:transform .3s;}
+.wizard-cta-btn:hover .wcta-arrow{transform:translateX(5px);}
+@keyframes wcta-glow{
+  0%,100%{box-shadow:0 8px 32px rgba(168,85,247,.18),0 0 0 0 rgba(168,85,247,.25);}
+  50%{box-shadow:0 8px 32px rgba(168,85,247,.18),0 0 0 8px rgba(168,85,247,0);}
+}
+
 /* ═══ PRICING — ClickSites style ═══ */
 #pricing{background:var(--dark);}
 .price-table{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:860px;margin:0 auto;}
@@ -1005,139 +1037,50 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <div class="dline"></div>
 
-<!-- ════════════ AMANDA + SHIRLEY ════════════ -->
+<!-- ════════════ AGENT CTA ════════════ -->
 <section id="venus" class="sec">
   <div class="vwrap">
 
-    <div class="veye reveal">Intelligent AI Sales Agents</div>
-    <h2 class="vh2 reveal">Talk to <span class="hlv">Shirley or Amanda</span><br>— Your Personal Guide 24/7</h2>
-    <p class="vsub reveal">Two AI agents available at all times. Shirley in English 🇺🇸 · Amanda en español 🇪🇸<br>Ask them anything — they respond by <strong>text and voice</strong>, guiding you step by step.</p>
+    <div class="veye reveal" id="venusEye">Your Personal AI Guide — Available 24/7</div>
+    <h2 class="vh2 reveal" id="venusH2">Ask <span class="hlv">Shirley or Amanda</span> <br>Anything — Instantly</h2>
+    <p class="vsub reveal" id="venusSub">
+      Shirley 🇺🇸 in English &nbsp;·&nbsp; Amanda 🇪🇸 en español<br>
+      Text &amp; voice — guiding you to <strong>build your bot in 5 minutes</strong>
+    </p>
 
-    <!-- ══ HOW IT WORKS GUIDE ══ -->
-    <div class="how-box reveal">
-      <div class="how-title">📖 How does it work?</div>
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-num">1</div>
-          <div class="how-text"><strong>Click 🧙‍♀️</strong><br>Bottom right — the purple button</div>
+    <!-- ── BIG WIZARD CTA ── -->
+    <div class="wizard-cta-block reveal">
+      <button class="wizard-cta-btn" onclick="openWizardFromVenus()" id="venusCTABtn">
+        <span class="wcta-emoji">🧙‍♀️</span>
+        <div class="wcta-info">
+          <div class="wcta-name" id="venusBtnLabel">Talk to Shirley — Start Here</div>
+          <div class="wcta-sub" id="venusBtnSub">Click to chat · text or voice · free</div>
         </div>
-        <div class="how-arr">→</div>
-        <div class="how-step">
-          <div class="how-num">2</div>
-          <div class="how-text"><strong>Type or speak</strong><br>Type your question or press <span class="how-mic-ico"><i class="fas fa-microphone"></i></span></div>
-        </div>
-        <div class="how-arr">→</div>
-        <div class="how-step">
-          <div class="how-num">3</div>
-          <div class="how-text"><strong>Agent responds</strong><br>By text and voice, in your language</div>
-        </div>
-      </div>
-      <div class="how-note" id="howNote">
-        💡 <strong>Shirley 🇺🇸 (English):</strong> Press the 🧙‍♀️ button at the bottom right and type or speak in English.<br>
-        💡 <strong>Amanda 🇪🇸 (Español):</strong> Aprieta el botón 🧙‍♀️ abajo a la derecha y habla en español.
-      </div>
-    </div>
-
-    <!-- ── AGENT SELECTOR BUTTONS ── -->
-    <div class="agent-selector reveal">
-      <button class="agent-btn active" id="btnAmanda" onclick="switchAgent('amanda')">
-        <span class="agent-flag">🇪🇸</span>
-        <span class="agent-name">Amanda</span>
-        <span class="agent-badge-es">ESPAÑOL</span>
-        <span class="agent-label">Responds in Spanish · Voice + text</span>
+        <span class="wcta-arrow">→</span>
       </button>
-      <button class="agent-btn" id="btnShirley" onclick="switchAgent('shirley')">
-        <span class="agent-flag">🇺🇸</span>
-        <span class="agent-name">Shirley</span>
-        <span class="agent-badge-en">ENGLISH</span>
-        <span class="agent-label">👆 Tap here to activate Shirley</span>
-      </button>
-    </div>
 
-    <!-- ── ACTIVE AGENT BANNER ── -->
-    <div class="agent-active-bar" id="agentActiveBar">
-      <span class="aab-dot"></span>
-      <span id="agentBarText">Shirley is ready · Click here or the 🧙‍♀️ button at the bottom right</span>
-    </div>
-
-    <!-- ── ORB (hidden visually but kept for JS compatibility) ── -->
-    <div id="vorb" style="display:none;"></div>
-    <div id="vorbBadge" style="display:none;"></div>
-    <div id="agentEmoji" style="display:none;">💜</div>
-    <div id="vorbPulse" style="display:none;"></div>
-    <div id="vring3" style="display:none;"></div>
-    <div id="vring2" style="display:none;"></div>
-    <div id="vring" style="display:none;"></div>
-
-    <div id="vwave" class="idle" style="display:none;">
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-      <div class="wb"></div><div class="wb"></div><div class="wb"></div>
-    </div>
-    <div id="vstatus" style="display:none;">💜 Shirley ready</div>
-
-    <!-- ── CHAT WINDOW ── -->
-    <div class="vchat reveal" id="vchatBox">
-
-      <!-- Chat header -->
-      <div class="vchat-header" id="vchatHeader">
-        <div class="vch-avatar" id="vchAvatar">🤖</div>
-        <div class="vch-info">
-          <div class="vch-name" id="vchName">Shirley · AI Agent</div>
-          <div class="vch-online"><span class="vch-dot"></span> <span id="vchStatus">online · responds in seconds</span></div>
-        </div>
-        <div class="vch-lang" id="vchLang">🇺🇸 EN</div>
+      <!-- EN quick chips -->
+      <div class="vsug reveal" id="sugChips">
+        <button class="sg" onclick="askWizard(this)">💰 How much does it cost?</button>
+        <button class="sg" onclick="askWizard(this)">🤖 What does SuperBot007 include?</button>
+        <button class="sg" onclick="askWizard(this)">✂️ I have a barbershop, does it work?</button>
+        <button class="sg" onclick="askWizard(this)">🍽️ I have a restaurant, how does it work?</button>
+        <button class="sg" onclick="askWizard(this)">🚀 I want to create my bot now</button>
+        <button class="sg" onclick="askWizard(this)">💼 Can I start an agency?</button>
+        <button class="sg" onclick="askWizard(this)">⏱️ How long does setup take?</button>
+        <button class="sg" onclick="askWizard(this)">🤝 Is there a money-back guarantee?</button>
       </div>
-
-      <!-- Messages area -->
-      <div id="vmsg"></div>
-
-      <!-- Input row -->
-      <div class="vci">
-        <button id="vbmic" onclick="toggleVoice()" title="Tap to speak">
-          <i class="fas fa-microphone" id="mic-icon"></i>
-          <span class="vmic-label" id="vmicLabel">Speak</span>
-        </button>
-        <input type="text" id="vin" placeholder="Ask Shirley here...">
-        <button class="vbsend" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+      <!-- ES quick chips (hidden by default) -->
+      <div class="vsug" id="sugChipsEs" style="display:none;">
+        <button class="sg" onclick="askWizard(this)">💰 ¿Cuánto cuesta?</button>
+        <button class="sg" onclick="askWizard(this)">🤖 ¿Qué incluye SuperBot007?</button>
+        <button class="sg" onclick="askWizard(this)">✂️ Tengo una barbería, ¿me sirve?</button>
+        <button class="sg" onclick="askWizard(this)">🍽️ Tengo un restaurante, ¿cómo funciona?</button>
+        <button class="sg" onclick="askWizard(this)">🚀 Quiero crear mi bot ahora</button>
+        <button class="sg" onclick="askWizard(this)">💼 ¿Puedo crear una agencia?</button>
+        <button class="sg" onclick="askWizard(this)">⏱️ ¿Cuánto tarda en estar listo?</button>
+        <button class="sg" onclick="askWizard(this)">🤝 ¿Tienen garantía de devolución?</button>
       </div>
-      <div class="vci-hint" id="vciHint">
-        🎙️ <strong>To speak:</strong> press the microphone button · <strong>To type:</strong> write here and press send
-      </div>
-    </div>
-
-    <!-- ── AMANDA SUGGESTIONS (ES) ── -->
-    <div class="vsug-label reveal" id="sugLabelAmanda" style="display:none;">💬 Preguntas rápidas para Amanda:</div>
-    <div class="vsug reveal" id="sugAmanda" style="display:none;">
-      <button class="sg" onclick="sendSug(this)">💰 ¿Cuánto cuesta?</button>
-      <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye SuperBot007?</button>
-      <button class="sg" onclick="sendSug(this)">✂️ Tengo una barbería, ¿me sirve?</button>
-      <button class="sg" onclick="sendSug(this)">🍽️ Tengo un restaurante, ¿cómo funciona?</button>
-      <button class="sg" onclick="sendSug(this)">⚙️ ¿Cómo configuro mi bot?</button>
-      <button class="sg" onclick="sendSug(this)">🚀 Quiero crear mi bot ahora</button>
-      <button class="sg" onclick="sendSug(this)">💼 ¿Puedo crear una agencia?</button>
-      <button class="sg" onclick="sendSug(this)">⏱️ ¿Cuánto tiempo tarda en estar listo?</button>
-      <button class="sg" onclick="sendSug(this)">🎓 ¿Hay soporte si me trabo?</button>
-      <button class="sg" onclick="sendSug(this)">🔄 ¿Puedo cancelar cuando quiera?</button>
-      <button class="sg" onclick="sendSug(this)">🤝 ¿Tienen garantía de devolución?</button>
-      <button class="sg" onclick="sendSug(this)">🌍 ¿Funciona en mi país?</button>
-    </div>
-
-    <!-- ── SHIRLEY SUGGESTIONS (EN) ── -->
-    <div class="vsug-label reveal" id="sugLabelShirley">💬 Quick questions for Shirley:</div>
-    <div class="vsug reveal" id="sugShirley">
-      <button class="sg" onclick="sendSug(this)">💰 How much does it cost?</button>
-      <button class="sg" onclick="sendSug(this)">🤖 What does SuperBot007 include?</button>
-      <button class="sg" onclick="sendSug(this)">✂️ I have a barbershop, does it work?</button>
-      <button class="sg" onclick="sendSug(this)">🍽️ I have a restaurant, how does it work?</button>
-      <button class="sg" onclick="sendSug(this)">⚙️ How do I configure my bot?</button>
-      <button class="sg" onclick="sendSug(this)">🚀 I want to create my bot now</button>
-      <button class="sg" onclick="sendSug(this)">💼 Can I start an agency?</button>
-      <button class="sg" onclick="sendSug(this)">⏱️ How long does setup take?</button>
-      <button class="sg" onclick="sendSug(this)">🎓 Is there support if I get stuck?</button>
-      <button class="sg" onclick="sendSug(this)">🔄 Can I cancel anytime?</button>
-      <button class="sg" onclick="sendSug(this)">🤝 Is there a money-back guarantee?</button>
-      <button class="sg" onclick="sendSug(this)">🌍 Does it work in my country?</button>
     </div>
 
   </div>
@@ -1533,515 +1476,6 @@ function tFaq(item){
   if(!open){a.classList.add('open');arr.style.transform='rotate(180deg)';}
 }
 
-/* ══════════════════════════════════════════════
-   VENUS — ElevenLabs Flash v2.5 + GPT-4o-mini
-   ES: Valentina (pFZP5JQG7iQjIQuC4Bku)
-   EN: dfeOmy6Uay63tNhyO99j
-══════════════════════════════════════════════ */
-
-/* OpenAI key — GPT chat only */
-const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
-
-/* ElevenLabs — dual voice */
-const EL_KEY      = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
-const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku'; /* Valentina — native Spanish */
-const EL_VOICE_EN = 'dfeOmy6Uay63tNhyO99j'; /* English voice */
-const EL_MODEL    = 'eleven_flash_v2_5';
-
-/* Detect language of Venus reply */
-function detectLang(t){
-  return /\b(hola|gracias|cómo|qué|tienes|negocio|precio|quiero|puedo|para|una|los|las|con|por|que|del|más|también|esto|eso|muy|bien|sí|cuánto|tengo|mira|claro|listo|desde|solo)\b/i.test(t) ? 'es' : 'en';
-}
-
-/* ══════════════════════════════════════════════════════════════
-   AMANDA PROMPT — Español completo con todo el conocimiento
-══════════════════════════════════════════════════════════════ */
-const AMANDA_PROMPT = `Eres Amanda — agente de ventas y soporte de SuperBot007. Eres cálida, entusiasta, como una amiga latina que quiere ayudar al cliente a tener éxito.
-
-IDIOMA: SIEMPRE 100% en español. Nunca mezcles inglés.
-
-PERSONALIDAD: Abre SIEMPRE con una frase cálida antes de responder. Ejemplos: "¡Claro que sí!", "¡Qué buena pregunta!", "¡Me alegra que preguntes!", "¡Por supuesto!", "¡Con mucho gusto!", "¡Qué emocionante!", "¡Claro!", "¡Perfecto!"
-
-═══════════════════════════════
-QUÉ ES SUPERBOT007 (conócelo bien):
-═══════════════════════════════
-SuperBot007 es una plataforma todo-en-uno que le permite a cualquier persona —sin saber programar— crear en 5 minutos:
-1. Un AI Bot with GPT-4 que responde preguntas, vende servicios y agenda citas automáticamente 24/7
-2. Una Landing Page "cinematic" profesional con animaciones, galería de fotos y diseño premium
-3. Carrito de compras con pagos PayPal directos (0% comisión adicional)
-4. Agenda de citas con notificaciones automáticas por WhatsApp
-5. Tarjeta Digital con código QR para compartir por redes sociales
-6. Editor Visual en Tiempo Real — cambias colores, fotos, texto, precios sin tocar código
-7. Bot bilingüe español/inglés — atiende clientes en ambos idiomas
-
-PRECIO: $10.99/mes (precio de lanzamiento, subirá a $29.99). Sin costos ocultos. Cancela cuando quieras.
-GARANTÍA: 30 días de devolución completa sin preguntas.
-SETUP: 5 minutos. Sin código. Sin diseñador. Sin experiencia técnica.
-SOPORTE: WhatsApp directo con el equipo.
-FUNCIONA EN: Cualquier país con internet. EEUU, México, Colombia, Argentina, España, etc.
-LINK FORMULARIO: https://apolo189.github.io/superbot007/form.html
-
-═══════════════════════════════
-CÓMO CONFIGURAR EL BOT (cuando alguien pregunta):
-═══════════════════════════════
-El proceso completo tiene 7 pasos en el formulario:
-Paso 1 — Información del negocio: nombre, tipo de negocio, ciudad, descripción del negocio
-Paso 2 — Diseño y colores: colores de marca, logo (imagen), foto de portada/banner principal
-Paso 3 — Servicios: agrega todos tus servicios con nombre, precio y descripción (mínimo 1)
-Paso 4 — Productos y PayPal: tu email de PayPal, productos físicos o digitales si tienes
-Paso 5 — Galería de fotos: hasta 8 fotos del negocio (entre más, mejor)
-Paso 6 — Contacto y horarios: teléfono, WhatsApp, email, dirección, horarios de atención
-Paso 7 — IA y Bot: instrucciones especiales para el bot, idioma, personalidad, ACTIVAR
-
-Cuando alguien quiere crear su bot, dile:
-"¡Perfecto! 🚀 Abrí el formulario para ti. Empieza por el Paso 1: escribe el nombre de tu negocio, el tipo de negocio (ej: barbería, restaurante, tienda), tu ciudad y una descripción de qué haces. Cuando termines aprieta Siguiente y dime en qué paso estás."
-
-GUÍA PASO A PASO cuando el cliente ya está en el formulario:
-Paso 2 → "¡Excelente! Paso 2: Diseño. Escoge tus colores de marca, sube tu logo y una foto de portada atractiva. ¿Tienes logo? Si no, puedes usar uno sencillo o texto. Aprieta Siguiente cuando termines. 🎨"
-Paso 3 → "¡Perfecto! Paso 3: Servicios. Agrega cada servicio con nombre, precio y descripción breve. Por ejemplo: 'Corte de cabello — $15 — Corte profesional para hombres'. Mínimo 1 servicio. ✂️"
-Paso 4 → "¡Casi listo! Paso 4: Pagos. Escribe tu email de PayPal para recibir pagos directos. Si no tienes PayPal puedes dejarlo en blanco por ahora. 🛒"
-Paso 5 → "¡Paso 5: Fotos! Sube hasta 8 fotos de tu negocio — tu local, tu trabajo, tu equipo. Entre más fotos mejor impresión. 📸"
-Paso 6 → "¡Paso 6: Contacto. Agrega tu teléfono, WhatsApp, email, dirección y tus horarios de atención. Esto ayuda a tus clientes a encontrarte. 📞"
-Paso 7 → "¡Último paso! Escribe instrucciones especiales para tu bot (ej: 'Somos una barbería, ofrecemos cortes para hombres'). Luego aprieta ACTIVAR. ¡Tu bot IA ya estará listo! 🎉"
-
-═══════════════════════════════
-PARA QUÉ NEGOCIOS FUNCIONA:
-═══════════════════════════════
-Funciona para CUALQUIER negocio. Ejemplos específicos:
-- Barbería / Peluquería / Salón de belleza → agenda citas, muestra servicios y precios, responde '¿cuánto cuesta un corte?', '¿tienen cita disponible?'
-- Restaurante / Cafetería / Food truck → muestra menú con precios, toma pedidos, informa horarios y ubicación
-- Tienda de ropa / Boutique / Accesorios → muestra catálogo, acepta pagos PayPal, responde preguntas de tallas y disponibilidad
-- Clínica / Dentista / Médico / Veterinaria → agenda consultas, recuerda citas, responde dudas frecuentes
-- Gimnasio / Coach / Personal trainer → muestra planes, agenda clases, responde sobre rutinas y precios
-- Fotógrafo / Videógrafo → muestra portafolio, agenda sesiones, informa precios de paquetes
-- Abogado / Contador / Consultor → agenda consultas, explica servicios, responde preguntas frecuentes
-- Spa / Masajista / Estética → agenda citas, muestra tratamientos y precios
-- Servicios del hogar (plomero, electricista, etc.) → responde disponibilidad, agenda visitas, informa precios
-- Vendedor de productos digitales / cursos → vende con PayPal, responde preguntas del producto
-- CUALQUIER negocio local o en línea
-
-CUANDO MENCIONEN SU NEGOCIO: Adapta la respuesta explicando CÓMO EL BOT AYUDA A ESE NEGOCIO ESPECÍFICO.
-Ejemplos:
-- "Tengo una barbería" → "¡Perfecto para una barbería! Tu bot va a agendar citas automáticamente, mostrar tus servicios con precios, responder '¿cuánto vale un corte?' a las 2am sin que tú estés. ¿Quieres que te ayude a crearlo ahora? ✂️"
-- "Tengo un restaurante" → "¡Increíble! Tu bot puede mostrar el menú con fotos y precios, informar horarios y ubicación, y hasta tomar pedidos. ¿Empezamos a crearlo? 🍽️"
-- "Quiero ayudar a otros negocios" → "¡Eso es el modelo de agencia! Creas bots para otros negocios y cobras $50-200/mes por cliente. Con 5 clientes ya tienes $250-1,000/mes de ingreso pasivo. ¿Te explico cómo funciona? 💼"
-
-═══════════════════════════════
-RESPUESTAS RÁPIDAS (para preguntas frecuentes):
-═══════════════════════════════
-- Precio → "¡Solo $10.99 al mes! Todo incluido: bot IA, landing page, pagos PayPal, tarjeta digital y editor visual. Sin costos ocultos. ¿Te parece bien? 💜"
-- Qué incluye → "¡Incluye todo! Bot GPT-4 24/7, landing page profesional con animaciones, carrito PayPal, agenda de citas con WhatsApp, tarjeta digital con QR, editor visual. Todo por $10.99/mes. 🤖"
-- Cuánto tiempo → "¡Solo 5 minutos! Llenas 7 pasos sencillos en el formulario y tu bot ya está activo. Sin código, sin diseñador. ⏱️"
-- Soporte / atascado → "¡Siempre estamos aquí! Tienes soporte por WhatsApp directo con el equipo. ¿En qué paso te trabaste? 🎓"
-- Garantía → "¡30 días de garantía total! Si no te gusta te devolvemos el dinero completo sin preguntas. 🤝"
-- Cancelar → "¡Sí! Cancelas cuando quieras desde tu cuenta, sin penalidades ni contratos. 🔄"
-- Pago → "¡Súper fácil! Pago con tarjeta de crédito/débito o PayPal. Seguro y encriptado. 💳"
-- Seguridad → "¡Completamente seguro! Cifrado SSL, pagos PayPal verificados, datos protegidos. 🔒"
-- Países → "¡Funciona en cualquier país! Solo necesitas internet. EEUU, México, Colombia, Argentina, España y más. 🌍"
-- Agencia → "¡Idea increíble! Creas bots para negocios locales y cobras $50-200/mes por cliente. Muchos usuarios ganan $500-2,000/mes. ¿Te explico cómo? 💼"
-- Bot de WhatsApp → "El bot funciona en tu landing page propia. Responde preguntas, agenda citas y vende por tu sitio web personalizado. ¿Te muestro cómo funciona? 📱"
-- Configurar → "¡Es muy fácil! El formulario tiene 7 pasos guiados. Pones el nombre de tu negocio, tus servicios, fotos, contacto y listo. ¿Quieres que te guíe paso a paso? ⚙️"
-- Si no sabe → "¡Me alegra que preguntes! Cuéntame más sobre tu negocio o lo que necesitas y te ayudo con gusto. 💜"
-
-REGLA FINAL: SIEMPRE responde. Nunca digas "no sé" ni "no puedo". Si no tienes info exacta, da la respuesta más cercana y ofrece soporte por WhatsApp.`;
-
-/* ══════════════════════════════════════════════════════════════
-   SHIRLEY PROMPT — Full English with complete product knowledge
-══════════════════════════════════════════════════════════════ */
-const SHIRLEY_PROMPT = `You are Shirley — sales and support agent for SuperBot007. You're warm, confident, friendly — like a smart friend who genuinely wants to help you succeed.
-
-LANGUAGE: ALWAYS 100% in English. Never mix Spanish.
-
-PERSONALITY: ALWAYS open with warmth before answering. Examples: "Of course!", "Great question!", "I'm so glad you asked!", "Absolutely!", "Happy to help!", "That's exciting!", "Love that question!"
-
-═══════════════════════════════
-WHAT IS SUPERBOT007 (know it well):
-═══════════════════════════════
-SuperBot007 is an all-in-one platform that lets ANYONE — with zero coding skills — create in just 5 minutes:
-1. An AI Bot powered by GPT-4 that answers questions, sells services and books appointments automatically 24/7
-2. A professional "cinematic" Landing Page with animations, photo gallery and premium design
-3. A shopping cart with direct PayPal payments (no extra commission)
-4. Appointment scheduling with automatic WhatsApp notifications
-5. A Digital Business Card with QR code to share on social media
-6. Real-Time Visual Editor — change colors, photos, text, prices with no coding
-7. Bilingual bot (English/Spanish) — serves customers in both languages
-
-PRICE: $10.99/month (launch price, will rise to $29.99). No hidden fees. Cancel anytime.
-GUARANTEE: 30-day full money-back, no questions asked.
-SETUP: 5 minutes. No code. No designer. No tech experience needed.
-SUPPORT: Direct WhatsApp support from the team.
-WORKS IN: Any country with internet. USA, Mexico, Colombia, Spain, Argentina, etc.
-FORM LINK: https://apolo189.github.io/superbot007/form.html
-
-═══════════════════════════════
-HOW TO CONFIGURE THE BOT (when someone asks):
-═══════════════════════════════
-The full setup has 7 steps in the form:
-Step 1 — Business info: business name, type of business, city, business description
-Step 2 — Design & colors: brand colors, logo image, main banner/cover photo
-Step 3 — Services: add all your services with name, price and description (minimum 1)
-Step 4 — Products & PayPal: your PayPal email, physical or digital products if any
-Step 5 — Photo gallery: up to 8 photos of your business (more = better impression)
-Step 6 — Contact & hours: phone, WhatsApp, email, address, business hours
-Step 7 — AI & Bot settings: special instructions for the bot, language, personality, then ACTIVATE
-
-When someone wants to create their bot, say:
-"Perfect! 🚀 I've opened the form for you. Start with Step 1: enter your business name, type of business (e.g. barbershop, restaurant, store), your city and a brief description of what you do. Press Next when done and tell me which step you're on."
-
-STEP-BY-STEP GUIDE when client is filling the form:
-Step 2 → "Awesome! Step 2: Design. Choose your brand colors, upload your logo and an attractive cover photo. Don't have a logo? You can use simple text for now. Press Next when done. 🎨"
-Step 3 → "Perfect! Step 3: Services. Add each service with a name, price and short description. Example: 'Men's Haircut — $15 — Professional cut and style'. Minimum 1 service required. ✂️"
-Step 4 → "Almost there! Step 4: Payments. Enter your PayPal email to receive direct payments. No PayPal? You can leave it blank for now. 🛒"
-Step 5 → "Step 5: Photos! Upload up to 8 photos of your business — your space, your work, your team. More photos = better first impression. 📸"
-Step 6 → "Step 6: Contact info. Add your phone, WhatsApp, email, address and business hours so customers can find you. 📞"
-Step 7 → "Last step! Write special instructions for your bot (e.g. 'We are a barbershop offering haircuts for men'). Then press ACTIVATE. Your AI bot will be live! 🎉"
-
-═══════════════════════════════
-WHAT BUSINESSES DOES IT WORK FOR:
-═══════════════════════════════
-It works for ANY business. Specific examples:
-- Barbershop / Hair salon / Beauty salon → books appointments, shows services and prices, answers 'how much is a haircut?', 'are you available today?'
-- Restaurant / Café / Food truck → shows menu with prices, takes orders, provides hours and location
-- Clothing store / Boutique / Accessories → displays catalog, accepts PayPal, answers size and availability questions
-- Clinic / Dentist / Doctor / Vet → schedules appointments, sends reminders, answers FAQs
-- Gym / Coach / Personal trainer → shows plans, books classes, answers about routines and pricing
-- Photographer / Videographer → shows portfolio, books sessions, informs package prices
-- Lawyer / Accountant / Consultant → schedules consultations, explains services, answers FAQs
-- Spa / Massage / Aesthetics → books appointments, shows treatments and prices
-- Home services (plumber, electrician, etc.) → responds to availability, schedules visits, quotes prices
-- Digital products / Online courses → sells with PayPal, answers product questions
-- ANY local or online business
-
-WHEN THEY MENTION THEIR BUSINESS: Adapt your reply explaining HOW THE BOT HELPS THAT SPECIFIC BUSINESS.
-Examples:
-- "I have a barbershop" → "That's perfect for a barbershop! Your bot will automatically book appointments, display your services with prices, and answer 'how much is a haircut?' at 2am without you there. Want me to help you create it now? ✂️"
-- "I have a restaurant" → "Amazing! Your bot can show the full menu with photos and prices, share your hours and location, and even take orders. Shall we create it? 🍽️"
-- "I want to help other businesses" → "That's the agency model! You create bots for local businesses and charge $50-200/month per client. With just 5 clients you're making $250-1,000/month in passive income. Want me to explain how? 💼"
-
-═══════════════════════════════
-QUICK RESPONSES (for common questions):
-═══════════════════════════════
-- Price → "Just $10.99/month! Everything included: AI bot, landing page, PayPal payments, digital card and visual editor. No hidden fees. Sound good? 💜"
-- What's included → "Everything! GPT-4 bot 24/7, professional animated landing page, PayPal cart, WhatsApp appointment scheduling, digital card with QR, visual editor. All for $10.99/month. 🤖"
-- How long → "Just 5 minutes! Fill out 7 simple steps in the form and your bot is live. No code, no designer needed. ⏱️"
-- Support / stuck → "We're always here! You get direct WhatsApp support from the team. Which step are you stuck on? 🎓"
-- Guarantee → "30-day full money-back guarantee! If you're not happy we refund you completely, no questions asked. 🤝"
-- Cancel → "Yes! Cancel anytime from your account, no penalties, no contracts. 🔄"
-- Payment → "Super easy! Pay with credit/debit card or PayPal. Secure and encrypted. 💳"
-- Security → "Completely secure! SSL encryption, verified PayPal payments, data protected. 🔒"
-- Countries → "Works in any country! All you need is internet. USA, UK, Canada, Mexico, Spain and more. 🌍"
-- Agency → "Amazing idea! Create bots for local businesses and charge $50-200/month per client. Many users make $500-2,000/month. Want me to explain? 💼"
-- WhatsApp bot → "The bot lives on your own landing page. It answers questions, books appointments and sells through your personalized website. Want to see how? 📱"
-- Configure → "It's super easy! The form has 7 guided steps. You enter your business name, services, photos, contact info and you're done. Want me to guide you step by step? ⚙️"
-- If unsure → "I'd love to help you better! Tell me about your business or what you need and I'll guide you. 🌟"
-
-FINAL RULE: ALWAYS respond. Never say 'I don't know' or 'I can't'. If you don't have exact info, give the closest answer and offer WhatsApp support.`;
-
-/* ── ACTIVE AGENT STATE ── */
-let activeAgent = 'amanda';
-let CH = [{role:'system', content: AMANDA_PROMPT}];
-let isRec=false, rec=null, elAudio=null, isSpeaking=false;
-let audioCtx=null;
-
-/* helper: current agent display name */
-function agentName(){ return activeAgent==='amanda'?'Amanda':'Shirley'; }
-function agentEmoji2(){ return activeAgent==='amanda'?'💜':'🌟'; }
-
-function switchAgent(agent){
-  if(activeAgent === agent) return;
-  activeAgent = agent;
-  CH = [{role:'system', content: agent==='amanda' ? AMANDA_PROMPT : SHIRLEY_PROMPT}];
-  document.getElementById('vmsg').innerHTML = '';
-  if(elAudio){ elAudio.pause(); elAudio=null; }
-
-  /* Selector buttons */
-  document.getElementById('btnAmanda').classList.toggle('active', agent==='amanda');
-  document.getElementById('btnShirley').classList.toggle('active', agent==='shirley');
-
-  /* Suggestion panels + labels */
-  document.getElementById('sugAmanda').style.display      = agent==='amanda' ? 'flex' : 'none';
-  document.getElementById('sugShirley').style.display     = agent==='shirley' ? 'flex' : 'none';
-  document.getElementById('sugLabelAmanda').style.display = agent==='amanda' ? 'block' : 'none';
-  document.getElementById('sugLabelShirley').style.display= agent==='shirley' ? 'block' : 'none';
-
-  if(agent==='amanda'){
-    /* Chat header */
-    document.getElementById('vchName').textContent   = 'Amanda · Agente IA';
-    document.getElementById('vchStatus').textContent = 'en línea · responde en segundos';
-    document.getElementById('vchLang').textContent   = '🇪🇸 ES';
-    document.getElementById('vchAvatar').textContent = '🤖';
-    document.getElementById('vchatHeader').style.background = 'rgba(168,85,247,.1)';
-    /* Active bar */
-    document.getElementById('agentActiveText').textContent = 'Amanda está lista · Escríbele abajo o aprieta el micrófono 🎙️';
-    /* Input */
-    document.getElementById('vin').placeholder = 'Escríbele a Amanda aquí...';
-    document.getElementById('vmicLabel').textContent = 'Hablar';
-    /* Hint */
-    document.getElementById('vciHint').innerHTML = '🎙️ <strong>To speak:</strong> press the microphone button · <strong>To type:</strong> write here and press send';
-    /* How note */
-    document.getElementById('howNote').innerHTML = '💡 <strong>Amanda (español):</strong> Escríbele en el cuadro de texto o aprieta 🎙️ para hablar<br>💡 <strong>Shirley (English):</strong> Type in the box or press 🎙️ to speak';
-  } else {
-    /* Chat header */
-    document.getElementById('vchName').textContent   = 'Shirley · AI Agent';
-    document.getElementById('vchStatus').textContent = 'online · replies in seconds';
-    document.getElementById('vchLang').textContent   = '🇺🇸 EN';
-    document.getElementById('vchAvatar').textContent = '🤖';
-    document.getElementById('vchatHeader').style.background = 'rgba(245,158,11,.08)';
-    /* Active bar */
-    document.getElementById('agentActiveText').textContent = 'Shirley is ready · Type below or press the microphone 🎙️';
-    /* Input */
-    document.getElementById('vin').placeholder = 'Chat with Shirley here...';
-    document.getElementById('vmicLabel').textContent = 'Speak';
-    /* Hint */
-    document.getElementById('vciHint').innerHTML = '🎙️ <strong>To speak:</strong> press the microphone button · <strong>To type:</strong> write here and press send';
-    /* How note */
-    document.getElementById('howNote').innerHTML = '💡 <strong>Amanda (español):</strong> Escríbele en el cuadro de texto o aprieta 🎙️ para hablar<br>💡 <strong>Shirley (English):</strong> Type in the box or press 🎙️ to speak';
-  }
-  setTimeout(()=>{
-    const g = agent==='amanda'
-      ? '¡Hola! Soy Amanda 💜 ¿En qué puedo ayudarte hoy? ¿Tienes un negocio o quieres crear uno?'
-      : "Hey! I'm Shirley 🌟 How can I help you today? Do you have a business or want to create one?";
-    addMsg(g,'v'); agentSpeak(g);
-  }, 400);
-}
-
-/* unlock AudioContext on first user gesture */
-function unlockAudio(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==='suspended') audioCtx.resume();
-}
-document.addEventListener('click', unlockAudio, {once:true});
-document.addEventListener('touchstart', unlockAudio, {once:true});
-
-/* ═══════════════════════════════════════════
-   agentSpeak — AudioContext decode (bypasses
-   browser autoplay block completely)
-═══════════════════════════════════════════ */
-async function agentSpeak(text){
-  const clean = text
-    .replace(/\*\*/g,'').replace(/\*/g,'')
-    .replace(/https?:\/\/\S+/g,'')
-    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪📊📈🛒🏢📲⏱️🎓🔒💳🔄🤝🌍😊]/g,'')
-    .replace(/\s+/g,' ').trim().slice(0,500);
-  if(!clean) return;
-
-  const orb = document.getElementById('vorb');
-  setWave(true); orb.classList.add('spk');
-  setSt('🔊 ' + agentName() + ' hablando...');
-  const done = () => { setWave(false); orb.classList.remove('spk'); setSt(agentEmoji2() + ' ' + agentName() + ' lista'); };
-
-  if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
-
-  /* ensure AudioContext is alive */
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  if(audioCtx.state==='suspended') await audioCtx.resume();
-
-  try {
-    /* ── ElevenLabs Flash v2.5 — Valentina(ES) / EN voice ── */
-    const voice = detectLang(clean) === 'es' ? EL_VOICE_ES : EL_VOICE_EN;
-    const res = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
-      {
-        method: 'POST',
-        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: clean,
-          model_id: EL_MODEL,
-          voice_settings: { stability: 0.35, similarity_boost: 0.88, style: 0.45, use_speaker_boost: true }
-        })
-      }
-    );
-    if(!res.ok) throw new Error('EL TTS '+res.status);
-
-    const arrayBuf = await res.arrayBuffer();
-    const audioBuf = await audioCtx.decodeAudioData(arrayBuf);
-    const src = audioCtx.createBufferSource();
-    src.buffer = audioBuf;
-    src.connect(audioCtx.destination);
-    src.onended = done;
-    src.start(0);
-
-  } catch(err){
-    console.warn('EL TTS error:', err);
-    /* Fallback: OpenAI shimmer via Audio element */
-    try {
-      const res2 = await fetch('https://api.openai.com/v1/audio/speech', {
-        method:'POST',
-        headers:{'Authorization':'Bearer '+OA_KEY,'Content-Type':'application/json'},
-        body: JSON.stringify({model:'tts-1',voice:'shimmer',input:clean,speed:1.05})
-      });
-      if(res2.ok){
-        const arrayBuf2 = await res2.arrayBuffer();
-        const audioBuf2 = await audioCtx.decodeAudioData(arrayBuf2);
-        const src2 = audioCtx.createBufferSource();
-        src2.buffer = audioBuf2;
-        src2.connect(audioCtx.destination);
-        src2.onended = done;
-        src2.start(0);
-      } else { done(); }
-    } catch(e2){ console.warn('Fallback TTS error:',e2); done(); }
-  }
-}
-
-/* ── BOT INTENT DETECTOR — opens form automatically ── */
-/* Bot intent — only trigger on clear "I want to create MY bot" signals, not on general questions */
-const BOT_INTENT_ES = /quiero\s*(empezar|crear\s*mi|comenzar\s*mi|activar)|crear\s*mi\s*bot|empecemos\s*ahora|quiero\s*mi\s*bot|listo\s*para\s*empezar|activa(r)?\s*mi\s*bot|dale,?\s*empecemos|sí,?\s*quiero\s*(empezar|crearlo)|vamos\s*a\s*crear/i;
-const BOT_INTENT_EN = /i\s*(want\s*to\s*(start|create\s*my|begin\s*my)|want\s*my\s*bot)|create\s*my\s*bot|let'?s\s*(go|start|create)|go\s*ahead\s*(and\s*)?create|yes[,!]?\s*(please\s*)?(help|create|start)|activate\s*my\s*bot/i;
-
-function checkBotIntent(txt){
-  if(activeAgent==='amanda' && BOT_INTENT_ES.test(txt)) return true;
-  if(activeAgent==='shirley' && BOT_INTENT_EN.test(txt)) return true;
-  return false;
-}
-
-/* ── GREETING — Amanda greets on load (only once) ── */
-let greetingDone = false;
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    if(greetingDone) return;
-    greetingDone = true;
-    const g='¡Hola! Soy Amanda 💜 ¿Tienes un negocio o quieres crear un bot IA? ¡Cuéntame, te ayudo!';
-    addMsg(g,'v'); agentSpeak(g);
-  }, 1200);
-});
-
-/* ── SEND MESSAGE ── */
-async function sendMsg(){
-  const inp=document.getElementById('vin'), txt=inp.value.trim();
-  if(!txt) return;
-  inp.value=''; addMsg(txt,'u');
-  CH.push({role:'user',content:txt});
-  /* Auto-open form if client explicitly wants to create their bot */
-  if(checkBotIntent(txt)){
-    setTimeout(()=> window.open('https://apolo189.github.io/superbot007/form.html','_blank'), 600);
-  }
-  await agentThink();
-}
-function sendSug(btn){
-  /* Strip all emoji and leading/trailing whitespace */
-  document.getElementById('vin').value=btn.textContent.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu,'').trim();
-  sendMsg();
-}
-
-/* ── GPT THINK ── */
-async function agentThink(){
-  setSt('💭 ' + agentName() + ' pensando...'); setWave(true);
-  /* Update chat header status */
-  const chs = document.getElementById('vchStatus');
-  if(chs) chs.textContent = (activeAgent==='amanda' ? 'escribiendo...' : 'typing...');
-  const ty=addTyping();
-  try {
-    const r = await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+OA_KEY},
-      body: JSON.stringify({
-        model:'gpt-4o-mini',
-        messages: CH,
-        max_tokens: 200,
-        temperature: 0.80,
-        presence_penalty: 0.2,
-        frequency_penalty: 0.1
-      })
-    });
-    const d = await r.json();
-    /* Log API errors for debugging */
-    if(d.error){ console.warn('OpenAI API error:', d.error.message); }
-    const raw = d.choices?.[0]?.message?.content;
-    /* If API returned nothing useful, generate a local fallback reply */
-    const rep = (raw && raw.trim().length > 0)
-      ? raw.trim()
-      : localFallback(CH[CH.length-1]?.content || '');
-    ty.remove();
-    setWave(false);
-    addMsg(rep,'v');
-    CH.push({role:'assistant',content:rep});
-    const chs2 = document.getElementById('vchStatus');
-    if(chs2) chs2.textContent = (activeAgent==='amanda' ? 'en línea · responde en segundos' : 'online · replies in seconds');
-    setSt(agentEmoji2() + ' ' + agentName() + ' lista');
-    agentSpeak(rep);
-  } catch(e){
-    console.warn('agentThink error:', e);
-    ty.remove(); setWave(false);
-    const fb = localFallback(CH[CH.length-1]?.content || '');
-    addMsg(fb,'v');
-    CH.push({role:'assistant',content:fb});
-    setSt(agentEmoji2() + ' ' + agentName() + ' lista');
-    agentSpeak(fb);
-  }
-}
-
-/* ── LOCAL FALLBACK — answers common questions without OpenAI ── */
-function localFallback(userMsg){
-  const m = userMsg.toLowerCase();
-  const isES = activeAgent === 'amanda';
-  /* Price */
-  if(/cuánto|cuesta|precio|cost|price|how much/.test(m))
-    return isES ? '¡Con gusto! Son solo $10.99 al mes — todo incluido, sin costos ocultos. ¿Te parece bien? 💜'
-                : 'Happy to help! It\'s only $10.99/month — everything included, no hidden fees. Sound good? 💜';
-  /* What\'s included */
-  if(/incluye|qué tiene|qué trae|what.*include|what.*get/.test(m))
-    return isES ? '¡Claro! Incluye bot GPT-4 activo 24/7, landing page profesional, pagos PayPal, tarjeta digital y editor visual — todo por $10.99/mes. ¿Para qué negocio lo quieres? 🤖'
-                : 'Great question! It includes: GPT-4 AI bot 24/7, professional landing page, PayPal payments, digital card and visual editor — all for $10.99/month. What\'s your business? 🤖';
-  /* Barbershop / salon / specific business */
-  if(/barber|peluquer|salon|salón|restaur|tienda|clínica|clinica|gym|gimnasio|dentist|doctor|coach|fotograf/.test(m))
-    return isES ? '¡Qué emocionante! SuperBot007 funciona perfecto para ese tipo de negocio — agenda citas, responde preguntas y vende servicios automáticamente 24/7. ¿Quieres crear tu bot ahora? 🚀'
-                : 'That\'s exciting! SuperBot007 works perfectly for that type of business — books appointments, answers questions and sells services automatically 24/7. Want to create your bot now? 🚀';
-  /* Create bot / help */
-  if(/crear|create|bot|ayuda|help|empez|start|quiero/.test(m))
-    return isES ? '¡Perfecto! Te ayudo a crear tu bot en solo 5 minutos sin necesidad de conocimientos técnicos. ¿Empezamos ahora? 🚀'
-                : 'Perfect! I can help you create your bot in just 5 minutes — no tech skills needed. Shall we start now? 🚀';
-  /* Guarantee */
-  if(/garantía|garantia|guarantee|devolu|refund/.test(m))
-    return isES ? '¡Por supuesto! Tienes 30 días de garantía total — si no te gusta te devolvemos el dinero sin preguntas. 🤝'
-                : 'Of course! Full 30-day money-back guarantee — no questions asked. 🤝';
-  /* Default warm response */
-  return isES
-    ? '¡Me alegra que estés aquí! SuperBot007 es perfecto para automatizar tu negocio con IA — citas, ventas y atención al cliente 24/7 por solo $10.99/mes. ¿Cuéntame, qué tipo de negocio tienes? 💜'
-    : 'I\'m so glad you\'re here! SuperBot007 is perfect for automating your business with AI — appointments, sales and customer service 24/7 for just $10.99/month. What kind of business do you have? 🌟';
-}
-
-/* ── VOICE INPUT ── */
-function toggleVoice(){
-  if(isRec){ stopRec(); return; }
-  if(elAudio){ elAudio.pause(); }
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){ document.getElementById('vin').focus(); setSt('🎤 Escribe aquí'); return; }
-  rec=new SR();
-  /* Auto-detect language from browser — supports both ES and EN */
-  const bl=navigator.language||'en-US';
-  rec.lang=bl.startsWith('es')?'es-US':bl.startsWith('en')?'en-US':bl;
-  rec.continuous=false; rec.interimResults=false;
-  rec.onstart=()=>{ isRec=true; document.getElementById('vbmic').classList.add('rec'); document.getElementById('mic-icon').className='fas fa-stop'; document.getElementById('vorb').classList.add('lst'); setWave(true); setSt('🎤 Te escucho...'); };
-  rec.onresult=e=>{ document.getElementById('vin').value=e.results[0][0].transcript; stopRec(); sendMsg(); };
-  rec.onerror=()=>{ stopRec(); setSt('❌ Intenta de nuevo'); };
-  rec.onend=()=>{ if(isRec) stopRec(); };
-  rec.start();
-}
-function stopRec(){
-  isRec=false;
-  if(rec){ try{rec.stop();}catch(e){} }
-  document.getElementById('vbmic').classList.remove('rec');
-  document.getElementById('mic-icon').className='fas fa-microphone';
-  document.getElementById('vorb').classList.remove('lst');
-  setWave(false); setSt(agentEmoji2() + ' ' + agentName() + ' lista');
-}
-
-/* ── UI HELPERS ── */
-function setSt(m){ const e=document.getElementById('vstatus'); if(e) e.textContent=m; }
-function setWave(on){ const w=document.getElementById('vwave'); if(w){ if(on) w.classList.remove('idle'); else w.classList.add('idle'); }}
-function addMsg(txt,who){
-  const c=document.getElementById('vmsg'),d=document.createElement('div');
-  d.className='msg '+who;
-  d.innerHTML=txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-  c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
-}
-function addTyping(){
-  const c=document.getElementById('vmsg'),d=document.createElement('div');
-  d.className='mtyp'; d.innerHTML='<span></span><span></span><span></span>';
-  c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
-}
-document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter') sendMsg(); });
 
 /* ══════════════════════════════════════════════════════
    HERO PHONE MOCKUP — animated WhatsApp-style demo
@@ -2178,17 +1612,11 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
       heroCta:'<i class="fas fa-robot"></i> Talk to Shirley — Start Here',
       waMockName:'Shirley · SuperBot007', waStatus:'online',
       ctaBtn:'<i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step',
-      venusEye:'Intelligent AI Sales Agents',
-      venusH2:'Talk to <span class="hlv">Shirley or Amanda</span><br>— Your Personal Guide 24/7',
-      venusSub:'Two AI agents available at all times. Shirley in English 🇺🇸 · Amanda en español 🇪🇸<br>Ask them anything — they respond by <strong>text and voice</strong>, guiding you step by step.',
-      howTitle:'📖 How does it work?',
-      howStep1:'<strong>Click 🧙‍♀️</strong><br>Bottom right — the purple button',
-      howStep2:'<strong>Type or speak</strong><br>Type your question or press <span class="how-mic-ico"><i class="fas fa-microphone"></i></span>',
-      howStep3:'<strong>Agent responds</strong><br>By text and voice, in your language',
-      howNote:'💡 <strong>Shirley 🇺🇸 (English):</strong> Press the 🧙‍♀️ button at the bottom right and type or speak in English.<br>💡 <strong>Amanda 🇪🇸 (Español):</strong> Press 🧙‍♀️ bottom right and speak in Spanish.',
-      agentBarText:'Shirley is ready · Click here or the 🧙‍♀️ button at the bottom right',
-      agentLabelEn:'Responds in English · Voice + text',
-      agentLabelEs:'Responds in Spanish · Voice + text',
+      venusEye:'Your Personal AI Guide — Available 24/7',
+      venusH2:'Ask <span class="hlv">Shirley or Amanda</span><br>Anything — Instantly',
+      venusSub:'Shirley 🇺🇸 in English &nbsp;·&nbsp; Amanda 🇪🇸 en español<br>Text &amp; voice — guiding you to <strong>build your bot in 5 minutes</strong>',
+      venusBtnLabel:'Talk to Shirley — Start Here',
+      venusBtnSub:'Click to chat · text or voice · free',
       guarTitle:'30-Day Guarantee',
       guarText:'If in the first 30 days you are not <strong>100% satisfied</strong> with the results, we refund <strong>every single penny</strong> with no questions asked. No fine print. No bureaucracy. No delays.<br><br>Try SuperBot007 completely risk-free. <strong>You\'ll love it — or we give your money back.</strong>',
       testiEye:'Testimonials', testiH2:'What Our <span class="hl">Clients Say</span>',
@@ -2220,18 +1648,12 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
       heroH2:'✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>✅ Tarjeta Digital Profesional &nbsp;·&nbsp; ✅ Pagos en línea &nbsp;·&nbsp; ✅ Agenda automática<br><em>⚠️ Solo <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>',
       heroCta:'<i class="fas fa-robot"></i> Habla con Amanda — Empieza Aquí',
       waMockName:'Amanda · SuperBot007', waStatus:'en línea',
-      ctaBtn:'<i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step',
-      venusEye:'Agentes Inteligentes de Ventas IA',
-      venusH2:'Chatea con <span class="hlv">Shirley o Amanda</span><br>— Tu Guía Personal 24/7',
-      venusSub:'Dos agentes IA disponibles en todo momento. Shirley en inglés 🇺🇸 · Amanda en español 🇪🇸<br>Pregúntales lo que quieras — responden por <strong>texto y voz</strong>, guiándote paso a paso.',
-      howTitle:'📖 ¿Cómo funciona?',
-      howStep1:'<strong>Haz clic en 🧙‍♀️</strong><br>Abajo a la derecha — el botón morado',
-      howStep2:'<strong>Escribe o habla</strong><br>Escribe tu pregunta o aprieta <span class="how-mic-ico"><i class="fas fa-microphone"></i></span>',
-      howStep3:'<strong>El agente responde</strong><br>Por texto y voz, en tu idioma',
-      howNote:'💡 <strong>Amanda 🇪🇸 (Español):</strong> Aprieta el botón 🧙‍♀️ abajo a la derecha y escribe o habla en español.<br>💡 <strong>Shirley 🇺🇸 (English):</strong> Press 🧙‍♀️ bottom right and speak in English.',
-      agentBarText:'Amanda está lista · Haz clic aquí o en el botón 🧙‍♀️ abajo a la derecha',
-      agentLabelEn:'Responde en inglés · Voz + texto',
-      agentLabelEs:'Responde en español · Voz + texto',
+      ctaBtn:'<i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso',
+      venusEye:'Tu Guía Personal IA — Disponible 24/7',
+      venusH2:'Pregúntale a <span class="hlv">Amanda o Shirley</span><br>Lo Que Sea — Al Instante',
+      venusSub:'Amanda 🇪🇸 en español &nbsp;·&nbsp; Shirley 🇺🇸 in English<br>Texto y voz — te guían a <strong>crear tu bot en 5 minutos</strong>',
+      venusBtnLabel:'Habla con Amanda — Empieza Aquí',
+      venusBtnSub:'Haz clic para chatear · texto o voz · gratis',
       guarTitle:'Garantía 30 Días',
       guarText:'If in the first 30 days you are not <strong>100% satisfied</strong> with the results, te devolvemos <strong>cada centavo</strong> sin preguntas. Sin letra pequeña. Sin burocracia. Sin demoras.<br><br>Try SuperBot007 completely risk-free. <strong>Te encantará — o te devolvemos el dinero.</strong>',
       testiEye:'Testimonios', testiH2:'Lo que Dicen Nuestros <span class="hl">Clientes</span>',
@@ -2285,18 +1707,14 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
     /* sticky */
     const stxt=document.querySelector('#sticky .stxt'); if(stxt) stxt.innerHTML=t.stickyTxt;
     const sbtn=document.getElementById('stickyBtn'); if(sbtn) sbtn.textContent=t.stickyBtn;
-    /* venus section */
-    setTxt('.veye',t.venusEye); setTxt('.vh2',t.venusH2); setTxt('.vsub',t.venusSub);
-    const ht=document.querySelector('.how-title'); if(ht) ht.innerHTML=t.howTitle;
-    const hsteps=document.querySelectorAll('.how-text');
-    if(hsteps[0]) hsteps[0].innerHTML=t.howStep1;
-    if(hsteps[1]) hsteps[1].innerHTML=t.howStep2;
-    if(hsteps[2]) hsteps[2].innerHTML=t.howStep3;
-    const hn=document.querySelector('.how-note'); if(hn) hn.innerHTML=t.howNote;
-    const albl=document.querySelectorAll('.agent-label');
-    if(albl[0]) albl[0].textContent=t.agentLabelEn;
-    if(albl[1]) albl[1].textContent=t.agentLabelEs;
-    const abt=document.getElementById('agentBarText'); if(abt) abt.textContent=t.agentBarText;
+    /* venus section — new wizard CTA */
+    setTxt('.veye',t.venusEye); setTxt('.vh2',t.venusH2);
+    const vsub=document.getElementById('venusSub'); if(vsub) vsub.innerHTML=t.venusSub;
+    const vbl=document.getElementById('venusBtnLabel'); if(vbl) vbl.textContent=t.venusBtnLabel;
+    const vbs=document.getElementById('venusBtnSub'); if(vbs) vbs.textContent=t.venusBtnSub;
+    /* swap chip sets */
+    const chipsEn=document.getElementById('sugChips'); if(chipsEn) chipsEn.style.display=lang==='en'?'flex':'none';
+    const chipsEs=document.getElementById('sugChipsEs'); if(chipsEs) chipsEs.style.display=lang==='es'?'flex':'none';
     /* guarantee */
     const gt=document.querySelector('.gtitle'); if(gt) gt.textContent=t.guarTitle;
     const gtxt=document.querySelector('.gtext'); if(gtxt) gtxt.innerHTML=t.guarText;
@@ -2367,6 +1785,40 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
 
 <script>
 window.WIZARD_CONTEXT = { page:'sales', language:'en', agentName:'Shirley', businessType:'' };
+
+/* ── WIZARD BRIDGE — connects venus CTA + chip buttons to the wizard overlay ── */
+function openWizardFromVenus(){
+  const btn = document.getElementById('wz-btn');
+  if(!btn) return;
+  /* only open — never close */
+  const panel = document.getElementById('wz-panel');
+  const isAlreadyOpen = panel && panel.classList.contains('visible');
+  if(!isAlreadyOpen) btn.click();
+}
+
+function askWizard(el){
+  const q = el ? el.textContent.trim() : '';
+  /* Open wizard first */
+  openWizardFromVenus();
+  /* Send the question after wizard panel opens */
+  setTimeout(function(){
+    const input = document.getElementById('wz-text-inp');
+    if(input && q){
+      input.value = q;
+      if(typeof window.__wzSend === 'function') window.__wzSend();
+      else {
+        const sendBtn = document.getElementById('wz-send-btn');
+        if(sendBtn) sendBtn.click();
+      }
+    }
+  }, 650);
+}
+
+/* scrollToAgent → now opens the wizard instead of scrolling to old section */
+function scrollToAgent(){
+  openWizardFromVenus();
+  return false;
+}
 </script>
 <script src="wizard.js"></script>
 </body>
