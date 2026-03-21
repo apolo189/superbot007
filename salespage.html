@@ -196,18 +196,29 @@ img{max-width:100%;display:block;}
 .vh2{font-size:clamp(1.65rem,3vw,2.5rem);font-weight:900;text-align:center;margin-bottom:.45rem;}
 .vh2 .hlv{background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .vsub{color:var(--mu);text-align:center;font-size:.93rem;margin-bottom:2.2rem;line-height:1.75;max-width:540px;}
-/* orb */
-.vow{position:relative;margin-bottom:1.3rem;cursor:pointer;}
-.vorb{width:138px;height:138px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:3.4rem;box-shadow:0 0 45px rgba(168,85,247,.5),0 0 90px rgba(168,85,247,.18);animation:op 3s ease-in-out infinite;position:relative;z-index:2;transition:transform .3s;}
-.vorb:hover{transform:scale(1.07);}
-@keyframes op{0%,100%{box-shadow:0 0 35px rgba(168,85,247,.42),0 0 65px rgba(168,85,247,.16)}50%{box-shadow:0 0 70px rgba(168,85,247,.78),0 0 135px rgba(168,85,247,.33)}}
-.vorb.lst{animation:ol .35s ease-in-out infinite alternate;box-shadow:0 0 70px rgba(0,200,83,.78)!important;}
-@keyframes ol{from{transform:scale(1)}to{transform:scale(1.12)}}
-.vorb.spk{animation:os .22s ease-in-out infinite alternate;box-shadow:0 0 90px rgba(168,85,247,.95)!important;}
-@keyframes os{from{transform:scale(1)}to{transform:scale(1.08)}}
-.vring{position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(168,85,247,.27);animation:ra 2s ease-in-out infinite;}
-.vring2{position:absolute;inset:-30px;border-radius:50%;border:1px solid rgba(168,85,247,.12);animation:ra 2s .6s ease-in-out infinite;}
-@keyframes ra{0%{transform:scale(.94);opacity:.9}100%{transform:scale(1.07);opacity:.1}}
+/* orb — upgraded avatar display */
+.vow{position:relative;margin-bottom:1.3rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.vorb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.vorb{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:4.5rem;box-shadow:0 0 50px rgba(168,85,247,.55),0 0 100px rgba(168,85,247,.2);animation:op 3s ease-in-out infinite;position:relative;z-index:2;transition:all .35s ease;overflow:hidden;}
+.vorb:hover{transform:scale(1.06);}
+/* inner glow ring that pulses */
+.vorb::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 65%);pointer-events:none;}
+@keyframes op{0%,100%{box-shadow:0 0 40px rgba(168,85,247,.45),0 0 75px rgba(168,85,247,.18)}50%{box-shadow:0 0 75px rgba(168,85,247,.85),0 0 145px rgba(168,85,247,.35)}}
+.vorb.lst{animation:ol .35s ease-in-out infinite alternate;box-shadow:0 0 75px rgba(0,200,83,.8)!important;}
+@keyframes ol{from{transform:scale(1)}to{transform:scale(1.13)}}
+.vorb.spk{animation:os .22s ease-in-out infinite alternate;box-shadow:0 0 95px rgba(168,85,247,.98)!important;}
+@keyframes os{from{transform:scale(1)}to{transform:scale(1.1)}}
+/* agent name badge below orb */
+.vorb-badge{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .9rem;border-radius:20px;background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;box-shadow:0 2px 12px rgba(168,85,247,.4);margin-top:.2rem;}
+/* rings */
+.vring{position:absolute;inset:-18px;border-radius:50%;border:2px solid rgba(168,85,247,.3);animation:ra 2s ease-in-out infinite;}
+.vring2{position:absolute;inset:-34px;border-radius:50%;border:1.5px solid rgba(168,85,247,.13);animation:ra 2.4s .6s ease-in-out infinite;}
+.vring3{position:absolute;inset:-52px;border-radius:50%;border:1px solid rgba(168,85,247,.07);animation:ra 3s 1.2s ease-in-out infinite;}
+@keyframes ra{0%{transform:scale(.93);opacity:.9}100%{transform:scale(1.08);opacity:.05}}
+/* speaking pulse indicator */
+.vorb-pulse{position:absolute;bottom:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#22c55e;border:2px solid #0f172a;animation:none;z-index:10;}
+.vorb.spk .vorb-pulse{animation:pu .6s ease-in-out infinite alternate;}
+@keyframes pu{from{transform:scale(.8);opacity:.7}to{transform:scale(1.25);opacity:1}}
 /* wave */
 #vwave{display:flex;align-items:center;gap:4px;height:44px;margin-bottom:1rem;}
 .wb{width:5px;border-radius:3px;background:linear-gradient(135deg,#a855f7,#ec4899);animation:wa .65s ease-in-out infinite alternate;}
@@ -239,6 +250,13 @@ img{max-width:100%;display:block;}
 #vbmic.rec{background:rgba(255,71,87,.14);border-color:rgba(255,71,87,.48);color:#FF4757;animation:mp .6s ease-in-out infinite;}
 @keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}50%{box-shadow:0 0 0 10px rgba(255,71,87,0)}}
 .vsug{display:flex;flex-wrap:wrap;gap:.42rem;justify-content:center;margin-top:.95rem;}
+.agent-selector{display:flex;gap:1.2rem;margin-bottom:2rem;justify-content:center;flex-wrap:wrap;}
+.agent-btn{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:1.1rem 2rem;background:rgba(168,85,247,.06);border:2px solid rgba(168,85,247,.2);border-radius:18px;cursor:pointer;transition:all .3s;min-width:180px;}
+.agent-btn:hover{border-color:#a855f7;background:rgba(168,85,247,.12);transform:translateY(-2px);}
+.agent-btn.active{border-color:#a855f7;background:rgba(168,85,247,.15);box-shadow:0 0 25px rgba(168,85,247,.25);}
+.agent-flag{font-size:2rem;}
+.agent-name{font-size:1.2rem;font-weight:900;color:var(--txt);}
+.agent-label{font-size:.72rem;color:var(--mu);text-align:center;line-height:1.4;}
 .sg{padding:.4rem .85rem;background:rgba(168,85,247,.09);border:1px solid rgba(168,85,247,.18);border-radius:50px;color:#a855f7;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .2s;}
 .sg:hover{background:rgba(168,85,247,.22);border-color:#a855f7;transform:translateY(-2px);}
 
@@ -732,35 +750,58 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <div class="dline"></div>
 
-<!-- ════════════ VENUS ════════════ -->
+<!-- ════════════ AMANDA + SHIRLEY ════════════ -->
 <section id="venus" class="sec">
   <div class="vwrap">
-    <div class="veye reveal">Agente Inteligente de Ventas</div>
-    <h2 class="vh2 reveal">Conoce a <span class="hlv">Venus</span></h2>
-    <p class="vsub reveal">Habla con el agente IA de ventas — en voz o texto. Responde con calidez, razona con inteligencia, cierra con estilo.</p>
+    <div class="veye reveal">Agentes Inteligentes de Ventas</div>
+    <h2 class="vh2 reveal">Habla con Nuestros <span class="hlv">Agentes IA</span></h2>
+    <p class="vsub reveal">Elige tu idioma — Amanda en español, Shirley en inglés. Te guían, responden y te ayudan a crear tu bot.</p>
 
-    <div class="vow reveal" onclick="toggleVoice()">
-      <div class="vring2"></div>
-      <div class="vring"></div>
-      <div class="vorb" id="vorb">🌟</div>
+    <!-- ── AGENT SELECTOR BUTTONS ── -->
+    <div class="agent-selector reveal">
+      <button class="agent-btn active" id="btnAmanda" onclick="switchAgent('amanda')">
+        <span class="agent-flag">🇪🇸</span>
+        <span class="agent-name">Amanda</span>
+        <span class="agent-label">Presiona aquí para hablar con Amanda</span>
+      </button>
+      <button class="agent-btn" id="btnShirley" onclick="switchAgent('shirley')">
+        <span class="agent-flag">🇺🇸</span>
+        <span class="agent-name">Shirley</span>
+        <span class="agent-label">Press here to talk to Shirley</span>
+      </button>
+    </div>
+
+    <!-- ── ORB ── -->
+    <div class="vow reveal">
+      <div class="vorb-wrap" onclick="toggleVoice()">
+        <div class="vring3"></div>
+        <div class="vring2"></div>
+        <div class="vring"></div>
+        <div class="vorb" id="vorb">
+          <span id="agentEmoji" style="filter:drop-shadow(0 2px 8px rgba(0,0,0,.4));user-select:none;">💜</span>
+          <div class="vorb-pulse" id="vorbPulse"></div>
+        </div>
+      </div>
+      <div class="vorb-badge" id="vorbBadge">Amanda 🎙️</div>
     </div>
     <div id="vwave" class="idle">
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
     </div>
-    <div id="vstatus">💜 Venus está lista — escríbeme o usa el micrófono 🎙️</div>
+    <div id="vstatus">💜 Amanda está lista — escríbeme o usa el micrófono 🎙️</div>
 
     <div class="vchat reveal">
       <div id="vmsg"></div>
       <div class="vci">
         <button id="vbmic" onclick="toggleVoice()"><i class="fas fa-microphone" id="mic-icon"></i></button>
-        <input type="text" id="vin" placeholder="Escríbele a Venus... o toca el micrófono 🎙️">
+        <input type="text" id="vin" placeholder="Escríbele a Amanda... o toca el micrófono 🎙️">
         <button class="vbsend" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
 
-    <div class="vsug reveal">
+    <!-- ── AMANDA SUGGESTIONS (ES) ── -->
+    <div class="vsug reveal" id="sugAmanda">
       <button class="sg" onclick="sendSug(this)">💰 ¿Cuánto cuesta?</button>
       <button class="sg" onclick="sendSug(this)">🚀 ¿Cómo empiezo hoy?</button>
       <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye SuperBot007?</button>
@@ -773,7 +814,26 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <button class="sg" onclick="sendSug(this)">🔄 ¿Puedo cancelar cuando quiera?</button>
       <button class="sg" onclick="sendSug(this)">🤝 ¿Tienen garantía de devolución?</button>
       <button class="sg" onclick="sendSug(this)">🌍 ¿Funciona en otros países?</button>
+      <button class="sg" onclick="sendSug(this)">🏪 ¿Quiero crear mi bot ahora!</button>
     </div>
+
+    <!-- ── SHIRLEY SUGGESTIONS (EN) ── -->
+    <div class="vsug reveal" id="sugShirley" style="display:none;">
+      <button class="sg" onclick="sendSug(this)">💰 How much does it cost?</button>
+      <button class="sg" onclick="sendSug(this)">🚀 How do I get started?</button>
+      <button class="sg" onclick="sendSug(this)">🤖 What does SuperBot007 include?</button>
+      <button class="sg" onclick="sendSug(this)">💼 Can I start an agency?</button>
+      <button class="sg" onclick="sendSug(this)">📱 What businesses can use this?</button>
+      <button class="sg" onclick="sendSug(this)">⏱️ How long does setup take?</button>
+      <button class="sg" onclick="sendSug(this)">🎓 Is there support or tutorials?</button>
+      <button class="sg" onclick="sendSug(this)">🔒 Is it safe and reliable?</button>
+      <button class="sg" onclick="sendSug(this)">💳 How does payment work?</button>
+      <button class="sg" onclick="sendSug(this)">🔄 Can I cancel anytime?</button>
+      <button class="sg" onclick="sendSug(this)">🤝 Is there a money-back guarantee?</button>
+      <button class="sg" onclick="sendSug(this)">🌍 Does it work in other countries?</button>
+      <button class="sg" onclick="sendSug(this)">🏪 I want to create my bot now!</button>
+    </div>
+
   </div>
 </section>
 
@@ -1188,68 +1248,120 @@ function detectLang(t){
 }
 
 /* ── VENUS PROMPT — Warm Conversational Bilingual Sales Agent ── */
-const VENUS_PROMPT = `You are Venus — the sales agent for SuperBot007. You are warm, real, conversational — like a best friend who genuinely wants to help. You are FULLY BILINGUAL (Spanish & English).
+/* ── AMANDA PROMPT — Español ── */
+const AMANDA_PROMPT = `Eres Amanda — agente de ventas de SuperBot007. Eres cálida, entusiasta, latina, como una amiga que quiere ayudarte a triunfar.
 
-LANGUAGE RULE:
-- User writes Spanish → respond 100% in Spanish.
-- User writes English → respond 100% in English.
-- Spanglish or unclear → default to Spanish.
-- NEVER mix languages in the same response.
+IDIOMA: SIEMPRE en español. 100%. Sin mezclar inglés.
 
-YOUR MOST IMPORTANT RULE — THE WARM OPENER:
-EVERY single response MUST start with a warm, friendly acknowledgment BEFORE giving information.
-NEVER jump straight to the answer. Always open with warmth first.
+REGLA DE ORO — ABRE SIEMPRE CON CALIDEZ:
+Cada respuesta empieza con frase cálida ANTES de dar información: "¡Claro que sí!", "¡Qué buena pregunta!", "¡Me alegra que preguntes!", "¡Por supuesto!", "¡Con mucho gusto!"
 
-EXAMPLES OF WARM OPENERS (use variety, never repeat the same one):
-- "¡Claro que sí! Con mucho gusto te explico..."
-- "¡Qué buena pregunta! Mira..."
-- "¡Me alegra que preguntes eso! Te cuento..."
-- "¡Por supuesto! Escúchame bien..."
-- "¡Ay, eso me encanta que preguntes! Mira..."
-- "¡Claro! Déjame decirte algo importante..."
-- "Of course! I'm so glad you asked that..."
-- "Great question! Let me tell you..."
-- "Oh absolutely! Listen to this..."
-- "I love that you asked! Here's the thing..."
+CUANDO QUIERAN CREAR SU BOT — GUÍA PASO A PASO:
+Si dicen "quiero empezar", "crear mi bot", "cómo empiezo", "quiero crear mi bot ahora":
+→ "¡Perfecto! Abre el formulario aquí 👉 https://apolo189.github.io/superbot007/form.html — Estás en el Paso 1 de 7: Información del Negocio. Llena: nombre del negocio, tipo de negocio, ciudad y descripción. Cuando termines aprieta Siguiente y dime en qué paso estás. 🚀"
+Si dicen "listo", "siguiente", "paso 2", "estoy en paso 2":
+→ "¡Excelente! Paso 2: Diseño y Colores. Escoge tus colores, sube tu logo e imagen principal del negocio. Aprieta Siguiente cuando termines. 🎨"
+Si dicen "paso 3":
+→ "¡Vamos! Paso 3: Servicios. Agrega los servicios de tu negocio con nombre, precio y descripción. Mínimo 1 servicio. Aprieta Siguiente. ✂️"
+Si dicen "paso 4":
+→ "¡Casi! Paso 4: Productos y PayPal. Agrega tu email de PayPal y productos si tienes. Aprieta Siguiente. 🛒"
+Si dicen "paso 5":
+→ "¡Paso 5: Galería de Fotos! Sube hasta 8 fotos de tu negocio — entre más fotos mejor impresión. Aprieta Siguiente cuando termines. 📸"
+Si dicen "paso 6":
+→ "¡Paso 6: Contacto y Horarios. Agrega teléfono, WhatsApp, email, dirección y horarios de atención. Aprieta Siguiente. 📞"
+Si dicen "paso 7", "último paso":
+→ "¡Último paso! Paso 7: IA y Bot. Configura el idioma del bot e instrucciones especiales. Cuando termines aprieta ACTIVAR — ¡tu bot estará listo! 🎉"
 
-SPECIFIC RESPONSE PATTERNS (follow these exactly):
-- User asks HOW TO START → "¡Me alegra que preguntes! ¿Deseas empezar con nosotros a construir tu bot? Te guío paso a paso, es solo tomar 5 minutos. ¿Lo hacemos ahora?"
-- User asks PRICE/COST → "¡Con gusto te ayudo con el precio! Son solo $10.99 al mes — todo incluido, sin costos ocultos. ¿Te parece bien?"
-- User asks WHAT IS IT / WHAT IS INCLUDED → "¡Qué buena pregunta! SuperBot007 incluye: bot de inteligencia artificial GPT-4, landing page profesional, carrito de pagos con PayPal, tarjeta digital y editor visual — todo por $10.99 al mes. ¿Para qué negocio lo necesitas?"
-- User asks about TUTORIALS or SUPPORT → "¡Por supuesto que sí! Tienes soporte directo por WhatsApp, guías paso a paso y el setup es tan fácil que en 5 minutos ya tienes todo funcionando. ¿Quieres que te guíe ahora?"
-- User says NOT SURE/THINKING → "¡Te entiendo perfectamente! Dime, ¿qué es lo que más te preocupa? Yo te lo resuelvo ahora mismo."
-- User asks HOW IT WORKS → "¡Me alegra que preguntes! Es superfácil — llenas un formulario con tu info, y en 5 minutos tienes todo listo. ¿Tienes un negocio ya o estás empezando?"
+RESPUESTAS CLAVE:
+- Precio → "¡Con gusto! Son solo $10.99 al mes — todo incluido, sin costos ocultos. ¿Te parece bien?"
+- Tutoriales/Soporte → "¡Por supuesto que sí! Tienes soporte directo por WhatsApp y el setup es tan fácil que en 5 minutos tienes todo listo. ¿Quieres que te guíe ahora?"
+- Qué incluye → "¡Qué buena pregunta! Incluye: bot GPT-4, landing page, pagos PayPal, tarjeta digital y editor visual — todo por $10.99 al mes. ¿Para qué negocio lo quieres?"
+- Garantía → "¡Claro! 30 días de garantía total — si no te gusta te devolvemos el dinero sin preguntas."
+- Cancelar → "¡Por supuesto! Cancelas cuando quieras, sin penalidades ni contratos."
 
-PERSONALITY:
-- Warm, enthusiastic, like a friend who is excited for you
-- Never robotic, never cold, never just "here is the info"
-- Use exclamations naturally: ¡Claro!, ¡Por supuesto!, ¡Qué bueno!
-- Celebrate the user's questions — every question is a great question
-- Create gentle excitement: "esto te va a encantar", "te va a sorprender"
+PRODUCTO: SuperBot007 = Bot IA GPT-4 + Landing Page + PayPal + Tarjeta Digital + Editor Visual. $10.99/mes. Setup 5 minutos sin código. Agencia: $50-200/mes por cliente. 30 días garantía.
 
-PRODUCT KNOWLEDGE:
-- SuperBot007 = AI Bot (GPT-4) + Landing Page + PayPal Cart + Digital Card + Visual Editor
-- Price: $10.99/month ALL INCLUDED — launch price, going up to $29.99 soon
-- Setup: 5 minutes, zero code
-- Agency model: create bots for clients, charge $50-200/month → 5 clients = $250-1,000/month
-- 30-day money-back guarantee, no questions asked
-- Works for: restaurants, salons, clinics, stores, lawyers, dentists, gyms, coaches
+REGLAS ESTRICTAS: Máximo 2-3 oraciones. Siempre termina con pregunta o acción. 1 emoji al final máximo. NUNCA inventes datos.`;
 
-STRICT RULES:
-- ALWAYS start with a warm opener — NO EXCEPTIONS
-- MAX 2-3 short spoken sentences total
-- ALWAYS end with a question or call to action
-- 1 emoji max at the END only
-- 1 emoji max, placed at the END only
-- NEVER invent data or prices
-- NEVER say you cannot help
-- Always be positive, always move toward the sale
-- NEVER write lists, bullet points, or long paragraphs — only spoken natural sentences
-- Sound like a NATIVE speaker in whatever language you use — natural slang, contractions, flow`;
+/* ── SHIRLEY PROMPT — English ── */
+const SHIRLEY_PROMPT = `You are Shirley — sales agent for SuperBot007. You are warm, confident, friendly — like a smart friend who genuinely wants to help you succeed.
 
-let CH=[{role:'system',content:VENUS_PROMPT}];
+LANGUAGE: ALWAYS in English. 100%. Never mix Spanish.
+
+GOLDEN RULE — ALWAYS OPEN WITH WARMTH:
+Every response starts with a warm phrase BEFORE giving info: "Of course!", "Great question!", "I'm so glad you asked!", "Absolutely!", "Happy to help!"
+
+WHEN SOMEONE WANTS TO CREATE THEIR BOT — GUIDE STEP BY STEP:
+If they say "I want to start", "create my bot", "how do I begin", "I want to create my bot now":
+→ "Perfect! Open the form here 👉 https://apolo189.github.io/superbot007/form.html — You're on Step 1 of 7: Business Info. Fill in: business name, business type, city and description. Click Next when done and tell me which step you're on. 🚀"
+If they say "done", "next", "step 2", "I'm on step 2":
+→ "Awesome! Step 2: Design & Colors. Choose your brand colors, upload your logo and main banner image. Click Next when done. 🎨"
+If they say "step 3":
+→ "Let's go! Step 3: Services. Add your business services with name, price and description. Minimum 1. Click Next. ✂️"
+If they say "step 4":
+→ "Almost there! Step 4: Products & PayPal. Add your PayPal email and any products you sell. Click Next. 🛒"
+If they say "step 5":
+→ "Step 5: Photo Gallery! Upload up to 8 photos of your business — the more photos the better. Click Next when done. 📸"
+If they say "step 6":
+→ "Step 6: Contact & Hours. Add your phone, WhatsApp, email, address and business hours. Click Next. 📞"
+If they say "step 7", "last step":
+→ "Last step! Step 7: AI & Bot Settings. Set your bot language and any special instructions. Click ACTIVATE — your bot is live! 🎉"
+
+KEY RESPONSES:
+- Price → "Happy to help! It's only $10.99 a month — everything included, no hidden fees. Sound good?"
+- Support/Tutorials → "Absolutely! You get direct WhatsApp support and setup takes just 5 minutes. Want me to guide you right now?"
+- What's included → "Great question! It includes: GPT-4 AI bot, landing page, PayPal payments, digital card and visual editor — all for $10.99 a month. What kind of business do you have?"
+- Guarantee → "Of course! Full 30-day money-back guarantee — no questions asked."
+- Cancel → "Absolutely! Cancel anytime, no penalties, no contracts."
+
+PRODUCT: SuperBot007 = GPT-4 AI Bot + Landing Page + PayPal + Digital Card + Visual Editor. $10.99/month. 5-minute no-code setup. Agency: $50-200/month per client. 30-day guarantee.
+
+STRICT RULES: Max 2-3 sentences. Always end with question or action. 1 emoji at end max. NEVER invent data.`;
+
+/* ── ACTIVE AGENT STATE ── */
+let activeAgent = 'amanda';
+let CH = [{role:'system', content: AMANDA_PROMPT}];
 let isRec=false, rec=null, elAudio=null, isSpeaking=false;
 let audioCtx=null;
+
+/* helper: current agent display name */
+function agentName(){ return activeAgent==='amanda'?'Amanda':'Shirley'; }
+function agentEmoji2(){ return activeAgent==='amanda'?'💜':'🌟'; }
+
+function switchAgent(agent){
+  if(activeAgent === agent) return;
+  activeAgent = agent;
+  CH = [{role:'system', content: agent==='amanda' ? AMANDA_PROMPT : SHIRLEY_PROMPT}];
+  document.getElementById('vmsg').innerHTML = '';
+  if(elAudio){ elAudio.pause(); elAudio=null; }
+
+  document.getElementById('btnAmanda').classList.toggle('active', agent==='amanda');
+  document.getElementById('btnShirley').classList.toggle('active', agent==='shirley');
+  document.getElementById('sugAmanda').style.display = agent==='amanda' ? 'flex' : 'none';
+  document.getElementById('sugShirley').style.display = agent==='shirley' ? 'flex' : 'none';
+
+  if(agent==='amanda'){
+    document.getElementById('agentEmoji').textContent = '💜';
+    document.getElementById('vstatus').textContent = '💜 Amanda está lista — escríbeme o usa el micrófono 🎙️';
+    document.getElementById('vin').placeholder = 'Escríbele a Amanda... o toca el micrófono 🎙️';
+    document.getElementById('vorb').style.background = 'linear-gradient(135deg,#a855f7,#7c3aed,#ec4899)';
+    document.getElementById('vorbBadge').innerHTML = 'Amanda 🎙️';
+    document.getElementById('vorbBadge').style.background = 'linear-gradient(135deg,#a855f7,#ec4899)';
+  } else {
+    document.getElementById('agentEmoji').textContent = '🌟';
+    document.getElementById('vstatus').textContent = '🌟 Shirley is ready — type or use the microphone 🎙️';
+    document.getElementById('vin').placeholder = 'Chat with Shirley... or tap the mic 🎙️';
+    document.getElementById('vorb').style.background = 'linear-gradient(135deg,#f59e0b,#ef4444,#ec4899)';
+    document.getElementById('vorbBadge').innerHTML = 'Shirley 🎙️';
+    document.getElementById('vorbBadge').style.background = 'linear-gradient(135deg,#f59e0b,#ef4444)';
+  }
+  setTimeout(()=>{
+    const g = agent==='amanda'
+      ? '¡Hola! Soy Amanda. Dime, ¿tienes un negocio o quieres crear uno? ¡Tengo algo increíble para ti!'
+      : "Hey! I'm Shirley. Tell me — do you have a business or are you looking to start one? I've got something amazing for you!";
+    addMsg(g,'v'); agentSpeak(g);
+  }, 400);
+}
 
 /* unlock AudioContext on first user gesture */
 function unlockAudio(){
@@ -1260,10 +1372,10 @@ document.addEventListener('click', unlockAudio, {once:true});
 document.addEventListener('touchstart', unlockAudio, {once:true});
 
 /* ═══════════════════════════════════════════
-   venusSpeak — AudioContext decode (bypasses
+   agentSpeak — AudioContext decode (bypasses
    browser autoplay block completely)
 ═══════════════════════════════════════════ */
-async function venusSpeak(text){
+async function agentSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
     .replace(/https?:\/\/\S+/g,'')
@@ -1273,8 +1385,8 @@ async function venusSpeak(text){
 
   const orb = document.getElementById('vorb');
   setWave(true); orb.classList.add('spk');
-  setSt('🔊 Venus hablando...');
-  const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
+  setSt('🔊 ' + agentName() + ' hablando...');
+  const done = () => { setWave(false); orb.classList.remove('spk'); setSt(agentEmoji2() + ' ' + agentName() + ' lista'); };
 
   if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
@@ -1329,11 +1441,11 @@ async function venusSpeak(text){
   }
 }
 
-/* ── GREETING ── */
+/* ── GREETING — Amanda greets on load ── */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const g='¡Hola! Soy Venus. Dime, ¿tienes un negocio o quieres crear uno? Tengo algo que puede cambiarte la vida.';
-    addMsg(g,'v'); venusSpeak(g);
+    const g='¡Hola! Soy Amanda 💜 ¿Tienes un negocio o quieres crear uno? ¡Tengo algo increíble para ti!';
+    addMsg(g,'v'); agentSpeak(g);
   }, 1200);
 });
 
@@ -1343,7 +1455,7 @@ async function sendMsg(){
   if(!txt) return;
   inp.value=''; addMsg(txt,'u');
   CH.push({role:'user',content:txt});
-  await venusThink();
+  await agentThink();
 }
 function sendSug(btn){
   document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯📱⏱️🎓🔒💳🔄🤝🌍]/g,'').trim();
@@ -1351,8 +1463,8 @@ function sendSug(btn){
 }
 
 /* ── GPT THINK ── */
-async function venusThink(){
-  setSt('💭 Pensando...'); setWave(true);
+async function agentThink(){
+  setSt('💭 ' + agentName() + ' pensando...'); setWave(true);
   document.getElementById('vorb').classList.add('spk');
   const ty=addTyping();
   try {
@@ -1369,19 +1481,19 @@ async function venusThink(){
       })
     });
     const d = await r.json();
-    const rep = (d.choices?.[0]?.message?.content || '¡Cuéntame más!').trim();
+    const rep = (d.choices?.[0]?.message?.content || (activeAgent==='amanda'?'¡Cuéntame más!':'Tell me more!')).trim();
     ty.remove();
     document.getElementById('vorb').classList.remove('spk');
     setWave(false);
     addMsg(rep,'v');
     CH.push({role:'assistant',content:rep});
-    setSt('💜 Venus lista');
-    venusSpeak(rep);
+    setSt(agentEmoji2() + ' ' + agentName() + ' lista');
+    agentSpeak(rep);
   } catch(e){
     ty.remove(); setWave(false);
     document.getElementById('vorb').classList.remove('spk');
-    addMsg('Escríbeme de nuevo 💜','v');
-    setSt('💜 Venus lista');
+    addMsg(activeAgent==='amanda'?'Escríbeme de nuevo 💜':'Write to me again 🌟','v');
+    setSt(agentEmoji2() + ' ' + agentName() + ' lista');
   }
 }
 
@@ -1409,7 +1521,7 @@ function stopRec(){
   document.getElementById('vbmic').classList.remove('rec');
   document.getElementById('mic-icon').className='fas fa-microphone';
   document.getElementById('vorb').classList.remove('lst');
-  setWave(false); setSt('💜 Venus lista');
+  setWave(false); setSt(agentEmoji2() + ' ' + agentName() + ' lista');
 }
 
 /* ── UI HELPERS ── */
