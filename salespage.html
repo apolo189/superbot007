@@ -1249,31 +1249,41 @@ STRICT RULES:
 
 let CH=[{role:'system',content:VENUS_PROMPT}];
 let isRec=false, rec=null, elAudio=null, isSpeaking=false;
+let audioCtx=null;
+
+/* unlock AudioContext on first user gesture */
+function unlockAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+}
+document.addEventListener('click', unlockAudio, {once:true});
+document.addEventListener('touchstart', unlockAudio, {once:true});
 
 /* ═══════════════════════════════════════════
-   venusSpeak — blob approach, simple & solid
-   Speed trick: max_tokens 80 → GPT ~500ms
-                ElevenLabs turbo ~600ms
-                Total ≈ 1.1s (vs 4s before)
+   venusSpeak — AudioContext decode (bypasses
+   browser autoplay block completely)
 ═══════════════════════════════════════════ */
 async function venusSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
     .replace(/https?:\/\/\S+/g,'')
-    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪📊📈🛒🏢📲]/g,'')
+    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪📊📈🛒🏢📲⏱️🎓🔒💳🔄🤝🌍😊]/g,'')
     .replace(/\s+/g,' ').trim().slice(0,500);
   if(!clean) return;
 
   const orb = document.getElementById('vorb');
   setWave(true); orb.classList.add('spk');
   setSt('🔊 Venus hablando...');
-
   const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
 
   if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
+  /* ensure AudioContext is alive */
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') await audioCtx.resume();
+
   try {
-    /* ── ElevenLabs Flash v2.5 — auto voice: Valentina(ES) / EN voice ── */
+    /* ── ElevenLabs Flash v2.5 — Valentina(ES) / EN voice ── */
     const voice = detectLang(clean) === 'es' ? EL_VOICE_ES : EL_VOICE_EN;
     const res = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
@@ -1289,16 +1299,17 @@ async function venusSpeak(text){
     );
     if(!res.ok) throw new Error('EL TTS '+res.status);
 
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
-    elAudio    = new Audio(url);
-    elAudio.onended = () => { done(); URL.revokeObjectURL(url); };
-    elAudio.onerror = () => { done(); URL.revokeObjectURL(url); };
-    await elAudio.play();
+    const arrayBuf = await res.arrayBuffer();
+    const audioBuf = await audioCtx.decodeAudioData(arrayBuf);
+    const src = audioCtx.createBufferSource();
+    src.buffer = audioBuf;
+    src.connect(audioCtx.destination);
+    src.onended = done;
+    src.start(0);
 
   } catch(err){
-    console.warn('EL TTS error:', err); done();
-    /* Fallback: OpenAI shimmer */
+    console.warn('EL TTS error:', err);
+    /* Fallback: OpenAI shimmer via Audio element */
     try {
       const res2 = await fetch('https://api.openai.com/v1/audio/speech', {
         method:'POST',
@@ -1306,13 +1317,15 @@ async function venusSpeak(text){
         body: JSON.stringify({model:'tts-1',voice:'shimmer',input:clean,speed:1.05})
       });
       if(res2.ok){
-        const blob2 = await res2.blob();
-        const url2  = URL.createObjectURL(blob2);
-        elAudio     = new Audio(url2);
-        elAudio.onended = ()=>{ done(); URL.revokeObjectURL(url2); };
-        await elAudio.play();
+        const arrayBuf2 = await res2.arrayBuffer();
+        const audioBuf2 = await audioCtx.decodeAudioData(arrayBuf2);
+        const src2 = audioCtx.createBufferSource();
+        src2.buffer = audioBuf2;
+        src2.connect(audioCtx.destination);
+        src2.onended = done;
+        src2.start(0);
       } else { done(); }
-    } catch(e2){ done(); }
+    } catch(e2){ console.warn('Fallback TTS error:',e2); done(); }
   }
 }
 
