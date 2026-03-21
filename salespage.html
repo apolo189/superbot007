@@ -1162,16 +1162,23 @@ function tFaq(item){
 
 /* ══════════════════════════════════════════════
    VENUS — ElevenLabs Flash v2.5 + GPT-4o-mini
-   Voice: dfeOmy6Uay63tNhyO99j | Model: eleven_flash_v2_5
+   ES: Valentina (pFZP5JQG7iQjIQuC4Bku)
+   EN: dfeOmy6Uay63tNhyO99j
 ══════════════════════════════════════════════ */
 
-/* OpenAI key — used for GPT chat only */
+/* OpenAI key — GPT chat only */
 const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
 
-/* ElevenLabs config — TTS only */
-const EL_KEY   = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
-const EL_VOICE = 'dfeOmy6Uay63tNhyO99j';
-const EL_MODEL = 'eleven_flash_v2_5';
+/* ElevenLabs — dual voice */
+const EL_KEY      = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
+const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku'; /* Valentina — native Spanish */
+const EL_VOICE_EN = 'dfeOmy6Uay63tNhyO99j'; /* English voice */
+const EL_MODEL    = 'eleven_flash_v2_5';
+
+/* Detect language of Venus reply */
+function detectLang(t){
+  return /\b(hola|gracias|cómo|qué|tienes|negocio|precio|quiero|puedo|para|una|los|las|con|por|que|del|más|también|esto|eso|muy|bien|sí|cuánto|tengo|mira|claro|listo|desde|solo)\b/i.test(t) ? 'es' : 'en';
+}
 
 /* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
 const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real woman: warm, confident, clever, and genuinely excited about helping people make money. You are FULLY BILINGUAL — you speak perfect Spanish AND perfect English.
@@ -1260,9 +1267,10 @@ async function venusSpeak(text){
   if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
   try {
-    /* ── ElevenLabs Flash v2.5 — fastest model, ~500ms ── */
+    /* ── ElevenLabs Flash v2.5 — auto voice: Valentina(ES) / EN voice ── */
+    const voice = detectLang(clean) === 'es' ? EL_VOICE_ES : EL_VOICE_EN;
     const res = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${EL_VOICE}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
       {
         method: 'POST',
         headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
