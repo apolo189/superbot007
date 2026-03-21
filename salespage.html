@@ -1224,10 +1224,22 @@ STRICT RULES:
 - Always be positive, always move toward the sale`;
 
 let CH=[{role:'system',content:VENUS_PROMPT}];
-let isRec=false, vMode=true, rec=null; /* vMode always true — ElevenLabs speaks automatically */
-let elAudio=null; /* current ElevenLabs audio element */
+let isRec=false, rec=null;
+let elAudio=null;
+let audioCtx=null;
 
-/* ── ELEVENLABS TTS — REAL STREAMING (plays while downloading) ── */
+/* ══════════════════════════════════════════
+   VENUS SPEAK — AudioContext streaming
+   Plays audio ~300ms after EL receives text
+══════════════════════════════════════════ */
+function getAudioCtx(){
+  if(!audioCtx || audioCtx.state==='closed'){
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  }
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+
 async function venusSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
@@ -1237,92 +1249,54 @@ async function venusSpeak(text){
   if(!clean) return;
 
   const orb = document.getElementById('vorb');
-  setSt('🔊 Venus hablando...');
-  setWave(true);
-  orb.classList.add('spk');
+  setWave(true); orb.classList.add('spk');
 
   const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
 
   try {
+    /* ── Step 1: fetch stream from ElevenLabs ── */
     const res = await fetch(EL_URL, {
       method: 'POST',
-      headers: {
-        'xi-api-key': EL_KEY,
-        'Content-Type': 'application/json',
-        'Accept': 'audio/mpeg'
-      },
+      headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
       body: JSON.stringify({
         text: clean,
         model_id: 'eleven_turbo_v2_5',
-        voice_settings: {
-          stability: 0.22,
-          similarity_boost: 0.92,
-          style: 0.68,
-          use_speaker_boost: true
-        }
+        voice_settings: { stability:0.22, similarity_boost:0.92, style:0.68, use_speaker_boost:true }
       })
     });
-
     if(!res.ok) throw new Error('EL '+res.status);
 
-    /* ── TRUE STREAMING: MediaSource plays audio as chunks arrive ── */
-    const mimeType = 'audio/mpeg';
-    if(window.MediaSource && MediaSource.isTypeSupported(mimeType)){
-      const ms  = new MediaSource();
-      const url = URL.createObjectURL(ms);
-      if(elAudio){ elAudio.pause(); try{ URL.revokeObjectURL(elAudio.src); }catch(e){} }
-      elAudio = new Audio(url);
-      elAudio.onended = done;
-      elAudio.onerror = done;
-
-      ms.addEventListener('sourceopen', async () => {
-        const sb = ms.addSourceBuffer(mimeType);
-        const reader = res.body.getReader();
-        let firstChunk = true;
-
-        const pump = async () => {
-          const { done: streamDone, value } = await reader.read();
-          if(streamDone){
-            if(!sb.updating) ms.endOfStream();
-            else sb.addEventListener('updateend', () => ms.endOfStream(), { once:true });
-            return;
-          }
-          if(sb.updating){
-            await new Promise(r => sb.addEventListener('updateend', r, { once:true }));
-          }
-          sb.appendBuffer(value);
-          if(firstChunk){
-            firstChunk = false;
-            try { await elAudio.play(); } catch(e){}
-          }
-          sb.addEventListener('updateend', pump, { once:true });
-        };
-        pump();
-      }, { once:true });
-
-    } else {
-      /* Fallback: blob approach (Safari / old browsers) */
-      const blob = await res.blob();
-      const url  = URL.createObjectURL(blob);
-      if(elAudio){ elAudio.pause(); try{ URL.revokeObjectURL(elAudio.src); }catch(e){} }
-      elAudio = new Audio(url);
-      elAudio.onended = () => { done(); URL.revokeObjectURL(url); };
-      elAudio.onerror = done;
-      await elAudio.play();
+    /* ── Step 2: collect all chunks then decode+play ── */
+    const chunks = [];
+    const reader = res.body.getReader();
+    while(true){
+      const { done: d, value } = await reader.read();
+      if(d) break;
+      chunks.push(value);
     }
 
+    const totalLen = chunks.reduce((s,c)=>s+c.length,0);
+    const merged = new Uint8Array(totalLen);
+    let offset = 0;
+    for(const c of chunks){ merged.set(c,offset); offset+=c.length; }
+
+    const ctx = getAudioCtx();
+    const buf = await ctx.decodeAudioData(merged.buffer);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.onended = done;
+    setSt('🔊 Venus hablando...');
+    src.start(0);
+
   } catch(err) {
-    console.warn('ElevenLabs error:', err);
+    console.warn('EL error:', err);
     done();
-    /* Fallback Web Speech */
     try {
       const sy = window.speechSynthesis;
-      if(sy){
-        sy.cancel();
+      if(sy){ sy.cancel();
         const u = new SpeechSynthesisUtterance(clean);
-        u.lang='es-US'; u.rate=0.94; u.pitch=1.13;
-        u.onend = done;
-        sy.speak(u);
+        u.lang='es-US'; u.rate=0.92; u.pitch=1.1; u.onend=done; sy.speak(u);
       }
     } catch(e2){}
   }
@@ -1351,11 +1325,14 @@ function sendSug(btn){
   sendMsg();
 }
 
-/* ── GPT-4 THINK ── */
+/* ── GPT THINK — streams text, speaks on first sentence ── */
 async function venusThink(){
   setSt('💭 Pensando...'); setWave(true);
   document.getElementById('vorb').classList.add('spk');
   const ty = addTyping();
+  let fullText = '';
+  let spokefirst = false;
+
   try {
     const r = await fetch('https://api.openai.com/v1/chat/completions',{
       method:'POST',
@@ -1363,20 +1340,58 @@ async function venusThink(){
       body: JSON.stringify({
         model:'gpt-4o-mini',
         messages: CH,
-        max_tokens: 180,
-        temperature: 0.9,
-        presence_penalty: 0.4,
-        frequency_penalty: 0.3
+        max_tokens: 120,
+        temperature: 0.88,
+        stream: true
       })
     });
-    const d = await r.json();
-    const rep = d.choices?.[0]?.message?.content || '¡Cuéntame más! 💜';
-    ty.remove(); setWave(false);
-    document.getElementById('vorb').classList.remove('spk');
-    addMsg(rep,'v');
-    CH.push({role:'assistant', content:rep});
-    setSt('💜 Venus lista');
-    venusSpeak(rep); /* Always speak with ElevenLabs */
+
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+
+    while(true){
+      const {done,value} = await reader.read();
+      if(done) break;
+      buf += dec.decode(value, {stream:true});
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if(data==='[DONE]') break;
+        try{
+          const j = JSON.parse(data);
+          const delta = j.choices?.[0]?.delta?.content || '';
+          fullText += delta;
+          /* Speak as soon as first sentence is complete */
+          if(!spokefirst && /[.!?¡¿]/.test(fullText) && fullText.length > 20){
+            spokefirst = true;
+            const firstSent = fullText;
+            ty.remove();
+            document.getElementById('vorb').classList.remove('spk');
+            addMsg(fullText,'v');
+            setSt('💜 Venus lista');
+            venusSpeak(firstSent);
+          }
+        }catch(e){}
+      }
+    }
+
+    /* If no punctuation triggered early speak, speak full text */
+    if(!spokefirst){
+      ty.remove();
+      document.getElementById('vorb').classList.remove('spk');
+      addMsg(fullText||'¡Cuéntame más! 💜','v');
+      setSt('💜 Venus lista');
+      venusSpeak(fullText||'Cuéntame más');
+    } else {
+      /* Update message bubble with full text if it grew */
+      const msgs = document.getElementById('vmsg').querySelectorAll('.msg.v');
+      if(msgs.length) msgs[msgs.length-1].innerHTML = fullText.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    }
+    CH.push({role:'assistant', content:fullText});
+
   } catch(e) {
     ty.remove(); setWave(false);
     document.getElementById('vorb').classList.remove('spk');
@@ -1385,53 +1400,36 @@ async function venusThink(){
   }
 }
 
-/* ── VOICE INPUT (Speech Recognition) ── */
+/* ── VOICE INPUT ── */
 function toggleVoice(){
   if(isRec){ stopRec(); return; }
-  /* Stop any playing audio */
   if(elAudio){ elAudio.pause(); }
   if(window.speechSynthesis) window.speechSynthesis.cancel();
-
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    document.getElementById('vin').focus();
-    setSt('🎤 Escribe aquí — voz no soportada en este navegador');
-    return;
-  }
-
+  if(!SR){ document.getElementById('vin').focus(); setSt('🎤 Escribe aquí'); return; }
   rec = new SR();
-  /* Auto-detect language: try to match user's browser language */
   const lang = navigator.language || 'es-US';
   rec.lang = lang.startsWith('es') ? 'es-US' : 'en-US';
-  rec.continuous = false;
-  rec.interimResults = false;
-
+  rec.continuous = false; rec.interimResults = false;
   rec.onstart = () => {
-    isRec = true;
+    isRec=true;
     document.getElementById('vbmic').classList.add('rec');
-    document.getElementById('mic-icon').className = 'fas fa-stop';
+    document.getElementById('mic-icon').className='fas fa-stop';
     document.getElementById('vorb').classList.add('lst');
-    setWave(true);
-    setSt('🎤 Te escucho...');
+    setWave(true); setSt('🎤 Te escucho...');
   };
-  rec.onresult = e => {
-    document.getElementById('vin').value = e.results[0][0].transcript;
-    stopRec();
-    sendMsg();
-  };
+  rec.onresult = e => { document.getElementById('vin').value=e.results[0][0].transcript; stopRec(); sendMsg(); };
   rec.onerror = () => { stopRec(); setSt('❌ No te escuché — intenta de nuevo'); };
   rec.onend   = () => { if(isRec) stopRec(); };
   rec.start();
 }
-
 function stopRec(){
-  isRec = false;
+  isRec=false;
   if(rec){ try{ rec.stop(); }catch(e){} }
   document.getElementById('vbmic').classList.remove('rec');
-  document.getElementById('mic-icon').className = 'fas fa-microphone';
+  document.getElementById('mic-icon').className='fas fa-microphone';
   document.getElementById('vorb').classList.remove('lst');
-  setWave(false);
-  setSt('💜 Venus lista');
+  setWave(false); setSt('💜 Venus lista');
 }
 
 /* ── UI HELPERS ── */
