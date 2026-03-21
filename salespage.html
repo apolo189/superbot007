@@ -545,38 +545,38 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:2.5rem 
     <!-- ROW 1: 4 videos -->
     <div class="video-grid" style="margin-bottom:1.2rem;">
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/ipObTPOw"></video>
+        <video autoplay loop muted playsinline src="videos/vid1_bot.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">🤖 Bot respondiendo 24/7</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/GeWVJ8Dv"></video>
+        <video autoplay loop muted playsinline src="videos/vid2_calendar.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">📅 Agendando citas automático</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/SUtu0d7B"></video>
+        <video autoplay loop muted playsinline src="videos/vid3_money.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">💰 Generando ingresos reales</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/T4xnEYjx"></video>
+        <video autoplay loop muted playsinline src="videos/vid4_deal.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">🤝 Cerrando tratos 24/7</div></div>
       </div>
     </div>
     <!-- ROW 2: 4 videos -->
     <div class="video-grid">
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/mvYOgUkx"></video>
+        <video autoplay loop muted playsinline src="videos/vid5_nocode.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">💻 Sin código — fácil y rápido</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/IH6hYrMQ"></video>
+        <video autoplay loop muted playsinline src="videos/vid6_landing.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">📱 Landing page + tarjeta digital</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/Isrn0QKG"></video>
+        <video autoplay loop muted playsinline src="videos/vid7_paypal.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">💳 Pagos PayPal automáticos</div></div>
       </div>
       <div class="vid-card reveal" data-tilt>
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/XjwVdbPU"></video>
+        <video autoplay loop muted playsinline src="videos/vid8_agency.mp4"></video>
         <div class="vid-overlay"><div class="vid-label">🏆 Tu agencia de bots IA</div></div>
       </div>
     </div>
@@ -1059,17 +1059,22 @@ function loadVoices(){
   if(!voices.length)return;
   voicesLoaded=true;
   // Priority list — warm, feminine, natural Spanish voices
+  /* Best warm feminine Spanish voices in priority order */
   const priority=[
-    v=>v.name==='Paulina',           // macOS Mexican Spanish
-    v=>v.name==='Monica',            // macOS Spanish Spain
+    v=>v.name==='Paulina',              // macOS es-MX — warm, natural
+    v=>v.name==='Monica',               // macOS es-ES
     v=>v.name==='Mónica',
-    v=>v.name.includes('Samantha'),  // macOS English fallback
-    v=>v.lang==='es-US'&&v.localService,
-    v=>v.lang==='es-MX'&&v.localService,
+    v=>v.name==='Karen',                // macOS en-AU — smooth
+    v=>v.name==='Samantha',             // macOS en-US — clear
+    v=>v.name==='Google español de Estados Unidos',
+    v=>v.name.includes('Google') && v.lang==='es-US',
+    v=>v.name.includes('Google') && v.lang==='es-MX',
+    v=>v.lang==='es-US' && v.localService,
+    v=>v.lang==='es-MX' && v.localService,
     v=>v.lang==='es-US',
     v=>v.lang==='es-MX',
     v=>v.lang.startsWith('es'),
-    v=>v.lang.startsWith('en')&&v.name.toLowerCase().includes('female'),
+    v=>v.lang==='en-AU',
     v=>v.lang.startsWith('en'),
   ];
   for(const test of priority){
@@ -1158,8 +1163,11 @@ function venusSpeak(text){
      rate 1.35 = noticeably faster than default (1.0) but not rushed
      pitch 1.15 = slightly higher = warmer, more feminine
      volume 1.0 = full presence */
-  utt.rate=1.35;
-  utt.pitch=1.15;
+  /* Sexy, warm, natural — NOT robotic:
+     rate 1.08 = slightly faster than default, but not rushed
+     pitch 1.05 = slightly warmer/feminine, not exaggerated */
+  utt.rate=1.08;
+  utt.pitch=1.05;
   utt.volume=1.0;
 
   // Ensure voices loaded
