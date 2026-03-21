@@ -285,10 +285,6 @@ Copy your links and share them with your clients. Remember you can change anythi
       landing: "Hi! I'm Shirley. This is your landing page created with Super Bot 007. Can I help you with anything? 🌟",
     }
   };
-      editor: "Hi! I'm here to help you customize your landing page. I can suggest colors, text, and images based on your business type. Where shall we start?",
-      landing: "Hi! I'm Shirley. This is your landing page created with Super Bot 007. Can I help you with anything? 🌟",
-    }
-  };
 
   /* ── STATE ── */
   let isOpen       = false;

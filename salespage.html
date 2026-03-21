@@ -1682,6 +1682,27 @@ function tFaq(item){
 function scrollToAmanda(){ openWizardFromVenus(); }
 function scrollToAgent(){ openWizardFromVenus(); return false; }
 function toggleVoiceInput(){ if(typeof window.wizardToggleMic==='function') window.wizardToggleMic(); }
+
+/* ── selectAgent — sets wizard language then opens it ── */
+function selectAgent(agent){
+  const lang = (agent === 'amanda') ? 'es' : 'en';
+  if(typeof window.wizardSetLang === 'function') window.wizardSetLang(lang);
+  openWizardFromVenus();
+}
+
+/* ── submitAnswer — redirects to wizard (old conversational form stub) ── */
+function submitAnswer(){
+  const inp = document.getElementById('chatInput');
+  const q = inp ? inp.value.trim() : '';
+  inp && (inp.value = '');
+  openWizardFromVenus();
+  if(q){
+    setTimeout(function(){
+      const wzInp = document.getElementById('wz-text-inp');
+      if(wzInp){ wzInp.value = q; if(typeof window.__wzSend==='function') window.__wzSend(); }
+    }, 700);
+  }
+}
 </script>
 
 <script>
