@@ -1045,33 +1045,39 @@ STRICT RULES:
     isSpeaking = true;
     setSpeakingUI(true);
 
-    // Sanitize — strip markdown, bullets, URLs, emojis, extra whitespace
-    // Then truncate to 400 chars max for TTS (long step scripts show in chat but speak a short version)
+    // Sanitize for TTS — safe clean, no destructive regex
     const clean = text
-      .replace(/https?:\/\/\S+/g, '')           // remove URLs
-      .replace(/[•\-\*\_\`#\[\]()>~]/g, '')     // remove markdown/bullets
-      .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')   // remove emojis (unicode range)
-      .replace(/[^\x00-\x7FáéíóúüñÁÉÍÓÚÜÑ¡¿]/g, '') // keep latin + spanish chars only
-      .replace(/\n+/g, ' ')                      // newlines → space
-      .replace(/\s+/g, ' ')                      // collapse spaces
+      .replace(/https?:\/\/\S+/g, '')        // remove URLs
+      .replace(/[•*_`#\[\]>~]/g, '')         // remove markdown symbols
+      .replace(/\n+/g, '. ')                  // newlines → pause
+      .replace(/\s+/g, ' ')                   // collapse spaces
       .trim()
-      .slice(0, 400);                            // max 400 chars for TTS
+      .slice(0, 450);                         // max 450 chars
 
     if (!clean) { isSpeaking = false; setSpeakingUI(false); return; }
 
+    console.log('[WIZARD TTS] lang:', LANG, '| chars:', clean.length, '| text:', clean.substring(0, 80) + '...');
+
     try {
-      // Try ElevenLabs first
       const voice = LANG === 'es' ? EL_VOICE_ES : EL_VOICE_EN;
+      console.log('[WIZARD TTS] Calling ElevenLabs, voice:', voice);
       const elRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
         method: 'POST',
         headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: clean, model_id: EL_MODEL, voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.3 } })
       });
 
-      if (!elRes.ok) throw new Error('EL failed');
+      console.log('[WIZARD TTS] ElevenLabs response status:', elRes.status);
+      if (!elRes.ok) {
+        const errTxt = await elRes.text();
+        console.warn('[WIZARD TTS] ElevenLabs error body:', errTxt);
+        throw new Error('EL ' + elRes.status);
+      }
       const blob = await elRes.blob();
+      console.log('[WIZARD TTS] Got audio blob, size:', blob.size);
       await playBlob(blob);
     } catch (e) {
+      console.warn('[WIZARD TTS] ElevenLabs failed:', e.message, '— trying OpenAI fallback');
       try {
         // Fallback: OpenAI TTS
         const oaRes = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -1079,11 +1085,17 @@ STRICT RULES:
           headers: { 'Authorization': 'Bearer ' + OA_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: 'tts-1', voice: 'shimmer', input: clean, speed: 1.05 })
         });
-        if (!oaRes.ok) throw new Error('OA TTS failed');
+        console.log('[WIZARD TTS] OpenAI TTS response status:', oaRes.status);
+        if (!oaRes.ok) {
+          const errTxt2 = await oaRes.text();
+          console.warn('[WIZARD TTS] OpenAI TTS error body:', errTxt2);
+          throw new Error('OA TTS ' + oaRes.status);
+        }
         const blob = await oaRes.blob();
+        console.log('[WIZARD TTS] Got OpenAI audio blob, size:', blob.size);
         await playBlob(blob);
       } catch (e2) {
-        // Offline: no audio, text only
+        console.error('[WIZARD TTS] Both TTS services failed:', e2.message);
         isSpeaking = false;
         setSpeakingUI(false);
       }
@@ -1113,13 +1125,16 @@ STRICT RULES:
       const audio = new Audio(url);
       audio.volume = 1;
       currentAudio = audio;
+      console.log('[WIZARD AUDIO] playBlob — blob size:', blob.size, 'type:', blob.type);
       audio.onended = () => {
+        console.log('[WIZARD AUDIO] playback ended OK');
         isSpeaking = false;
         setSpeakingUI(false);
         URL.revokeObjectURL(url);
         resolve();
       };
-      audio.onerror = () => {
+      audio.onerror = (ev) => {
+        console.error('[WIZARD AUDIO] audio.onerror:', ev);
         isSpeaking = false;
         setSpeakingUI(false);
         URL.revokeObjectURL(url);
@@ -1127,13 +1142,16 @@ STRICT RULES:
       };
       // play() returns a Promise — catch DOMException (autoplay blocked)
       const playPromise = audio.play();
+      console.log('[WIZARD AUDIO] audio.play() called, promise:', !!playPromise);
       if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          // Autoplay blocked — silently resolve, text still shows
-          isSpeaking = false;
-          setSpeakingUI(false);
-          resolve();
-        });
+        playPromise
+          .then(() => console.log('[WIZARD AUDIO] audio.play() resolved — playing!'))
+          .catch((err) => {
+            console.error('[WIZARD AUDIO] audio.play() BLOCKED:', err.name, err.message);
+            isSpeaking = false;
+            setSpeakingUI(false);
+            resolve();
+          });
       }
     });
   }
