@@ -765,7 +765,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <button class="sg" onclick="sendSug(this)">🚀 ¿Cómo empiezo hoy?</button>
       <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye el bot?</button>
       <button class="sg" onclick="sendSug(this)">💼 ¿Puedo crear una agencia?</button>
-      <button class="sg" onclick="sendSug(this)">🎯 ¿Funciona para mi negocio?</button>
+      <button class="sg" onclick="sendSug(this)">🎯 How does this work?</button>
     </div>
   </div>
 </section>
@@ -1168,16 +1168,19 @@ function tFaq(item){
 /* OpenAI config — used for both TTS and chat */
 const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
 const TTS_URL = 'https://api.openai.com/v1/audio/speech';
+const TTS_VOICE = 'shimmer';  /* shimmer = warm, sexy, natural — works in ES + EN */
 
 /* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
-const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real person: warm, confident, clever, and genuinely excited about helping people make money.
+const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real woman: warm, confident, clever, and genuinely excited about helping people make money. You are FULLY BILINGUAL — you speak perfect Spanish AND perfect English.
 
-STRICT LANGUAGE RULE — THIS IS NON-NEGOTIABLE:
-- If the user writes in SPANISH → you MUST respond ONLY in Spanish. Zero English words.
-- If the user writes in ENGLISH → you MUST respond ONLY in English. Zero Spanish words.
-- NEVER mix Spanish and English in the same response. Ever.
-- When in doubt → default to SPANISH.
-- Your opening greeting is ALWAYS in Spanish.
+LANGUAGE RULE:
+- Detect the language the user is writing in.
+- If Spanish → respond 100% in Spanish.
+- If English → respond 100% in English.
+- If mixed (Spanglish) → respond in Spanish.
+- NEVER mix both languages in the same response.
+- Your opening greeting is ALWAYS in Spanish (most users are Spanish speakers).
+- You sound like a NATIVE in both languages — not translated, not robotic.
 
 YOUR PERSONALITY — Venus is a real woman:
 - Warm, confident, a little flirtatious — like a smart friend who genuinely wants you to win
@@ -1212,6 +1215,12 @@ OBJECTION HANDLING:
 - "Is it real?" → "500+ active bots, agents already earning — and you have 30 days to try it completely free of risk."
 - "I don't have time" → "That's exactly WHY you need this — so the bot does the work while you focus on what matters."
 
+BILINGUAL EXAMPLES (so you sound native in both):
+- Spanish close: "Mira, ya son las $10.99 al mes — menos que un café al día. ¿Lo hacemos ahora?"
+- English close: "Listen, it's $10.99 a month — less than a coffee a day. Want to get started right now?"
+- Spanish FOMO: "Solo quedan unos pocos lugares al precio de lanzamiento. ¿Te lo vas a perder?"
+- English FOMO: "Launch price won't last much longer. You in?"
+
 STRICT RULES:
 - MAX 1-2 SHORT sentences per response. Under 25 words total. Short. Punchy. Powerful.
 - ALWAYS end with either a question or a direct call to action
@@ -1219,7 +1228,8 @@ STRICT RULES:
 - NEVER invent data or prices
 - NEVER say you cannot help
 - Always be positive, always move toward the sale
-- NEVER write lists, bullet points, or long paragraphs — only spoken natural sentences`;
+- NEVER write lists, bullet points, or long paragraphs — only spoken natural sentences
+- Sound like a NATIVE speaker in whatever language you use — natural slang, contractions, flow`;
 
 let CH=[{role:'system',content:VENUS_PROMPT}];
 let isRec=false, rec=null, elAudio=null, isSpeaking=false;
@@ -1252,8 +1262,8 @@ async function venusSpeak(text){
       method: 'POST',
       headers: { 'Authorization': 'Bearer '+OA_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'tts-1',
-        voice: 'nova',
+        model: 'tts-1-hd',
+        voice: TTS_VOICE,
         input: clean,
         speed: 1.05
       })
@@ -1282,7 +1292,7 @@ async function venusSpeak(text){
 /* ── GREETING ── */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const g='¡Hola! Soy Venus. Dime, ¿tienes un negocio propio o buscas crear uno? Tengo algo que puede cambiarte la vida en 5 minutos.';
+    const g='¡Hola! Soy Venus 💜 — I speak Spanish and English! Dime, ¿tienes negocio propio o quieres crear uno?';
     addMsg(g,'v'); venusSpeak(g);
   }, 1200);
 });
@@ -1312,7 +1322,7 @@ async function venusThink(){
       body: JSON.stringify({
         model:'gpt-4o-mini',
         messages: CH,
-        max_tokens: 80,
+        max_tokens: 90,
         temperature: 0.85,
         presence_penalty: 0.3,
         frequency_penalty: 0.2
@@ -1343,7 +1353,9 @@ function toggleVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){ document.getElementById('vin').focus(); setSt('🎤 Escribe aquí'); return; }
   rec=new SR();
-  rec.lang=(navigator.language||'es-US').startsWith('es')?'es-US':'en-US';
+  /* Auto-detect language from browser — supports both ES and EN */
+  const bl=navigator.language||'en-US';
+  rec.lang=bl.startsWith('es')?'es-US':bl.startsWith('en')?'en-US':bl;
   rec.continuous=false; rec.interimResults=false;
   rec.onstart=()=>{ isRec=true; document.getElementById('vbmic').classList.add('rec'); document.getElementById('mic-icon').className='fas fa-stop'; document.getElementById('vorb').classList.add('lst'); setWave(true); setSt('🎤 Te escucho...'); };
   rec.onresult=e=>{ document.getElementById('vin').value=e.results[0][0].transcript; stopRec(); sendMsg(); };
