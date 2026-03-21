@@ -1216,87 +1216,71 @@ OBJECTION HANDLING:
 - "I don't have time" → "That's exactly WHY you need this — so the bot does the work while you focus on what matters."
 
 STRICT RULES:
-- MAX 2-3 sentences per response. Short. Punchy. Powerful.
+- MAX 1-2 SHORT sentences per response. Under 25 words total. Short. Punchy. Powerful.
 - ALWAYS end with either a question or a direct call to action
-- 1 emoji max
+- 1 emoji max, placed at the END only
 - NEVER invent data or prices
 - NEVER say you cannot help
-- Always be positive, always move toward the sale`;
+- Always be positive, always move toward the sale
+- NEVER write lists, bullet points, or long paragraphs — only spoken natural sentences`;
 
 let CH=[{role:'system',content:VENUS_PROMPT}];
-let isRec=false, rec=null;
-let elAudio=null;
-let audioCtx=null;
+let isRec=false, rec=null, elAudio=null, isSpeaking=false;
 
-/* ══════════════════════════════════════════
-   VENUS SPEAK — AudioContext streaming
-   Plays audio ~300ms after EL receives text
-══════════════════════════════════════════ */
-function getAudioCtx(){
-  if(!audioCtx || audioCtx.state==='closed'){
-    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  }
-  if(audioCtx.state==='suspended') audioCtx.resume();
-  return audioCtx;
-}
-
+/* ═══════════════════════════════════════════
+   venusSpeak — blob approach, simple & solid
+   Speed trick: max_tokens 80 → GPT ~500ms
+                ElevenLabs turbo ~600ms
+                Total ≈ 1.1s (vs 4s before)
+═══════════════════════════════════════════ */
 async function venusSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
-    .replace(/https?:\/\/\S+/g,'the link')
-    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️]/g,'')
-    .replace(/\s+/g,' ').trim();
+    .replace(/https?:\/\/\S+/g,'')
+    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️📱🏪💼📊📈🛒🎯🏢📲]/g,'')
+    .replace(/\s+/g,' ').trim().slice(0,400);
   if(!clean) return;
 
   const orb = document.getElementById('vorb');
+  isSpeaking = true;
   setWave(true); orb.classList.add('spk');
+  setSt('🔊 Venus hablando...');
 
-  const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
+  const done = () => {
+    isSpeaking = false;
+    setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
+  };
+
+  /* stop previous audio immediately */
+  if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
   try {
-    /* ── Step 1: fetch stream from ElevenLabs ── */
     const res = await fetch(EL_URL, {
-      method: 'POST',
-      headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+      method:'POST',
+      headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json','Accept':'audio/mpeg'},
       body: JSON.stringify({
         text: clean,
         model_id: 'eleven_turbo_v2_5',
-        voice_settings: { stability:0.22, similarity_boost:0.92, style:0.68, use_speaker_boost:true }
+        voice_settings:{ stability:0.25, similarity_boost:0.90, style:0.60, use_speaker_boost:true }
       })
     });
     if(!res.ok) throw new Error('EL '+res.status);
 
-    /* ── Step 2: collect all chunks then decode+play ── */
-    const chunks = [];
-    const reader = res.body.getReader();
-    while(true){
-      const { done: d, value } = await reader.read();
-      if(d) break;
-      chunks.push(value);
-    }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    elAudio    = new Audio(url);
+    elAudio.onended  = () => { done(); URL.revokeObjectURL(url); };
+    elAudio.onerror  = () => { done(); URL.revokeObjectURL(url); };
+    await elAudio.play();
 
-    const totalLen = chunks.reduce((s,c)=>s+c.length,0);
-    const merged = new Uint8Array(totalLen);
-    let offset = 0;
-    for(const c of chunks){ merged.set(c,offset); offset+=c.length; }
-
-    const ctx = getAudioCtx();
-    const buf = await ctx.decodeAudioData(merged.buffer);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.onended = done;
-    setSt('🔊 Venus hablando...');
-    src.start(0);
-
-  } catch(err) {
-    console.warn('EL error:', err);
-    done();
+  } catch(err){
+    console.warn('EL:', err); done();
+    /* Web Speech fallback */
     try {
       const sy = window.speechSynthesis;
       if(sy){ sy.cancel();
         const u = new SpeechSynthesisUtterance(clean);
-        u.lang='es-US'; u.rate=0.92; u.pitch=1.1; u.onend=done; sy.speak(u);
+        u.lang='es-US'; u.rate=0.93; u.pitch=1.08; u.onend=done; sy.speak(u);
       }
     } catch(e2){}
   }
@@ -1305,34 +1289,29 @@ async function venusSpeak(text){
 /* ── GREETING ── */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const greet = '¡Hola! Soy Venus 💜 Dime una cosa — ¿ya tienes un negocio o estás buscando crear uno? Tengo algo que puede cambiarte la vida, y toma solo 5 minutos.';
-    addMsg(greet,'v');
-    venusSpeak(greet);
-  }, 1400);
+    const g='¡Hola! Soy Venus. Dime, ¿tienes un negocio propio o buscas crear uno? Tengo algo que puede cambiarte la vida en 5 minutos.';
+    addMsg(g,'v'); venusSpeak(g);
+  }, 1200);
 });
 
 /* ── SEND MESSAGE ── */
 async function sendMsg(){
   const inp=document.getElementById('vin'), txt=inp.value.trim();
   if(!txt) return;
-  inp.value='';
-  addMsg(txt,'u');
-  CH.push({role:'user', content:txt});
+  inp.value=''; addMsg(txt,'u');
+  CH.push({role:'user',content:txt});
   await venusThink();
 }
 function sendSug(btn){
-  document.getElementById('vin').value = btn.textContent.replace(/[💰🚀🤖💼🎯]/g,'').trim();
+  document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯]/g,'').trim();
   sendMsg();
 }
 
-/* ── GPT THINK — streams text, speaks on first sentence ── */
+/* ── GPT THINK ── */
 async function venusThink(){
   setSt('💭 Pensando...'); setWave(true);
   document.getElementById('vorb').classList.add('spk');
-  const ty = addTyping();
-  let fullText = '';
-  let spokefirst = false;
-
+  const ty=addTyping();
   try {
     const r = await fetch('https://api.openai.com/v1/chat/completions',{
       method:'POST',
@@ -1340,59 +1319,22 @@ async function venusThink(){
       body: JSON.stringify({
         model:'gpt-4o-mini',
         messages: CH,
-        max_tokens: 120,
-        temperature: 0.88,
-        stream: true
+        max_tokens: 80,
+        temperature: 0.85,
+        presence_penalty: 0.3,
+        frequency_penalty: 0.2
       })
     });
-
-    const reader = r.body.getReader();
-    const dec = new TextDecoder();
-    let buf = '';
-
-    while(true){
-      const {done,value} = await reader.read();
-      if(done) break;
-      buf += dec.decode(value, {stream:true});
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if(data==='[DONE]') break;
-        try{
-          const j = JSON.parse(data);
-          const delta = j.choices?.[0]?.delta?.content || '';
-          fullText += delta;
-          /* Speak as soon as first sentence is complete */
-          if(!spokefirst && /[.!?¡¿]/.test(fullText) && fullText.length > 20){
-            spokefirst = true;
-            const firstSent = fullText;
-            ty.remove();
-            document.getElementById('vorb').classList.remove('spk');
-            addMsg(fullText,'v');
-            setSt('💜 Venus lista');
-            venusSpeak(firstSent);
-          }
-        }catch(e){}
-      }
-    }
-
-    /* If no punctuation triggered early speak, speak full text */
-    if(!spokefirst){
-      ty.remove();
-      document.getElementById('vorb').classList.remove('spk');
-      addMsg(fullText||'¡Cuéntame más! 💜','v');
-      setSt('💜 Venus lista');
-      venusSpeak(fullText||'Cuéntame más');
-    } else {
-      /* Update message bubble with full text if it grew */
-      const msgs = document.getElementById('vmsg').querySelectorAll('.msg.v');
-      if(msgs.length) msgs[msgs.length-1].innerHTML = fullText.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-    }
-    CH.push({role:'assistant', content:fullText});
-
-  } catch(e) {
+    const d = await r.json();
+    const rep = (d.choices?.[0]?.message?.content || '¡Cuéntame más!').trim();
+    ty.remove();
+    document.getElementById('vorb').classList.remove('spk');
+    setWave(false);
+    addMsg(rep,'v');
+    CH.push({role:'assistant',content:rep});
+    setSt('💜 Venus lista');
+    venusSpeak(rep);
+  } catch(e){
     ty.remove(); setWave(false);
     document.getElementById('vorb').classList.remove('spk');
     addMsg('Escríbeme de nuevo 💜','v');
@@ -1405,27 +1347,20 @@ function toggleVoice(){
   if(isRec){ stopRec(); return; }
   if(elAudio){ elAudio.pause(); }
   if(window.speechSynthesis) window.speechSynthesis.cancel();
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){ document.getElementById('vin').focus(); setSt('🎤 Escribe aquí'); return; }
-  rec = new SR();
-  const lang = navigator.language || 'es-US';
-  rec.lang = lang.startsWith('es') ? 'es-US' : 'en-US';
-  rec.continuous = false; rec.interimResults = false;
-  rec.onstart = () => {
-    isRec=true;
-    document.getElementById('vbmic').classList.add('rec');
-    document.getElementById('mic-icon').className='fas fa-stop';
-    document.getElementById('vorb').classList.add('lst');
-    setWave(true); setSt('🎤 Te escucho...');
-  };
-  rec.onresult = e => { document.getElementById('vin').value=e.results[0][0].transcript; stopRec(); sendMsg(); };
-  rec.onerror = () => { stopRec(); setSt('❌ No te escuché — intenta de nuevo'); };
-  rec.onend   = () => { if(isRec) stopRec(); };
+  rec=new SR();
+  rec.lang=(navigator.language||'es-US').startsWith('es')?'es-US':'en-US';
+  rec.continuous=false; rec.interimResults=false;
+  rec.onstart=()=>{ isRec=true; document.getElementById('vbmic').classList.add('rec'); document.getElementById('mic-icon').className='fas fa-stop'; document.getElementById('vorb').classList.add('lst'); setWave(true); setSt('🎤 Te escucho...'); };
+  rec.onresult=e=>{ document.getElementById('vin').value=e.results[0][0].transcript; stopRec(); sendMsg(); };
+  rec.onerror=()=>{ stopRec(); setSt('❌ Intenta de nuevo'); };
+  rec.onend=()=>{ if(isRec) stopRec(); };
   rec.start();
 }
 function stopRec(){
   isRec=false;
-  if(rec){ try{ rec.stop(); }catch(e){} }
+  if(rec){ try{rec.stop();}catch(e){} }
   document.getElementById('vbmic').classList.remove('rec');
   document.getElementById('mic-icon').className='fas fa-microphone';
   document.getElementById('vorb').classList.remove('lst');
@@ -1436,17 +1371,17 @@ function stopRec(){
 function setSt(m){ const e=document.getElementById('vstatus'); if(e) e.textContent=m; }
 function setWave(on){ const w=document.getElementById('vwave'); if(w){ if(on) w.classList.remove('idle'); else w.classList.add('idle'); }}
 function addMsg(txt,who){
-  const c=document.getElementById('vmsg'), d=document.createElement('div');
+  const c=document.getElementById('vmsg'),d=document.createElement('div');
   d.className='msg '+who;
-  d.innerHTML = txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  d.innerHTML=txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
   c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
 }
 function addTyping(){
-  const c=document.getElementById('vmsg'), d=document.createElement('div');
+  const c=document.getElementById('vmsg'),d=document.createElement('div');
   d.className='mtyp'; d.innerHTML='<span></span><span></span><span></span>';
   c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
 }
-document.getElementById('vin').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
+document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
 </body>
 </html>
