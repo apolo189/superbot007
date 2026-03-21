@@ -763,9 +763,16 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <div class="vsug reveal">
       <button class="sg" onclick="sendSug(this)">💰 ¿Cuánto cuesta?</button>
       <button class="sg" onclick="sendSug(this)">🚀 ¿Cómo empiezo hoy?</button>
-      <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye el bot?</button>
+      <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye SuperBot007?</button>
       <button class="sg" onclick="sendSug(this)">💼 ¿Puedo crear una agencia?</button>
-      <button class="sg" onclick="sendSug(this)">🎯 How does this work?</button>
+      <button class="sg" onclick="sendSug(this)">📱 ¿Para qué negocios funciona?</button>
+      <button class="sg" onclick="sendSug(this)">⏱️ ¿Cuánto tiempo tarda en estar listo?</button>
+      <button class="sg" onclick="sendSug(this)">🎓 ¿Hay tutoriales o soporte?</button>
+      <button class="sg" onclick="sendSug(this)">🔒 ¿Es seguro y confiable?</button>
+      <button class="sg" onclick="sendSug(this)">💳 ¿Cómo funciona el pago?</button>
+      <button class="sg" onclick="sendSug(this)">🔄 ¿Puedo cancelar cuando quiera?</button>
+      <button class="sg" onclick="sendSug(this)">🤝 ¿Tienen garantía de devolución?</button>
+      <button class="sg" onclick="sendSug(this)">🌍 ¿Funciona en otros países?</button>
     </div>
   </div>
 </section>
@@ -1208,7 +1215,8 @@ EXAMPLES OF WARM OPENERS (use variety, never repeat the same one):
 SPECIFIC RESPONSE PATTERNS (follow these exactly):
 - User asks HOW TO START → "¡Me alegra que preguntes! ¿Deseas empezar con nosotros a construir tu bot? Te guío paso a paso, es solo tomar 5 minutos. ¿Lo hacemos ahora?"
 - User asks PRICE/COST → "¡Con gusto te ayudo con el precio! Son solo $10.99 al mes — todo incluido, sin costos ocultos. ¿Te parece bien?"
-- User asks WHAT IS IT → "¡Qué buena pregunta! SuperBot007 te da un bot de IA, landing page, pagos y más — todo listo en 5 minutos. ¿Para qué tipo de negocio lo quieres?"
+- User asks WHAT IS IT / WHAT IS INCLUDED → "¡Qué buena pregunta! SuperBot007 incluye: bot de inteligencia artificial GPT-4, landing page profesional, carrito de pagos con PayPal, tarjeta digital y editor visual — todo por $10.99 al mes. ¿Para qué negocio lo necesitas?"
+- User asks about TUTORIALS or SUPPORT → "¡Por supuesto que sí! Tienes soporte directo por WhatsApp, guías paso a paso y el setup es tan fácil que en 5 minutos ya tienes todo funcionando. ¿Quieres que te guíe ahora?"
 - User says NOT SURE/THINKING → "¡Te entiendo perfectamente! Dime, ¿qué es lo que más te preocupa? Yo te lo resuelvo ahora mismo."
 - User asks HOW IT WORKS → "¡Me alegra que preguntes! Es superfácil — llenas un formulario con tu info, y en 5 minutos tienes todo listo. ¿Tienes un negocio ya o estás empezando?"
 
@@ -1325,7 +1333,7 @@ async function sendMsg(){
   await venusThink();
 }
 function sendSug(btn){
-  document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯]/g,'').trim();
+  document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯📱⏱️🎓🔒💳🔄🤝🌍]/g,'').trim();
   sendMsg();
 }
 
