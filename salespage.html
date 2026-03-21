@@ -8,8 +8,8 @@
 <meta http-equiv="Expires" content="0">
 <!-- v1774097963 -->
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>SuperBot007 — Bot IA + Landing Page + Pagos. Sin Código. En 5 Minutos.</title>
-<meta name="description" content="Crea tu bot IA con GPT-4, landing page cinematic y carrito PayPal — sin código, en 5 minutos. Modelo de agencia incluido.">
+<title>SuperBot007 — AI Bot + Landing Page + Payments. No Code. In 5 Minutes.</title>
+<meta name="description" content="Create your AI bot with GPT-4, cinematic landing page and PayPal cart — no code, in 5 minutes. Agency model included.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
@@ -492,6 +492,34 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 /* COUNTDOWN */
 #cntdn{font-weight:900;font-size:.92rem;letter-spacing:2px;color:#fff;}
+
+/* ═══ LANGUAGE TOGGLE BAR ═══ */
+#lang-bar{
+  position:fixed;top:12px;right:16px;z-index:9999;
+  display:flex;align-items:center;
+}
+#lang-btn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(20,20,35,.85);
+  border:1.5px solid rgba(138,43,226,.55);
+  border-radius:20px;
+  padding:6px 14px;
+  color:#f0f0ff;
+  font-family:'Inter',sans-serif;
+  font-size:.78rem;font-weight:700;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:all .25s ease;
+  box-shadow:0 2px 12px rgba(138,43,226,.25);
+}
+#lang-btn:hover{
+  border-color:var(--primary);
+  background:rgba(138,43,226,.25);
+  transform:translateY(-1px);
+  box-shadow:0 4px 18px rgba(138,43,226,.45);
+}
+#lang-flag{font-size:1rem;}
+#lang-label{letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -502,46 +530,54 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <div id="sp"></div>
 <!-- CURSOR -->
 <div id="cdot"></div>
+
+<!-- ═══ LANGUAGE TOGGLE ═══ -->
+<div id="lang-bar">
+  <button id="lang-btn" onclick="toggleLang()" title="Switch language / Cambiar idioma">
+    <span id="lang-flag">🇪🇸</span>
+    <span id="lang-label">Español</span>
+  </button>
+</div>
 <div id="cring"></div>
 
 <!-- ═══ FLASH BAR ═══ -->
 <div id="flash">
-  ⚡ OFERTA DE LANZAMIENTO — Precio $10.99/mes vence en: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">personas viendo esto ahora</span>
+  ⚡ LAUNCH OFFER — Price $10.99/mo expires in: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">people watching this now</span>
 </div>
 
 <!-- ════════════ HERO ════════════ -->
 <section id="hero">
   <div class="upill">
     <span class="ldot"></span>
-    🔥 Solo quedan <span id="slots">23</span> lugares al precio de lanzamiento
+    🔥 Only <span id="slots">23</span> spots left at launch price
   </div>
 
-  <p class="hero-tag">La plataforma de bots IA para negocios locales</p>
+  <p class="hero-tag">The AI bot platform for local businesses</p>
 
   <h1 class="hero-h1">
-    Mientras Tu Competencia Duerme,<br>
-    <span class="hl">Tu Bot IA Está Vendiendo</span>
+    While Your Competition Sleeps,<br>
+    <span class="hl">Your AI Bot Is Selling</span>
   </h1>
 
   <p class="hero-h2">
-    ✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>
-    ✅ Tarjeta Digital profesional &nbsp;·&nbsp; ✅ Pagos online &nbsp;·&nbsp; ✅ Agenda automática<br>
-    <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>
+    ✅ AI Bot that responds instantly &nbsp;·&nbsp; ✅ Landing Page that converts<br>
+    ✅ Professional Digital Card &nbsp;·&nbsp; ✅ Online payments &nbsp;·&nbsp; ✅ Automatic scheduling<br>
+    <em>⚠️ Only <span id="slots2">20</span> spots left at launch price $10.99/mo</em>
   </p>
 
-  <a href="#venus" class="btn-access" id="top-cta" onclick="scrollToAmanda()">
-    <i class="fas fa-robot"></i> Habla con Amanda — Empieza Aquí
+  <a href="#venus" class="btn-access" id="top-cta" onclick="scrollToAgent()">
+    <i class="fas fa-robot"></i> Talk to Shirley — Start Here
   </a>
 
   <div class="pay-row">
-    <div class="pay-chip g"><i class="fas fa-lock"></i> Pago Seguro</div>
-    <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5 Calificación</div>
+    <div class="pay-chip g"><i class="fas fa-lock"></i> Secure Payment</div>
+    <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5 Rating</div>
     <div class="pay-chip o"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
   </div>
 
   <div class="guar-row">
-    <i class="fas fa-shield-alt"></i> Sitios Ilimitados · Sin Costos Ocultos · Todo Incluido
+    <i class="fas fa-shield-alt"></i> Unlimited Sites · No Hidden Costs · Everything Included
   </div>
 
   <!-- ══ HERO PHONE MOCKUP ══ -->
@@ -560,14 +596,14 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <div class="wa-online-dot"></div>
         </div>
         <div class="wa-info">
-          <div class="wa-name">Amanda · SuperBot007</div>
-          <div class="wa-status" id="waStatus">en línea</div>
+          <div class="wa-name" id="waMockName">Shirley · SuperBot007</div>
+          <div class="wa-status" id="waStatus">online</div>
         </div>
         <div class="wa-actions"><i class="fas fa-video"></i> <i class="fas fa-phone"></i></div>
       </div>
       <!-- CHAT AREA -->
       <div class="wa-body" id="waBody">
-        <div class="wa-date-sep">Hoy</div>
+        <div class="wa-date-sep" id="waDateSep">Today</div>
       </div>
       <!-- INPUT BAR -->
       <div class="wa-input-bar">
@@ -578,7 +614,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       </div>
     </div>
     <!-- LIVE BADGE -->
-    <div class="phone-live-badge"><span class="live-dot"></span> En Vivo 24/7</div>
+    <div class="phone-live-badge"><span class="live-dot"></span> Live 24/7</div>
   </div>
 
   <div class="scroll-arrow">
@@ -590,10 +626,10 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <div id="tagline">
   <div class="tl-inner">
     <div class="tl-it"><i class="fas fa-bolt"></i> Setup en 5 Minutos</div>
-    <div class="tl-it"><i class="fas fa-code"></i> Sin Código</div>
-    <div class="tl-it"><i class="fas fa-robot"></i> GPT-4 Incluido</div>
-    <div class="tl-it"><i class="fas fa-dollar-sign"></i> $500–$2,000 por Cliente</div>
-    <div class="tl-it"><i class="fas fa-infinity"></i> Sin Límites</div>
+    <div class="tl-it"><i class="fas fa-code"></i> No Code</div>
+    <div class="tl-it"><i class="fas fa-robot"></i> GPT-4 Included</div>
+    <div class="tl-it"><i class="fas fa-dollar-sign"></i> $500–$2,000 per Client</div>
+    <div class="tl-it"><i class="fas fa-infinity"></i> Unlimited</div>
   </div>
 </div>
 
@@ -603,8 +639,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <section class="sec" style="background:var(--dark);">
   <div class="wr">
     <div class="eyebrow reveal">El Único Constructor de Bots IA Que Necesitas</div>
-    <h2 class="sh2 reveal">Crea Bots IA para <span class="hl">Cualquier Negocio</span><br>Sin Habilidades ni Experiencia…</h2>
-    <p class="ssub reveal">Sin código. Sin desarrolladores. Sin mensualidades ocultas.</p>
+    <h2 class="sh2 reveal">Create AI Bots for <span class="hl">Any Business</span><br>With Zero Skills ni Experiencia…</h2>
+    <p class="ssub reveal">No code. No developers. No hidden monthly fees.</p>
 
     <div class="what-cols">
       <div class="what-vid reveal">
@@ -613,23 +649,23 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <ul class="blist reveal" style="transition-delay:.1s">
         <li>
           <div class="bico"><i class="fas fa-robot"></i></div>
-          <div><strong>Bot IA entrenado con tu negocio</strong><br>Responde preguntas, vende servicios y agenda citas solo — 24/7 en español e inglés, sin que tú estés presente.</div>
+          <div><strong>AI Bot trained on your business</strong><br>Answers questions, sells services and schedula citas solo — 24/7 en español e inglés, sin que tú estés presente.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-globe"></i></div>
-          <div><strong>Landing Page Cinematic lista en minutos</strong><br>Página profesional con efectos Ken Burns, galería animada, carrito de compras y pagos PayPal directos al instante.</div>
+          <div><strong>Cinematic Landing Page ready in minutes</strong><br>Professional page with Ken Burns effecBurns, galería animada, carrito de compras y pagos PayPal directos al instante.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-id-card"></i></div>
-          <div><strong>Tarjeta Digital con Código QR</strong><br>Comparte todos tus contactos y redes en un solo link. Con QR listo para imprimir y compartir desde el celular.</div>
+          <div><strong>Digital Card with QR Code</strong><br>Share all your contacts and social media in one linlo link. Con QR listo para imprimir y compartir desde el celular.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-paint-brush"></i></div>
-          <div><strong>Editor Visual en Tiempo Real</strong><br>Cambia colores, fotos, precios y horarios al instante — sin tocar una línea de código. Como publicar en Instagram.</div>
+          <div><strong>Real-Time Visual Editor</strong><br>Change colors, photos, prices and hours instantly — wnstante — sin tocar una línea de código. Como publicar en Instagram.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-building"></i></div>
-          <div><strong>Modelo de Agencia — gana $500–$2,000/mes</strong><br>Crea bots para otros negocios y cobra recurrente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo.</div>
+          <div><strong>Agency Model — earn $500–$2,000/mo</strong><br>Create bots for other businesses and chargeecurrente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo.</div>
         </li>
       </ul>
     </div>
@@ -640,16 +676,16 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 1 ════════════ -->
 <div class="cta-mid">
-  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
-    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+  <a href="#venus" onclick="scrollToAgent()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
   </a>
   <div class="pay-row" style="margin-top:1rem;">
-    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
-    <div class="pay-chip"><i class="fas fa-lock"></i> Pago Seguro</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
+    <div class="pay-chip"><i class="fas fa-lock"></i> Secure Payment</div>
     <div class="pay-chip gl"><i class="fas fa-star"></i> 500+ bots activos</div>
   </div>
   <div class="guar-row" style="margin-top:.8rem;">
-    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+    <i class="fas fa-shield-alt"></i> 30-Day Guarantee — Full Refund No Questions Asked
   </div>
 </div>
 
@@ -659,17 +695,17 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <section class="sec" style="background:#0d0d14;">
   <div class="wr">
     <div class="eyebrow reveal">Verlo es Creerlo</div>
-    <h2 class="sh2 reveal">Mira el Poderoso Software <span class="hl">en Acción…</span></h2>
-    <p class="ssub reveal">Cada bot que creas incluye todas estas funciones desde el día 1</p>
+    <h2 class="sh2 reveal">Watch the Powerful Software <span class="hl">in Action…</span></h2>
+    <p class="ssub reveal">Every bot you create includes all these features from day 1</p>
 
     <div class="demo-grid reveal">
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid1_bot.mp4"></video>
-        <div class="dc-lbl">🤖 Bot IA con GPT-4</div>
+        <div class="dc-lbl">🤖 AI Bot with GPT-4</div>
       </div>
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid2_calendar.mp4"></video>
-        <div class="dc-lbl">📅 Agenda de Citas</div>
+        <div class="dc-lbl">📅 Appointment Scheduler</div>
       </div>
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid3_money.mp4"></video>
@@ -688,15 +724,15 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       </div>
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid6_landing.mp4"></video>
-        <div class="dc-lbl">📱 Landing + Tarjeta</div>
+        <div class="dc-lbl">📱 Landing + Digital Card</div>
       </div>
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid7_paypal.mp4"></video>
-        <div class="dc-lbl">💳 Pagos PayPal</div>
+        <div class="dc-lbl">💳 PayPal Payments</div>
       </div>
       <div class="dc">
         <video autoplay loop muted playsinline src="videos/vid8_agency.mp4"></video>
-        <div class="dc-lbl">🏆 Tu Agencia IA</div>
+        <div class="dc-lbl">🏆 Your AI Agency</div>
       </div>
     </div>
   </div>
@@ -706,18 +742,18 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 2 ════════════ -->
 <div class="cta-mid">
-  <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
+  <p class="cta-mid-eye">Only $10.99/mo — Everything Included</p>
   <h2 class="cta-mid-h reveal">Activa Tu Bot IA —<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Empieza a Ganar Hoy</span></h2>
-  <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
-  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
-    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+  <p class="cta-mid-sub reveal">Launch price $10.99/mo — goes up to $29.99 soon. No hidden costs.</p>
+  <a href="#venus" onclick="scrollToAgent()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
   </div>
   <div class="guar-row" style="margin-top:.8rem;">
-    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+    <i class="fas fa-shield-alt"></i> 30-Day Guarantee — Full Refund No Questions Asked
   </div>
 </div>
 
@@ -727,7 +763,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <section id="features" class="sec">
   <div class="wr">
     <div class="eyebrow reveal">Funciones de Siguiente Generación</div>
-    <h2 class="sh2 reveal">Todo Lo Que Necesitas en <span class="hl">Un Solo Lugar</span></h2>
+    <h2 class="sh2 reveal">Everything You Need in <span class="hl">One Single Place</span></h2>
     <h3 style="text-align:center;color:var(--mu);font-size:.95rem;font-weight:600;margin-bottom:3rem;" class="reveal">Un ecosistema completo que trabaja junto — automatizado, conectado y listo para vender 24/7</h3>
 
     <div class="flow-wrap reveal">
@@ -736,7 +772,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <div class="flow-center">
         <div class="flow-hub">🤖</div>
         <div class="flow-hub-label">SuperBot007</div>
-        <div class="flow-hub-sub">Tu ecosistema completo de IA</div>
+        <div class="flow-hub-sub">Your complete AI ecosystem</div>
       </div>
 
       <!-- CONNECTOR from hub to row 1 -->
@@ -750,25 +786,25 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
         <div class="fn reveal">
           <span class="fn-num">01</span>
           <img class="fn-img" src="https://sspark.genspark.ai/cfimages?u1=YtZNzqzB0d%2BbvHTgOBQLQSnV13ruT%2BU5rHhipQWD43fe1hHFbkDn%2BQnhsHuW4uxcD5SdnD5u%2Bra9KaaamOsV5Olgerkz%2FtCVuO6JgrvsD5difrwbQTPW90Dc9MgLMh2ZRntNdO%2FlJrnOsjzbDZAWnmBOcpVmyLu4IQ%3D%3D&u2=RilmvknqS8sCrc01&width=2560" alt="Bot IA">
-          <div class="fn-title">Bot IA con GPT-4</div>
-          <div class="fn-desc">Responde, vende y agenda citas solo — 24/7 en español e inglés.</div>
-          <span class="fn-badge">Nuevo</span>
+          <div class="fn-title">AI Bot with GPT-4</div>
+          <div class="fn-desc">Responds, sells and schedules appointments alone — 24/7 in English and Spanish.</div>
+          <span class="fn-badge">New</span>
         </div>
 
         <div class="fn reveal" style="transition-delay:.08s">
           <span class="fn-num">02</span>
           <img class="fn-img" src="https://sspark.genspark.ai/cfimages?u1=RomwTRwJnbpx9ekaGXkJp3qjRudTQAEJiCWQTGi3%2BfEhdAivKc8KgqCfoIQZzmPc8VmlebVxU6N8nxK4boKhXYYSQXTmqzPkCkxPnyG%2BWJSVKLag5%2BG%2FWeK%2FJrJeGvlOxfASv%2BfA81JTIcbXHGzEpw25KwmkAo4MFrrJpcsTFg%3D%3D&u2=lRV9MSbLTHqyxozP&width=2560" alt="Landing Page">
-          <div class="fn-title">Landing Page Cinematic</div>
-          <div class="fn-desc">Página profesional con efectos, galería animada y carrito — en minutos.</div>
-          <span class="fn-badge">Nuevo</span>
+          <div class="fn-title">Cinematic Landing Page</div>
+          <div class="fn-desc">Professional page with effects, animated gallery and cart — in minutes.</div>
+          <span class="fn-badge">New</span>
         </div>
 
         <div class="fn reveal" style="transition-delay:.16s">
           <span class="fn-num">03</span>
           <img class="fn-img" src="https://sspark.genspark.ai/cfimages?u1=BAKjtiwu0Rt2K1pgdM6KTDxVuUpUI9pu5TIojZOeatVqCB5%2B6aT5hcb99KifHMwBuXgsMAXshvaDi%2FVVOr3YuVXi69DgLSGT4YgXEJOmUAEa9tgFna8VeIGeUb%2B5af%2Bb2J%2FZWQ%3D%3D&u2=bQKQ96uQiw2LXRFs&width=2560" alt="PayPal">
-          <div class="fn-title">Carrito + PayPal Directo</div>
-          <div class="fn-desc">Los clientes pagan directo a tu PayPal. Sin intermediarios, sin comisiones ocultas.</div>
-          <span class="fn-badge">Nuevo</span>
+          <div class="fn-title">Cart + Direct PayPal</div>
+          <div class="fn-desc">Clients pay directly to your PayPal. No middlemen, no hidden commissions.</div>
+          <span class="fn-badge">New</span>
         </div>
 
       </div>
@@ -786,22 +822,22 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
         <div class="fn reveal" style="transition-delay:.12s">
           <span class="fn-num">04</span>
           <span class="fn-emoji">📅</span>
-          <div class="fn-title">Agenda de Citas</div>
-          <div class="fn-desc">Calendario interactivo. Clientes reservan solos, tú recibes notificación en WhatsApp.</div>
+          <div class="fn-title">Appointment Scheduler</div>
+          <div class="fn-desc">Interactive calendar. Clients book themselves, you get a WhatsApp notification.</div>
         </div>
 
         <div class="fn reveal" style="transition-delay:.20s">
           <span class="fn-num">05</span>
           <span class="fn-emoji">✏️</span>
-          <div class="fn-title">Editor Visual Real-Time</div>
-          <div class="fn-desc">Cambia colores, fotos y precios al instante — drag & drop, sin código.</div>
+          <div class="fn-title">Real-Time Visual Editor</div>
+          <div class="fn-desc">Change colors, photos and prices instantly — drag & drop, no code.</div>
         </div>
 
         <div class="fn reveal" style="transition-delay:.28s">
           <span class="fn-num">06</span>
           <span class="fn-emoji">📱</span>
-          <div class="fn-title">Tarjeta Digital + QR</div>
-          <div class="fn-desc">Todos tus contactos y redes en un solo link con código QR listo para compartir.</div>
+          <div class="fn-title">Digital Card + QR</div>
+          <div class="fn-desc">All your contacts and socials in one link with a QR code ready to share.</div>
         </div>
 
       </div>
@@ -819,15 +855,15 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
         <div class="fn reveal" style="transition-delay:.16s">
           <span class="fn-num">07</span>
           <span class="fn-emoji">🌍</span>
-          <div class="fn-title">Motor Bilingüe ES/EN</div>
-          <div class="fn-desc">Detecta el idioma del cliente automáticamente. Ideal para Miami, LA, NY.</div>
+          <div class="fn-title">Bilingual Engine ES/EN</div>
+          <div class="fn-desc">Automatically detects the client's language. Ideal for Miami, LA, NY.</div>
         </div>
 
         <div class="fn reveal" style="transition-delay:.24s">
           <span class="fn-num">08</span>
           <span class="fn-emoji">🏢</span>
-          <div class="fn-title">Modelo de Agencia</div>
-          <div class="fn-desc">Rebrandea y vende como tuyo. 5 clientes = $250–$1,000/mes de ingreso pasivo.</div>
+          <div class="fn-title">Agency Model</div>
+          <div class="fn-desc">White-label and sell as your own. 5 clients = $250–$1,000/mo passive income.</div>
           <span class="fn-badge fn-badge-hot">🔥 Popular</span>
         </div>
 
@@ -835,7 +871,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <span class="fn-num">09</span>
           <span class="fn-emoji">🔒</span>
           <div class="fn-title">Firebase 99.9% Uptime</div>
-          <div class="fn-desc">Google Cloud. Dominio propio. SSL gratis. Descarga tu HTML cuando quieras.</div>
+          <div class="fn-desc">Google Cloud. Custom domain. Free SSL. Download your HTML anytime.</div>
         </div>
 
       </div>
@@ -847,7 +883,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <div class="reveal" style="text-align:center;margin-top:0;">
         <div style="display:inline-flex;align-items:center;gap:.8rem;padding:1rem 2.2rem;background:linear-gradient(135deg,rgba(242,66,7,.12),rgba(255,106,0,.08));border:1px solid rgba(242,66,7,.35);border-radius:50px;font-size:.92rem;font-weight:800;color:var(--txt);box-shadow:0 0 40px rgba(242,66,7,.12);">
           <span style="font-size:1.5rem;">🎯</span>
-          <span>Todo conectado → Tu negocio <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">vendiendo 24/7 en automático</span></span>
+          <span>All connected → Your business <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">selling 24/7 on autopilot</span></span>
         </div>
       </div>
 
@@ -860,50 +896,50 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ EARN WAYS ════════════ -->
 <section id="earn" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Posibilidades Ilimitadas</div>
-    <h2 class="sh2 reveal">Maximiza Tus Ingresos<br><span class="hl">Sin Romper el Banco</span></h2>
-    <p class="ssub reveal">Cómo generar dinero con SuperBot007 — para ti o para tus clientes</p>
+    <div class="eyebrow reveal">Unlimited Possibilities</div>
+    <h2 class="sh2 reveal">Maximize Your Income<br><span class="hl">Without Breaking the Bank</span></h2>
+    <p class="ssub reveal">How to make money with SuperBot007 — for yourself or your clients</p>
 
     <div class="earn-grid">
       <div class="ec reveal">
         <div class="ec-ico">🏪</div>
-        <div class="ec-title">Automatiza Tu Negocio</div>
-        <div class="ec-desc">Responde clientes 24/7, agenda citas y cobra pagos — todo automático mientras duermes.</div>
+        <div class="ec-title">Automate Your Business</div>
+        <div class="ec-desc">Answer clients 24/7, schedule appointments and collect payments — all automatic while you sleep.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.06s">
         <div class="ec-ico">💼</div>
-        <div class="ec-title">Freelance de Bots IA</div>
-        <div class="ec-desc">Crea bots profesionales para clientes. Cobra $300–$500 por setup + recurrente mensual.</div>
+        <div class="ec-title">AI Bot Freelancing</div>
+        <div class="ec-desc">Create professional bots for clients. Charge $300–$500 for setup + monthly recurring.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.12s">
         <div class="ec-ico">🏢</div>
-        <div class="ec-title">Agencia de Negocios Locales</div>
-        <div class="ec-desc">Restaurantes, salones, clínicas. Cada cliente paga $50–$200/mes. 5 clientes = $250–$1,000/mes.</div>
+        <div class="ec-title">Local Business Agency</div>
+        <div class="ec-desc">Restaurants, salons, clinics. Each client pays $50–$200/mo. 5 clients = $250–$1,000/mo.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.18s">
         <div class="ec-ico">📲</div>
-        <div class="ec-title">Suscripciones Mensuales</div>
-        <div class="ec-desc">Mantén y actualiza los bots de tus clientes. Ingreso recurrente predecible mes a mes.</div>
+        <div class="ec-title">Monthly Subscriptions</div>
+        <div class="ec-desc">Maintain and update your clients' bots. Predictable recurring income month after month.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.24s">
         <div class="ec-ico">🎯</div>
-        <div class="ec-title">Generación de Leads</div>
-        <div class="ec-desc">Crea landing pages que capturan leads y véndelos a negocios locales. Alto margen, bajo costo.</div>
+        <div class="ec-title">Lead Generation</div>
+        <div class="ec-desc">Create landing pages that capture leads and sell them to local businesses. High margin, low cost.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.30s">
         <div class="ec-ico">🛒</div>
-        <div class="ec-title">E-commerce con IA</div>
-        <div class="ec-desc">Crea tiendas con bot, carrito PayPal y landing page. Vende productos físicos o digitales.</div>
+        <div class="ec-title">AI E-commerce</div>
+        <div class="ec-desc">Create stores with bot, PayPal cart and landing page. Sell physical or digital products.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.36s">
         <div class="ec-ico">📊</div>
-        <div class="ec-title">Marketing de Afiliados</div>
-        <div class="ec-desc">Construye sitios de nicho y gana con programas de afiliados. Tráfico orgánico, ingreso pasivo.</div>
+        <div class="ec-title">Affiliate Marketing</div>
+        <div class="ec-desc">Build niche sites and earn with affiliate programs. Organic traffic, passive income.</div>
       </div>
       <div class="ec reveal" style="transition-delay:.42s">
         <div class="ec-ico">📈</div>
-        <div class="ec-title">Portafolios Profesionales</div>
-        <div class="ec-desc">Crea y vende portafolios para fotógrafos, abogados, coaches y profesionales independientes.</div>
+        <div class="ec-title">Professional Portfolios</div>
+        <div class="ec-desc">Create and sell portfolios for photographers, lawyers, coaches and independent professionals.</div>
       </div>
     </div>
   </div>
@@ -913,18 +949,18 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 3 ════════════ -->
 <div class="cta-mid">
-  <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
-  <h2 class="cta-mid-h reveal">Tu Agencia IA<br>Empieza con SuperBot007</h2>
-  <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $10.99/mes.</p>
-  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
-    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+  <p class="cta-mid-eye">Only $10.99/mo — Everything Included</p>
+  <h2 class="cta-mid-h reveal">Your AI Agency<br>Starts with SuperBot007</h2>
+  <p class="cta-mid-sub reveal">Charge $50–$200/mo per client. 5 clients = $250–$1,000/mo passive. For just $10.99/mo.</p>
+  <a href="#venus" onclick="scrollToAgent()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
   </div>
   <div class="guar-row" style="margin-top:.8rem;">
-    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+    <i class="fas fa-shield-alt"></i> 30-Day Guarantee — Full Refund No Questions Asked
   </div>
 </div>
 
@@ -933,34 +969,34 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ SAVES YOU ════════════ -->
 <section id="saves" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Lo Que Te Ahorra</div>
-    <h2 class="sh2 reveal">Maximiza Ingresos y Ahorra Tiempo<br><span class="hl">Sin Gastar una Fortuna</span></h2>
+    <div class="eyebrow reveal">What It Saves You</div>
+    <h2 class="sh2 reveal">Maximize Income and Save Time<br><span class="hl">Without Spending a Fortune</span></h2>
 
     <div class="saves-cols">
       <div class="reveal">
-        <div class="saves-head r"><i class="fas fa-times-circle"></i> Sin SuperBot007 Pagas…</div>
+        <div class="saves-head r"><i class="fas fa-times-circle"></i> Without SuperBot007 You Pay…</div>
         <ul class="saves-list">
-          <li><i class="fas fa-times"></i> Desarrollador web: $3,000–$10,000</li>
-          <li><i class="fas fa-times"></i> Chatbot externo: $99–$500/mes</li>
-          <li><i class="fas fa-times"></i> Hosting y dominio: $20–$80/mes</li>
-          <li><i class="fas fa-times"></i> Pasarela de pagos con comisión: 3–5%</li>
-          <li><i class="fas fa-times"></i> Diseñador gráfico: $500–$2,000</li>
-          <li><i class="fas fa-times"></i> Herramienta de agenda: $25–$60/mes</li>
-          <li><i class="fas fa-times"></i> Copywriter: $200–$800 por página</li>
-          <li><i class="fas fa-times"></i> Semanas o meses de espera</li>
+          <li><i class="fas fa-times"></i> Web developer: $3,000–$10,000</li>
+          <li><i class="fas fa-times"></i> External chatbot: $99–$500/mo</li>
+          <li><i class="fas fa-times"></i> Hosting and domain: $20–$80/mo</li>
+          <li><i class="fas fa-times"></i> Payment gateway commission: 3–5%</li>
+          <li><i class="fas fa-times"></i> Graphic designer: $500–$2,000</li>
+          <li><i class="fas fa-times"></i> Scheduling tool: $25–$60/mo</li>
+          <li><i class="fas fa-times"></i> Copywriter: $200–$800 per page</li>
+          <li><i class="fas fa-times"></i> Weeks or months of waiting</li>
         </ul>
       </div>
       <div class="reveal" style="transition-delay:.1s">
-        <div class="saves-head g"><i class="fas fa-check-circle"></i> Con SuperBot007 tienes…</div>
+        <div class="saves-head g"><i class="fas fa-check-circle"></i> With SuperBot007 you get…</div>
         <ul class="saves-list">
-          <li><i class="fas fa-check"></i> Bot IA GPT-4 entrenado en tu negocio</li>
-          <li><i class="fas fa-check"></i> Landing page cinematic profesional</li>
-          <li><i class="fas fa-check"></i> Pagos PayPal directos — 0% comisión</li>
-          <li><i class="fas fa-check"></i> Agenda de citas con notificaciones WA</li>
-          <li><i class="fas fa-check"></i> Tarjeta digital con QR incluida</li>
-          <li><i class="fas fa-check"></i> Editor visual en tiempo real</li>
-          <li><i class="fas fa-check"></i> Modelo de agencia para escalar ingresos</li>
-          <li><i class="fas fa-check"></i> Todo listo en 5 minutos — $10.99/mes</li>
+          <li><i class="fas fa-check"></i> GPT-4 AI Bot trained on your business</li>
+          <li><i class="fas fa-check"></i> Professional cinematic landing page</li>
+          <li><i class="fas fa-check"></i> Direct PayPal payments — 0% commission</li>
+          <li><i class="fas fa-check"></i> Appointment scheduler with WA notifications</li>
+          <li><i class="fas fa-check"></i> Digital card with QR included</li>
+          <li><i class="fas fa-check"></i> Real-time visual editor</li>
+          <li><i class="fas fa-check"></i> Agency model to scale income</li>
+          <li><i class="fas fa-check"></i> Everything ready in 5 minutes — $10.99/mo</li>
         </ul>
       </div>
     </div>
@@ -973,32 +1009,32 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <section id="venus" class="sec">
   <div class="vwrap">
 
-    <div class="veye reveal">Agentes Inteligentes de Ventas IA</div>
-    <h2 class="vh2 reveal">Chatea con <span class="hlv">Amanda o Shirley</span><br>— Te Ayudan a Crear Tu Bot</h2>
-    <p class="vsub reveal">Dos agentes IA disponibles 24/7. Amanda habla español 🇪🇸 · Shirley habla inglés 🇺🇸<br>Hazles cualquier pregunta sobre SuperBot007 o pídeles que te guíen paso a paso.</p>
+    <div class="veye reveal">Intelligent AI Sales Agents</div>
+    <h2 class="vh2 reveal">Talk to <span class="hlv">Shirley or Amanda</span><br>— Your Personal Guide 24/7</h2>
+    <p class="vsub reveal">Two AI agents available at all times. Shirley in English 🇺🇸 · Amanda en español 🇪🇸<br>Ask them anything — they respond by <strong>text and voice</strong>, guiding you step by step.</p>
 
     <!-- ══ HOW IT WORKS GUIDE ══ -->
     <div class="how-box reveal">
-      <div class="how-title">📖 ¿Cómo funciona? / How does it work?</div>
+      <div class="how-title">📖 How does it work?</div>
       <div class="how-steps">
         <div class="how-step">
           <div class="how-num">1</div>
-          <div class="how-text"><strong>Elige tu agente</strong><br>Amanda 🇪🇸 español · Shirley 🇺🇸 English</div>
+          <div class="how-text"><strong>Click 🧙‍♀️</strong><br>Bottom right — the purple button</div>
         </div>
         <div class="how-arr">→</div>
         <div class="how-step">
           <div class="how-num">2</div>
-          <div class="how-text"><strong>Escribe tu pregunta</strong><br>o aprieta el botón <span class="how-mic-ico"><i class="fas fa-microphone"></i></span> para hablar</div>
+          <div class="how-text"><strong>Type or speak</strong><br>Type your question or press <span class="how-mic-ico"><i class="fas fa-microphone"></i></span></div>
         </div>
         <div class="how-arr">→</div>
         <div class="how-step">
           <div class="how-num">3</div>
-          <div class="how-text"><strong>El agente responde</strong><br>y te guía para crear tu bot</div>
+          <div class="how-text"><strong>Agent responds</strong><br>By text and voice, in your language</div>
         </div>
       </div>
       <div class="how-note" id="howNote">
-        💡 <strong>Amanda (español):</strong> Escríbele en el cuadro de texto o aprieta 🎙️ para hablar<br>
-        💡 <strong>Shirley (English):</strong> Type in the box or press 🎙️ to speak
+        💡 <strong>Shirley 🇺🇸 (English):</strong> Press the 🧙‍♀️ button at the bottom right and type or speak in English.<br>
+        💡 <strong>Amanda 🇪🇸 (Español):</strong> Aprieta el botón 🧙‍♀️ abajo a la derecha y habla en español.
       </div>
     </div>
 
@@ -1008,7 +1044,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
         <span class="agent-flag">🇪🇸</span>
         <span class="agent-name">Amanda</span>
         <span class="agent-badge-es">ESPAÑOL</span>
-        <span class="agent-label">👆 Toca aquí para activar a Amanda</span>
+        <span class="agent-label">Responds in Spanish · Voice + text</span>
       </button>
       <button class="agent-btn" id="btnShirley" onclick="switchAgent('shirley')">
         <span class="agent-flag">🇺🇸</span>
@@ -1021,7 +1057,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <!-- ── ACTIVE AGENT BANNER ── -->
     <div class="agent-active-bar" id="agentActiveBar">
       <span class="aab-dot"></span>
-      <span id="agentActiveText">Amanda está lista · Escríbele abajo o aprieta el micrófono 🎙️</span>
+      <span id="agentBarText">Shirley is ready · Click here or the 🧙‍♀️ button at the bottom right</span>
     </div>
 
     <!-- ── ORB (hidden visually but kept for JS compatibility) ── -->
@@ -1038,7 +1074,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
     </div>
-    <div id="vstatus" style="display:none;">💜 Amanda lista</div>
+    <div id="vstatus" style="display:none;">💜 Shirley ready</div>
 
     <!-- ── CHAT WINDOW ── -->
     <div class="vchat reveal" id="vchatBox">
@@ -1047,10 +1083,10 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <div class="vchat-header" id="vchatHeader">
         <div class="vch-avatar" id="vchAvatar">🤖</div>
         <div class="vch-info">
-          <div class="vch-name" id="vchName">Amanda · Agente IA</div>
-          <div class="vch-online"><span class="vch-dot"></span> <span id="vchStatus">en línea · responde en segundos</span></div>
+          <div class="vch-name" id="vchName">Shirley · AI Agent</div>
+          <div class="vch-online"><span class="vch-dot"></span> <span id="vchStatus">online · responds in seconds</span></div>
         </div>
-        <div class="vch-lang" id="vchLang">🇪🇸 ES</div>
+        <div class="vch-lang" id="vchLang">🇺🇸 EN</div>
       </div>
 
       <!-- Messages area -->
@@ -1058,21 +1094,21 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
       <!-- Input row -->
       <div class="vci">
-        <button id="vbmic" onclick="toggleVoice()" title="Toca para hablar / Tap to speak">
+        <button id="vbmic" onclick="toggleVoice()" title="Tap to speak">
           <i class="fas fa-microphone" id="mic-icon"></i>
-          <span class="vmic-label" id="vmicLabel">Hablar</span>
+          <span class="vmic-label" id="vmicLabel">Speak</span>
         </button>
-        <input type="text" id="vin" placeholder="Escríbele a Amanda aquí...">
+        <input type="text" id="vin" placeholder="Ask Shirley here...">
         <button class="vbsend" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
       </div>
       <div class="vci-hint" id="vciHint">
-        🎙️ <strong>Para hablar:</strong> aprieta el botón del micrófono · <strong>Para escribir:</strong> escribe aquí y aprieta enviar
+        🎙️ <strong>To speak:</strong> press the microphone button · <strong>To type:</strong> write here and press send
       </div>
     </div>
 
     <!-- ── AMANDA SUGGESTIONS (ES) ── -->
-    <div class="vsug-label reveal" id="sugLabelAmanda">💬 Preguntas rápidas para Amanda:</div>
-    <div class="vsug reveal" id="sugAmanda">
+    <div class="vsug-label reveal" id="sugLabelAmanda" style="display:none;">💬 Preguntas rápidas para Amanda:</div>
+    <div class="vsug reveal" id="sugAmanda" style="display:none;">
       <button class="sg" onclick="sendSug(this)">💰 ¿Cuánto cuesta?</button>
       <button class="sg" onclick="sendSug(this)">🤖 ¿Qué incluye SuperBot007?</button>
       <button class="sg" onclick="sendSug(this)">✂️ Tengo una barbería, ¿me sirve?</button>
@@ -1088,8 +1124,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     </div>
 
     <!-- ── SHIRLEY SUGGESTIONS (EN) ── -->
-    <div class="vsug-label reveal" id="sugLabelShirley" style="display:none;">💬 Quick questions for Shirley:</div>
-    <div class="vsug reveal" id="sugShirley" style="display:none;">
+    <div class="vsug-label reveal" id="sugLabelShirley">💬 Quick questions for Shirley:</div>
+    <div class="vsug reveal" id="sugShirley">
       <button class="sg" onclick="sendSug(this)">💰 How much does it cost?</button>
       <button class="sg" onclick="sendSug(this)">🤖 What does SuperBot007 include?</button>
       <button class="sg" onclick="sendSug(this)">✂️ I have a barbershop, does it work?</button>
@@ -1112,82 +1148,82 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ PRICING ════════════ -->
 <section id="pricing" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Nuestro precio único irresistible</div>
-    <h2 class="sh2 reveal">Actúa Rápido: Esta Oferta Irresistible<br><span class="hl">Puede Expirar Sin Aviso…</span></h2>
-    <p class="ssub reveal">Todas las apps de la competencia cobran mensualidades. Con SuperBot007 accedes a todas las funciones por un precio de lanzamiento. ¡Garantía de 30 días incluida!</p>
+    <div class="eyebrow reveal">Our one irresistible price</div>
+    <h2 class="sh2 reveal">Act Fast: This Irresistible Offer<br><span class="hl">Can Expire Without Warning…</span></h2>
+    <p class="ssub reveal">All competitor apps charge monthly fees. With SuperBot007 you get all features at a launch price. 30-day guarantee included!</p>
 
     <div class="price-table">
       <!-- STARTER -->
       <div class="pbox reveal">
-        <div class="pname">Plan Starter</div>
-        <div class="pprice">Gratis</div>
-        <div class="pper">Crea y configura tu bot</div>
+        <div class="pname">Starter Plan</div>
+        <div class="pprice">Free</div>
+        <div class="pper">Create and configure your bot</div>
         <ul class="pfeats">
-          <li><i class="fas fa-check"></i> Bot IA configurado</li>
-          <li><i class="fas fa-check"></i> Landing page cinematic</li>
-          <li><i class="fas fa-check"></i> Editor visual incluido</li>
-          <li><i class="fas fa-check"></i> Tarjeta digital + QR</li>
-          <li><i class="fas fa-check"></i> Sin tarjeta de crédito</li>
-          <li class="no"><i class="fas fa-times"></i> Bot activo / publicado</li>
-          <li class="no"><i class="fas fa-times"></i> Link para compartir</li>
-          <li class="no"><i class="fas fa-times"></i> Pagos PayPal activos</li>
+          <li><i class="fas fa-check"></i> AI Bot configured</li>
+          <li><i class="fas fa-check"></i> Cinematic landing page</li>
+          <li><i class="fas fa-check"></i> Visual editor included</li>
+          <li><i class="fas fa-check"></i> Digital card + QR</li>
+          <li><i class="fas fa-check"></i> No credit card needed</li>
+          <li class="no"><i class="fas fa-times"></i> Bot active / published</li>
+          <li class="no"><i class="fas fa-times"></i> Shareable link</li>
+          <li class="no"><i class="fas fa-times"></i> Active PayPal payments</li>
         </ul>
-        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank"><i class="fas fa-rocket"></i> Empezar Gratis</a>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank"><i class="fas fa-rocket"></i> Start Free</a>
       </div>
 
       <!-- PRO — HOT -->
       <div class="pbox hot reveal" style="transition-delay:.1s">
-        <div class="pbadge">⭐ MÁS POPULAR</div>
-        <div class="pname">Plan Pro</div>
+        <div class="pbadge">⭐ MOST POPULAR</div>
+        <div class="pname">Pro Plan</div>
         <div class="pprice">$10.99</div>
-        <div class="pper">/ mes · Todo activado · Sin mensualidades ocultas</div>
+        <div class="pper">/ mo · Everything activated · No hidden fees</div>
         <ul class="pfeats">
-          <li><i class="fas fa-check"></i> Bot IA GPT-4 activo 24/7</li>
-          <li><i class="fas fa-check"></i> Landing cinematic publicada</li>
-          <li><i class="fas fa-check"></i> Carrito + PayPal directo</li>
-          <li><i class="fas fa-check"></i> Agenda de citas + WhatsApp</li>
-          <li><i class="fas fa-check"></i> Tarjeta digital con QR</li>
-          <li><i class="fas fa-check"></i> Editor visual en vivo</li>
-          <li><i class="fas fa-check"></i> Motor bilingüe ES/EN</li>
-          <li><i class="fas fa-check"></i> Soporte prioritario WhatsApp</li>
+          <li><i class="fas fa-check"></i> GPT-4 AI Bot active 24/7</li>
+          <li><i class="fas fa-check"></i> Published cinematic landing</li>
+          <li><i class="fas fa-check"></i> Cart + direct PayPal</li>
+          <li><i class="fas fa-check"></i> Appointment scheduler + WhatsApp</li>
+          <li><i class="fas fa-check"></i> Digital card with QR</li>
+          <li><i class="fas fa-check"></i> Live visual editor</li>
+          <li><i class="fas fa-check"></i> Bilingual engine ES/EN</li>
+          <li><i class="fas fa-check"></i> Priority WhatsApp support</li>
         </ul>
-        <a href="#venus" class="pbtn main" onclick="scrollToAmanda()"><i class="fas fa-robot"></i> Habla con Amanda — Activa Ahora</a>
+        <a href="#venus" class="pbtn main" onclick="scrollToAgent()"><i class="fas fa-robot"></i> Talk to Shirley — Activate Now</a>
       </div>
     </div>
 
     <!-- RECAP blurb (ClickSites-style) -->
     <div class="price-blurb reveal" style="margin-top:3rem;">
-      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Precio de Lanzamiento: $10.99/mes — Sube a $29.99 Pronto</p>
-      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Todo lo que obtienes con SuperBot007 hoy…</h3>
-      <p class="price-blurb-sub">$10.99/mes · Todo Incluido · Sin Costos Ocultos · Cancela Cuando Quieras.<br>30 Días Garantía de Devolución Completa.</p>
+      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Launch Price: $10.99/mo — Goes up to $29.99 Soon</p>
+      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Everything you get with SuperBot007 today…</h3>
+      <p class="price-blurb-sub">$10.99/mo · Everything Included · No Hidden Costs · Cancel Anytime.<br>30-Day Full Money-Back Guarantee.</p>
 
-      <a href="#venus" class="btn-access" style="margin-bottom:1.1rem;" onclick="scrollToAmanda()">
-        <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+      <a href="#venus" class="btn-access" style="margin-bottom:1.1rem;" onclick="scrollToAgent()">
+        <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
       </a>
 
       <div class="pay-row">
         <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
         <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5</div>
       </div>
-      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">$10.99/mes | Cancela Cuando Quieras | Garantía 30 Días</p>
+      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">$10.99/mo | Cancel Anytime | 30-Day Guarantee</p>
     </div>
 
     <!-- AGENCY blurb -->
     <div class="price-blurb reveal" style="border-top:1px solid var(--bd);padding-top:3rem;margin-top:0;">
-      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Plan Agencia — Múltiples Clientes</p>
-      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Obtén SuperBot007 Agencia</h3>
-      <p class="price-blurb-sub">Plan Agencia Completo: Bots ilimitados + white-label + panel de clientes + onboarding 1 a 1.<br>Sin mensualidades. Sin costos ocultos. Todo incluido.</p>
+      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Agency Plan — Multiple Clients</p>
+      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Get SuperBot007 Agency</h3>
+      <p class="price-blurb-sub">Full Agency Plan: Unlimited bots + white-label + client dashboard + 1-on-1 onboarding.<br>No monthly fees. No hidden costs. Everything included.</p>
 
       <a href="https://wa.me/19143644377?text=Quiero%20plan%20Agencia%20SuperBot007" target="_blank" class="btn-access" style="margin-bottom:1.1rem;background:linear-gradient(135deg,#1a1a2e,#16213e);border:2px solid var(--orange);">
-        <i class="fab fa-whatsapp"></i> contactar por whatsapp
+        <i class="fab fa-whatsapp"></i> Contact via WhatsApp
       </a>
 
       <div class="pay-row">
         <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
       </div>
-      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">Bots Ilimitados | $10.99/mes | Garantía 30 Días</p>
+      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">Unlimited Bots | $10.99/mo | 30-Day Guarantee</p>
     </div>
   </div>
 </section>
@@ -1197,18 +1233,18 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ TESTIMONIALS ════════════ -->
 <section id="testi" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Testimonios</div>
-    <h2 class="sh2 reveal">Lo Que Dicen <span class="hl">Nuestros Clientes</span></h2>
+    <div class="eyebrow reveal">Testimonials</div>
+    <h2 class="sh2 reveal">What Our <span class="hl">Clients Say</span></h2>
 
     <div class="tgrid">
       <div class="tc reveal">
         <div class="tstars">★★★★★</div>
-        <p class="ttxt">"En la primera semana conseguí 3 clientes nuevos gracias al bot. La landing page se ve increíblemente profesional. Mis ventas subieron un 40% el primer mes."</p>
+        <p class="ttxt">"In the first week I got 3 new clients thanks to the bot. The landing page looks incredibly professional. My sales went up 40% in the first month."</p>
         <div class="tauth">
           <div class="tav">M</div>
-          <div><div class="tname">María González</div><div class="trole">Salón de Belleza — Miami, FL</div></div>
+          <div><div class="tname">Maria González</div><div class="trole">Beauty Salon — Miami, FL</div></div>
         </div>
-        <div class="tres">💰 +$540 en el primer mes</div>
+        <div class="tres">💰 +$540 in the first month</div>
       </div>
       <div class="tc reveal" style="transition-delay:.1s">
         <div class="tstars">★★★★★</div>
@@ -1236,18 +1272,18 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 4 ════════════ -->
 <div class="cta-mid">
-  <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
-  <h2 class="cta-mid-h reveal">Activa Tu Bot IA Hoy<br>Antes de Que Suba el Precio</h2>
-  <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
-  <a href="#venus" onclick="scrollToAmanda()" class="btn-mid reveal">
-    <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+  <p class="cta-mid-eye">Only $10.99/mo — Everything Included</p>
+  <h2 class="cta-mid-h reveal">Activate Your AI Bot Today<br>Before the Price Goes Up</h2>
+  <p class="cta-mid-sub reveal">Launch price $10.99/mo — goes up to $29.99 soon. No hidden costs.</p>
+  <a href="#venus" onclick="scrollToAgent()" class="btn-mid reveal">
+    <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
   </a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30-Day Guarantee</div>
   </div>
   <div class="guar-row" style="margin-top:.8rem;">
-    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+    <i class="fas fa-shield-alt"></i> 30-Day Guarantee — Full Refund No Questions Asked
   </div>
 </div>
 
@@ -1259,11 +1295,11 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <div class="gbadge reveal">🛡️</div>
     <h2 class="gtitle reveal">Garantía de 30 Días</h2>
     <p class="gtext reveal">
-      Si en los primeros 30 días no estás <strong>100% satisfecho</strong> con los resultados,
-      te devolvemos <strong>hasta el último centavo</strong> sin hacer preguntas.
-      Sin letras pequeñas. Sin burocracia. Sin demoras.
+      If in the first 30 days you are not <strong>100% satisfied</strong> with the results,
+      we refund <strong>every single penny</strong> with no questions asked.
+      No fine print. No bureaucracy. No delays.
       <br><br>
-      Prueba SuperBot007 completamente sin riesgo.
+      Try SuperBot007 completely risk-free.
       <strong>O te enamoras — o te devolvemos tu dinero.</strong>
     </p>
   </div>
@@ -1274,7 +1310,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ FAQ ════════════ -->
 <section id="faq" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Preguntas Frecuentes</div>
+    <div class="eyebrow reveal">Frequently Asked Questions</div>
     <h2 class="sh2 reveal">Respuestas a <span class="hl">Todas Tus Dudas</span></h2>
     <p class="ssub reveal">Las respuestas a todas tus preguntas más importantes</p>
 
@@ -1316,17 +1352,17 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ FINAL CTA ════════════ -->
 <section id="cfinal" class="sec">
   <div class="cf-inner">
-    <div class="eyebrow reveal">No Pierdas Esta Oportunidad</div>
+    <div class="eyebrow reveal">Don't Miss This Opportunity</div>
     <h2 class="cf-h reveal">
       Activa Tu Bot IA Ahora —<br>
       <span class="hl">Antes de Que Suba el Precio</span>
     </h2>
     <p class="cf-sub reveal">
-      Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Por solo $10.99/mes — el precio sube a $29.99 pronto, sin aviso previo.
+      Join 500+ entrepreneurs already automating their businesses with SuperBot007. For just $10.99/mo — price goes up to $29.99 pronto, sin aviso previo.
     </p>
 
-    <a href="#venus" class="btn-access reveal" onclick="scrollToAmanda()">
-      <i class="fas fa-robot"></i> Habla con Amanda — Te Guiamos Paso a Paso
+    <a href="#venus" class="btn-access reveal" onclick="scrollToAgent()">
+      <i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step
     </a>
 
     <div class="pay-row" style="justify-content:center;margin-top:1rem;">
@@ -1338,7 +1374,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
     <div class="unote reveal">
       <i class="fas fa-fire" style="color:#ff6a00;"></i>
-      Precio $10.99/mes — sube a $29.99 pronto. Sin aviso previo.
+      Price $10.99/mo — goes up to $29.99 soon. Without prior notice.
     </div>
   </div>
 </section>
@@ -1346,23 +1382,23 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- FOOTER -->
 <footer>
   <div class="flinks">
-    <a href="https://apolo189.github.io/superbot007/form.html">Crear Bot</a>
+    <a href="https://apolo189.github.io/superbot007/form.html">Create Bot</a>
     <a href="https://apolo189.github.io/superbot007/agent.html?id=bella-organics-demo" target="_blank">Demo Bot</a>
     <a href="https://apolo189.github.io/superbot007/landing.html?id=bella-organics-demo" target="_blank">Demo Landing</a>
     <a href="https://wa.me/19143644377" target="_blank">WhatsApp</a>
-    <a href="#pricing">Precios</a>
+    <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
   </div>
-  <div class="fcopy">© 2025 SuperBot007 · Todos los derechos reservados · <a href="https://wa.me/19143644377" style="color:var(--orange);">Soporte</a></div>
+  <div class="fcopy">© 2025 SuperBot007 · All rights reserved · <a href="https://wa.me/19143644377" style="color:var(--orange);">Support</a></div>
 </footer>
 
 <!-- MOBILE STICKY -->
 <div id="sticky">
   <div class="stxt">
-    <strong>⚡ Solo $10.99/mes</strong>
-    Precio sube pronto — no pierdas
+    <strong>⚡ Only $10.99/mo</strong>
+    Price goes up soon — don't miss out
   </div>
-  <a href="#venus" class="sbtn" onclick="scrollToAmanda()">Habla con Amanda →</a>
+  <a href="#venus" class="sbtn" onclick="scrollToAgent()">Talk to Shirley →</a>
 </div>
 
 <!-- ════════════════════════════════════
@@ -1530,7 +1566,7 @@ PERSONALIDAD: Abre SIEMPRE con una frase cálida antes de responder. Ejemplos: "
 QUÉ ES SUPERBOT007 (conócelo bien):
 ═══════════════════════════════
 SuperBot007 es una plataforma todo-en-uno que le permite a cualquier persona —sin saber programar— crear en 5 minutos:
-1. Un Bot IA con GPT-4 que responde preguntas, vende servicios y agenda citas automáticamente 24/7
+1. Un AI Bot with GPT-4 que responde preguntas, vende servicios y agenda citas automáticamente 24/7
 2. Una Landing Page "cinematic" profesional con animaciones, galería de fotos y diseño premium
 3. Carrito de compras con pagos PayPal directos (0% comisión adicional)
 4. Agenda de citas con notificaciones automáticas por WhatsApp
@@ -1741,7 +1777,7 @@ function switchAgent(agent){
     document.getElementById('vin').placeholder = 'Escríbele a Amanda aquí...';
     document.getElementById('vmicLabel').textContent = 'Hablar';
     /* Hint */
-    document.getElementById('vciHint').innerHTML = '🎙️ <strong>Para hablar:</strong> aprieta el botón del micrófono · <strong>Para escribir:</strong> escribe aquí y aprieta enviar';
+    document.getElementById('vciHint').innerHTML = '🎙️ <strong>To speak:</strong> press the microphone button · <strong>To type:</strong> write here and press send';
     /* How note */
     document.getElementById('howNote').innerHTML = '💡 <strong>Amanda (español):</strong> Escríbele en el cuadro de texto o aprieta 🎙️ para hablar<br>💡 <strong>Shirley (English):</strong> Type in the box or press 🎙️ to speak';
   } else {
@@ -2124,5 +2160,214 @@ document.getElementById('vin').addEventListener('keydown',e=>{ if(e.key==='Enter
   });
 })();
 </script>
+<!-- ══ WIZARD VOICE AGENT ══ -->
+<script>
+/* ══════════════════════════════════════════════
+   BILINGUAL SYSTEM — EN (default) ↔ ES
+   ══════════════════════════════════════════════ */
+(function(){
+
+  const T = {
+    en: {
+      langFlag:'🇪🇸', langLabel:'Español',
+      flash:'⚡ LAUNCH OFFER — Price $10.99/mo expires in: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">people watching this now</span>',
+      upill:'🔥 Only <span id="slots">23</span> spots left at launch price',
+      heroTag:'The AI bot platform for local businesses',
+      heroH1:'While Your Competition Sleeps,<br><span class="hl">Your AI Bot Is Selling</span>',
+      heroH2:'✅ AI Bot that responds instantly &nbsp;·&nbsp; ✅ Landing Page that converts<br>✅ Professional Digital Card &nbsp;·&nbsp; ✅ Online payments &nbsp;·&nbsp; ✅ Automatic scheduling<br><em>⚠️ Only <span id="slots2">20</span> spots left at launch price $10.99/mo</em>',
+      heroCta:'<i class="fas fa-robot"></i> Talk to Shirley — Start Here',
+      waMockName:'Shirley · SuperBot007', waStatus:'online',
+      ctaBtn:'<i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step',
+      venusEye:'Intelligent AI Sales Agents',
+      venusH2:'Talk to <span class="hlv">Shirley or Amanda</span><br>— Your Personal Guide 24/7',
+      venusSub:'Two AI agents available at all times. Shirley in English 🇺🇸 · Amanda en español 🇪🇸<br>Ask them anything — they respond by <strong>text and voice</strong>, guiding you step by step.',
+      howTitle:'📖 How does it work?',
+      howStep1:'<strong>Click 🧙‍♀️</strong><br>Bottom right — the purple button',
+      howStep2:'<strong>Type or speak</strong><br>Type your question or press <span class="how-mic-ico"><i class="fas fa-microphone"></i></span>',
+      howStep3:'<strong>Agent responds</strong><br>By text and voice, in your language',
+      howNote:'💡 <strong>Shirley 🇺🇸 (English):</strong> Press the 🧙‍♀️ button at the bottom right and type or speak in English.<br>💡 <strong>Amanda 🇪🇸 (Español):</strong> Press 🧙‍♀️ bottom right and speak in Spanish.',
+      agentBarText:'Shirley is ready · Click here or the 🧙‍♀️ button at the bottom right',
+      agentLabelEn:'Responds in English · Voice + text',
+      agentLabelEs:'Responds in Spanish · Voice + text',
+      guarTitle:'30-Day Guarantee',
+      guarText:'If in the first 30 days you are not <strong>100% satisfied</strong> with the results, we refund <strong>every single penny</strong> with no questions asked. No fine print. No bureaucracy. No delays.<br><br>Try SuperBot007 completely risk-free. <strong>You\'ll love it — or we give your money back.</strong>',
+      testiEye:'Testimonials', testiH2:'What Our <span class="hl">Clients Say</span>',
+      testi1:'"In the first week I got 3 new clients thanks to the bot. The landing page looks incredibly professional. My sales went up 40% in the first month."',
+      testi1role:'Beauty Salon — Miami, FL', testi1res:'💰 +$540 in the first month',
+      testi2:'"I never thought I could have something like this without knowing code. The bot answers better than me and works at 3am. My appointment bookings doubled."',
+      testi2role:'Restaurant — Los Angeles, CA', testi2res:'📈 Bookings ×2 in the first month',
+      testi3:'"I created bots for 5 businesses in my city. I charge $100/mo for each — that\'s $500/mo in passive income. This literally changed my life."',
+      testi3role:'SuperBot007 Agent — Bogotá, CO', testi3res:'🏆 $500/mo passive income',
+      cfEye:'Don\'t Miss This Opportunity',
+      cfH:'Activate Your AI Bot Now —<br><span class="hl">Before the Price Goes Up</span>',
+      cfSub:'Join 500+ entrepreneurs already automating their businesses with SuperBot007. For just $10.99/mo — price goes up to $29.99 soon, without prior notice.',
+      cfNote:'<i class="fas fa-fire" style="color:#ff6a00;"></i> Price $10.99/mo — goes up to $29.99 soon. Without prior notice.',
+      stickyTxt:'<strong>⚡ Only $10.99/mo</strong> Price goes up soon — don\'t miss out',
+      stickyBtn:'Talk to Shirley →',
+      pricingEye:'Our one irresistible price',
+      pricingH2:'Act Fast: This Irresistible Offer<br><span class="hl">Can Expire Without Warning…</span>',
+      pricingSub:'All competitor apps charge monthly fees. With SuperBot007 you get all features at a launch price. 30-day guarantee included!',
+      proBadge:'⭐ MOST POPULAR', proBtn:'<i class="fas fa-robot"></i> Talk to Shirley — Activate Now',
+      guarChip:'<i class="fas fa-shield-alt"></i> 30-Day Guarantee',
+      faqEye:'Frequently Asked Questions', faqH2:'Answers to <span class="hl">All Your Questions</span>',
+    },
+    es: {
+      langFlag:'🇺🇸', langLabel:'English',
+      flash:'⚡ OFERTA DE LANZAMIENTO — Precio $10.99/mes expira en: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">personas viendo ahora</span>',
+      upill:'🔥 Solo <span id="slots">23</span> lugares al precio de lanzamiento',
+      heroTag:'La plataforma de bots IA para negocios locales',
+      heroH1:'Mientras Tu Competencia Duerme,<br><span class="hl">Tu Bot IA Está Vendiendo</span>',
+      heroH2:'✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>✅ Tarjeta Digital Profesional &nbsp;·&nbsp; ✅ Pagos en línea &nbsp;·&nbsp; ✅ Agenda automática<br><em>⚠️ Solo <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>',
+      heroCta:'<i class="fas fa-robot"></i> Habla con Amanda — Empieza Aquí',
+      waMockName:'Amanda · SuperBot007', waStatus:'en línea',
+      ctaBtn:'<i class="fas fa-robot"></i> Talk to Shirley — We Guide You Step by Step',
+      venusEye:'Agentes Inteligentes de Ventas IA',
+      venusH2:'Chatea con <span class="hlv">Shirley o Amanda</span><br>— Tu Guía Personal 24/7',
+      venusSub:'Dos agentes IA disponibles en todo momento. Shirley en inglés 🇺🇸 · Amanda en español 🇪🇸<br>Pregúntales lo que quieras — responden por <strong>texto y voz</strong>, guiándote paso a paso.',
+      howTitle:'📖 ¿Cómo funciona?',
+      howStep1:'<strong>Haz clic en 🧙‍♀️</strong><br>Abajo a la derecha — el botón morado',
+      howStep2:'<strong>Escribe o habla</strong><br>Escribe tu pregunta o aprieta <span class="how-mic-ico"><i class="fas fa-microphone"></i></span>',
+      howStep3:'<strong>El agente responde</strong><br>Por texto y voz, en tu idioma',
+      howNote:'💡 <strong>Amanda 🇪🇸 (Español):</strong> Aprieta el botón 🧙‍♀️ abajo a la derecha y escribe o habla en español.<br>💡 <strong>Shirley 🇺🇸 (English):</strong> Press 🧙‍♀️ bottom right and speak in English.',
+      agentBarText:'Amanda está lista · Haz clic aquí o en el botón 🧙‍♀️ abajo a la derecha',
+      agentLabelEn:'Responde en inglés · Voz + texto',
+      agentLabelEs:'Responde en español · Voz + texto',
+      guarTitle:'Garantía 30 Días',
+      guarText:'If in the first 30 days you are not <strong>100% satisfied</strong> with the results, te devolvemos <strong>cada centavo</strong> sin preguntas. Sin letra pequeña. Sin burocracia. Sin demoras.<br><br>Try SuperBot007 completely risk-free. <strong>Te encantará — o te devolvemos el dinero.</strong>',
+      testiEye:'Testimonios', testiH2:'Lo que Dicen Nuestros <span class="hl">Clientes</span>',
+      testi1:'"En la primera semana conseguí 3 nuevos clientes gracias al bot. La landing page se ve increíblemente profesional. Mis ventas subieron 40% en el primer mes."',
+      testi1role:'Salón de Belleza — Miami, FL', testi1res:'💰 +$540 in the first month',
+      testi2:'"Nunca pensé que podría tener algo así sin saber código. El bot responde mejor que yo y funciona a las 3am. Mis reservas de citas se duplicaron."',
+      testi2role:'Restaurante — Los Ángeles, CA', testi2res:'📈 Reservas ×2 en el primer mes',
+      testi3:'"Creé bots para 5 negocios en mi ciudad. Cobro $100/mes por cada uno — eso es $500/mes en ingresos pasivos. Esto literalmente cambió mi vida."',
+      testi3role:'Agente SuperBot007 — Bogotá, CO', testi3res:'🏆 $500/mes ingresos pasivos',
+      cfEye:'No Pierdas Esta Oportunidad',
+      cfH:'Activa Tu Bot IA Ahora —<br><span class="hl">Antes de que Suba el Precio</span>',
+      cfSub:'Únete a 500+ emprendedores que ya automatizan sus negocios con SuperBot007. Por solo $10.99/mes — el precio sube a $29.99 pronto, sin previo aviso.',
+      cfNote:'<i class="fas fa-fire" style="color:#ff6a00;"></i> Precio $10.99/mes — sube a $29.99 pronto. Sin previo aviso.',
+      stickyTxt:'<strong>⚡ Only $10.99/mo</strong> El precio sube pronto — no te lo pierdas',
+      stickyBtn:'Talk to Shirley →',
+      pricingEye:'Nuestro único precio irresistible',
+      pricingH2:'Actúa Rápido: Esta Oferta Irresistible<br><span class="hl">Puede Expirar Sin Previo Aviso…</span>',
+      pricingSub:'Todas las apps de la competencia cobran cuotas mensuales. Con SuperBot007 obtienes todas las funciones al precio de lanzamiento. ¡Garantía de 30 días incluida!',
+      proBadge:'⭐ MÁS POPULAR', proBtn:'<i class="fas fa-robot"></i> Talk to Shirley — Activate Now',
+      guarChip:'<i class="fas fa-shield-alt"></i> Garantía 30 Días',
+      faqEye:'Preguntas Frecuentes', faqH2:'Respuestas a <span class="hl">Todas tus Preguntas</span>',
+    }
+  };
+
+  let currentLang = 'en';
+
+  function setTxt(sel, html, all){
+    if(all){ document.querySelectorAll(sel).forEach(e=>e.innerHTML=html); return; }
+    const e=document.querySelector(sel); if(e) e.innerHTML=html;
+  }
+
+  function applyLang(lang){
+    const t=T[lang]; currentLang=lang;
+    /* lang button */
+    const flag=document.getElementById('lang-flag'); if(flag) flag.textContent=t.langFlag;
+    const lbl=document.getElementById('lang-label'); if(lbl) lbl.textContent=t.langLabel;
+    document.documentElement.lang=lang;
+    /* flash */
+    const fl=document.getElementById('flash'); if(fl) fl.innerHTML=t.flash;
+    /* hero */
+    setTxt('.upill',t.upill);
+    setTxt('.hero-tag',t.heroTag);
+    setTxt('.hero-h1',t.heroH1);
+    setTxt('.hero-h2',t.heroH2);
+    const tc=document.getElementById('top-cta'); if(tc) tc.innerHTML=t.heroCta;
+    const wmn=document.getElementById('waMockName'); if(wmn) wmn.textContent=t.waMockName;
+    const ws=document.getElementById('waStatus'); if(ws) ws.textContent=t.waStatus;
+    /* all CTA buttons */
+    document.querySelectorAll('.btn-mid, .btn-access').forEach(b=>{ b.innerHTML=t.ctaBtn; });
+    document.getElementById('top-cta').innerHTML=t.heroCta;
+    /* sticky */
+    const stxt=document.querySelector('#sticky .stxt'); if(stxt) stxt.innerHTML=t.stickyTxt;
+    const sbtn=document.getElementById('stickyBtn'); if(sbtn) sbtn.textContent=t.stickyBtn;
+    /* venus section */
+    setTxt('.veye',t.venusEye); setTxt('.vh2',t.venusH2); setTxt('.vsub',t.venusSub);
+    const ht=document.querySelector('.how-title'); if(ht) ht.innerHTML=t.howTitle;
+    const hsteps=document.querySelectorAll('.how-text');
+    if(hsteps[0]) hsteps[0].innerHTML=t.howStep1;
+    if(hsteps[1]) hsteps[1].innerHTML=t.howStep2;
+    if(hsteps[2]) hsteps[2].innerHTML=t.howStep3;
+    const hn=document.querySelector('.how-note'); if(hn) hn.innerHTML=t.howNote;
+    const albl=document.querySelectorAll('.agent-label');
+    if(albl[0]) albl[0].textContent=t.agentLabelEn;
+    if(albl[1]) albl[1].textContent=t.agentLabelEs;
+    const abt=document.getElementById('agentBarText'); if(abt) abt.textContent=t.agentBarText;
+    /* guarantee */
+    const gt=document.querySelector('.gtitle'); if(gt) gt.textContent=t.guarTitle;
+    const gtxt=document.querySelector('.gtext'); if(gtxt) gtxt.innerHTML=t.guarText;
+    /* testimonials */
+    const ts=document.getElementById('testi');
+    if(ts){
+      const e=ts.querySelector('.eyebrow'); if(e) e.innerHTML=t.testiEye;
+      const h=ts.querySelector('.sh2'); if(h) h.innerHTML=t.testiH2;
+      const txts=ts.querySelectorAll('.ttxt');
+      if(txts[0]) txts[0].textContent=t.testi1;
+      if(txts[1]) txts[1].textContent=t.testi2;
+      if(txts[2]) txts[2].textContent=t.testi3;
+      const roles=ts.querySelectorAll('.trole');
+      if(roles[0]) roles[0].textContent=t.testi1role;
+      if(roles[1]) roles[1].textContent=t.testi2role;
+      if(roles[2]) roles[2].textContent=t.testi3role;
+      const res=ts.querySelectorAll('.tres');
+      if(res[0]) res[0].textContent=t.testi1res;
+      if(res[1]) res[1].textContent=t.testi2res;
+      if(res[2]) res[2].textContent=t.testi3res;
+    }
+    /* pricing */
+    const ps=document.getElementById('pricing');
+    if(ps){
+      const pe=ps.querySelector('.eyebrow'); if(pe) pe.innerHTML=t.pricingEye;
+      const ph=ps.querySelector('.sh2'); if(ph) ph.innerHTML=t.pricingH2;
+      const pp=ps.querySelector('.ssub'); if(pp) pp.textContent=t.pricingSub;
+      const hot=ps.querySelector('.pbox.hot');
+      if(hot){
+        const badge=hot.querySelector('.pbadge'); if(badge) badge.textContent=t.proBadge;
+        const pb=hot.querySelector('.pbtn'); if(pb) pb.innerHTML=t.proBtn;
+      }
+    }
+    /* faq */
+    const fq=document.getElementById('faq');
+    if(fq){
+      const fe=fq.querySelector('.eyebrow'); if(fe) fe.innerHTML=t.faqEye;
+      const fh=fq.querySelector('.sh2'); if(fh) fh.innerHTML=t.faqH2;
+    }
+    /* final cta */
+    const cf=document.getElementById('cfinal');
+    if(cf){
+      const ce=cf.querySelector('.eyebrow'); if(ce) ce.innerHTML=t.cfEye;
+      const ch=cf.querySelector('.cf-h'); if(ch) ch.innerHTML=t.cfH;
+      const cs=cf.querySelector('.cf-sub'); if(cs) cs.textContent=t.cfSub;
+      const cn=cf.querySelector('.unote'); if(cn) cn.innerHTML=t.cfNote;
+    }
+    /* wizard sync */
+    if(window.WIZARD_CONTEXT){ window.WIZARD_CONTEXT.language=lang; window.WIZARD_CONTEXT.agentName=lang==='es'?'Amanda':'Shirley'; }
+    if(typeof window.wizardSetLang==='function') window.wizardSetLang(lang);
+    try{ localStorage.setItem('sb007_lang',lang); }catch(e){}
+  }
+
+  window.toggleLang=function(){ applyLang(currentLang==='en'?'es':'en'); };
+
+  function init(){
+    let saved='en';
+    try{ saved=localStorage.getItem('sb007_lang')||'en'; }catch(e){}
+    /* force English if no saved pref — ignore browser language */
+    applyLang(saved);
+  }
+
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',init); }
+  else{ init(); }
+
+})();
+</script>
+
+<script>
+window.WIZARD_CONTEXT = { page:'sales', language:'en', agentName:'Shirley', businessType:'' };
+</script>
+<script src="wizard.js"></script>
 </body>
 </html>
