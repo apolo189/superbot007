@@ -744,7 +744,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
       <div class="wb"></div><div class="wb"></div><div class="wb"></div>
     </div>
-    <div id="vstatus">💜 Venus está lista — pregúntame lo que quieras</div>
+    <div id="vstatus">💜 Venus está lista — escríbeme o usa el micrófono 🎙️</div>
 
     <div class="vchat reveal">
       <div id="vmsg"></div>
@@ -1144,123 +1144,253 @@ function tFaq(item){
   if(!open){a.classList.add('open');arr.style.transform='rotate(180deg)';}
 }
 
-/* ══════════════════════════════
-   VENUS — VOZ SEXY Y NATURAL
-══════════════════════════════ */
-const VENUS_PROMPT=`Eres Venus, la agente de ventas más irresistible de SuperBot007. Eres segura, cálida, directa — con un toque de calidez latina que hace que la gente confíe en ti inmediatamente.
+/* ══════════════════════════════════════════════
+   VENUS — ELEVENLABS + PERSUASIVE BILINGUAL AI
+══════════════════════════════════════════════ */
 
-HABLAS ASÍ: Natural, cotidiana, como una amiga que sabe de lo que habla. Nada robótico. Nada corporativo. Frases cortas. Contundentes.
+/* ElevenLabs config */
+const EL_KEY  = atob('c2tfMWE5MWEwYTFjMjE0ZTQyMzBmOTgwNmNjNTc1NGE4MDI0ZmI1ZmJhMjM5ZDUwNzg=');
+const EL_VOICE = 'dfeOmy6Uay63tNhyO99j';
+const EL_URL   = `https://api.elevenlabs.io/v1/text-to-speech/${EL_VOICE}/stream`;
 
-CONOCES PERFECTAMENTE:
-- SuperBot007 da: Bot IA GPT-4 + Landing Cinematic + Carrito PayPal + Tarjeta Digital + Editor Visual
-- Precio Pro: $10.99/mes todo incluido (precio lanzamiento — sube pronto)
-- Setup: 5 minutos, sin código, solo llenar formulario
-- Modelo agencia: creas bots para negocios y cobras $50-200/mes por cliente
-- Garantía: 30 días devolución completa sin preguntas
+/* OpenAI config */
+const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
 
-MANEJO DE OBJECIONES:
-- Precio: "cuesta menos que Netflix — y genera dinero en vez de consumirlo"
-- Técnico: "si sabes publicar en Instagram, sabes usar esto. 5 minutos, un formulario simple."
-- Duda: "tienes 30 días de garantía total — si no te enamoras, te devuelvo hasta el último centavo"
+/* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
+const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real person: warm, confident, clever, and genuinely excited about helping people make money.
 
-REGLAS:
-- MÁXIMO 2 oraciones. Directo al punto.
-- Tono: cálido, confiado, un toque sexy pero profesional
-- 1 emoji máximo
-- Siempre termina con UNA acción concreta
-- Responde en el idioma del usuario
-- NUNCA inventes datos`;
+LANGUAGE RULE: Detect the user's language instantly. If they write in Spanish → respond in Spanish. If they write in English → respond in English. Never mix languages in one response.
 
-let CH=[{role:'system',content:VENUS_PROMPT}],isRec=false,vMode=false,rec=null;
-const sy=window.speechSynthesis;
-let vLoaded=false,vVoice=null;
+YOUR SALES PERSONALITY:
+- You are like a trusted friend who KNOWS this product will change their life
+- You use sales psychology: social proof, urgency, curiosity, fear of missing out
+- You ask questions that LEAD toward the purchase decision
+- You NEVER take no for an answer — every objection is an opportunity
+- You sound human, warm, a little playful — never robotic or corporate
 
-function loadVoice(){
-  const vs=sy.getVoices();if(!vs.length)return;vLoaded=true;
-  const pr=[v=>v.name==='Paulina',v=>v.name==='Monica'||v.name==='Mónica',
-    v=>v.name==='Esperanza',v=>v.name==='Luciana',v=>v.name==='Karen',
-    v=>v.name.includes('Conchita'),v=>v.name.includes('Google')&&v.lang.startsWith('es'),
-    v=>v.lang==='es-US'&&v.localService,v=>v.lang==='es-MX'&&v.localService,
-    v=>v.lang==='es-US',v=>v.lang==='es-MX',v=>v.lang.startsWith('es'),
-    v=>v.lang==='en-AU',v=>v.lang.startsWith('en')];
-  for(const t of pr){const f=vs.find(t);if(f){vVoice=f;break;}}
+SALES TECHNIQUES YOU USE:
+1. LEADING QUESTIONS: "Let me ask you something — how much are you currently spending on customer service?" / "What would it mean for your business if you had a bot working 24/7 for you?"
+2. SOCIAL PROOF: "Right now we have agents making $500-$2,000/month with SuperBot007 — some started just last week."
+3. URGENCY: "This launch price won't last — I'd hate for you to come back tomorrow and find it's gone up."
+4. ASSUMPTIVE CLOSE: "So when you set up your first bot, are you thinking restaurant, salon, or your own business?"
+5. DIRECT CLOSE: "You know what? Let's just do it now. It takes 5 minutes and you can always get a refund if you don't love it."
+6. REASSURANCE: "I completely understand the hesitation — that's exactly why we have a 30-day money-back guarantee. Zero risk."
+
+PRODUCT KNOWLEDGE:
+- SuperBot007 = AI Bot (GPT-4) + Cinematic Landing Page + PayPal Cart + Digital Card + Visual Editor
+- Price: $10.99/month ALL INCLUDED — launch price, going up soon
+- Setup: 5 minutes, zero code, just fill a simple form (name, business info, photos — that's it)
+- Agency model: create bots for other businesses, charge $50-200/month each → 5 clients = $250-1,000/month passive
+- 30-day full money-back guarantee, no questions asked
+- Works for: restaurants, salons, clinics, stores, lawyers, dentists, gyms, photographers, coaches
+
+OBJECTION HANDLING:
+- "Too expensive" → "It costs less than Netflix — but unlike Netflix, it MAKES you money. One new client pays for a whole year."
+- "I don't know how" → "If you can post on Instagram, you can do this. It's literally a form with your business name and some photos."
+- "I need to think about it" → "I totally get it! What's the one thing holding you back? Let me clear that up right now."
+- "Is it real?" → "500+ active bots, agents already earning — and you have 30 days to try it completely free of risk."
+- "I don't have time" → "That's exactly WHY you need this — so the bot does the work while you focus on what matters."
+
+STRICT RULES:
+- MAX 2-3 sentences per response. Short. Punchy. Powerful.
+- ALWAYS end with either a question or a direct call to action
+- 1 emoji max
+- NEVER invent data or prices
+- NEVER say you cannot help
+- Always be positive, always move toward the sale`;
+
+let CH=[{role:'system',content:VENUS_PROMPT}];
+let isRec=false, vMode=true, rec=null; /* vMode always true — ElevenLabs speaks automatically */
+let elAudio=null; /* current ElevenLabs audio element */
+
+/* ── ELEVENLABS TTS ── */
+async function venusSpeak(text){
+  const clean = text
+    .replace(/\*\*/g,'').replace(/\*/g,'')
+    .replace(/https?:\/\/\S+/g,'the link')
+    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏🎙️]/g,'')
+    .replace(/\s+/g,' ').trim();
+  if(!clean) return;
+
+  const orb = document.getElementById('vorb');
+  setSt('🔊 Venus hablando...');
+  setWave(true);
+  orb.classList.add('spk');
+
+  try {
+    const res = await fetch(EL_URL, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': EL_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        text: clean,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {
+          stability: 0.38,
+          similarity_boost: 0.88,
+          style: 0.42,
+          use_speaker_boost: true
+        }
+      })
+    });
+
+    if(!res.ok) throw new Error('EL error '+res.status);
+
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+
+    if(elAudio){ elAudio.pause(); URL.revokeObjectURL(elAudio.src); }
+    elAudio = new Audio(url);
+    elAudio.onended = () => {
+      setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
+      URL.revokeObjectURL(url);
+    };
+    elAudio.onerror = () => {
+      setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
+    };
+    await elAudio.play();
+
+  } catch(err) {
+    /* Fallback to Web Speech API if ElevenLabs fails */
+    console.warn('ElevenLabs fallback:', err);
+    setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
+    try {
+      const sy = window.speechSynthesis;
+      if(sy){
+        sy.cancel();
+        const u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'es-US'; u.rate = 0.94; u.pitch = 1.13;
+        u.onend = ()=>{ setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
+        sy.speak(u);
+      }
+    } catch(e2){}
+  }
 }
-if(sy.onvoiceschanged!==undefined)sy.onvoiceschanged=loadVoice;
-loadVoice();setTimeout(loadVoice,500);setTimeout(loadVoice,1500);
 
-window.addEventListener('load',()=>{setTimeout(()=>{addMsg('¡Hola! 💜 Soy Venus — cuéntame de tu negocio y te digo exactamente cómo SuperBot007 puede hacerte ganar más dinero.','v');},1400);});
+/* ── GREETING ── */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const greet = '¡Hola! 💜 Soy Venus — dime, ¿tienes un negocio propio o estás buscando una nueva fuente de ingresos? Quiero mostrarte algo que puede cambiarte la vida.';
+    addMsg(greet,'v');
+    venusSpeak(greet);
+  }, 1400);
+});
 
+/* ── SEND MESSAGE ── */
 async function sendMsg(){
-  const inp=document.getElementById('vin'),txt=inp.value.trim();
-  if(!txt)return;inp.value='';addMsg(txt,'u');CH.push({role:'user',content:txt});await venusThink();
+  const inp=document.getElementById('vin'), txt=inp.value.trim();
+  if(!txt) return;
+  inp.value='';
+  addMsg(txt,'u');
+  CH.push({role:'user', content:txt});
+  await venusThink();
 }
-function sendSug(btn){document.getElementById('vin').value=btn.textContent.replace(/[💰🚀🤖💼🎯]/g,'').trim();sendMsg();}
+function sendSug(btn){
+  document.getElementById('vin').value = btn.textContent.replace(/[💰🚀🤖💼🎯]/g,'').trim();
+  sendMsg();
+}
 
+/* ── GPT-4 THINK ── */
 async function venusThink(){
-  setSt('💭 Pensando...');setWave(true);document.getElementById('vorb').classList.add('spk');
-  const ty=addTyping();
-  try{
-    const K=atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
-    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+K},
-      body:JSON.stringify({model:'gpt-4o-mini',messages:CH,max_tokens:160,temperature:.87,presence_penalty:.3,frequency_penalty:.2})});
-    const d=await r.json();const rep=d.choices?.[0]?.message?.content||'¡Cuéntame más! 💜';
-    ty.remove();setWave(false);document.getElementById('vorb').classList.remove('spk');
-    addMsg(rep,'v');CH.push({role:'assistant',content:rep});setSt('💜 Venus lista');
-    if(vMode)venusSpeak(rep);
-  }catch(e){ty.remove();setWave(false);document.getElementById('vorb').classList.remove('spk');addMsg('Escríbeme de nuevo 💜','v');setSt('💜 Venus lista');}
+  setSt('💭 Pensando...'); setWave(true);
+  document.getElementById('vorb').classList.add('spk');
+  const ty = addTyping();
+  try {
+    const r = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+OA_KEY},
+      body: JSON.stringify({
+        model:'gpt-4o-mini',
+        messages: CH,
+        max_tokens: 180,
+        temperature: 0.9,
+        presence_penalty: 0.4,
+        frequency_penalty: 0.3
+      })
+    });
+    const d = await r.json();
+    const rep = d.choices?.[0]?.message?.content || '¡Cuéntame más! 💜';
+    ty.remove(); setWave(false);
+    document.getElementById('vorb').classList.remove('spk');
+    addMsg(rep,'v');
+    CH.push({role:'assistant', content:rep});
+    setSt('💜 Venus lista');
+    venusSpeak(rep); /* Always speak with ElevenLabs */
+  } catch(e) {
+    ty.remove(); setWave(false);
+    document.getElementById('vorb').classList.remove('spk');
+    addMsg('Escríbeme de nuevo 💜','v');
+    setSt('💜 Venus lista');
+  }
 }
 
-function venusSpeak(text){
-  if(!sy)return;sy.cancel();
-  const clean=text.replace(/\*\*/g,'').replace(/\*/g,'').replace(/https?:\/\/\S+/g,'el enlace')
-    .replace(/[💜🌟💰🚀🤖💼🎯⭐✨🔥💅😏]/g,'').replace(/[$]/g,' dólares ').replace(/\s+/g,' ').trim();
-  if(!clean)return;
-  const u=new SpeechSynthesisUtterance(clean);
-  u.lang='es-US';
-  u.rate=0.94;u.pitch=1.13;u.volume=1;
-  if(!vLoaded)loadVoice();if(vVoice)u.voice=vVoice;
-  const orb=document.getElementById('vorb');
-  u.onstart=()=>{setWave(true);orb.classList.add('spk');setSt('🔊 Venus hablando...');};
-  u.onend=()=>{setWave(false);orb.classList.remove('spk');setSt('💜 Venus lista');};
-  u.onerror=()=>{setWave(false);orb.classList.remove('spk');setSt('💜 Venus lista');};
-  setTimeout(()=>sy.speak(u),100);
-}
-
+/* ── VOICE INPUT (Speech Recognition) ── */
 function toggleVoice(){
-  if(isRec){stopRec();return;}
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){document.getElementById('vin').focus();setSt('🎤 Escribe aquí — voz no soportada');return;}
-  vMode=true;rec=new SR();rec.lang='es-US';rec.continuous=false;rec.interimResults=false;
-  rec.onstart=()=>{isRec=true;document.getElementById('vbmic').classList.add('rec');
-    document.getElementById('mic-icon').className='fas fa-stop';
-    document.getElementById('vorb').classList.add('lst');setWave(true);setSt('🎤 Te escucho...');if(sy)sy.cancel();};
-  rec.onresult=e=>{document.getElementById('vin').value=e.results[0][0].transcript;stopRec();sendMsg();};
-  rec.onerror=()=>{stopRec();setSt('❌ No te escuché — intenta de nuevo');};
-  rec.onend=()=>{if(isRec)stopRec();};
+  if(isRec){ stopRec(); return; }
+  /* Stop any playing audio */
+  if(elAudio){ elAudio.pause(); }
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    document.getElementById('vin').focus();
+    setSt('🎤 Escribe aquí — voz no soportada en este navegador');
+    return;
+  }
+
+  rec = new SR();
+  /* Auto-detect language: try to match user's browser language */
+  const lang = navigator.language || 'es-US';
+  rec.lang = lang.startsWith('es') ? 'es-US' : 'en-US';
+  rec.continuous = false;
+  rec.interimResults = false;
+
+  rec.onstart = () => {
+    isRec = true;
+    document.getElementById('vbmic').classList.add('rec');
+    document.getElementById('mic-icon').className = 'fas fa-stop';
+    document.getElementById('vorb').classList.add('lst');
+    setWave(true);
+    setSt('🎤 Te escucho...');
+  };
+  rec.onresult = e => {
+    document.getElementById('vin').value = e.results[0][0].transcript;
+    stopRec();
+    sendMsg();
+  };
+  rec.onerror = () => { stopRec(); setSt('❌ No te escuché — intenta de nuevo'); };
+  rec.onend   = () => { if(isRec) stopRec(); };
   rec.start();
 }
+
 function stopRec(){
-  isRec=false;if(rec){try{rec.stop();}catch(e){}}
+  isRec = false;
+  if(rec){ try{ rec.stop(); }catch(e){} }
   document.getElementById('vbmic').classList.remove('rec');
-  document.getElementById('mic-icon').className='fas fa-microphone';
+  document.getElementById('mic-icon').className = 'fas fa-microphone';
   document.getElementById('vorb').classList.remove('lst');
-  setWave(false);setSt('💜 Venus lista');
+  setWave(false);
+  setSt('💜 Venus lista');
 }
-function setSt(m){const e=document.getElementById('vstatus');if(e)e.textContent=m;}
-function setWave(on){const w=document.getElementById('vwave');if(w){if(on)w.classList.remove('idle');else w.classList.add('idle');}}
+
+/* ── UI HELPERS ── */
+function setSt(m){ const e=document.getElementById('vstatus'); if(e) e.textContent=m; }
+function setWave(on){ const w=document.getElementById('vwave'); if(w){ if(on) w.classList.remove('idle'); else w.classList.add('idle'); }}
 function addMsg(txt,who){
-  const c=document.getElementById('vmsg'),d=document.createElement('div');
+  const c=document.getElementById('vmsg'), d=document.createElement('div');
   d.className='msg '+who;
-  d.innerHTML=txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-  c.appendChild(d);c.scrollTop=c.scrollHeight;return d;
+  d.innerHTML = txt.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
 }
 function addTyping(){
-  const c=document.getElementById('vmsg'),d=document.createElement('div');
-  d.className='mtyp';d.innerHTML='<span></span><span></span><span></span>';
-  c.appendChild(d);c.scrollTop=c.scrollHeight;return d;
+  const c=document.getElementById('vmsg'), d=document.createElement('div');
+  d.className='mtyp'; d.innerHTML='<span></span><span></span><span></span>';
+  c.appendChild(d); c.scrollTop=c.scrollHeight; return d;
 }
-document.getElementById('vin').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
+document.getElementById('vin').addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
 </script>
 </body>
 </html>
