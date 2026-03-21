@@ -1161,14 +1161,17 @@ function tFaq(item){
 }
 
 /* ══════════════════════════════════════════════
-   VENUS — OPENAI TTS (nova) + GPT-4o-mini
-   ~3-4x faster than ElevenLabs (~300-500ms)
+   VENUS — ElevenLabs Flash v2.5 + GPT-4o-mini
+   Voice: dfeOmy6Uay63tNhyO99j | Model: eleven_flash_v2_5
 ══════════════════════════════════════════════ */
 
-/* OpenAI config — used for both TTS and chat */
+/* OpenAI key — used for GPT chat only */
 const OA_KEY = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
-const TTS_URL = 'https://api.openai.com/v1/audio/speech';
-const TTS_VOICE = 'shimmer';  /* shimmer = warm, sexy, natural — works in ES + EN */
+
+/* ElevenLabs config — TTS only */
+const EL_KEY   = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
+const EL_VOICE = 'dfeOmy6Uay63tNhyO99j';
+const EL_MODEL = 'eleven_flash_v2_5';
 
 /* ── VENUS PROMPT — Persuasive Bilingual Sales Agent ── */
 const VENUS_PROMPT = `You are Venus — the most persuasive, irresistible sales agent for SuperBot007. You are a real woman: warm, confident, clever, and genuinely excited about helping people make money. You are FULLY BILINGUAL — you speak perfect Spanish AND perfect English.
@@ -1257,18 +1260,20 @@ async function venusSpeak(text){
   if(elAudio){ elAudio.pause(); elAudio.src=''; elAudio=null; }
 
   try {
-    /* ── OpenAI TTS — nova voice, ~300ms latency ── */
-    const res = await fetch(TTS_URL, {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer '+OA_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'tts-1-hd',
-        voice: TTS_VOICE,
-        input: clean,
-        speed: 1.05
-      })
-    });
-    if(!res.ok) throw new Error('TTS '+res.status);
+    /* ── ElevenLabs Flash v2.5 — fastest model, ~500ms ── */
+    const res = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${EL_VOICE}`,
+      {
+        method: 'POST',
+        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: clean,
+          model_id: EL_MODEL,
+          voice_settings: { stability: 0.35, similarity_boost: 0.88, style: 0.45, use_speaker_boost: true }
+        })
+      }
+    );
+    if(!res.ok) throw new Error('EL TTS '+res.status);
 
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
@@ -1278,21 +1283,29 @@ async function venusSpeak(text){
     await elAudio.play();
 
   } catch(err){
-    console.warn('TTS error:', err); done();
+    console.warn('EL TTS error:', err); done();
+    /* Fallback: OpenAI shimmer */
     try {
-      const sy = window.speechSynthesis;
-      if(sy){ sy.cancel();
-        const u = new SpeechSynthesisUtterance(clean);
-        u.lang='es-US'; u.rate=0.93; u.pitch=1.08; u.onend=done; sy.speak(u);
-      }
-    } catch(e2){}
+      const res2 = await fetch('https://api.openai.com/v1/audio/speech', {
+        method:'POST',
+        headers:{'Authorization':'Bearer '+OA_KEY,'Content-Type':'application/json'},
+        body: JSON.stringify({model:'tts-1',voice:'shimmer',input:clean,speed:1.05})
+      });
+      if(res2.ok){
+        const blob2 = await res2.blob();
+        const url2  = URL.createObjectURL(blob2);
+        elAudio     = new Audio(url2);
+        elAudio.onended = ()=>{ done(); URL.revokeObjectURL(url2); };
+        await elAudio.play();
+      } else { done(); }
+    } catch(e2){ done(); }
   }
 }
 
 /* ── GREETING ── */
 window.addEventListener('load',()=>{
   setTimeout(()=>{
-    const g='¡Hola! Soy Venus 💜 — I speak Spanish and English! Dime, ¿tienes negocio propio o quieres crear uno?';
+    const g='¡Hola! Soy Venus. Dime, ¿tienes un negocio o quieres crear uno? Tengo algo que puede cambiarte la vida.';
     addMsg(g,'v'); venusSpeak(g);
   }, 1200);
 });
