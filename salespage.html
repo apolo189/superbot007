@@ -4,6 +4,9 @@
 <script>(function(){if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});})}if(window.caches){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});}})();</script>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- v1774097963 -->
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SuperBot007 — Bot IA + Landing Page + Pagos. Sin Código. En 5 Minutos.</title>
 <meta name="description" content="Crea tu bot IA con GPT-4, landing page cinematic y carrito PayPal — sin código, en 5 minutos. Modelo de agencia incluido.">
@@ -514,7 +517,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ MID CTA 2 ════════════ -->
 <div class="cta-mid">
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
-  <h2 class="cta-mid-h reveal">Obtén SuperBot007<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">con un Solo Pago</span></h2>
+  <h2 class="cta-mid-h reveal">Activa Tu Bot IA —<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Empieza a Ganar Hoy</span></h2>
   <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
     <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
@@ -674,8 +677,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ MID CTA 3 ════════════ -->
 <div class="cta-mid">
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
-  <h2 class="cta-mid-h reveal">Obtén SuperBot007<br>con un Solo Pago</h2>
-  <p class="cta-mid-sub reveal">Sin mensualidades. Sin costos ocultos. Sin sorpresas.</p>
+  <h2 class="cta-mid-h reveal">Tu Agencia IA<br>Empieza con SuperBot007</h2>
+  <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $10.99/mes.</p>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
     <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
   </a>
@@ -818,7 +821,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     <!-- RECAP blurb (ClickSites-style) -->
     <div class="price-blurb reveal" style="margin-top:3rem;">
       <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Precio de Lanzamiento: $10.99/mes — Sube a $29.99 Pronto</p>
-      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Aquí está todo lo que obtienes hoy…</h3>
+      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Todo lo que obtienes con SuperBot007 hoy…</h3>
       <p class="price-blurb-sub">$10.99/mes · Todo Incluido · Sin Costos Ocultos · Cancela Cuando Quieras.<br>30 Días Garantía de Devolución Completa.</p>
 
       <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access" style="margin-bottom:1.1rem;">
@@ -897,7 +900,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- ════════════ MID CTA 4 ════════════ -->
 <div class="cta-mid">
   <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
-  <h2 class="cta-mid-h reveal">Obtén SuperBot007<br>con un Solo Pago</h2>
+  <h2 class="cta-mid-h reveal">Activa Tu Bot IA Hoy<br>Antes de Que Suba el Precio</h2>
   <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-mid reveal">
     <i class="fas fa-rocket"></i> obtén acceso instantáneo a superbot007
@@ -978,8 +981,8 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <div class="cf-inner">
     <div class="eyebrow reveal">No Pierdas Esta Oportunidad</div>
     <h2 class="cf-h reveal">
-      Obtén SuperBot007<br>
-      <span class="hl">con un Solo Pago</span>
+      Activa Tu Bot IA Ahora —<br>
+      <span class="hl">Antes de Que Suba el Precio</span>
     </h2>
     <p class="cf-sub reveal">
       Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Por solo $10.99/mes — el precio sube a $29.99 pronto, sin aviso previo.
@@ -1224,7 +1227,7 @@ let CH=[{role:'system',content:VENUS_PROMPT}];
 let isRec=false, vMode=true, rec=null; /* vMode always true — ElevenLabs speaks automatically */
 let elAudio=null; /* current ElevenLabs audio element */
 
-/* ── ELEVENLABS TTS ── */
+/* ── ELEVENLABS TTS — REAL STREAMING (plays while downloading) ── */
 async function venusSpeak(text){
   const clean = text
     .replace(/\*\*/g,'').replace(/\*/g,'')
@@ -1237,6 +1240,8 @@ async function venusSpeak(text){
   setSt('🔊 Venus hablando...');
   setWave(true);
   orb.classList.add('spk');
+
+  const done = () => { setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
 
   try {
     const res = await fetch(EL_URL, {
@@ -1258,33 +1263,65 @@ async function venusSpeak(text){
       })
     });
 
-    if(!res.ok) throw new Error('EL error '+res.status);
+    if(!res.ok) throw new Error('EL '+res.status);
 
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
+    /* ── TRUE STREAMING: MediaSource plays audio as chunks arrive ── */
+    const mimeType = 'audio/mpeg';
+    if(window.MediaSource && MediaSource.isTypeSupported(mimeType)){
+      const ms  = new MediaSource();
+      const url = URL.createObjectURL(ms);
+      if(elAudio){ elAudio.pause(); try{ URL.revokeObjectURL(elAudio.src); }catch(e){} }
+      elAudio = new Audio(url);
+      elAudio.onended = done;
+      elAudio.onerror = done;
 
-    if(elAudio){ elAudio.pause(); URL.revokeObjectURL(elAudio.src); }
-    elAudio = new Audio(url);
-    elAudio.onended = () => {
-      setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
-      URL.revokeObjectURL(url);
-    };
-    elAudio.onerror = () => {
-      setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
-    };
-    await elAudio.play();
+      ms.addEventListener('sourceopen', async () => {
+        const sb = ms.addSourceBuffer(mimeType);
+        const reader = res.body.getReader();
+        let firstChunk = true;
+
+        const pump = async () => {
+          const { done: streamDone, value } = await reader.read();
+          if(streamDone){
+            if(!sb.updating) ms.endOfStream();
+            else sb.addEventListener('updateend', () => ms.endOfStream(), { once:true });
+            return;
+          }
+          if(sb.updating){
+            await new Promise(r => sb.addEventListener('updateend', r, { once:true }));
+          }
+          sb.appendBuffer(value);
+          if(firstChunk){
+            firstChunk = false;
+            try { await elAudio.play(); } catch(e){}
+          }
+          sb.addEventListener('updateend', pump, { once:true });
+        };
+        pump();
+      }, { once:true });
+
+    } else {
+      /* Fallback: blob approach (Safari / old browsers) */
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      if(elAudio){ elAudio.pause(); try{ URL.revokeObjectURL(elAudio.src); }catch(e){} }
+      elAudio = new Audio(url);
+      elAudio.onended = () => { done(); URL.revokeObjectURL(url); };
+      elAudio.onerror = done;
+      await elAudio.play();
+    }
 
   } catch(err) {
-    /* Fallback to Web Speech API if ElevenLabs fails */
-    console.warn('ElevenLabs fallback:', err);
-    setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista');
+    console.warn('ElevenLabs error:', err);
+    done();
+    /* Fallback Web Speech */
     try {
       const sy = window.speechSynthesis;
       if(sy){
         sy.cancel();
         const u = new SpeechSynthesisUtterance(clean);
-        u.lang = 'es-US'; u.rate = 0.94; u.pitch = 1.13;
-        u.onend = ()=>{ setWave(false); orb.classList.remove('spk'); setSt('💜 Venus lista'); };
+        u.lang='es-US'; u.rate=0.94; u.pitch=1.13;
+        u.onend = done;
         sy.speak(u);
       }
     } catch(e2){}
