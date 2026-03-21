@@ -971,6 +971,24 @@ STRICT RULES:
   window.__wzSend       = sendText;
   window.__wzToggleLang = toggleLang;
 
+  /* ── PUBLIC: change language from outside (e.g. salespage toggle) ── */
+  window.wizardSetLang = function(newLang) {
+    if(newLang !== LANG) {
+      LANG = newLang;
+      if(window.WIZARD_CONTEXT) {
+        window.WIZARD_CONTEXT.language = newLang;
+        window.WIZARD_CONTEXT.agentName = newLang === 'es' ? 'Amanda' : 'Shirley';
+      }
+      /* refresh agent label & icon color */
+      const agent = AGENTS[LANG];
+      const btn = document.getElementById('wz-btn');
+      if(btn) btn.style.background = `linear-gradient(135deg, ${agent.color}, ${agent.color}cc)`;
+      /* update lang toggle button text inside wizard panel */
+      const langTgl = document.getElementById('wz-lang-toggle');
+      if(langTgl) langTgl.textContent = LANG === 'es' ? '🇺🇸 EN' : '🇪🇸 ES';
+    }
+  };
+
   /* ── INIT ── */
   function init() {
     injectStyles();
