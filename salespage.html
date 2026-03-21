@@ -1260,7 +1260,7 @@ async function venusSpeak(text){
       headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json','Accept':'audio/mpeg'},
       body: JSON.stringify({
         text: clean,
-        model_id: 'eleven_turbo_v2_5',
+        model_id: 'eleven_flash_v2_5',
         voice_settings:{ stability:0.25, similarity_boost:0.90, style:0.60, use_speaker_boost:true }
       })
     });
