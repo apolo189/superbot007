@@ -1045,8 +1045,19 @@ STRICT RULES:
     isSpeaking = true;
     setSpeakingUI(true);
 
-    // Sanitize
-    const clean = text.replace(/[*_`#[\]()>~]/g, '').replace(/https?:\/\/\S+/g, '').replace(/\s+/g, ' ').trim();
+    // Sanitize — strip markdown, bullets, URLs, emojis, extra whitespace
+    // Then truncate to 400 chars max for TTS (long step scripts show in chat but speak a short version)
+    const clean = text
+      .replace(/https?:\/\/\S+/g, '')           // remove URLs
+      .replace(/[•\-\*\_\`#\[\]()>~]/g, '')     // remove markdown/bullets
+      .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')   // remove emojis (unicode range)
+      .replace(/[^\x00-\x7FáéíóúüñÁÉÍÓÚÜÑ¡¿]/g, '') // keep latin + spanish chars only
+      .replace(/\n+/g, ' ')                      // newlines → space
+      .replace(/\s+/g, ' ')                      // collapse spaces
+      .trim()
+      .slice(0, 400);                            // max 400 chars for TTS
+
+    if (!clean) { isSpeaking = false; setSpeakingUI(false); return; }
 
     try {
       // Try ElevenLabs first
