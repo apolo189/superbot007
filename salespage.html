@@ -195,36 +195,36 @@ img{max-width:100%;display:block;}
 .btn-mid:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(242,66,7,.7);}
 
 /* ═══ FEATURES — SAAS DEMO LAYOUT ═══ */
-#features{background:var(--dark);overflow:hidden;}
+#features{background:#000000;overflow:hidden;}
 @keyframes fnfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 /* ── DEMO GRID: left pills | center screen | right pills ── */
 .feat-grid{display:grid;grid-template-columns:1fr minmax(300px,480px) 1fr;gap:2rem;align-items:center;max-width:1200px;margin:0 auto;}
 /* ── PILL COLUMNS ── */
 .feat-col{display:flex;flex-direction:column;gap:1rem;}
-.feat-pill{display:flex;align-items:center;gap:.85rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:.75rem 1.1rem .75rem .75rem;transition:all .3s;cursor:default;position:relative;}
-.feat-pill:hover{background:rgba(255,255,255,.08);border-color:rgba(242,66,7,.3);transform:scale(1.03);}
+.feat-pill{display:flex;align-items:center;gap:.85rem;background:#0a0a0a;border:1px solid rgba(242,66,7,.15);border-radius:50px;padding:.75rem 1.1rem .75rem .75rem;transition:all .3s;cursor:default;position:relative;}
+.feat-pill:hover{background:#111111;border-color:rgba(242,66,7,.5);transform:scale(1.03);box-shadow:0 4px 18px rgba(242,66,7,.15);}
 .feat-col-right .feat-pill{flex-direction:row-reverse;padding:.75rem .75rem .75rem 1.1rem;}
 .dp-icon{width:42px;height:42px;border-radius:50%;border:1px solid;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
 .dp-text{flex:1;min-width:0;}
-.dp-title{font-size:.82rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dp-desc{font-size:.7rem;color:var(--mu);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dp-title{font-size:.82rem;font-weight:800;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dp-desc{font-size:.7rem;color:rgba(255,255,255,.45);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dp-arrow{font-size:1rem;flex-shrink:0;opacity:.4;transition:opacity .3s;}
 .feat-pill:hover .dp-arrow{opacity:1;color:var(--orange);}
 /* ── CENTER SCREEN ── */
 .feat-center{display:flex;flex-direction:column;align-items:center;gap:1.2rem;}
-.feat-screen{position:relative;width:100%;border-radius:16px;background:#0d0d14;border:1px solid rgba(255,255,255,.12);overflow:hidden;box-shadow:0 0 80px rgba(242,66,7,.2),0 30px 80px rgba(0,0,0,.5);}
+.feat-screen{position:relative;width:100%;border-radius:16px;background:#0d0d14;border:1px solid rgba(255,255,255,.1);overflow:hidden;box-shadow:0 0 80px rgba(242,66,7,.2),0 30px 80px rgba(0,0,0,.7);}
 .demo-glow{position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(242,66,7,.4),rgba(108,99,255,.3),rgba(242,66,7,.2));z-index:0;animation:demoglow 4s ease-in-out infinite alternate;}
 @keyframes demoglow{0%{opacity:.5}100%{opacity:1}}
-.demo-browser-bar{position:relative;z-index:1;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08);padding:.5rem .9rem;display:flex;align-items:center;gap:.6rem;}
+.demo-browser-bar{position:relative;z-index:1;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.06);padding:.5rem .9rem;display:flex;align-items:center;gap:.6rem;}
 .demo-dots{display:flex;gap:.35rem;}
 .demo-dots span{width:10px;height:10px;border-radius:50%;}
 .demo-dots span:nth-child(1){background:#ff5f57;}
 .demo-dots span:nth-child(2){background:#febc2e;}
 .demo-dots span:nth-child(3){background:#28c840;}
-.demo-url{flex:1;background:rgba(255,255,255,.07);border-radius:6px;padding:.22rem .8rem;font-size:.7rem;color:rgba(255,255,255,.5);text-align:center;}
+.demo-url{flex:1;background:#000000;border-radius:6px;padding:.22rem .8rem;font-size:.7rem;color:rgba(255,255,255,.35);text-align:center;}
 .demo-ssl{font-size:.85rem;}
 /* ── Screens collage inside center ── */
-.demo-content{position:relative;z-index:1;width:100%;aspect-ratio:16/9;overflow:hidden;background:#080810;}
+.demo-content{position:relative;z-index:1;width:100%;aspect-ratio:16/9;overflow:hidden;background:#050505;}
 .demo-play-wrap{display:block;width:100%;height:100%;position:relative;text-decoration:none;}
 .demo-screens-collage{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;}
 .dsc-item{position:relative;overflow:hidden;background:#111118;}
@@ -241,13 +241,13 @@ img{max-width:100%;display:block;}
 .demo-play-wrap:hover .demo-play-icon{transform:scale(1.12);box-shadow:0 0 60px rgba(242,66,7,.8);}
 .demo-play-label{font-size:.78rem;font-weight:800;color:#fff;background:rgba(0,0,0,.5);padding:.25rem .7rem;border-radius:20px;backdrop-filter:blur(4px);}
 /* ── Bottom bar ── */
-.demo-bottom-bar{position:relative;z-index:1;background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.08);padding:.5rem .9rem;display:flex;align-items:center;gap:.4rem;}
+.demo-bottom-bar{position:relative;z-index:1;background:#0a0a0a;border-top:1px solid rgba(255,255,255,.06);padding:.5rem .9rem;display:flex;align-items:center;gap:.4rem;}
 .demo-live-dot{width:7px;height:7px;border-radius:50%;background:#43e97b;display:inline-block;animation:hubpulse 1.5s ease-in-out infinite;}
 /* ── Stats row ── */
 .demo-stats{display:flex;align-items:center;gap:1rem;}
 .dstat{display:flex;flex-direction:column;align-items:center;}
-.dstat-n{font-size:1.3rem;font-weight:900;color:#fff;}
-.dstat-l{font-size:.68rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;}
+.dstat-n{font-size:1.3rem;font-weight:900;color:#ffffff;}
+.dstat-l{font-size:.68rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;}
 .dstat-sep{width:1px;height:28px;background:rgba(255,255,255,.1);}
 /* ── Responsive ── */
 @media(max-width:1000px){
@@ -881,7 +881,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <div class="demo-bottom-bar">
             <span class="demo-live-dot"></span>
             <span style="font-size:.72rem;font-weight:700;color:#43e97b;">LIVE DEMO</span>
-            <span style="font-size:.7rem;color:var(--mu);margin-left:.5rem;">SuperBot007 en acción</span>
+            <span style="font-size:.7rem;color:rgba(255,255,255,.4);margin-left:.5rem;">SuperBot007 en acción</span>
           </div>
         </div>
         <!-- Stats below screen -->
