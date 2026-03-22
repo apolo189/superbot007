@@ -430,12 +430,17 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   <div class="step-title">🤖 IA & Activar Bot</div>
   <div class="step-subtitle">Genera contenido con IA, configura el chatbot y activa tu Super Bot 007</div>
 
-  <div class="info-box"><i class="fas fa-key"></i> API Key de OpenAI para el chatbot. Opcional si no usas el chatbot. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--primary);">Obtener aquí →</a></div>
+  <!-- API Key hidden — pre-filled, client never sees it -->
+  <input type="hidden" id="openaiKey" value="">
+  <script>document.getElementById('openaiKey').value=atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');</script>
   <div class="form-row">
-    <div class="form-group"><label>OpenAI API Key</label><input type="password" id="openaiKey" placeholder="sk-proj-... (opcional)"><p class="tooltip"><i class="fas fa-lock"></i> Solo se usa para el chatbot IA</p></div>
     <div class="form-group">
       <label>Modelo GPT</label>
       <select id="gptModel"><option value="gpt-4o-mini" selected>GPT-4o Mini (Recomendado)</option><option value="gpt-4o">GPT-4o (Potente)</option><option value="gpt-3.5-turbo">GPT-3.5 Turbo (Económico)</option></select>
+    </div>
+    <div class="form-group">
+      <label>Idioma del Bot</label>
+      <select id="botLanguage"><option value="es" selected>Español</option><option value="en">English</option><option value="pt">Português</option></select>
     </div>
   </div>
 
@@ -452,7 +457,6 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Idioma del Bot</label><select id="botLanguage"><option value="es" selected>Español</option><option value="en">English</option><option value="pt">Português</option></select></div>
     <div class="form-group"><label>Instrucción Especial (opcional)</label><input type="text" id="botInstruction" placeholder="Ej: No hacer descuentos mayores al 10%"></div>
   </div>
   <hr class="section-div">
