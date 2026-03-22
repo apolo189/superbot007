@@ -140,13 +140,13 @@
   const PAGE_INTROS = {
     es: {
       sales: 'Hola, mi nombre es Amanda y estoy aquí para ayudarte en tu nueva aventura de crear tu primer bot con inteligencia artificial. Puedo explicarte cómo funciona todo, qué incluye, el precio, y cuando estés listo te llevo directamente al formulario para empezar. ¿Qué quieres saber?',
-      form: 'Hola, soy Amanda, tu guía personal. Voy a acompañarte en cada uno de los 7 pasos para crear tu bot. Es más sencillo de lo que parece — solo llena los campos y yo te explico para qué sirve cada sección. Empecemos con el primer paso.',
+      form: 'Hola, mi nombre es Amanda. Estoy aquí para acompañarte en esta nueva aventura de crear tu primer bot. Son 7 pasos sencillos — yo te explico cada uno. Cuando termines un paso, solo dime "listo" y avanzamos juntos.',
       editor: 'Hola, soy Amanda. Estás en el editor visual de tu landing page — aquí puedes cambiar colores, imágenes y textos en tiempo real. Dime qué quieres personalizar.',
       landing: 'Hola, soy Amanda. Esta es la landing page de tu negocio creada con Super Bot 007. ¿Te puedo ayudar con algo?',
     },
     en: {
       sales: "Hi, my name is Shirley and I'm here to help you on your new adventure of creating your first AI bot. I can explain how everything works, what's included, the price, and when you're ready I'll take you directly to the form to get started. What would you like to know?",
-      form: "Hi, I'm Shirley, your personal guide. I'll walk you through all 7 steps to build your bot. It's simpler than it sounds — just fill in the fields and I'll explain what each section is for. Let's start with the first step.",
+      form: "Hi, my name is Shirley. I'm here to help you on your new adventure of creating your first bot. There are 7 simple steps — I'll explain each one. When you finish a step, just say \"done\" or \"ready\" and we'll move forward together.",
       editor: "Hi, I'm Shirley. You're in the visual editor for your landing page — here you can change colors, images, and text in real time. Tell me what you'd like to customize.",
       landing: "Hi, I'm Shirley. This is your business landing page created with Super Bot 007. Can I help you with anything?",
     }
@@ -550,12 +550,26 @@
     hasGreeted = true;
     const intro = PAGE_INTROS[LANG][PAGE] || PAGE_INTROS[LANG].sales;
     addAgentMsg(intro);
-    // On form page: speak immediately to guide the user
-    // On sales page: only show text, speak only when user interacts
-    if (PAGE === 'form' || PAGE === 'editor') {
+    chatHistory = [{ role: 'system', content: buildSystemPrompt() }];
+
+    // On form page: greet, then immediately show & speak the current step explanation
+    if (PAGE === 'form') {
+      const stepHint = STEP_SCRIPTS[LANG][currentStep];
+      if (stepHint) {
+        setTimeout(() => {
+          addAgentMsg(stepHint);
+          speak(stepHint); // speak ONLY the step hint (not the greeting)
+        }, 500);
+      } else {
+        speak(intro); // fallback
+      }
+      return;
+    }
+    // Editor page: speak intro
+    if (PAGE === 'editor') {
       speak(intro);
     }
-    chatHistory = [{ role: 'system', content: buildSystemPrompt() }];
+    // Sales page: only show text, no auto-speak
   }
 
   /* ── ADD MESSAGE ── */
@@ -1111,10 +1125,9 @@ STRICT RULES:
     inactivityTimer = setTimeout(() => {
       if (isOpen && !isSpeaking && !isListening) {
         const msg = IS_ES()
-          ? '¿Sigues ahí? ¿Necesitas ayuda con algo? Estoy aquí para guiarte. 😊'
-          : "Still there? Need help with anything? I'm here to guide you. 😊";
-        addAgentMsg(msg);
-        speak(msg);
+          ? '¿Sigues ahí? Cuando termines de llenar los campos, dime "listo" para continuar al siguiente paso. 😊'
+          : "Still there? When you finish filling in the fields, just say \"done\" or \"ready\" to move to the next step. 😊";
+        addAgentMsg(msg); // show text only — no auto-speak to avoid interrupting
       }
     }, 90000); // 90 seconds — give user time to interact
   }
@@ -1194,12 +1207,19 @@ STRICT RULES:
       }, 3000);
     }
 
-    // Form page: auto-open wizard after 1.5s and greet with step guide
+    // Form page: show a notification dot on the wizard button to invite the user
+    // but do NOT auto-open — user opens it when ready
     if (PAGE === 'form') {
       setTimeout(() => {
         if (!isOpen) {
           const btn = document.getElementById('wz-btn');
-          if (btn) btn.click();
+          if (btn) {
+            // Add a pulsing notification dot to invite attention
+            const nd = document.createElement('span');
+            nd.className = 'wz-notify';
+            nd.style.cssText = 'position:absolute;top:4px;right:4px;width:12px;height:12px;background:#ff4444;border-radius:50%;border:2px solid #000;';
+            btn.appendChild(nd);
+          }
         }
       }, 1500);
 
