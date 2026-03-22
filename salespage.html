@@ -549,16 +549,6 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 /* VENUS PILLS */
 .vpill{display:inline-flex;align-items:center;gap:.4rem;background:#000000;border:1px solid rgba(255,255,255,.4);border-radius:50px;padding:.45rem 1rem;font-size:.82rem;color:#ffffff;font-weight:600;}
-/* ══ VIDEO GRID — 4 per row, perfectly uniform ══ */
-.video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
-@media(max-width:1000px){.video-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:540px){.video-grid{grid-template-columns:repeat(2,1fr);gap:0.6rem;}}
-.vid-card{position:relative;border-radius:18px;overflow:hidden;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 32px rgba(0,0,0,0.35);transition:all 0.4s cubic-bezier(.25,.8,.25,1);aspect-ratio:16/9;}
-.vid-card:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(242,66,7,0.55);box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 50px rgba(242,66,7,0.22);}
-.vid-card video{width:100%;height:100%;object-fit:cover;display:block;}
-.vid-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.80)0%,transparent 55%);opacity:0;transition:opacity 0.35s;display:flex;align-items:flex-end;padding:1rem;}
-.vid-card:hover .vid-overlay{opacity:1;}
-.vid-label{font-size:0.82rem;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.8);}
 </style>
 </head>
 <body>
@@ -791,54 +781,174 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <div class="dline"></div>
 
-<!-- ════════════ VIDEO SHOWCASE — 4x2 GRID ════════════ -->
-<section id="features" class="sec" style="background:#000000;">
+<!-- ════════════ FEATURES — SAAS DEMO LAYOUT ════════════ -->
+<section id="features" class="sec">
   <div class="wr">
-    <div style="text-align:center;margin-bottom:2.5rem;">
-      <div class="eyebrow reveal" style="color:var(--orange);border-color:rgba(242,66,7,.3);background:rgba(242,66,7,.08);">VERLO ES CREERLO</div>
-      <h2 class="sh2 reveal">Mira el Poderoso Software <span class="hl">en Acción…</span></h2>
-      <p style="text-align:center;color:var(--mu);font-size:.95rem;margin-top:.8rem;" class="reveal">Cada bot que creas incluye todas estas funciones desde el día 1</p>
-    </div>
+    <div class="eyebrow reveal">Funciones de Siguiente Generación</div>
+    <h2 class="sh2 reveal">Mira El Poderoso<br><span class="hl">Demo del Software</span></h2>
+    <p style="text-align:center;color:var(--mu);font-size:.95rem;font-weight:600;margin-bottom:3.5rem;" class="reveal">Un ecosistema completo que trabaja junto — automatizado, conectado y listo para vender 24/7</p>
 
-    <!-- ROW 1: 4 videos -->
-    <div class="video-grid reveal" style="margin-bottom:1.2rem;">
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/ipObTPOw"></video>
-        <div class="vid-overlay"><div class="vid-label">🤖 Bot respondiendo 24/7</div></div>
-      </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/GeWVJ8Dv"></video>
-        <div class="vid-overlay"><div class="vid-label">📅 Agenda de Citas</div></div>
-      </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/SUtu0d7B"></video>
-        <div class="vid-overlay"><div class="vid-label">💰 Generando ingresos reales</div></div>
-      </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/T4xnEYjx"></video>
-        <div class="vid-overlay"><div class="vid-label">🤝 Cerrando tratos 24/7</div></div>
-      </div>
-    </div>
+    <!-- ══ SAAS DEMO GRID ══ -->
+    <div class="feat-grid reveal">
 
-    <!-- ROW 2: 4 videos -->
-    <div class="video-grid reveal">
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/mvYOgUkx"></video>
-        <div class="vid-overlay"><div class="vid-label">💻 Sin código — fácil y rápido</div></div>
+      <!-- LEFT COLUMN — 5 features -->
+      <div class="feat-col feat-col-left">
+
+        <div class="feat-pill reveal" style="transition-delay:.05s">
+          <div class="dp-icon" style="background:rgba(108,99,255,.15);border-color:rgba(108,99,255,.35);">🤖</div>
+          <div class="dp-text">
+            <div class="dp-title">Bot IA con GPT-4</div>
+            <div class="dp-desc">Responde, vende y agenda — 24/7</div>
+          </div>
+          <div class="dp-arrow dp-arrow-right">↗</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.10s">
+          <div class="dp-icon" style="background:rgba(255,215,0,.12);border-color:rgba(255,215,0,.35);">🌐</div>
+          <div class="dp-text">
+            <div class="dp-title">Landing Page Cinematic</div>
+            <div class="dp-desc">Página pro con efectos en minutos</div>
+          </div>
+          <div class="dp-arrow dp-arrow-right">↗</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.15s">
+          <div class="dp-icon" style="background:rgba(67,233,123,.12);border-color:rgba(67,233,123,.35);">💳</div>
+          <div class="dp-text">
+            <div class="dp-title">Carrito + PayPal Directo</div>
+            <div class="dp-desc">Cobros directos, sin intermediarios</div>
+          </div>
+          <div class="dp-arrow dp-arrow-right">↗</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.20s">
+          <div class="dp-icon" style="background:rgba(255,101,132,.12);border-color:rgba(255,101,132,.35);">📅</div>
+          <div class="dp-text">
+            <div class="dp-title">Agenda de Citas</div>
+            <div class="dp-desc">Reservas automáticas por WhatsApp</div>
+          </div>
+          <div class="dp-arrow dp-arrow-right">↗</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.25s">
+          <div class="dp-icon" style="background:rgba(0,200,212,.12);border-color:rgba(0,200,212,.35);">✏️</div>
+          <div class="dp-text">
+            <div class="dp-title">Editor Visual Real-Time</div>
+            <div class="dp-desc">Drag & drop, sin código</div>
+          </div>
+          <div class="dp-arrow dp-arrow-right">↗</div>
+        </div>
+
       </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/IH6hYrMQ"></video>
-        <div class="vid-overlay"><div class="vid-label">📱 Landing page + tarjeta digital</div></div>
+
+      <!-- CENTER — Video Demo -->
+      <div class="feat-center reveal" style="transition-delay:.12s">
+        <div class="feat-screen">
+          <!-- Glow ring -->
+          <div class="demo-glow"></div>
+          <!-- Browser bar -->
+          <div class="demo-browser-bar">
+            <div class="demo-dots"><span></span><span></span><span></span></div>
+            <div class="demo-url">superbot007.app</div>
+            <div class="demo-ssl">🔒</div>
+          </div>
+          <!-- Video / Demo content -->
+          <div class="demo-content">
+            <a href="https://apolo189.github.io/superbot007/agent.html?id=bella-organics-demo"
+               target="_blank" class="demo-play-wrap">
+              <!-- Mockup screens collage -->
+              <div class="demo-screens-collage">
+                <div class="dsc-item dsc-item-1">
+                  <img src="https://apolo189.github.io/superbot007/frame-pro.jpg"
+                       onerror="this.style.display='none'" alt="Bot Demo" loading="lazy">
+                  <div class="dsc-fallback">🤖<br><small>Bot IA</small></div>
+                </div>
+                <div class="dsc-item dsc-item-2">
+                  <img src="https://apolo189.github.io/superbot007/frame-free.jpg"
+                       onerror="this.style.display='none'" alt="Landing Demo" loading="lazy">
+                  <div class="dsc-fallback">🌐<br><small>Landing</small></div>
+                </div>
+                <div class="dsc-item dsc-item-3">
+                  <img src="https://apolo189.github.io/superbot007/frame-agency.jpg"
+                       onerror="this.style.display='none'" alt="Agency Demo" loading="lazy">
+                  <div class="dsc-fallback">🏢<br><small>Agencia</small></div>
+                </div>
+              </div>
+              <!-- Play button overlay -->
+              <div class="demo-play-btn">
+                <div class="demo-play-icon">▶</div>
+                <div class="demo-play-label">Ver Demo</div>
+              </div>
+            </a>
+          </div>
+          <!-- Bottom bar -->
+          <div class="demo-bottom-bar">
+            <span class="demo-live-dot"></span>
+            <span style="font-size:.72rem;font-weight:700;color:#43e97b;">LIVE DEMO</span>
+            <span style="font-size:.7rem;color:#ffffff;margin-left:.5rem;">SuperBot007 en acción</span>
+          </div>
+        </div>
+        <!-- Stats below screen -->
+        <div class="demo-stats">
+          <div class="dstat"><span class="dstat-n">5 min</span><span class="dstat-l">Setup</span></div>
+          <div class="dstat-sep"></div>
+          <div class="dstat"><span class="dstat-n">24/7</span><span class="dstat-l">Activo</span></div>
+          <div class="dstat-sep"></div>
+          <div class="dstat"><span class="dstat-n">$0</span><span class="dstat-l">Código</span></div>
+        </div>
       </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/Isrn0QKG"></video>
-        <div class="vid-overlay"><div class="vid-label">💳 Pagos PayPal automáticos</div></div>
+
+      <!-- RIGHT COLUMN — 5 features -->
+      <div class="feat-col feat-col-right">
+
+        <div class="feat-pill reveal" style="transition-delay:.05s">
+          <div class="dp-arrow dp-arrow-left">↖</div>
+          <div class="dp-text" style="text-align:right;">
+            <div class="dp-title">Tarjeta Digital + QR</div>
+            <div class="dp-desc">Todos tus links en un solo lugar</div>
+          </div>
+          <div class="dp-icon" style="background:rgba(242,66,7,.12);border-color:rgba(242,66,7,.35);">📱</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.10s">
+          <div class="dp-arrow dp-arrow-left">↖</div>
+          <div class="dp-text" style="text-align:right;">
+            <div class="dp-title">Motor Bilingüe ES/EN</div>
+            <div class="dp-desc">Ideal para Miami, LA, NY</div>
+          </div>
+          <div class="dp-icon" style="background:rgba(0,176,155,.12);border-color:rgba(0,176,155,.35);">🌍</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.15s">
+          <div class="dp-arrow dp-arrow-left">↖</div>
+          <div class="dp-text" style="text-align:right;">
+            <div class="dp-title">Modelo de Agencia</div>
+            <div class="dp-desc">Revende y gana $500–$2,000/mes</div>
+          </div>
+          <div class="dp-icon" style="background:rgba(255,165,0,.12);border-color:rgba(255,165,0,.35);">🏢</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.20s">
+          <div class="dp-arrow dp-arrow-left">↖</div>
+          <div class="dp-text" style="text-align:right;">
+            <div class="dp-title">Firebase 99.9% Uptime</div>
+            <div class="dp-desc">Google Cloud + SSL gratis</div>
+          </div>
+          <div class="dp-icon" style="background:rgba(255,214,0,.12);border-color:rgba(255,214,0,.35);">🔒</div>
+        </div>
+
+        <div class="feat-pill reveal" style="transition-delay:.25s">
+          <div class="dp-arrow dp-arrow-left">↖</div>
+          <div class="dp-text" style="text-align:right;">
+            <div class="dp-title">Amanda &amp; Shirley IA</div>
+            <div class="dp-desc">Agentes de voz que guían al cliente</div>
+          </div>
+          <div class="dp-icon" style="background:rgba(249,83,198,.12);border-color:rgba(249,83,198,.35);">🎙️</div>
+        </div>
+
       </div>
-      <div class="vid-card">
-        <video autoplay loop muted playsinline src="https://www.genspark.ai/api/files/s/XjwVdbPU"></video>
-        <div class="vid-overlay"><div class="vid-label">🏆 Tu agencia de bots IA</div></div>
-      </div>
-    </div>
+
+    </div><!-- /demo-grid -->
 
   </div>
 </section>
