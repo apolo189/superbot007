@@ -1224,13 +1224,14 @@ STRICT RULES:
 
     setStatus(IS_ES() ? 'En línea · Lista para ayudarte' : 'Online · Ready to help');
 
-    // Reset history and greet in new lang
+    // Reset history and show greeting in new lang (no auto-speak on lang change)
     chatHistory = [{ role: 'system', content: buildSystemPrompt() }];
     const msgs = document.getElementById('wz-msgs');
     if (msgs) msgs.innerHTML = '';
     const intro = PAGE_INTROS[LANG][PAGE] || PAGE_INTROS[LANG].sales;
     addAgentMsg(intro);
-    speak(intro);
+    // Only speak if not currently speaking
+    if (!isSpeaking) speak(intro);
   }
 
   /* ── INACTIVITY TIMER ── */
@@ -1245,7 +1246,7 @@ STRICT RULES:
         addAgentMsg(msg);
         speak(msg);
       }
-    }, 30000); // 30 seconds
+    }, 90000); // 90 seconds — give user time to interact
   }
 
   /* ── STEP UPDATE (called by form.html when step changes) ── */
@@ -1254,19 +1255,19 @@ STRICT RULES:
     const hint = STEP_SCRIPTS[LANG][step];
     if (!hint) return;
 
-    // If panel closed, open it and greet
+    // Show hint in chat — speak only if panel is already open and user is engaged
     if (!isOpen) {
-      const btn = document.getElementById('wz-btn');
-      if (btn) btn.click();
-      // Wait for open animation then show hint
-      setTimeout(() => {
-        addAgentMsg(hint);
-        speak(hint);
-      }, 700);
+      // Panel closed: just update currentStep silently, don't auto-open or speak
+      return;
     } else {
+      // Panel open: show text + speak only if not already speaking
       setTimeout(() => {
-        addAgentMsg(hint);
-        speak(hint);
+        if (!isSpeaking) {
+          addAgentMsg(hint);
+          speak(hint);
+        } else {
+          addAgentMsg(hint); // show text even if speaking
+        }
       }, 500);
     }
   };
