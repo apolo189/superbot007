@@ -159,14 +159,15 @@ img{max-width:100%;display:block;}
 .dline{height:1px;background:linear-gradient(90deg,transparent,rgba(255,69,0,.38),transparent);margin:0;}
 
 /* ═══ WHAT IS IT — 2 col ═══ */
-.what-cols{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.what-cols{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1200px;margin:0 auto;}
 @media(max-width:760px){.what-cols{grid-template-columns:1fr;gap:2rem;}}
-.what-vid{border-radius:16px;overflow:hidden;box-shadow:0 20px 55px rgba(0,0,0,.6);border:1px solid var(--bd);}
+.what-vid{border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(255,69,0,.25),0 0 0 1px rgba(255,69,0,.2);border:1px solid rgba(255,69,0,.3);position:relative;}
+.what-vid::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:linear-gradient(135deg,rgba(255,69,0,.5),rgba(255,0,153,.3),transparent);z-index:-1;}
 .what-vid video{width:100%;display:block;}
-.blist{list-style:none;display:flex;flex-direction:column;gap:1rem;}
-.blist li{display:flex;align-items:flex-start;gap:.85rem;font-size:.93rem;line-height:1.65;color:#ffffff;opacity:.9;}
-.blist li strong{color:var(--txt);}
-.bico{width:34px;height:34px;border-radius:9px;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.22);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--orange);flex-shrink:0;margin-top:.08rem;}
+.blist{list-style:none;display:flex;flex-direction:column;gap:1.4rem;}
+.blist li{display:flex;align-items:flex-start;gap:1rem;font-size:1.02rem;line-height:1.7;color:#ffffff;}
+.blist li strong{color:#ffffff;font-size:1.06rem;display:block;margin-bottom:.2rem;text-shadow:0 0 20px rgba(255,255,255,.3);}
+.bico{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,rgba(255,69,0,.18),rgba(255,0,153,.1));border:1px solid rgba(255,69,0,.35);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--orange);flex-shrink:0;margin-top:.05rem;box-shadow:0 0 18px rgba(255,69,0,.15);transition:all .3s;}
 
 /* ═══ DEMO GRID 2×4 ═══ */
 .demo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;}
@@ -195,74 +196,43 @@ img{max-width:100%;display:block;}
 .btn-mid{display:inline-flex;align-items:center;gap:.55rem;padding:.95rem 2.5rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;box-shadow:0 6px 25px rgba(255,69,0,.45);animation:gp 3s ease-in-out infinite;}
 .btn-mid:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,69,0,.7);}
 
-/* ═══ FEATURES — SAAS DEMO LAYOUT ═══ */
-#features{background:#0a0a0f;overflow:hidden;}
+/* ═══ FEATURES — BIG NUMBERED CARDS LAYOUT ═══ */
+#features{background:linear-gradient(180deg,#050508 0%,#0a0a0f 40%,#08050f 100%);overflow:hidden;padding:5rem 0;}
 @keyframes fnfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-/* ── DEMO GRID: left pills | center screen | right pills ── */
-.feat-grid{display:grid;grid-template-columns:1fr minmax(300px,480px) 1fr;gap:2rem;align-items:center;max-width:1200px;margin:0 auto;}
-/* ── PILL COLUMNS ── */
-.feat-col{display:flex;flex-direction:column;gap:1rem;}
-.feat-pill{display:flex;align-items:center;gap:.85rem;background:#0a0a0f;border:1px solid rgba(255,69,0,.15);border-radius:50px;padding:.75rem 1.1rem .75rem .75rem;transition:all .3s;cursor:default;position:relative;}
-.feat-pill:hover{background:#0a0a0f;border-color:rgba(255,69,0,.5);transform:scale(1.03);box-shadow:0 4px 18px rgba(255,69,0,.15);}
-.feat-col-right .feat-pill{flex-direction:row-reverse;padding:.75rem .75rem .75rem 1.1rem;}
-.dp-icon{width:42px;height:42px;border-radius:50%;border:1px solid;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;}
-.dp-text{flex:1;min-width:0;}
-.dp-title{font-size:.82rem;font-weight:800;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dp-desc{font-size:.7rem;color:#ffffff;margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dp-arrow{font-size:1rem;flex-shrink:0;opacity:.4;transition:opacity .3s;}
-.feat-pill:hover .dp-arrow{opacity:1;color:var(--orange);}
-/* ── CENTER SCREEN ── */
-.feat-center{display:flex;flex-direction:column;align-items:center;gap:1.2rem;}
-.feat-screen{position:relative;width:100%;border-radius:16px;background:#0a0a0f;border:1px solid rgba(255,255,255,.35);overflow:hidden;box-shadow:0 0 80px rgba(255,69,0,.2),0 30px 80px rgba(0,0,0,.7);}
-.demo-glow{position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(255,69,0,.4),rgba(108,99,255,.3),rgba(255,69,0,.2));z-index:0;animation:demoglow 4s ease-in-out infinite alternate;}
-@keyframes demoglow{0%{opacity:.5}100%{opacity:1}}
-.demo-browser-bar{position:relative;z-index:1;background:#0a0a0f;border-bottom:1px solid rgba(255,255,255,.15);padding:.5rem .9rem;display:flex;align-items:center;gap:.6rem;}
-.demo-dots{display:flex;gap:.35rem;}
-.demo-dots span{width:10px;height:10px;border-radius:50%;}
-.demo-dots span:nth-child(1){background:#ff5f57;}
-.demo-dots span:nth-child(2){background:#febc2e;}
-.demo-dots span:nth-child(3){background:#28c840;}
-.demo-url{flex:1;background:#0a0a0f;border-radius:6px;padding:.22rem .8rem;font-size:.7rem;color:#ffffff;text-align:center;}
-.demo-ssl{font-size:.85rem;}
-/* ── Screens collage inside center ── */
-.demo-content{position:relative;z-index:1;width:100%;aspect-ratio:16/9;overflow:hidden;background:#0a0a0f;}
-.demo-play-wrap{display:block;width:100%;height:100%;position:relative;text-decoration:none;}
-.demo-screens-collage{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;}
-.dsc-item{position:relative;overflow:hidden;background:#0a0a0f;}
-.dsc-item-1{grid-column:1;grid-row:1/3;}
-.dsc-item-2{grid-column:2;grid-row:1;}
-.dsc-item-3{grid-column:2/4;grid-row:2;}
-.dsc-item img{width:100%;height:100%;object-fit:cover;opacity:.75;transition:opacity .3s;}
-.demo-play-wrap:hover .dsc-item img{opacity:.45;}
-.dsc-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.6rem;color:#ffffff;text-align:center;gap:.2rem;}
-.dsc-fallback small{font-size:.65rem;color:#ffffff;}
-/* ── Play button ── */
-.demo-play-btn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;z-index:2;}
-.demo-play-icon{width:64px;height:64px;border-radius:50%;background:rgba(255,69,0,.9);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;box-shadow:0 0 40px rgba(255,69,0,.5);transition:all .3s;padding-left:4px;}
-.demo-play-wrap:hover .demo-play-icon{transform:scale(1.12);box-shadow:0 0 60px rgba(255,69,0,.8);}
-.demo-play-label{font-size:.78rem;font-weight:800;color:#fff;background:rgba(0,0,0,.5);padding:.25rem .7rem;border-radius:20px;backdrop-filter:blur(4px);}
-/* ── Bottom bar ── */
-.demo-bottom-bar{position:relative;z-index:1;background:#0a0a0f;border-top:1px solid rgba(255,255,255,.15);padding:.5rem .9rem;display:flex;align-items:center;gap:.4rem;}
-.demo-live-dot{width:7px;height:7px;border-radius:50%;background:#43e97b;display:inline-block;animation:hubpulse 1.5s ease-in-out infinite;}
-/* ── Stats row ── */
-.demo-stats{display:flex;align-items:center;gap:1rem;}
-.dstat{display:flex;flex-direction:column;align-items:center;}
-.dstat-n{font-size:1.3rem;font-weight:900;color:#ffffff;}
-.dstat-l{font-size:.68rem;color:#ffffff;text-transform:uppercase;letter-spacing:.05em;}
-.dstat-sep{width:1px;height:28px;background:rgba(255,255,255,.4);}
+@keyframes cardglow{0%{box-shadow:0 0 0 0 rgba(255,69,0,0)}50%{box-shadow:0 0 40px 0 rgba(255,69,0,.18)}100%{box-shadow:0 0 0 0 rgba(255,69,0,0)}}
+/* ── FEATURES 2-COL GRID ── */
+.feat-list{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;max-width:1160px;margin:0 auto;}
+/* ── INDIVIDUAL CARD ── */
+.fi{display:flex;gap:1.6rem;align-items:flex-start;padding:2rem 2.2rem;background:rgba(255,255,255,.026);border:1px solid rgba(255,69,0,.14);border-radius:20px;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;}
+.fi::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 15% 50%,rgba(255,69,0,.07) 0%,transparent 70%);opacity:0;transition:opacity .4s;}
+.fi:hover{border-color:rgba(255,69,0,.55);transform:translateY(-6px);box-shadow:0 20px 60px rgba(255,69,0,.18),0 0 0 1px rgba(255,69,0,.25);animation:cardglow 2s ease-in-out;}
+.fi:hover::before{opacity:1;}
+/* ── NUMBER + ICON BOX ── */
+.fi-num{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;min-width:72px;width:72px;height:80px;border-radius:16px;background:linear-gradient(160deg,rgba(255,69,0,.14) 0%,rgba(255,0,153,.09) 100%);border:1px solid rgba(255,69,0,.3);flex-shrink:0;position:relative;}
+.fi-num::after{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(255,69,0,.4),transparent,rgba(255,0,153,.2));opacity:0;transition:opacity .3s;}
+.fi:hover .fi-num::after{opacity:1;}
+.fi-n{font-size:.72rem;font-weight:900;color:var(--orange);letter-spacing:.1em;text-shadow:0 0 12px rgba(255,69,0,.7);}
+.fi-ico{font-size:1.9rem;line-height:1;}
+.fi-new{display:inline-flex;align-items:center;padding:.16rem .5rem;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:5px;font-size:.6rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-left:.5rem;vertical-align:middle;}
+.fi-pop{display:inline-flex;align-items:center;padding:.16rem .5rem;background:rgba(255,165,0,.14);border:1px solid rgba(255,165,0,.35);border-radius:5px;font-size:.6rem;font-weight:800;color:#ffa500;text-transform:uppercase;letter-spacing:.06em;margin-left:.5rem;vertical-align:middle;}
+/* ── TEXT SIDE ── */
+.fi-body{flex:1;min-width:0;}
+.fi-title{font-size:1.08rem;font-weight:900;color:#ffffff;margin-bottom:.55rem;line-height:1.3;text-shadow:0 0 20px rgba(255,255,255,.15);}
+.fi-desc{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.76;}
 /* ── Responsive ── */
-@media(max-width:1000px){
-  .feat-grid{grid-template-columns:1fr;gap:2rem;}
-  .feat-col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-  .feat-col-right .feat-pill{flex-direction:row;padding:.75rem 1.1rem .75rem .75rem;}
-  .feat-col-right .dp-text{text-align:left;}
-  .dp-arrow{display:none;}
-  .feat-center{max-width:520px;width:100%;margin:0 auto;}
+@media(max-width:860px){
+  .feat-list{grid-template-columns:1fr;gap:1.1rem;}
+  .fi{padding:1.5rem 1.6rem;gap:1.2rem;}
+  .fi-num{min-width:60px;width:60px;height:68px;}
+  .fi-ico{font-size:1.6rem;}
 }
-@media(max-width:560px){
-  .demo-col{grid-template-columns:1fr;}
-  .dp-title{white-space:normal;}
-  .dp-desc{white-space:normal;}
+@media(max-width:480px){
+  .fi{padding:1.2rem 1.1rem;gap:1rem;}
+  .fi-num{min-width:50px;width:50px;height:58px;border-radius:12px;}
+  .fi-n{font-size:.65rem;}
+  .fi-ico{font-size:1.4rem;}
+  .fi-title{font-size:.97rem;}
+  .fi-desc{font-size:.84rem;}
 }
 
 /* ═══ EARN WAYS — cards grid ═══ */
@@ -760,36 +730,36 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <div class="dline"></div>
 
 <!-- ════════════ WHAT IS IT ════════════ -->
-<section class="sec" style="background:var(--dark);">
+<section class="sec" style="background:linear-gradient(180deg,#0a0a0f 0%,#0d0820 50%,#0a0a0f 100%);">
   <div class="wr">
     <div class="eyebrow reveal">El Único Constructor de Bots IA Que Necesitas</div>
     <h2 class="sh2 reveal">Crea Bots IA para <span class="hl">Cualquier Negocio</span><br>Sin Habilidades ni Experiencia…</h2>
-    <p class="ssub reveal">Sin código. Sin desarrolladores. Sin mensualidades ocultas.</p>
+    <p class="ssub reveal" style="font-size:1.05rem;">Sin código. Sin desarrolladores. Sin mensualidades ocultas.</p>
 
-    <div class="what-cols">
+    <div class="what-cols" style="margin-top:3.5rem;">
       <div class="what-vid reveal">
         <video autoplay loop muted playsinline src="videos/vid1_bot.mp4"></video>
       </div>
       <ul class="blist reveal" style="transition-delay:.1s">
         <li>
           <div class="bico"><i class="fas fa-robot"></i></div>
-          <div><strong>Bot IA entrenado con tu negocio</strong><br>Responde preguntas, vende servicios y agenda citas solo — 24/7 en español e inglés, sin que tú estés presente.</div>
+          <div><strong>Bot IA entrenado con tu negocio</strong>Responde preguntas, vende servicios y agenda citas solo — 24/7 en español e inglés, sin que tú estés presente.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-globe"></i></div>
-          <div><strong>Landing Page Cinematic lista en minutos</strong><br>Página profesional con efectos Ken Burns, galería animada, carrito de compras y pagos PayPal directos al instante.</div>
+          <div><strong>Landing Page Cinematic lista en minutos</strong>Página profesional con efectos Ken Burns, galería animada, carrito de compras y pagos PayPal directos al instante.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-id-card"></i></div>
-          <div><strong>Tarjeta Digital con Código QR</strong><br>Comparte todos tus contactos y redes en un solo link. Con QR listo para imprimir y compartir desde el celular.</div>
+          <div><strong>Tarjeta Digital con Código QR</strong>Comparte todos tus contactos y redes en un solo link. Con QR listo para imprimir y compartir desde el celular.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-paint-brush"></i></div>
-          <div><strong>Editor Visual en Tiempo Real</strong><br>Cambia colores, fotos, precios y horarios al instante — sin tocar una línea de código. Como publicar en Instagram.</div>
+          <div><strong>Editor Visual en Tiempo Real</strong>Cambia colores, fotos, precios y horarios al instante — sin tocar una línea de código. Como publicar en Instagram.</div>
         </li>
         <li>
           <div class="bico"><i class="fas fa-building"></i></div>
-          <div><strong>Modelo de Agencia — gana $500–$2,000/mes</strong><br>Crea bots para otros negocios y cobra recurrente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo.</div>
+          <div><strong>Modelo de Agencia — gana $500–$2,000/mes</strong>Crea bots para otros negocios y cobra recurrente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo.</div>
         </li>
       </ul>
     </div>
@@ -813,175 +783,96 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <div class="dline"></div>
 
-<!-- ════════════ FEATURES — SAAS DEMO LAYOUT ════════════ -->
+<!-- ════════════ FEATURES — BIG NUMBERED CARDS ════════════ -->
 <section id="features" class="sec">
   <div class="wr">
     <div class="eyebrow reveal">Funciones de Siguiente Generación</div>
-    <h2 class="sh2 reveal">Mira El Poderoso<br><span class="hl">Demo del Software</span></h2>
-    <p style="text-align:center;color:var(--mu);font-size:.95rem;font-weight:600;margin-bottom:3.5rem;" class="reveal">Un ecosistema completo que trabaja junto — automatizado, conectado y listo para vender 24/7</p>
+    <h2 class="sh2 reveal">Lo Que Ves Es Solo la<br><span class="hl">Punta del Iceberg…</span></h2>
+    <p class="ssub reveal" style="margin-bottom:3.5rem;">Desbloquea funciones de última generación que dejan a la competencia en el polvo…</p>
 
-    <!-- ══ SAAS DEMO GRID ══ -->
-    <div class="feat-grid reveal">
+    <div class="feat-list">
 
-      <!-- LEFT COLUMN — 5 features -->
-      <div class="feat-col feat-col-left">
-
-        <div class="feat-pill reveal" style="transition-delay:.05s">
-          <div class="dp-icon" style="background:rgba(108,99,255,.15);border-color:rgba(108,99,255,.35);">🤖</div>
-          <div class="dp-text">
-            <div class="dp-title">Bot IA con GPT-4</div>
-            <div class="dp-desc">Responde, vende y agenda — 24/7</div>
-          </div>
-          <div class="dp-arrow dp-arrow-right">↗</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.10s">
-          <div class="dp-icon" style="background:rgba(255,215,0,.12);border-color:rgba(255,215,0,.35);">🌐</div>
-          <div class="dp-text">
-            <div class="dp-title">Landing Page Cinematic</div>
-            <div class="dp-desc">Página pro con efectos en minutos</div>
-          </div>
-          <div class="dp-arrow dp-arrow-right">↗</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.15s">
-          <div class="dp-icon" style="background:rgba(67,233,123,.12);border-color:rgba(67,233,123,.35);">💳</div>
-          <div class="dp-text">
-            <div class="dp-title">Carrito + PayPal Directo</div>
-            <div class="dp-desc">Cobros directos, sin intermediarios</div>
-          </div>
-          <div class="dp-arrow dp-arrow-right">↗</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.20s">
-          <div class="dp-icon" style="background:rgba(255,101,132,.12);border-color:rgba(255,101,132,.35);">📅</div>
-          <div class="dp-text">
-            <div class="dp-title">Agenda de Citas</div>
-            <div class="dp-desc">Reservas automáticas por WhatsApp</div>
-          </div>
-          <div class="dp-arrow dp-arrow-right">↗</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.25s">
-          <div class="dp-icon" style="background:rgba(0,200,212,.12);border-color:rgba(0,200,212,.35);">✏️</div>
-          <div class="dp-text">
-            <div class="dp-title">Editor Visual Real-Time</div>
-            <div class="dp-desc">Drag &amp; drop, sin código</div>
-          </div>
-          <div class="dp-arrow dp-arrow-right">↗</div>
-        </div>
-
-      </div>
-
-      <!-- CENTER — Video Demo -->
-      <div class="feat-center reveal" style="transition-delay:.12s">
-        <div class="feat-screen">
-          <!-- Glow ring -->
-          <div class="demo-glow"></div>
-          <!-- Browser bar -->
-          <div class="demo-browser-bar">
-            <div class="demo-dots"><span></span><span></span><span></span></div>
-            <div class="demo-url">superbot007.app</div>
-            <div class="demo-ssl">🔒</div>
-          </div>
-          <!-- Video / Demo content -->
-          <div class="demo-content">
-            <a href="https://apolo189.github.io/superbot007/agent.html?id=bella-organics-demo"
-               target="_blank" class="demo-play-wrap">
-              <!-- Mockup screens collage -->
-              <div class="demo-screens-collage">
-                <div class="dsc-item dsc-item-1">
-                  <img src="https://apolo189.github.io/superbot007/frame-pro.jpg"
-                       onerror="this.style.display='none'" alt="Bot Demo" loading="lazy">
-                  <div class="dsc-fallback">🤖<br><small>Bot IA</small></div>
-                </div>
-                <div class="dsc-item dsc-item-2">
-                  <img src="https://apolo189.github.io/superbot007/frame-free.jpg"
-                       onerror="this.style.display='none'" alt="Landing Demo" loading="lazy">
-                  <div class="dsc-fallback">🌐<br><small>Landing</small></div>
-                </div>
-                <div class="dsc-item dsc-item-3">
-                  <img src="https://apolo189.github.io/superbot007/frame-agency.jpg"
-                       onerror="this.style.display='none'" alt="Agency Demo" loading="lazy">
-                  <div class="dsc-fallback">🏢<br><small>Agencia</small></div>
-                </div>
-              </div>
-              <!-- Play button overlay -->
-              <div class="demo-play-btn">
-                <div class="demo-play-icon">▶</div>
-                <div class="demo-play-label">Ver Demo</div>
-              </div>
-            </a>
-          </div>
-          <!-- Bottom bar -->
-          <div class="demo-bottom-bar">
-            <span class="demo-live-dot"></span>
-            <span style="font-size:.72rem;font-weight:700;color:#43e97b;">LIVE DEMO</span>
-            <span style="font-size:.7rem;color:#ffffff;margin-left:.5rem;">SuperBot007 en acción</span>
-          </div>
-        </div>
-        <!-- Stats below screen -->
-        <div class="demo-stats">
-          <div class="dstat"><span class="dstat-n">5 min</span><span class="dstat-l">Setup</span></div>
-          <div class="dstat-sep"></div>
-          <div class="dstat"><span class="dstat-n">24/7</span><span class="dstat-l">Activo</span></div>
-          <div class="dstat-sep"></div>
-          <div class="dstat"><span class="dstat-n">$0</span><span class="dstat-l">Código</span></div>
+      <div class="fi reveal">
+        <div class="fi-num"><span class="fi-n">01</span><span class="fi-ico">🤖</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Bot IA con GPT-4 <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Convierte tus ideas en un bot IA entrenado con tu negocio en minutos usando solo un formulario. El bot responde preguntas, vende servicios y agenda citas — solo, las 24 horas, en español e inglés. Sin código. Sin diseño. Solo tu negocio hecho realidad en segundos.</div>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN — 5 features -->
-      <div class="feat-col feat-col-right">
-
-        <div class="feat-pill reveal" style="transition-delay:.05s">
-          <div class="dp-arrow dp-arrow-left">↖</div>
-          <div class="dp-text" style="text-align:right;">
-            <div class="dp-title">Tarjeta Digital + QR</div>
-            <div class="dp-desc">Todos tus links en un solo lugar</div>
-          </div>
-          <div class="dp-icon" style="background:rgba(255,69,0,.12);border-color:rgba(255,69,0,.35);">📱</div>
+      <div class="fi reveal" style="transition-delay:.05s">
+        <div class="fi-num"><span class="fi-n">02</span><span class="fi-ico">🌐</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Landing Page Cinematic <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Recrea o diseña tu página profesional al instante dando solo los datos de tu negocio. La IA genera una landing completa con efectos Ken Burns, flip cards animadas y carrito de compras — en minutos, sin empezar desde cero ni escribir una línea de código.</div>
         </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.10s">
-          <div class="dp-arrow dp-arrow-left">↖</div>
-          <div class="dp-text" style="text-align:right;">
-            <div class="dp-title">Motor Bilingüe ES/EN</div>
-            <div class="dp-desc">Ideal para Miami, LA, NY</div>
-          </div>
-          <div class="dp-icon" style="background:rgba(0,176,155,.12);border-color:rgba(0,176,155,.35);">🌍</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.15s">
-          <div class="dp-arrow dp-arrow-left">↖</div>
-          <div class="dp-text" style="text-align:right;">
-            <div class="dp-title">Modelo de Agencia</div>
-            <div class="dp-desc">Revende y gana $500–$2,000/mes</div>
-          </div>
-          <div class="dp-icon" style="background:rgba(255,165,0,.12);border-color:rgba(255,165,0,.35);">🏢</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.20s">
-          <div class="dp-arrow dp-arrow-left">↖</div>
-          <div class="dp-text" style="text-align:right;">
-            <div class="dp-title">Firebase 99.9% Uptime</div>
-            <div class="dp-desc">Google Cloud + SSL gratis</div>
-          </div>
-          <div class="dp-icon" style="background:rgba(255,214,0,.12);border-color:rgba(255,214,0,.35);">🔒</div>
-        </div>
-
-        <div class="feat-pill reveal" style="transition-delay:.25s">
-          <div class="dp-arrow dp-arrow-left">↖</div>
-          <div class="dp-text" style="text-align:right;">
-            <div class="dp-title">Asistente IA de Voz</div>
-            <div class="dp-desc">Guía al cliente paso a paso</div>
-          </div>
-          <div class="dp-icon" style="background:rgba(249,83,198,.12);border-color:rgba(249,83,198,.35);">🎙️</div>
-        </div>
-
       </div>
 
-    </div><!-- /demo-grid -->
+      <div class="fi reveal" style="transition-delay:.08s">
+        <div class="fi-num"><span class="fi-n">03</span><span class="fi-ico">💳</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Carrito de Compras + PayPal Directo <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Los clientes pagan directo a tu cuenta PayPal desde tu landing page. Sin intermediarios. Sin comisiones ocultas. 100% del dinero va directamente a ti en tiempo real. También acepta Stripe y Zelle integrados — elige el método que prefieras.</div>
+        </div>
+      </div>
 
+      <div class="fi reveal" style="transition-delay:.11s">
+        <div class="fi-num"><span class="fi-n">04</span><span class="fi-ico">📅</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Sistema de Agenda de Citas</div>
+          <div class="fi-desc">Calendario interactivo donde los clientes reservan citas directamente desde tu landing page. Notificaciones automáticas por WhatsApp al dueño del negocio con cada nueva reserva. Sin apps externas, sin integraciones complicadas — funciona solo.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.14s">
+        <div class="fi-num"><span class="fi-n">05</span><span class="fi-ico">✏️</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Editor Visual en Tiempo Real</div>
+          <div class="fi-desc">Cambia colores, fotos, servicios, precios y horarios al instante desde el editor drag-and-drop. Ves los cambios en tiempo real sin tocar una línea de código. Personaliza con interfaz de arrastrar y soltar — mueve elementos, ajusta layouts y diseña páginas exactamente como quieres.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.17s">
+        <div class="fi-num"><span class="fi-n">06</span><span class="fi-ico">📱</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Tarjeta Digital con Código QR</div>
+          <div class="fi-desc">Tarjeta de presentación digital con QR, WhatsApp, Instagram, Facebook y todos tus contactos en un solo link. Compártela desde el celular en un clic. Mejora tu sitio con el asistente IA — pídele que cambie colores, actualice fuentes o rediseñe el layout y míralo suceder al instante.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.20s">
+        <div class="fi-num"><span class="fi-n">07</span><span class="fi-ico">🌍</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Motor Bilingüe ES/EN</div>
+          <div class="fi-desc">El bot detecta automáticamente el idioma del cliente y responde en español o inglés. Ideal para negocios en ciudades con audiencias mixtas como Miami, Los Ángeles o Nueva York. Conecta con audiencias diversas en más de 40 idiomas con capacidades multilingües integradas.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.23s">
+        <div class="fi-num"><span class="fi-n">08</span><span class="fi-ico">🏢</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Modelo de Agencia — Ingresos Recurrentes <span class="fi-pop">Popular</span></div>
+          <div class="fi-desc">Rebrandea SuperBot007 con tu propio logo y branding, dándote la capacidad de venderlo como tuyo. Crea bots para restaurantes, salones, clínicas, tiendas y cobra $50–$200/mes por cliente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo sin hacer trabajo técnico.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.26s">
+        <div class="fi-num"><span class="fi-n">09</span><span class="fi-ico">🔒</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Firebase + Google Cloud — 99.9% Uptime</div>
+          <div class="fi-desc">Toda la plataforma corre sobre Google Firebase. Elige hospedar tus sitios en nuestra infraestructura confiable y apúntalos a tu dominio personalizado — o descarga los archivos HTML y hospédalos en tu propio servidor si prefieres control total. SSL gratuito incluido.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.29s">
+        <div class="fi-num"><span class="fi-n">10</span><span class="fi-ico">🎙️</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Asistente IA de Voz <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Guía a tus clientes paso a paso por el proceso de configuración usando voz natural. El asistente habla, responde y actúa — creando una experiencia interactiva única que ningún competidor ofrece. Convierte visitantes en clientes desde el primer segundo.</div>
+        </div>
+      </div>
+
+    </div><!-- /feat-list -->
   </div>
 </section>
 
