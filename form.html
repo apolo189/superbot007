@@ -656,7 +656,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <!-- STEP 6 -->
 <div class="step-card" id="step6">
   <div class="step-title">📞 Contacto & Horarios</div>
-  <div class="step-subtitle">Información de contacto y horario de atención</div>
+  <div class="step-subtitle">Información de contacto, horario de atención y calendario de citas</div>
   <div class="form-row">
     <div class="form-group"><label>Teléfono <span class="required">*</span></label><input type="tel" id="phone" placeholder="+1 (555) 000-0000"></div>
     <div class="form-group"><label>WhatsApp (solo números)</label><input type="tel" id="whatsapp" placeholder="15550000000"><p class="tooltip"><i class="fas fa-info-circle"></i> Código país + número, sin + ni espacios</p></div>
@@ -679,6 +679,92 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   <hr class="section-div">
   <label style="margin-bottom:0.8rem;display:block;">Horario de Atención</label>
   <div class="hours-table" id="hoursTable"></div>
+
+  <!-- ══ GOOGLE CALENDAR ══ -->
+  <hr class="section-div">
+  <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;">
+    <div style="width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+      <svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2" fill="#fff" stroke="#dadce0" stroke-width="1.5"/><rect x="3" y="9" width="18" height="1.5" fill="#dadce0"/><rect x="8" y="2" width="1.5" height="4" rx=".75" fill="#1a73e8"/><rect x="14.5" y="2" width="1.5" height="4" rx=".75" fill="#1a73e8"/><text x="12" y="19" text-anchor="middle" font-size="7" font-weight="700" fill="#1a73e8" font-family="Arial">CAL</text></svg>
+    </div>
+    <div>
+      <div style="font-weight:800;font-size:.95rem;color:#fff;">Google Calendar</div>
+      <div style="font-size:.78rem;color:var(--muted);">Tus clientes agendan citas reales — aparecen directo en tu calendario</div>
+    </div>
+    <div style="margin-left:auto;">
+      <label class="toggle-switch" style="width:48px;height:26px;">
+        <input type="checkbox" id="calendarEnabled" onchange="toggleCalendarSection()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Calendar fields — hidden until toggle ON -->
+  <div id="calendarSection" style="display:none;">
+    <div class="info-box" style="margin-bottom:1.2rem;">
+      <i class="fas fa-calendar-check"></i>
+      Cuando un cliente agenda una cita en tu bot — la cita aparece automáticamente en tu Google Calendar y el cliente recibe confirmación.
+    </div>
+
+    <div class="form-group">
+      <label>Google Calendar ID <span class="required">*</span></label>
+      <input type="text" id="googleCalendarId" placeholder="tunegocio@gmail.com">
+      <p class="tooltip"><i class="fas fa-info-circle"></i> Generalmente es tu email de Gmail</p>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Duración de cita (minutos)</label>
+        <select id="appointmentDuration">
+          <option value="30">30 minutos</option>
+          <option value="45">45 minutos</option>
+          <option value="60" selected>1 hora</option>
+          <option value="90">1.5 horas</option>
+          <option value="120">2 horas</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anticipación mínima</label>
+        <select id="appointmentNotice">
+          <option value="1">1 hora antes</option>
+          <option value="2">2 horas antes</option>
+          <option value="24" selected>1 día antes</option>
+          <option value="48">2 días antes</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Mensaje de confirmación de cita</label>
+      <input type="text" id="appointmentConfirmMsg" placeholder="¡Tu cita está confirmada! Te esperamos." maxlength="120">
+    </div>
+
+    <!-- Tutorial Google Calendar -->
+    <div class="pay-tutorial" style="margin-bottom:1rem;">
+      <button class="pay-tut-btn" onclick="toggleTut('tutGCal')">
+        <i class="fas fa-question-circle"></i> ¿Cómo conecto mi Google Calendar?
+        <i class="fas fa-chevron-down" id="tutGCal-ico" style="font-size:.7rem;"></i>
+      </button>
+      <div class="pay-tut-body" id="tutGCal">
+        <strong style="color:#fff;">Pasos — toma 3 minutos:</strong><br><br>
+        <strong style="color:#4285f4;">Paso 1 — Obtén tu Calendar ID:</strong><br>
+        1. Ve a <a href="https://calendar.google.com" target="_blank">calendar.google.com</a><br>
+        2. En el menú izquierdo busca tu calendario → clic en los <strong>3 puntos ⋮</strong><br>
+        3. Selecciona <strong>"Configuración y uso compartido"</strong><br>
+        4. Baja hasta <strong>"Dirección del calendario"</strong> — copia el ID<br>
+        5. Generalmente es tu email: <strong>tunombre@gmail.com</strong><br><br>
+        <strong style="color:#4285f4;">Paso 2 — Haz tu calendario público para citas:</strong><br>
+        1. En la misma pantalla busca <strong>"Permisos de acceso"</strong><br>
+        2. Activa <strong>"Hacer público este calendario"</strong><br>
+        3. Selecciona <strong>"Ver todos los detalles de los eventos"</strong><br><br>
+        <div class="pay-tut-tip">
+          💡 <strong>Importante:</strong> Hacer el calendario público solo permite que el bot vea tu disponibilidad. Tus eventos privados NO son visibles para nadie más.
+        </div>
+        <br>
+        <strong style="color:#4285f4;">Paso 3 — Pega tu Calendar ID arriba ↑ y listo.</strong>
+      </div>
+    </div>
+  </div>
+
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(6)"><i class="fas fa-arrow-left"></i> Atrás</button>
     <button class="btn-next" onclick="nextStep(6)">IA & Activar <i class="fas fa-arrow-right"></i></button>
@@ -897,6 +983,11 @@ function goToStep(n){
   if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
   if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
 }
+function toggleCalendarSection(){
+  const enabled = document.getElementById('calendarEnabled').checked;
+  document.getElementById('calendarSection').style.display = enabled ? 'block' : 'none';
+}
+
 // ── Payment method toggles ──
 function togglePayMethod(name){
   const body = document.getElementById('body'+name);
@@ -1220,6 +1311,9 @@ function collect(){
     instagram:g('instagram'),facebook:g('facebook'),tiktok:g('tiktok'),youtube:g('youtube'),
     paypalEmail:g('paypalEmail'),paypalLink:g('paypalLink'),
     stripeLink:g('stripeLink'),zelleInfo:g('zelleInfo'),venmoUser:g('venmoUser'),cashAppTag:g('cashAppTag'),
+    calendarEnabled:document.getElementById('calendarEnabled')?.checked||false,
+    googleCalendarId:g('googleCalendarId'),appointmentDuration:g('appointmentDuration')||'60',
+    appointmentNotice:g('appointmentNotice')||'24',appointmentConfirmMsg:g('appointmentConfirmMsg'),
     openaiKey:g('openaiKey')||atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE="),gptModel:g('gptModel')||'gpt-4o-mini',
     botLanguage:g('botLanguage')||'es',botInstruction:g('botInstruction'),
     services,products,galleryURLs,hours,testimonials,faqs
