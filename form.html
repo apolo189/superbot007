@@ -284,6 +284,24 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .webhook-steps .ws-num { background: var(--success); color:#000; border-radius:50%; width:16px; height:16px; min-width:16px; display:flex; align-items:center; justify-content:center; font-size:0.62rem; font-weight:700; }
 .sandbox-badge { display:inline-block; background:rgba(0,255,136,0.1); border:1px solid rgba(67,233,123,0.3); border-radius:6px; padding:0.25rem 0.6rem; font-family:monospace; font-size:0.72rem; color:var(--success); margin: 0.1rem 0; }
 .wb-wa-number { font-size:0.75rem; font-weight:600; color:var(--text); background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.4rem 0.8rem; margin:0.5rem 0; display:flex; align-items:center; gap:0.5rem; }
+/* ── Payment method blocks ── */
+.pay-method-block{background:rgba(255,255,255,0.02);border:1px solid rgba(255,69,0,0.18);border-radius:14px;margin-bottom:.75rem;overflow:hidden;transition:border-color .3s;}
+.pay-method-block:hover{border-color:rgba(255,69,0,0.35);}
+.pay-method-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;cursor:pointer;user-select:none;}
+.pay-method-header:hover{background:rgba(255,69,0,0.04);}
+.pay-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pay-badge{font-size:.68rem;font-weight:700;padding:.15rem .55rem;border-radius:20px;background:rgba(255,69,0,0.12);color:#ffaa88;border:1px solid rgba(255,69,0,0.25);}
+.pay-chevron{color:var(--muted);transition:transform .3s;font-size:.8rem;}
+.pay-chevron.open{transform:rotate(180deg);}
+.pay-method-body{padding:0 1.1rem 1.1rem;display:none;}
+.pay-method-body.open{display:block;}
+.pay-tutorial{margin-top:.4rem;}
+.pay-tut-btn{background:none;border:none;color:rgba(255,69,0,.8);font-size:.78rem;cursor:pointer;padding:0;display:flex;align-items:center;gap:.35rem;font-family:'Inter',sans-serif;}
+.pay-tut-btn:hover{color:var(--primary);}
+.pay-tut-body{display:none;margin-top:.6rem;background:rgba(255,69,0,0.05);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:.85rem 1rem;font-size:.8rem;color:#c8c8e0;line-height:1.9;}
+.pay-tut-body a{color:var(--primary);text-decoration:none;}
+.pay-tut-body a:hover{text-decoration:underline;}
+.pay-tut-body.open{display:block;}
 /* Webhook summary sub-row */
 .bot-summary-sub { font-size:0.68rem; color:var(--success); font-family:monospace; margin-top:0.2rem; word-break:break-all; display:none; }
 .bot-summary-sub.visible { display:block; }
@@ -434,17 +452,186 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 
 <!-- STEP 4 -->
 <div class="step-card" id="step4">
-  <div class="step-title">🛒 Productos & PayPal</div>
-  <div class="step-subtitle">Vende productos con carrito de compras y pago por PayPal</div>
-  <div class="info-box"><i class="fas fa-info-circle"></i> Los productos aparecen en tu landing con carrito y botón de PayPal. Puedes omitir si solo ofreces servicios.</div>
-  <div class="form-row">
-    <div class="form-group"><label>Email de PayPal</label><input type="email" id="paypalEmail" placeholder="tupaypal@email.com"></div>
-    <div class="form-group"><label>Link PayPal.me (opcional)</label><input type="url" id="paypalLink" placeholder="https://paypal.me/tunombre"></div>
+  <div class="step-title">🛒 Pagos & Productos</div>
+  <div class="step-subtitle">Conecta tus métodos de pago — tus clientes pagan directo a ti</div>
+  <div class="info-box"><i class="fas fa-info-circle"></i> Agrega solo los métodos que usas. Todos son opcionales — puedes volver a editar después.</div>
+
+  <!-- ══ PAYMENT METHODS ══ -->
+  <div style="margin-bottom:1.8rem;">
+    <div style="font-size:.78rem;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;">
+      <span style="width:3px;height:16px;background:var(--gradient);border-radius:2px;display:inline-block;"></span>
+      Métodos de Pago
+    </div>
+
+    <!-- PayPal -->
+    <div class="pay-method-block" id="pmPayPal">
+      <div class="pay-method-header" onclick="togglePayMethod('PayPal')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#003087;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M7.144 19.532l1.049-5.751c.11-.606.691-1.038 1.304-.946 2.102.309 5.291.108 6.957-2.388 1.968-2.942.901-6.18-2.507-6.868C12.697 3.259 11.362 3 10.03 3H5.872c-.77 0-1.428.56-1.55 1.322L2 17.604c-.09.558.338 1.058.899 1.058h3.45c.486 0 .905-.354.795-.13z"/><path d="M20.216 8.412c.482 3.544-2.346 6.084-5.8 6.084H13.05l-.82 4.5H9.1l1.051-5.77h2.006c3.273 0 6.066-2.205 6.066-5.476 1.016.119 1.773.773 1.993 1.662z" opacity=".6"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">PayPal</span>
+          <span class="pay-badge">Más popular</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevPayPal"></i>
+      </div>
+      <div class="pay-method-body" id="bodyPayPal">
+        <div class="form-row" style="margin-bottom:.8rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Email de PayPal</label>
+            <input type="email" id="paypalEmail" placeholder="tupaypal@email.com">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>PayPal.me Link <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+            <input type="url" id="paypalLink" placeholder="https://paypal.me/tunombre">
+          </div>
+        </div>
+        <!-- Tutorial PayPal -->
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutPP')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi email y link de PayPal? <i class="fas fa-chevron-down" id="tutPP-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutPP">
+            1. Ve a <a href="https://paypal.com" target="_blank">paypal.com</a> → Inicia sesión<br>
+            2. Tu <strong>email de PayPal</strong> es el que usaste para registrarte<br>
+            3. Para el link: ve a <a href="https://paypal.me" target="_blank">paypal.me</a> → crea tu link personalizado<br>
+            4. Ejemplo: <strong>paypal.me/tunombre</strong> — tus clientes te pagan con un clic<br>
+            <div class="pay-tut-tip">💡 Con una cuenta PayPal Business recibes pagos con tarjeta sin que el cliente necesite cuenta PayPal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stripe -->
+    <div class="pay-method-block" id="pmStripe">
+      <div class="pay-method-header" onclick="togglePayMethod('Stripe')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#635bff;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Stripe</span>
+          <span class="pay-badge" style="background:rgba(99,91,255,.15);color:#a89fff;border-color:rgba(99,91,255,.3);">Tarjetas USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevStripe"></i>
+      </div>
+      <div class="pay-method-body" id="bodyStripe">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>Stripe Payment Link</label>
+          <input type="url" id="stripeLink" placeholder="https://buy.stripe.com/...">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutST')"><i class="fas fa-question-circle"></i> ¿Cómo creo mi Stripe Payment Link? <i class="fas fa-chevron-down" id="tutST-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutST">
+            1. Ve a <a href="https://dashboard.stripe.com" target="_blank">dashboard.stripe.com</a> → crea cuenta gratis<br>
+            2. En el menú izquierdo: <strong>Payment Links → + New</strong><br>
+            3. Agrega tu producto con precio<br>
+            4. Copia el link generado — empieza con <strong>buy.stripe.com/...</strong><br>
+            5. Pégalo arriba ↑<br>
+            <div class="pay-tut-tip">💡 Stripe acepta Visa, Mastercard, Amex. Costo: 2.9% + $0.30 por transacción. Sin costo mensual.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zelle -->
+    <div class="pay-method-block" id="pmZelle">
+      <div class="pay-method-header" onclick="togglePayMethod('Zelle')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#6d1ed4;">
+            <span style="font-size:.85rem;font-weight:900;color:#fff;">Z</span>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Zelle</span>
+          <span class="pay-badge" style="background:rgba(109,30,212,.15);color:#b388ff;border-color:rgba(109,30,212,.3);">Rey latino USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevZelle"></i>
+      </div>
+      <div class="pay-method-body" id="bodyZelle">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>Email o Teléfono de Zelle</label>
+          <input type="text" id="zelleInfo" placeholder="email@gmail.com o +1 (305) 000-0000">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutZL')"><i class="fas fa-question-circle"></i> ¿Cómo activo Zelle? <i class="fas fa-chevron-down" id="tutZL-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutZL">
+            1. Abre la app de tu banco (Bank of America, Chase, Wells Fargo, etc.)<br>
+            2. Busca <strong>"Zelle"</strong> dentro de la app<br>
+            3. Regístrate con tu email o número de teléfono<br>
+            4. Pon ese email o teléfono arriba ↑<br>
+            <div class="pay-tut-tip">💡 Zelle es gratis, instantáneo y es el método #1 entre latinos en USA. No cobra comisión.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venmo -->
+    <div class="pay-method-block" id="pmVenmo">
+      <div class="pay-method-header" onclick="togglePayMethod('Venmo')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#008cff;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.4 2c.7 2.1.9 4.1.9 6.2 0 5.3-3.2 11.1-5.9 14.5h-6.8L4 3.1l6.7-.6 1.7 11.8c1.5-2.8 3.4-7.2 3.4-10.2 0-1.8-.3-3-.7-4.1H19.4z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Venmo</span>
+          <span class="pay-badge" style="background:rgba(0,140,255,.12);color:#7ec8ff;border-color:rgba(0,140,255,.25);">Jóvenes USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevVenmo"></i>
+      </div>
+      <div class="pay-method-body" id="bodyVenmo">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>@Username de Venmo</label>
+          <input type="text" id="venmoUser" placeholder="@tunombre">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutVM')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi @Venmo? <i class="fas fa-chevron-down" id="tutVM-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutVM">
+            1. Descarga la app <strong>Venmo</strong> o ve a <a href="https://venmo.com" target="_blank">venmo.com</a><br>
+            2. Crea tu cuenta con email o número de teléfono<br>
+            3. Tu usuario empieza con <strong>@</strong> — encuéntralo en tu perfil<br>
+            4. Ponlo arriba ↑<br>
+            <div class="pay-tut-tip">💡 Venmo es muy popular entre millennials y Gen Z en USA. Gratis para transferencias entre personas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cash App -->
+    <div class="pay-method-block" id="pmCashApp">
+      <div class="pay-method-header" onclick="togglePayMethod('CashApp')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#00d632;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm1.5 17.5h-3v-1.5c-1.5-.3-2.5-1.2-2.5-2.5h1.5c0 .8.9 1.5 2 1.5s2-.7 2-1.5c0-.9-.8-1.5-2-1.5-2 0-3.5-1.3-3.5-3 0-1.3 1-2.2 2.5-2.5V5h3v1.5c1.5.3 2.5 1.2 2.5 2.5h-1.5c0-.8-.9-1.5-2-1.5s-2 .7-2 1.5c0 .9.8 1.5 2 1.5 2 0 3.5 1.3 3.5 3 0 1.3-1 2.2-2.5 2.5v1.5z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Cash App</span>
+          <span class="pay-badge" style="background:rgba(0,214,50,.1);color:#6fffaa;border-color:rgba(0,214,50,.25);">$Cashtag</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevCashApp"></i>
+      </div>
+      <div class="pay-method-body" id="bodyCashApp">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>$Cashtag de Cash App</label>
+          <input type="text" id="cashAppTag" placeholder="$tunombre">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutCA')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi $Cashtag? <i class="fas fa-chevron-down" id="tutCA-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutCA">
+            1. Descarga la app <strong>Cash App</strong><br>
+            2. Crea cuenta con tu número de teléfono o email<br>
+            3. Elige tu <strong>$Cashtag</strong> — es tu identificador único<br>
+            4. Ejemplo: <strong>$tunegocio</strong><br>
+            <div class="pay-tut-tip">💡 Cash App es muy usado en comunidades afrolatinas y del sur de USA. Cero comisión para recibir pagos personales.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- ══ PRODUCTS LIST ══ -->
   <hr class="section-div">
+  <div style="font-size:.78rem;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;">
+    <span style="width:3px;height:16px;background:var(--gradient);border-radius:2px;display:inline-block;"></span>
+    Productos <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span>
+  </div>
   <div class="dynamic-list" id="productsList"></div>
   <button class="btn-add" id="addProdBtn" onclick="addProduct()"><i class="fas fa-plus"></i> Añadir Producto</button>
   <p class="tooltip" style="margin-top:0.5rem;"><i class="fas fa-lightbulb"></i> Máximo 8 productos.</p>
+
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(4)"><i class="fas fa-arrow-left"></i> Atrás</button>
     <button class="btn-next" onclick="nextStep(4)">Galería <i class="fas fa-arrow-right"></i></button>
@@ -710,6 +897,22 @@ function goToStep(n){
   if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
   if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
 }
+// ── Payment method toggles ──
+function togglePayMethod(name){
+  const body = document.getElementById('body'+name);
+  const chev = document.getElementById('chev'+name);
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+}
+function toggleTut(id){
+  const el = document.getElementById(id);
+  const ico = document.getElementById(id+'-ico');
+  const open = el.classList.contains('open');
+  el.classList.toggle('open', !open);
+  if(ico) ico.style.transform = open ? '' : 'rotate(180deg)';
+}
+
 function nextStep(from){
   if(!validate(from)) return;
   const next=from+1;
@@ -1016,6 +1219,7 @@ function collect(){
     phone:g('phone'),whatsapp:g('whatsapp'),email:g('email'),website:g('website'),address:g('address'),
     instagram:g('instagram'),facebook:g('facebook'),tiktok:g('tiktok'),youtube:g('youtube'),
     paypalEmail:g('paypalEmail'),paypalLink:g('paypalLink'),
+    stripeLink:g('stripeLink'),zelleInfo:g('zelleInfo'),venmoUser:g('venmoUser'),cashAppTag:g('cashAppTag'),
     openaiKey:g('openaiKey')||atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE="),gptModel:g('gptModel')||'gpt-4o-mini',
     botLanguage:g('botLanguage')||'es',botInstruction:g('botInstruction'),
     services,products,galleryURLs,hours,testimonials,faqs
