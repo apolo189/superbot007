@@ -305,6 +305,135 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 /* Webhook summary sub-row */
 .bot-summary-sub { font-size:0.68rem; color:var(--success); font-family:monospace; margin-top:0.2rem; word-break:break-all; display:none; }
 .bot-summary-sub.visible { display:block; }
+
+/* ══════════════════════════════════════
+   UPGRADE POPUP — Try before you buy
+══════════════════════════════════════ */
+#upgradeOverlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(0,0,0,.82);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+}
+#upgradeOverlay.show { opacity: 1; pointer-events: all; }
+
+#upgradeModal {
+  background: linear-gradient(160deg, #13131e, #0d0d18);
+  border: 2px solid rgba(255,69,0,.6);
+  border-radius: 28px;
+  max-width: 480px; width: 100%;
+  padding: 2.2rem 2rem 2rem;
+  position: relative;
+  box-shadow: 0 30px 100px rgba(255,69,0,.35), 0 0 0 1px rgba(255,255,255,.06);
+  animation: upgPop .4s cubic-bezier(.34,1.56,.64,1) both;
+  max-height: 90vh; overflow-y: auto;
+}
+@keyframes upgPop {
+  from { transform: scale(.82) translateY(30px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);       opacity: 1; }
+}
+
+#upgradeModal .upg-close {
+  position: absolute; top: 1rem; right: 1.1rem;
+  background: rgba(255,255,255,.08); border: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  color: #fff; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+#upgradeModal .upg-close:hover { background: rgba(255,255,255,.18); }
+
+.upg-lock { font-size: 2.8rem; margin-bottom: .5rem; display: block; animation: upg-shake 1s .4s ease both; }
+@keyframes upg-shake {
+  0%,100%{ transform:rotate(0); }
+  20%{ transform:rotate(-12deg); }
+  40%{ transform:rotate(12deg); }
+  60%{ transform:rotate(-8deg); }
+  80%{ transform:rotate(8deg); }
+}
+
+.upg-title {
+  font-size: 1.55rem; font-weight: 900; line-height: 1.2;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: .35rem;
+}
+.upg-sub {
+  font-size: .88rem; color: rgba(255,255,255,.8);
+  margin-bottom: 1.2rem; line-height: 1.55;
+}
+
+/* What they built — checkmarks */
+.upg-built {
+  background: rgba(0,255,136,.07);
+  border: 1px solid rgba(0,255,136,.25);
+  border-radius: 14px; padding: .9rem 1.1rem;
+  margin-bottom: 1.2rem;
+}
+.upg-built-title {
+  font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: #00ff88; margin-bottom: .6rem;
+}
+.upg-built-item {
+  display: flex; align-items: center; gap: .55rem;
+  font-size: .83rem; color: #fff; font-weight: 600;
+  padding: .22rem 0;
+}
+.upg-built-item i { color: #00ff88; font-size: .85rem; width: 16px; }
+
+/* Price reveal */
+.upg-price-block {
+  text-align: center; padding: 1rem;
+  background: rgba(255,69,0,.08);
+  border: 1px dashed rgba(255,69,0,.4);
+  border-radius: 14px; margin-bottom: 1.2rem;
+}
+.upg-price-label { font-size: .72rem; color: rgba(255,255,255,.6); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .25rem; }
+.upg-price-old { font-size: .9rem; color: rgba(255,255,255,.4); text-decoration: line-through; margin-bottom: .1rem; }
+.upg-price-now { font-size: 2.6rem; font-weight: 900; background: linear-gradient(135deg,#ff4500,#ff0099); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.upg-price-note { font-size: .75rem; color: rgba(255,255,255,.55); margin-top: .3rem; }
+
+/* Urgency pill */
+.upg-urgency {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(255,200,0,.1); border: 1px solid rgba(255,200,0,.4);
+  border-radius: 50px; padding: .35rem 1rem;
+  font-size: .78rem; font-weight: 800; color: #ffd700;
+  margin-bottom: 1.1rem; animation: upg-blink 2s ease-in-out infinite;
+}
+@keyframes upg-blink { 0%,100%{ opacity:1 } 50%{ opacity:.65 } }
+
+/* CTA buttons */
+.upg-btn-main {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  border: none; border-radius: 14px;
+  color: #fff; font-size: 1.05rem; font-weight: 900;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 8px 30px rgba(255,69,0,.5);
+  transition: transform .2s, box-shadow .2s;
+  margin-bottom: .7rem;
+}
+.upg-btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,69,0,.65); }
+
+.upg-btn-skip {
+  display: block; text-align: center;
+  font-size: .8rem; color: rgba(255,255,255,.45);
+  cursor: pointer; padding: .4rem;
+  transition: color .2s; background: none; border: none; width: 100%;
+}
+.upg-btn-skip:hover { color: rgba(255,255,255,.75); }
+
+/* Guarantee line */
+.upg-guarantee {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  font-size: .75rem; color: rgba(0,255,136,.8); font-weight: 700;
+  margin-top: .8rem;
+}
 </style>
 </head>
 <body>
@@ -936,6 +1065,57 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     </button>
   </div>
 </div>
+<!-- ══════════════════════════════════════
+     UPGRADE POPUP — intercepts share/copy
+══════════════════════════════════════ -->
+<div id="upgradeOverlay">
+  <div id="upgradeModal">
+    <button class="upg-close" onclick="closeUpgrade()">✕</button>
+
+    <div style="text-align:center;">
+      <span class="upg-lock">🔒</span>
+      <div class="upg-title">¡Tu Bot Está Listo!<br>Actívalo para Compartirlo</div>
+      <p class="upg-sub">Configuraste todo perfectamente. Ahora activa tu plan para publicar tu bot, landing page y tarjeta digital.</p>
+    </div>
+
+    <!-- What they built -->
+    <div class="upg-built">
+      <div class="upg-built-title">✅ Lo que acabas de crear:</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Bot IA GPT-4 entrenado en tu negocio</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Landing Page profesional lista</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Tarjeta Digital con código QR</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Google Calendar + pagos configurados</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Bot bilingüe ES / EN activo</div>
+    </div>
+
+    <!-- Urgency -->
+    <div style="text-align:center;">
+      <span class="upg-urgency">⚡ Precio de introducción — sube pronto</span>
+    </div>
+
+    <!-- Price reveal -->
+    <div class="upg-price-block">
+      <div class="upg-price-label">Activa todo por solo</div>
+      <div class="upg-price-old">Valor real: $418/mes</div>
+      <div class="upg-price-now">$19.99<span style="font-size:1rem;opacity:.7">/mes</span></div>
+      <div class="upg-price-note">Sin contrato · Cancela cuando quieras · Garantía 30 días</div>
+    </div>
+
+    <!-- CTA -->
+    <a href="https://wa.me/19143644377?text=Quiero%20activar%20mi%20SuperBot007%20-%20Plan%20Starter%20%2419.99%2Fmes" target="_blank" class="upg-btn-main" onclick="closeUpgrade()">
+      <i class="fas fa-rocket"></i> Activar Mi Bot — $19.99/mes
+    </a>
+
+    <button class="upg-btn-skip" onclick="skipUpgrade()">
+      Seguir explorando sin compartir →
+    </button>
+
+    <div class="upg-guarantee">
+      <i class="fas fa-shield-alt"></i> Garantía de devolución 30 días — sin preguntas
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script type="module">
@@ -1473,8 +1653,10 @@ _Powered by Super Bot 007 ⚡_`);
     document.getElementById('waOwnerBtn').href = ownerHref;
 
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
-    toast('🎉 ¡Bot activado! Copia el enlace y compártelo.','success');
+    toast('🎉 ¡Bot activado! Actívalo para compartirlo 🚀','success');
     window.scrollTo({top:0,behavior:'smooth'});
+    // ── Intercept share/copy to show upgrade popup ──
+    setTimeout(()=>{ interceptShareBtns(); interceptLinkCardBtns(); }, 500);
   }catch(e){
     hideOv();
     document.getElementById('activateBtn').disabled=false;
@@ -1487,16 +1669,83 @@ function setText(id, val){ const el=document.getElementById(id); if(el) el.textC
 function copyToClipboard(text, msg){ navigator.clipboard.writeText(text).then(()=>toast(msg||'Copiado ✅','success')).catch(()=>{}); }
 function copyWebhook(el){ copyToClipboard(el.textContent.trim(),'Webhook copiado ✅'); }
 function copyAgentLink(){
-  const url = window._agentUrl;
-  if(!url) return;
-  navigator.clipboard.writeText(url).then(()=>{
-    const btn = document.getElementById('copyAgentBtn');
-    btn.classList.add('copied');
-    btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!';
-    toast('Enlace del chatbot copiado ✅','success');
-    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500);
+  // Show upgrade popup instead of copying directly
+  showUpgrade('copy');
+}
+
+// ───────── UPGRADE POPUP ─────────
+let _pendingShareAction = null;
+
+function showUpgrade(action){
+  _pendingShareAction = action;
+  document.getElementById('upgradeOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeUpgrade(){
+  document.getElementById('upgradeOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  _pendingShareAction = null;
+}
+
+function skipUpgrade(){
+  // Let them continue exploring — execute original action
+  const action = _pendingShareAction;
+  closeUpgrade();
+  if(action === 'copy'){
+    const url = window._agentUrl;
+    if(!url) return;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = document.getElementById('copyAgentBtn');
+      if(btn){ btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!'; setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500); }
+      toast('Enlace copiado ✅','success');
+    });
+  } else if(action === 'wa-share'){
+    const btn = document.getElementById('waShareBtn');
+    if(btn) window.open(btn.dataset.href || btn.href,'_blank');
+  } else if(action === 'wa-owner'){
+    const btn = document.getElementById('waOwnerBtn');
+    if(btn) window.open(btn.dataset.href || btn.href,'_blank');
+  }
+}
+
+// Intercept WA share buttons
+function interceptShareBtns(){
+  const waShare = document.getElementById('waShareBtn');
+  const waOwner = document.getElementById('waOwnerBtn');
+  if(waShare){
+    waShare.dataset.href = waShare.href;
+    waShare.addEventListener('click', function(e){
+      e.preventDefault();
+      showUpgrade('wa-share');
+    });
+  }
+  if(waOwner){
+    waOwner.dataset.href = waOwner.href;
+    waOwner.addEventListener('click', function(e){
+      e.preventDefault();
+      showUpgrade('wa-owner');
+    });
+  }
+}
+
+// Also intercept link card open/copy buttons after bot activation
+function interceptLinkCardBtns(){
+  document.querySelectorAll('.lci-btn.open, .lci-btn.copy').forEach(btn => {
+    if(btn.dataset.intercepted) return;
+    btn.dataset.intercepted = '1';
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      showUpgrade('link-card');
+    });
   });
 }
+
+// Close overlay when clicking outside modal
+document.getElementById('upgradeOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeUpgrade();
+});
 
 // ───────── UI HELPERS ─────────
 function showOv(t){document.getElementById('overlayText').textContent=t||'...';document.getElementById('overlay').classList.add('show');}
