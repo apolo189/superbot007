@@ -42,10 +42,10 @@
   const AGENTS = {
     es: { name: 'Amanda', emoji: '🧙‍♀️', lang: 'es', voice: EL_VOICE_ES,
           welcome: '¡Hola! Soy Amanda, tu guía personal de Super Bot 007. Estoy aquí para ayudarte a crear tu bot perfecto paso a paso. ¿Empezamos? 🚀',
-          color: '#a855f7' },
+          color: '#ff4500' },
     en: { name: 'Shirley', emoji: '🧙‍♀️', lang: 'en', voice: EL_VOICE_EN,
           welcome: "Hi! I'm Shirley, your personal Super Bot 007 guide. I'm here to help you build your perfect bot step by step. Ready to start? 🚀",
-          color: '#6C63FF' }
+          color: '#ff0099' }
   };
 
   /* ── KNOWLEDGE BASE ── */
@@ -174,26 +174,65 @@
     style.id = 'wz-styles';
     style.textContent = `
       /* ═══ WIZARD OVERLAY ═══ */
+      /* ── CTA Banner ── */
+      #wz-cta-banner {
+        position: fixed;
+        bottom: 108px;
+        right: 18px;
+        z-index: 99989;
+        background: linear-gradient(135deg,#ff4500,#ff0099);
+        color: #fff;
+        padding: .55rem 1rem .55rem .9rem;
+        border-radius: 14px;
+        font-size: .78rem;
+        font-weight: 800;
+        font-family: 'Inter',sans-serif;
+        max-width: 220px;
+        text-align: center;
+        box-shadow: 0 6px 28px rgba(255,0,153,.5);
+        cursor: pointer;
+        animation: wz-cta-bounce .6s ease-in-out infinite alternate;
+        transition: opacity .4s, transform .4s;
+        line-height: 1.35;
+      }
+      #wz-cta-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        right: 36px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #ff0099;
+      }
+      #wz-cta-banner.hidden {
+        opacity: 0;
+        transform: translateY(12px) scale(.95);
+        pointer-events: none;
+      }
+      @keyframes wz-cta-bounce {
+        from { transform: translateY(0); }
+        to   { transform: translateY(-5px); }
+      }
       #wz-btn {
         position: fixed;
         bottom: 28px;
         right: 28px;
         z-index: 99990;
-        width: 76px;
-        height: 76px;
+        width: 86px;
+        height: 86px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #a855f7, #6d28d9);
-        border: 3px solid rgba(255,255,255,.18);
+        background: linear-gradient(135deg, #ff4500, #ff0099);
+        border: 3px solid rgba(255,255,255,.25);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        box-shadow: 0 8px 32px rgba(168,85,247,.75), 0 0 0 0 rgba(168,85,247,.4), inset 0 1px 0 rgba(255,255,255,.15);
+        font-size: 2.2rem;
+        box-shadow: 0 8px 32px rgba(255,69,0,.7), 0 0 0 0 rgba(255,0,153,.4), inset 0 1px 0 rgba(255,255,255,.2);
         animation: wz-pulse 2s ease-in-out infinite;
         transition: transform .2s, box-shadow .2s;
       }
-      #wz-btn:hover { transform: scale(1.12); box-shadow: 0 12px 42px rgba(168,85,247,.9), 0 0 0 0 rgba(168,85,247,.4); }
+      #wz-btn:hover { transform: scale(1.12); box-shadow: 0 12px 42px rgba(255,69,0,.9), 0 0 24px rgba(255,0,153,.6); }
       #wz-btn.open  { animation: none; background: linear-gradient(135deg,#ef4444,#dc2626); border-color: rgba(255,255,255,.2); }
       /* Label under button */
       #wz-btn::after {
@@ -205,7 +244,7 @@
         font-size: .65rem;
         font-weight: 800;
         letter-spacing: .06em;
-        color: rgba(168,85,247,.9);
+        color: rgba(255,69,0,.95);
         text-transform: uppercase;
         font-family: 'Inter', sans-serif;
       }
@@ -222,8 +261,8 @@
         font-size: .55rem; color: #fff; font-weight: 900;
       }
       @keyframes wz-pulse {
-        0%,100% { box-shadow: 0 8px 32px rgba(168,85,247,.65), 0 0 0 0 rgba(168,85,247,.5); }
-        50%      { box-shadow: 0 8px 48px rgba(168,85,247,.9),  0 0 0 16px rgba(168,85,247,0); }
+        0%,100% { box-shadow: 0 8px 32px rgba(255,69,0,.65), 0 0 0 0 rgba(255,0,153,.5); }
+        50%      { box-shadow: 0 8px 48px rgba(255,69,0,.9),  0 0 0 18px rgba(255,0,153,0); }
       }
       @keyframes wz-ndot {
         0%   { box-shadow: 0 0 0 0 rgba(0,200,83,.7); }
@@ -248,16 +287,16 @@
       /* ═══ PANEL ═══ */
       #wz-panel {
         position: fixed;
-        bottom: 118px;
+        bottom: 130px;
         right: 28px;
         z-index: 99989;
         width: 380px;
         max-width: calc(100vw - 32px);
         max-height: 580px;
         background: linear-gradient(180deg, #0d0d1f 0%, #0a0a14 100%);
-        border: 1px solid rgba(168,85,247,.4);
+        border: 1px solid rgba(255,0,153,.35);
         border-radius: 22px;
-        box-shadow: 0 24px 80px rgba(0,0,0,.8), 0 0 60px rgba(168,85,247,.15);
+        box-shadow: 0 24px 80px rgba(0,0,0,.8), 0 0 60px rgba(255,69,0,.18), 0 0 40px rgba(255,0,153,.1);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -278,14 +317,14 @@
         align-items: center;
         gap: .7rem;
         padding: .8rem 1rem;
-        background: rgba(168,85,247,.1);
-        border-bottom: 1px solid rgba(168,85,247,.15);
+        background: rgba(255,69,0,.08);
+        border-bottom: 1px solid rgba(255,0,153,.2);
         flex-shrink: 0;
       }
       .wz-avatar {
         width: 42px; height: 42px;
         border-radius: 50%;
-        background: linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);
+        background: linear-gradient(135deg,#ff4500,#ff0099);
         display: flex; align-items: center; justify-content: center;
         font-size: 1.3rem; flex-shrink: 0;
         position: relative;
@@ -302,10 +341,10 @@
       .wz-hstatus { font-size: .65rem; color: rgba(0,200,83,.85); font-weight: 600; display: flex; align-items: center; gap: .3rem; }
       .wz-hstatus::before { content: ''; width: 6px; height: 6px; background: #00c853; border-radius: 50%; display: inline-block; }
       #wz-lang-toggle {
-        background: rgba(168,85,247,.15);
-        border: 1px solid rgba(168,85,247,.3);
+        background: rgba(255,69,0,.15);
+        border: 1px solid rgba(255,0,153,.3);
         border-radius: 8px;
-        color: #a855f7;
+        color: #ff6b6b;
         font-size: .72rem;
         font-weight: 700;
         padding: .3rem .6rem;
@@ -313,7 +352,7 @@
         flex-shrink: 0;
         transition: all .2s;
       }
-      #wz-lang-toggle:hover { background: rgba(168,85,247,.28); }
+      #wz-lang-toggle:hover { background: rgba(255,69,0,.25); }
 
       /* MESSAGES */
       #wz-msgs {
@@ -326,7 +365,7 @@
         min-height: 0;
       }
       #wz-msgs::-webkit-scrollbar { width: 4px; }
-      #wz-msgs::-webkit-scrollbar-thumb { background: rgba(168,85,247,.3); border-radius: 2px; }
+      #wz-msgs::-webkit-scrollbar-thumb { background: rgba(255,69,0,.35); border-radius: 2px; }
 
       .wz-msg {
         max-width: 86%;
@@ -339,14 +378,14 @@
       @keyframes wz-pop { from { opacity:0; transform:scale(.92) translateY(8px); } to { opacity:1; transform:none; } }
       .wz-msg.agent {
         align-self: flex-start;
-        background: linear-gradient(135deg,rgba(168,85,247,.14),rgba(124,58,237,.06));
-        border: 1px solid rgba(168,85,247,.2);
+        background: linear-gradient(135deg,rgba(255,69,0,.12),rgba(255,0,153,.06));
+        border: 1px solid rgba(255,0,153,.2);
         border-bottom-left-radius: 4px;
         color: #e9edef;
       }
       .wz-msg.user {
         align-self: flex-end;
-        background: linear-gradient(135deg,#a855f7,#7c3aed);
+        background: linear-gradient(135deg,#ff4500,#ff0099);
         color: #fff;
         border-bottom-right-radius: 4px;
       }
@@ -354,13 +393,13 @@
         align-self: flex-start;
         display: flex; gap: .32rem; align-items: center;
         padding: .6rem .85rem;
-        background: rgba(168,85,247,.1);
-        border: 1px solid rgba(168,85,247,.18);
+        background: rgba(255,69,0,.08);
+        border: 1px solid rgba(255,0,153,.15);
         border-radius: 16px; border-bottom-left-radius: 4px;
         animation: wz-pop .2s ease both;
       }
       .wz-typing span {
-        width: 7px; height: 7px; background: #a855f7; border-radius: 50%;
+        width: 7px; height: 7px; background: #ff4500; border-radius: 50%;
         animation: wz-dots 1.2s infinite;
       }
       .wz-typing span:nth-child(2) { animation-delay: .2s; }
@@ -373,7 +412,7 @@
       /* INPUT AREA */
       #wz-input-area {
         padding: .65rem .8rem;
-        border-top: 1px solid rgba(168,85,247,.1);
+        border-top: 1px solid rgba(255,0,153,.12);
         background: rgba(0,0,0,.2);
         flex-shrink: 0;
       }
@@ -402,9 +441,9 @@
         animation: wz-recpulse .7s ease-in-out infinite;
       }
       #wz-mic-btn.speaking {
-        background: rgba(168,85,247,.12);
-        border-color: rgba(168,85,247,.5);
-        color: #a855f7;
+        background: rgba(255,69,0,.12);
+        border-color: rgba(255,0,153,.5);
+        color: #ff6b6b;
         pointer-events: none;
       }
       @keyframes wz-recpulse {
@@ -420,7 +459,7 @@
         flex: 1;
         padding: .55rem .8rem;
         background: rgba(255,255,255,.04);
-        border: 1px solid rgba(168,85,247,.2);
+        border: 1px solid rgba(255,0,153,.18);
         border-radius: 10px;
         color: #f0f0ff;
         font-family: 'Inter', sans-serif;
@@ -428,11 +467,11 @@
         outline: none;
         transition: border-color .2s;
       }
-      #wz-text-inp:focus { border-color: #a855f7; }
-      #wz-text-inp::placeholder { color: rgba(168,85,247,.4); }
+      #wz-text-inp:focus { border-color: #ff4500; }
+      #wz-text-inp::placeholder { color: rgba(255,100,0,.4); }
       #wz-send-btn {
         width: 36px; height: 36px;
-        background: linear-gradient(135deg,#a855f7,#7c3aed);
+        background: linear-gradient(135deg,#ff4500,#ff0099);
         border: none; border-radius: 10px;
         color: #fff; font-size: .85rem;
         cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -451,7 +490,7 @@
       #wz-wave.active { display: flex; }
       #wz-wave span {
         width: 4px; border-radius: 2px;
-        background: linear-gradient(135deg,#a855f7,#ec4899);
+        background: linear-gradient(135deg,#ff4500,#ff0099);
         animation: wz-wave-bar .65s ease-in-out infinite alternate;
       }
       #wz-wave span:nth-child(1) { height: 8px;  animation-delay: 0s; }
@@ -476,10 +515,19 @@
   /* ── BUILD UI ── */
   function buildUI() {
     // Floating button
+    // CTA Banner
+    const banner = document.createElement('div');
+    banner.id = 'wz-cta-banner';
+    banner.innerHTML = IS_ES()
+      ? '🤖 ¡Pulsa el botón y te ayudo <em>paso a paso</em> a construir tu primer bot!'
+      : '🤖 Click the button and I\'ll guide you <em>step by step</em> to build your first bot!';
+    banner.addEventListener('click', () => { togglePanel(); });
+    document.body.appendChild(banner);
+
     const btn = document.createElement('button');
     btn.id = 'wz-btn';
     btn.setAttribute('aria-label', IS_ES() ? 'Hablar con Amanda' : 'Talk to Shirley');
-    btn.setAttribute('data-label', IS_ES() ? 'Habla conmigo' : 'Talk to me');
+    btn.setAttribute('data-label', IS_ES() ? '¡Habla conmigo!' : 'Talk to me!');
     btn.innerHTML = `🧙‍♀️<span class="wz-notify">1</span><span id="wz-step-badge"></span>`;
     btn.addEventListener('click', togglePanel);
     document.body.appendChild(btn);
@@ -526,8 +574,10 @@
   function togglePanel() {
     unlockAudio(); // unlock on first user gesture
     isOpen = !isOpen;
-    const panel = document.getElementById('wz-panel');
-    const btn   = document.getElementById('wz-btn');
+    const panel  = document.getElementById('wz-panel');
+    const btn    = document.getElementById('wz-btn');
+    const banner = document.getElementById('wz-cta-banner');
+    if (banner) banner.classList.add('hidden'); // hide CTA once user interacts
     if (isOpen) {
       panel.classList.add('visible');
       btn.classList.add('open');
