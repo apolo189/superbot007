@@ -413,21 +413,73 @@ img{max-width:100%;display:block;}
 .sg:hover{background:rgba(168,85,247,.22);border-color:#a855f7;transform:translateY(-2px);}
 @keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}50%{box-shadow:0 0 0 10px rgba(255,71,87,0)}}
 
-/* ═══ PRICING — ClickSites style ═══ */
+/* ═══ PRICING — Psychological Funnel ═══ */
 #pricing{background:var(--dark);}
-.price-table{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:860px;margin:0 auto;}
-@media(max-width:680px){.price-table{grid-template-columns:1fr;max-width:420px;}}
-.pbox{background:var(--card);border:1px solid rgba(255,255,255,.5);border-radius:22px;padding:2.2rem 2rem;position:relative;overflow:hidden;transition:all .4s;box-shadow:0 8px 30px rgba(0,0,0,.3);}
-.pbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:#ffffff;}
-.pbox.hot{border:2px solid var(--orange);background:linear-gradient(145deg,rgba(255,69,0,.09),var(--card));box-shadow:0 24px 65px rgba(255,69,0,.2);}
+
+/* ── 2 Questions CTA ── */
+.two-q-wrap{max-width:700px;margin:0 auto 3.5rem;text-align:center;}
+.two-q-box{background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.06));border:1px solid rgba(255,0,153,.25);border-radius:20px;padding:2.2rem 2rem;margin-bottom:1.5rem;}
+.two-q-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(0,0,0,.3);border-radius:14px;margin-bottom:.8rem;text-align:left;}
+.two-q-item:last-child{margin-bottom:0;}
+.two-q-num{width:38px;height:38px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0;}
+.two-q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.4;}
+.two-q-yes{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3);border-radius:50px;padding:.5rem 1.4rem;font-size:.88rem;font-weight:800;color:var(--green);margin-top:1rem;}
+
+/* ── Recap Features Grid (ClickSites style) ── */
+.recap-section{background:linear-gradient(180deg,rgba(255,69,0,.04),transparent);border:1px solid rgba(255,0,153,.2);border-radius:24px;padding:2.5rem 2rem;max-width:900px;margin:0 auto 3rem;}
+.recap-title{text-align:center;font-size:1.6rem;font-weight:900;margin-bottom:.4rem;}
+.recap-subtitle{text-align:center;font-size:.88rem;color:var(--mu);margin-bottom:2rem;}
+.recap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;}
+@media(max-width:700px){.recap-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:420px){.recap-grid{grid-template-columns:1fr;}}
+.recap-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:13px;transition:all .3s;}
+.recap-item:hover{border-color:rgba(255,69,0,.4);background:rgba(255,69,0,.06);transform:translateY(-2px);}
+.recap-icon{font-size:1.3rem;flex-shrink:0;width:36px;text-align:center;}
+.recap-text{font-size:.83rem;font-weight:700;color:#fff;line-height:1.3;}
+.recap-val{font-size:.72rem;color:var(--orange);font-weight:800;}
+.recap-total{text-align:center;margin-top:1.8rem;padding:1.2rem;background:rgba(255,69,0,.06);border-radius:14px;border:1px dashed rgba(255,69,0,.3);}
+.recap-total-strike{font-size:1rem;color:var(--mu);text-decoration:line-through;margin-bottom:.25rem;}
+.recap-total-price{font-size:2.2rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.recap-total-note{font-size:.78rem;color:var(--mu);margin-top:.2rem;}
+
+/* ── Comparison Table ── */
+.comp-section{max-width:900px;margin:0 auto 3rem;}
+.comp-title{text-align:center;font-size:1.3rem;font-weight:900;margin-bottom:.4rem;}
+.comp-sub{text-align:center;font-size:.85rem;color:var(--mu);margin-bottom:1.5rem;}
+.comp-table{width:100%;border-collapse:collapse;border-radius:18px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);}
+.comp-table th{padding:.85rem 1rem;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:#0d0d1f;color:var(--mu);}
+.comp-table th:first-child{text-align:left;}
+.comp-table th.ours{background:linear-gradient(135deg,rgba(255,69,0,.2),rgba(255,0,153,.15));color:#fff;font-size:.85rem;}
+.comp-table td{padding:.8rem 1rem;font-size:.84rem;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
+.comp-table td:first-child{text-align:left;font-weight:700;color:#fff;}
+.comp-table tr:hover td{background:rgba(255,255,255,.02);}
+.comp-table .ours-col{background:rgba(255,69,0,.05);font-weight:800;color:#fff;}
+.comp-yes{color:var(--green);font-size:1rem;}
+.comp-no{color:#FF4757;font-size:.9rem;opacity:.7;}
+.comp-price{font-weight:900;font-size:.95rem;}
+.comp-price.ours{color:var(--orange);font-size:1.1rem;}
+.comp-price.them{color:#FF4757;}
+.comp-savings{text-align:center;margin-top:1.2rem;padding:1rem 1.5rem;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:14px;font-size:.92rem;font-weight:800;color:var(--green);}
+
+/* ── 3-Plan Price Table ── */
+.price-table{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+@media(max-width:760px){.price-table{grid-template-columns:1fr;max-width:420px;}}
+.pbox{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:2.2rem 1.8rem;position:relative;overflow:hidden;transition:all .4s;box-shadow:0 8px 30px rgba(0,0,0,.3);}
+.pbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);}
+.pbox.hot{border:2px solid var(--orange);background:linear-gradient(145deg,rgba(255,69,0,.09),var(--card));box-shadow:0 24px 65px rgba(255,69,0,.25);transform:scale(1.03);}
 .pbox.hot::before{background:var(--grad);}
-.pbox:hover{transform:translateY(-5px);}
+.pbox.agency{border:1px solid rgba(139,92,246,.35);background:linear-gradient(145deg,rgba(139,92,246,.08),var(--card));}
+.pbox.agency::before{background:linear-gradient(135deg,#8b5cf6,#a855f7);}
+.pbox:hover{transform:translateY(-6px);}
+.pbox.hot:hover{transform:scale(1.03) translateY(-6px);}
 .pbadge{position:absolute;top:1.1rem;right:1.1rem;padding:.22rem .7rem;background:var(--grad);border-radius:50px;font-size:.66rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.04em;}
+.pbadge.agency{background:linear-gradient(135deg,#8b5cf6,#a855f7);}
 .pname{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:.5rem;}
-.pprice{font-size:3rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:.18rem;}
+.pprice{font-size:2.8rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:.18rem;}
+.pprice.agency-price{background:linear-gradient(135deg,#8b5cf6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .pper{font-size:.8rem;color:var(--mu);margin-bottom:1.4rem;}
 .pfeats{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.8rem;}
-.pfeats li{display:flex;align-items:center;gap:.62rem;font-size:.86rem;}
+.pfeats li{display:flex;align-items:center;gap:.62rem;font-size:.84rem;}
 .pfeats li i{color:var(--green);width:14px;flex-shrink:0;}
 .pfeats li.no i{color:#FF4757;}
 .pfeats li.no{opacity:.5;}
@@ -436,6 +488,8 @@ img{max-width:100%;display:block;}
 .pbtn.main:hover{transform:translateY(-2px);}
 .pbtn.sec{background:#0a0a0f;border:1.5px solid rgba(255,255,255,.4);color:#ffffff;}
 .pbtn.sec:hover{border-color:var(--orange);color:var(--orange);}
+.pbtn.agency-btn{background:linear-gradient(135deg,#8b5cf6,#a855f7);color:#fff;box-shadow:0 6px 22px rgba(139,92,246,.35);}
+.pbtn.agency-btn:hover{transform:translateY(-2px);}
 /* big pricing blurb like ClickSites */
 .price-blurb{text-align:center;padding:3.5rem 1.5rem;position:relative;z-index:1;}
 .price-blurb-sub{color:var(--mu);font-size:.93rem;max-width:560px;margin:.4rem auto 1.8rem;line-height:1.7;}
@@ -581,7 +635,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ═══ FLASH BAR ═══ -->
 <div id="flash">
-  ⚡ OFERTA DE LANZAMIENTO — Precio $10.99/mes vence en: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">personas viendo esto ahora</span>
+  ⚡ OFERTA DE LANZAMIENTO — Precio $19.99/mes · Precio introducción · vence en: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">personas viendo esto ahora</span>
 </div>
 
 <!-- ════════════ HERO ════════════ -->
@@ -601,7 +655,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   <p class="hero-h2">
     ✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>
     ✅ Tarjeta Digital profesional &nbsp;·&nbsp; ✅ Pagos online &nbsp;·&nbsp; ✅ Agenda automática<br>
-    <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento $10.99/mes</em>
+    <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de introducción $19.99/mes</em>
   </p>
 
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
@@ -956,9 +1010,9 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 3 ════════════ -->
 <div class="cta-mid">
-  <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
+  <p class="cta-mid-eye">Solo $19.99/mes — Todo Incluido</p>
   <h2 class="cta-mid-h reveal">Tu Agencia IA<br>Empieza con SuperBot007</h2>
-  <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $10.99/mes.</p>
+  <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $19.99/mes.</p>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
@@ -1001,7 +1055,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
           <li><i class="fas fa-check"></i> Tarjeta digital con QR incluida</li>
           <li><i class="fas fa-check"></i> Editor visual en tiempo real</li>
           <li><i class="fas fa-check"></i> Modelo de agencia para escalar ingresos</li>
-          <li><i class="fas fa-check"></i> Todo listo en 5 minutos — $10.99/mes</li>
+          <li><i class="fas fa-check"></i> Todo listo en 5 minutos — desde $19.99/mes</li>
         </ul>
       </div>
     </div>
@@ -1013,84 +1067,173 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <div class="dline"></div>
 
-<!-- ════════════ PRICING ════════════ -->
+<!-- ════════════ PRICING — PSYCHOLOGICAL FUNNEL ════════════ -->
 <section id="pricing" class="sec">
   <div class="wr">
-    <div class="eyebrow reveal">Nuestro precio único irresistible</div>
-    <h2 class="sh2 reveal">Actúa Rápido: Esta Oferta Irresistible<br><span class="hl">Puede Expirar Sin Aviso…</span></h2>
-    <p class="ssub reveal">Todas las apps de la competencia cobran mensualidades. Con SuperBot007 accedes a todas las funciones por un precio de lanzamiento. ¡Garantía de 30 días incluida!</p>
+
+    <!-- EYEBROW -->
+    <div class="eyebrow reveal" style="color:var(--green);border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.07);">Precio de Introducción — Tiempo Limitado</div>
+    <h2 class="sh2 reveal">Aquí Está <span class="hl">TODO</span> Lo Que Obtienes Hoy…</h2>
+    <p class="ssub reveal">Antes de ver el precio, mira el valor real de lo que estás a punto de tener.<br>Cada herramienta listada abajo la pagarías <strong style="color:#fff;">por separado</strong> en cualquier otra plataforma.</p>
+
+    <!-- ═══ LAS 2 PREGUNTAS ═══ -->
+    <div class="two-q-wrap reveal">
+      <div class="two-q-box">
+        <p style="font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;">Antes de continuar — respóndete esto honestamente:</p>
+        <div class="two-q-item">
+          <div class="two-q-num">1</div>
+          <div class="two-q-text">¿Tienes un negocio que necesita más clientes, más citas o más ventas?</div>
+        </div>
+        <div class="two-q-item">
+          <div class="two-q-num">2</div>
+          <div class="two-q-text">¿Te gustaría automatizar todo eso por <strong style="color:var(--orange);">menos de $1 dólar al día</strong>?</div>
+        </div>
+        <div style="text-align:center;margin-top:1.2rem;">
+          <span class="two-q-yes"><i class="fas fa-check-circle"></i> Si respondiste SÍ a ambas — esto es para ti ↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RECAP FEATURES — ClickSites Style ═══ -->
+    <div class="recap-section reveal">
+      <div class="recap-title">🔥 Todo lo que recibes con SuperBot007</div>
+      <div class="recap-subtitle">12 herramientas profesionales en una sola plataforma — activadas en 5 minutos</div>
+      <div class="recap-grid">
+        <div class="recap-item"><div class="recap-icon">🤖</div><div><div class="recap-text">Bot IA GPT-4 activo 24/7</div><div class="recap-val">Valor: $99/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🌐</div><div><div class="recap-text">Landing Page Profesional</div><div class="recap-val">Valor: $49/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📅</div><div><div class="recap-text">Google Calendar — Citas Reales</div><div class="recap-val">Valor: $25/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">💳</div><div><div class="recap-text">PayPal + Stripe + Zelle + Venmo</div><div class="recap-val">Valor: $30/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📱</div><div><div class="recap-text">WhatsApp Integrado</div><div class="recap-val">Valor: $20/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🪪</div><div><div class="recap-text">Tarjeta Digital con QR</div><div class="recap-val">Valor: $15/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">✏️</div><div><div class="recap-text">Editor Visual en Tiempo Real</div><div class="recap-val">Valor: $29/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🌎</div><div><div class="recap-text">Motor Bilingüe ES / EN</div><div class="recap-val">Valor: $19/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">☁️</div><div><div class="recap-text">Hosting + SSL Incluido</div><div class="recap-val">Valor: $20/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📊</div><div><div class="recap-text">Dashboard del Cliente</div><div class="recap-val">Valor: $15/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🏢</div><div><div class="recap-text">Modelo de Agencia Incluido</div><div class="recap-val">Valor: $97/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🛡️</div><div><div class="recap-text">Garantía 30 Días</div><div class="recap-val">Riesgo: $0</div></div></div>
+      </div>
+      <div class="recap-total">
+        <div class="recap-total-strike">Valor real si lo compras por separado: $418/mes</div>
+        <div class="recap-total-price">Tú pagas solo $19.99/mes</div>
+        <div class="recap-total-note">Precio de introducción — sube sin aviso previo</div>
+      </div>
+    </div>
+
+    <!-- ═══ TABLA COMPARATIVA ═══ -->
+    <div class="comp-section reveal" style="transition-delay:.1s">
+      <div class="comp-title">📊 SuperBot007 vs La Competencia</div>
+      <div class="comp-sub">¿Por qué pagar $150–$200/mes en herramientas separadas cuando puedes tenerlo todo en uno?</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Herramienta / Feature</th>
+            <th>ManyChat</th>
+            <th>Chatfuel</th>
+            <th>Tidio</th>
+            <th class="ours">⭐ SuperBot007</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Bot IA con GPT-4</td><td><span class="comp-no">✗ Básico</span></td><td><span class="comp-no">✗ Básico</span></td><td><span class="comp-no">✗ Básico</span></td><td class="ours-col"><span class="comp-yes">✓ GPT-4</span></td></tr>
+          <tr><td>Landing Page incluida</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluida</span></td></tr>
+          <tr><td>Google Calendar / Citas</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluido</span></td></tr>
+          <tr><td>PayPal + Stripe + Zelle</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">Stripe solo</span></td><td class="ours-col"><span class="comp-yes">✓ Los 5</span></td></tr>
+          <tr><td>Tarjeta Digital + QR</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluida</span></td></tr>
+          <tr><td>Bilingüe ES / EN</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Nativo</span></td></tr>
+          <tr><td>Editor Visual en vivo</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">Limitado</span></td><td class="ours-col"><span class="comp-yes">✓ Completo</span></td></tr>
+          <tr><td>Modelo de Agencia</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluido</span></td></tr>
+          <tr>
+            <td style="font-weight:900;font-size:.95rem;">💰 Precio / mes</td>
+            <td><span class="comp-price them">$15–$45</span></td>
+            <td><span class="comp-price them">$19–$60</span></td>
+            <td><span class="comp-price them">$29–$59</span></td>
+            <td class="ours-col"><span class="comp-price ours">$19.99</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="comp-savings reveal">
+        💸 Ahorro real vs herramientas separadas: <strong>$150–$398/mes</strong> — Con SuperBot007 lo tienes TODO por solo $19.99/mes
+      </div>
+    </div>
+
+    <!-- ═══ 3 PLANES ═══ -->
+    <h3 class="sh2 reveal" style="font-size:clamp(1.4rem,2.8vw,2rem);margin-bottom:.5rem;">Elige Tu Plan <span class="hl">— Empieza Hoy</span></h3>
+    <p class="ssub reveal" style="margin-bottom:2rem;">Sin costos ocultos. Sin contratos. Cancela cuando quieras.</p>
 
     <div class="price-table">
       <!-- STARTER -->
       <div class="pbox reveal">
         <div class="pname">Plan Starter</div>
-        <div class="pprice">Gratis</div>
-        <div class="pper">Crea y configura tu bot</div>
+        <div class="pprice">$19.99</div>
+        <div class="pper">/ mes · 1 Bot · Perfecto para empezar</div>
         <ul class="pfeats">
-          <li><i class="fas fa-check"></i> Bot IA configurado</li>
-          <li><i class="fas fa-check"></i> Landing page cinematic</li>
-          <li><i class="fas fa-check"></i> Editor visual incluido</li>
+          <li><i class="fas fa-check"></i> Bot IA GPT-4 activo 24/7</li>
+          <li><i class="fas fa-check"></i> Landing page profesional</li>
           <li><i class="fas fa-check"></i> Tarjeta digital + QR</li>
-          <li><i class="fas fa-check"></i> Sin tarjeta de crédito</li>
-          <li class="no"><i class="fas fa-times"></i> Bot activo / publicado</li>
-          <li class="no"><i class="fas fa-times"></i> Link para compartir</li>
-          <li class="no"><i class="fas fa-times"></i> Pagos PayPal activos</li>
+          <li><i class="fas fa-check"></i> Editor visual en vivo</li>
+          <li><i class="fas fa-check"></i> Bilingüe ES / EN</li>
+          <li><i class="fas fa-check"></i> Hosting + SSL incluido</li>
+          <li class="no"><i class="fas fa-times"></i> Google Calendar</li>
+          <li class="no"><i class="fas fa-times"></i> Pagos integrados</li>
+          <li class="no"><i class="fas fa-times"></i> Soporte prioritario</li>
         </ul>
-        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank"><i class="fas fa-rocket"></i> Empezar Gratis</a>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn main" target="_blank"><i class="fas fa-rocket"></i> Empezar por $19.99/mes</a>
       </div>
 
       <!-- PRO — HOT -->
       <div class="pbox hot reveal" style="transition-delay:.1s">
         <div class="pbadge">⭐ MÁS POPULAR</div>
         <div class="pname">Plan Pro</div>
-        <div class="pprice">$10.99</div>
-        <div class="pper">/ mes · Todo activado · Sin mensualidades ocultas</div>
+        <div class="pprice">$49</div>
+        <div class="pper">/ mes · 1 Bot · Todo activado · Máximo poder</div>
         <ul class="pfeats">
-          <li><i class="fas fa-check"></i> Bot IA GPT-4 activo 24/7</li>
-          <li><i class="fas fa-check"></i> Landing cinematic publicada</li>
-          <li><i class="fas fa-check"></i> Carrito + PayPal directo</li>
-          <li><i class="fas fa-check"></i> Agenda de citas + WhatsApp</li>
-          <li><i class="fas fa-check"></i> Tarjeta digital con QR</li>
-          <li><i class="fas fa-check"></i> Editor visual en vivo</li>
-          <li><i class="fas fa-check"></i> Motor bilingüe ES/EN</li>
+          <li><i class="fas fa-check"></i> Todo lo del Starter +</li>
+          <li><i class="fas fa-check"></i> Google Calendar — citas reales</li>
+          <li><i class="fas fa-check"></i> PayPal + Stripe + Zelle + Venmo</li>
+          <li><i class="fas fa-check"></i> WhatsApp integrado</li>
+          <li><i class="fas fa-check"></i> Dashboard del cliente</li>
+          <li><i class="fas fa-check"></i> Notificaciones automáticas</li>
           <li><i class="fas fa-check"></i> Soporte prioritario WhatsApp</li>
+          <li><i class="fas fa-check"></i> Actualizaciones incluidas</li>
+          <li><i class="fas fa-check"></i> Garantía 30 días</li>
         </ul>
-        <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn main" target="_blank"><i class="fas fa-rocket"></i> Activar Plan Pro — $49/mes</a>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="pbox agency reveal" style="transition-delay:.2s">
+        <div class="pbadge agency">🏢 AGENCIA</div>
+        <div class="pname">Plan Agencia</div>
+        <div class="pprice agency-price">$99</div>
+        <div class="pper">/ mes · Bots Ilimitados · Revende y Escala</div>
+        <ul class="pfeats">
+          <li><i class="fas fa-check"></i> Todo lo del Pro +</li>
+          <li><i class="fas fa-check"></i> Bots ilimitados para clientes</li>
+          <li><i class="fas fa-check"></i> Cobra $200–$500/mes por bot</li>
+          <li><i class="fas fa-check"></i> Panel de administración</li>
+          <li><i class="fas fa-check"></i> White-label disponible</li>
+          <li><i class="fas fa-check"></i> Onboarding 1 a 1</li>
+          <li><i class="fas fa-check"></i> Soporte VIP directo</li>
+          <li><i class="fas fa-check"></i> Ingresos pasivos ilimitados</li>
+          <li><i class="fas fa-check"></i> Garantía 30 días</li>
+        </ul>
+        <a href="https://wa.me/19143644377?text=Quiero%20plan%20Agencia%20SuperBot007" target="_blank" class="pbtn agency-btn"><i class="fab fa-whatsapp"></i> Hablar de Plan Agencia</a>
       </div>
     </div>
 
-    <!-- RECAP blurb (ClickSites-style) -->
-    <div class="price-blurb reveal" style="margin-top:3rem;">
-      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Precio de Lanzamiento: $10.99/mes — Sube a $29.99 Pronto</p>
-      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Todo lo que obtienes con SuperBot007 hoy…</h3>
-      <p class="price-blurb-sub">$10.99/mes · Todo Incluido · Sin Costos Ocultos · Cancela Cuando Quieras.<br>30 Días Garantía de Devolución Completa.</p>
-
-      <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
-
-      <div class="pay-row">
-        <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
-        <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5</div>
-      </div>
-      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">$10.99/mes | Cancela Cuando Quieras | Garantía 30 Días</p>
+    <!-- URGENCY STRIP -->
+    <div class="reveal" style="text-align:center;margin-top:2.5rem;padding:1.2rem;background:rgba(255,69,0,.06);border:1px dashed rgba(255,69,0,.35);border-radius:16px;max-width:700px;margin-left:auto;margin-right:auto;">
+      <p style="font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:.3rem;">⚡ Precio de Introducción — Sube Sin Aviso Previo</p>
+      <p style="font-size:.88rem;color:var(--mu);">Starter: <strong style="color:#fff;">$19.99/mes</strong> → sube a $34.99 &nbsp;|&nbsp; Pro: <strong style="color:#fff;">$49/mes</strong> → sube a $79 &nbsp;|&nbsp; Agencia: <strong style="color:#fff;">$99/mes</strong> → sube a $197</p>
     </div>
 
-    <!-- AGENCY blurb -->
-    <div class="price-blurb reveal" style="border-top:1px solid var(--bd);padding-top:3rem;margin-top:0;">
-      <p style="font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.35rem;">Plan Agencia — Múltiples Clientes</p>
-      <h3 style="font-size:clamp(1.5rem,3vw,2.3rem);font-weight:900;margin-bottom:.4rem;">Obtén SuperBot007 Agencia</h3>
-      <p class="price-blurb-sub">Plan Agencia Completo: Bots ilimitados + white-label + panel de clientes + onboarding 1 a 1.<br>Sin mensualidades. Sin costos ocultos. Todo incluido.</p>
-
-      <a href="https://wa.me/19143644377?text=Quiero%20plan%20Agencia%20SuperBot007" target="_blank" class="btn-access" style="margin-bottom:1.1rem;background:#0a0a0f;border:2px solid var(--orange);">
-        <i class="fab fa-whatsapp"></i> contactar por whatsapp
-      </a>
-
-      <div class="pay-row">
-        <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
-        <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
-      </div>
-      <p style="font-size:.78rem;color:var(--mu);margin-top:.6rem;">Bots Ilimitados | $10.99/mes | Garantía 30 Días</p>
+    <!-- PAY METHODS + GUARANTEE -->
+    <div class="pay-row reveal" style="justify-content:center;margin-top:1.5rem;">
+      <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
+      <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía Total</div>
+      <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9 / 5</div>
     </div>
+
   </div>
 </section>
 
@@ -1138,9 +1281,9 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
 <!-- ════════════ MID CTA 4 ════════════ -->
 <div class="cta-mid">
-  <p class="cta-mid-eye">Solo $10.99/mes — Todo Incluido</p>
+  <p class="cta-mid-eye">Solo $19.99/mes — Todo Incluido</p>
   <h2 class="cta-mid-h reveal">Activa Tu Bot IA Hoy<br>Antes de Que Suba el Precio</h2>
-  <p class="cta-mid-sub reveal">Precio de lanzamiento $10.99/mes — sube a $29.99 pronto. Sin costos ocultos.</p>
+  <p class="cta-mid-sub reveal">Starter desde $19.99/mes — Pro $49/mes — Agencia $99/mes. Sin costos ocultos.</p>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
   <div class="pay-row" style="margin-top:1rem;">
     <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
@@ -1193,7 +1336,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       </div>
       <div class="fi-faq reveal" style="transition-delay:.15s" onclick="tFaq(this)">
         <div class="fq">¿Hay mensualidades ocultas o costos extra? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
-        <div class="fa-ans"><div class="fa-inner">No. El plan Pro es $10.99/mes todo incluido — sin cargos por setup, sin comisiones en ventas PayPal, sin costos de hosting ocultos. Lo que ves es lo que pagas. Sin sorpresas, sin letra pequeña.</div></div>
+        <div class="fa-ans"><div class="fa-inner">No. El Plan Starter es $19.99/mes todo incluido, el Pro $49/mes y el Agencia $99/mes — sin cargos por setup, sin comisiones en ventas PayPal, sin costos de hosting ocultos. Lo que ves es lo que pagas. Sin sorpresas, sin letra pequeña.</div></div>
       </div>
       <div class="fi-faq reveal" style="transition-delay:.20s" onclick="tFaq(this)">
         <div class="fq">¿Puedo ganar dinero creando bots para otros negocios? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
@@ -1205,7 +1348,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       </div>
       <div class="fi-faq reveal" style="transition-delay:.30s" onclick="tFaq(this)">
         <div class="fq">¿Por qué SuperBot007 es mejor que la competencia? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
-        <div class="fa-ans"><div class="fa-inner">$10.99/mes incluye TODO — Bot IA GPT-4 + Landing Page + Pagos + Agenda + Tarjeta Digital + Editor Visual. Setup en 5 minutos sin código. Modelo de agencia para ganar con los bots de tus clientes. Y garantía de 30 días. La competencia cobra eso por separado.</div></div>
+        <div class="fa-ans"><div class="fa-inner">$19.99/mes incluye TODO — Bot IA GPT-4 + Landing Page + Pagos + Agenda + Tarjeta Digital + Editor Visual. Setup en 5 minutos sin código. Modelo de agencia para ganar con los bots de tus clientes. Y garantía de 30 días. La competencia cobra eso por separado.</div></div>
       </div>
     </div>
   </div>
@@ -1222,7 +1365,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
       <span class="hl">Antes de Que Suba el Precio</span>
     </h2>
     <p class="cf-sub reveal">
-      Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Por solo $10.99/mes — el precio sube a $29.99 pronto, sin aviso previo.
+      Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Starter desde $19.99/mes — el precio sube sin aviso previo.
     </p>
 
     <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
@@ -1236,7 +1379,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 
     <div class="unote reveal">
       <i class="fas fa-fire" style="color:#ff0099;"></i>
-      Precio $10.99/mes — sube a $29.99 pronto. Sin aviso previo.
+      Desde $19.99/mes — el precio sube sin aviso previo.
     </div>
   </div>
 </section>
@@ -1308,7 +1451,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
 <!-- MOBILE STICKY -->
 <div id="sticky">
   <div class="stxt">
-    <strong>⚡ Solo $10.99/mes</strong>
+    <strong>⚡ Desde $19.99/mes</strong>
     Precio sube pronto — no pierdas
   </div>
   <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-rocket"></i> Create My Bot Now — Free to Start</a>
@@ -1458,7 +1601,7 @@ function tFaq(item){
     {role:'in',  text:'¡Hola! 💜 ¡Qué bueno que estás aquí! SuperBot007 es un bot IA con GPT-4 que trabaja 24/7 por tu negocio — responde clientes, vende y agenda citas solo. ¿Tienes un negocio o quieres crear uno?', delay:2600},
     {role:'out', text:'¿Cuánto cuesta?', delay:3200},
     {role:'typing', delay:2000},
-    {role:'in',  text:'Solo $10.99/mes 🎉 Incluye bot IA activo, landing page profesional, carrito PayPal, agenda de citas y tarjeta digital. ¡Todo en un plan! Con garantía de 30 días. ¿Quieres empezar hoy?', delay:2800},
+    {role:'in',  text:'Solo $19.99/mes 🎉 Incluye bot IA activo, landing page profesional, carrito PayPal, agenda de citas y tarjeta digital. ¡Todo en un plan! Con garantía de 30 días. ¿Quieres empezar hoy?', delay:2800},
     {role:'out', text:'¿En cuánto tiempo está listo mi bot? ⏱️', delay:3000},
     {role:'typing', delay:1900},
     {role:'in',  text:'¡En solo 5 minutos! ⚡ Sin código, sin diseñador. Llenas un formulario y tu bot ya está activo. Yo misma te guío paso a paso. ¿Te ayudo a crearlo ahora?', delay:2700},
