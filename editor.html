@@ -754,6 +754,27 @@ window.addEventListener('DOMContentLoaded', ()=>{
     window.location.href = `editor.html?id=${savedId}`;
     return;
   }
+  // ── DEMO MODE (?demo=1) ──
+  const isDemo = new URLSearchParams(location.search).get('demo') === '1';
+  const jumpTo = new URLSearchParams(location.search).get('section');
+  if(isDemo){
+    originalData = {
+      businessName:'Mi Negocio Demo', businessType:'Restaurante', businessCity:'Miami',
+      heroTitle:'Bienvenido a Mi Negocio', heroSubtitle:'El mejor servicio de la ciudad',
+      ctaText:'Reservar Ahora', welcomeMsg:'¡Hola! ¿En qué te puedo ayudar?',
+      primaryColor:'#6C63FF', secondaryColor:'#FF6584', accentColor:'#43E97B', bgColor:'#07071A',
+      fontFamily:'Inter', fontFamilyCSS:"'Inter',sans-serif",
+      description:'Descripción de prueba para el editor visual.'
+    };
+    editedData = JSON.parse(JSON.stringify(originalData));
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('botIdDisplay').textContent = 'DEMO';
+    document.getElementById('sec-colors').classList.add('active');
+    populateFields(editedData);
+    if(jumpTo){ showSection(jumpTo, document.querySelector(`[onclick*="showSection('${jumpTo}'"]`)); }
+    return;
+  }
+
   if(!botId){
     // Show clear instructions + manual ID entry
     document.getElementById('loadingState').innerHTML = `
