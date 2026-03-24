@@ -53,17 +53,18 @@ img{max-width:100%;display:block;}
 @keyframes lpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.8)}50%{box-shadow:0 0 0 7px rgba(0,255,136,0)}}
 
 /* ═══ HERO ═══ */
-#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 1.5rem 4rem;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,69,0,.16),transparent 55%);}
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 1.5rem 4rem;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,69,0,.22),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(139,92,246,.12),transparent 50%);}
 
-.hero-tag{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.6rem;animation:fadeUp .6s ease both;}
-.hero-h1{font-size:clamp(2.3rem,5.5vw,4.6rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:.55rem;animation:fadeUp .7s .05s ease both;max-width:860px;}
+.hero-tag{font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;animation:fadeUp .6s ease both;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.35);padding:.35rem 1.1rem;border-radius:50px;display:inline-block;}
+.hero-h1{font-size:clamp(2.6rem,6vw,5.2rem);font-weight:900;line-height:1.04;letter-spacing:-.03em;margin-bottom:.8rem;animation:fadeUp .7s .05s ease both;max-width:920px;text-shadow:0 4px 40px rgba(255,69,0,.25);}
 .hero-h1 .hl{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero-h2{font-size:clamp(1rem,2.5vw,1.4rem);font-weight:700;color:var(--mu);margin-bottom:2rem;animation:fadeUp .7s .1s ease both;}
+.hero-h2{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:500;color:rgba(255,255,255,.85);margin-bottom:.8rem;animation:fadeUp .7s .1s ease both;line-height:1.8;}
+.hero-sub2{font-size:clamp(.88rem,1.8vw,1.05rem);font-weight:700;color:var(--gold);margin-bottom:2rem;animation:fadeUp .7s .13s ease both;display:inline-block;background:rgba(255,204,0,.08);border:1px solid rgba(255,204,0,.3);padding:.4rem 1.2rem;border-radius:50px;}
 .hero-h2 em{color:var(--txt);font-style:normal;}
 
 /* CTA BUTTON */
-.btn-access{display:inline-flex;align-items:center;gap:.65rem;padding:1.05rem 2.8rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:900;font-size:1.08rem;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;animation:fadeUp .7s .15s ease both, gp 3s ease-in-out infinite;box-shadow:0 6px 32px rgba(255,69,0,.55),0 0 60px rgba(255,0,153,.25);}
-.btn-access:hover{transform:translateY(-3px);box-shadow:0 14px 45px rgba(255,69,0,.7);}
+.btn-access{display:inline-flex;align-items:center;gap:.65rem;padding:1.2rem 3.2rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:900;font-size:1.18rem;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;animation:fadeUp .7s .15s ease both, gp 3s ease-in-out infinite;box-shadow:0 8px 40px rgba(255,69,0,.65),0 0 80px rgba(255,0,153,.3);letter-spacing:.01em;}
+.btn-access:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 18px 55px rgba(255,69,0,.8);}
 @keyframes gp{0%,100%{box-shadow:0 6px 25px rgba(255,69,0,.4)}50%{box-shadow:0 6px 55px rgba(255,69,0,.85)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 
@@ -648,20 +649,21 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
     🔥 Solo quedan <span id="slots">23</span> lugares al precio de lanzamiento
   </div>
 
-  <p class="hero-tag">La plataforma de bots IA para negocios locales</p>
+  <p class="hero-tag">🤖 La plataforma #1 de bots IA para negocios locales</p>
 
   <h1 class="hero-h1">
-    Mientras Tu Competencia Duerme,<br>
-    <span class="hl">Tu Bot IA Está Vendiendo</span>
+    Tu Negocio Merece<br>
+    <span class="hl">Trabajar Solo Mientras Duermes</span>
   </h1>
 
   <p class="hero-h2">
-    ✅ Bot IA que responde al instante &nbsp;·&nbsp; ✅ Landing Page que convierte<br>
-    ✅ Tarjeta Digital profesional &nbsp;·&nbsp; ✅ Pagos online &nbsp;·&nbsp; ✅ Agenda automática<br>
-    <em>⚠️ Solo quedan <span id="slots2">20</span> lugares al precio de introducción $19.99/mes</em>
+    Crea tu bot IA, landing page y tarjeta digital profesional<br>
+    en minutos — sin código, sin complicaciones, sin excusas.
   </p>
 
-  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+  <p class="hero-sub2">⚡ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento — $19.99/mes</p>
+
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-magic"></i> Pide Tu Deseo Gratis — Sin Tarjeta</a>
 
   <div class="pay-row">
     <div class="pay-chip g"><i class="fas fa-lock"></i> Pago Seguro</div>
@@ -671,7 +673,7 @@ footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1
   </div>
 
   <div class="guar-row">
-    <i class="fas fa-shield-alt"></i> Sitios Ilimitados · Sin Costos Ocultos · Todo Incluido
+    <i class="fas fa-shield-alt"></i> Sin Contrato · Sin Costos Ocultos · Cancela Cuando Quieras
   </div>
 
   <!-- ══ HERO PHONE MOCKUP ══ -->
