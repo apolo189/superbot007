@@ -290,6 +290,19 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
 .modal-btn.cancel { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
 .modal-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
+/* FONT PICKER BUTTONS */
+.font-pick-btn {
+  display:flex; flex-direction:column; align-items:flex-start;
+  padding:0.6rem 0.8rem; border-radius:10px; cursor:pointer;
+  background:rgba(232,121,249,0.05); border:1.5px solid rgba(232,121,249,0.15);
+  transition:all 0.2s; text-align:left; color:var(--text);
+}
+.font-pick-btn:hover { background:rgba(232,121,249,0.12); border-color:rgba(232,121,249,0.4); transform:translateY(-1px); }
+.font-pick-btn.active-font { background:rgba(232,121,249,0.15); border-color:#E879F9; box-shadow:0 0 0 2px rgba(232,121,249,0.3); }
+.fp-name { font-size:0.9rem; font-weight:800; display:block; }
+.fp-sample { font-size:1rem; display:block; color:var(--muted); margin:0.1rem 0; }
+.fp-desc { font-size:0.62rem; color:var(--muted); display:block; opacity:0.8; }
+
 /* THEME PRESET BUTTONS */
 .theme-preset-btn {
   display: flex; flex-direction: column; align-items: flex-start;
@@ -349,6 +362,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
       <button class="sec-nav-btn" style="color:#F87171" onclick="showSection('contacto',this)">📞 Contacto</button>
       <button class="sec-nav-btn" style="color:#A3E635" onclick="showSection('testimonios',this)">⭐ Testimonios</button>
       <button class="sec-nav-btn" style="color:#38BDF8" onclick="showSection('faq',this)">❓ FAQ</button>
+      <button class="sec-nav-btn" style="color:#E879F9" onclick="showSection('fuentes',this)">🔤 Fuentes</button>
     </div>
 
     <!-- Content -->
@@ -579,6 +593,33 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
       </div>
 
       <!-- ██ FAQ ██ -->
+      <!-- ██ FUENTES ██ -->
+      <div class="edit-section" id="sec-fuentes">
+        <div class="sec-title" style="background:rgba(232,121,249,0.1);color:#E879F9;border:1px solid rgba(232,121,249,0.25)"><i class="fas fa-font"></i> TIPOGRAFÍA</div>
+
+        <div class="field-group">
+          <div class="field-label" style="margin-bottom:0.7rem">Elige la fuente de tu landing page</div>
+          <div id="fontPickerGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;"></div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:0.5rem;opacity:0.8">💡 La fuente se aplica en tiempo real al preview</div>
+        </div>
+
+        <div class="sec-divider"></div>
+
+        <div class="field-group">
+          <div class="field-label" style="margin-bottom:0.4rem">Vista previa</div>
+          <div id="fontPreviewBox" style="
+            background:rgba(232,121,249,0.06);
+            border:1px solid rgba(232,121,249,0.2);
+            border-radius:12px; padding:1rem 1.1rem;
+          ">
+            <div id="fontPreviewName" style="font-size:0.7rem;color:#E879F9;font-weight:700;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:1px">Inter</div>
+            <div id="fontPreviewTitle" style="font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:0.25rem">Tu Negocio Digital</div>
+            <div id="fontPreviewBody" style="font-size:0.9rem;color:var(--muted);line-height:1.5">Bienvenido a nuestra plataforma. Creamos bots inteligentes para tu negocio.</div>
+          </div>
+        </div>
+
+      </div>
+
       <div class="edit-section" id="sec-faq">
         <div class="sec-title" style="background:rgba(56,189,248,0.1);color:#38BDF8;border:1px solid rgba(56,189,248,0.25)"><i class="fas fa-question-circle"></i> PREGUNTAS FRECUENTES</div>
         <div id="faqList"></div>
@@ -811,6 +852,7 @@ function populateForm(){
   setColor('accentColor',   d.accentColor   || '#43E97B');
   initBgPalette();
   selectBgColor(d.bgColor || '#000000');
+  initFontPicker();
   setVal('heroTitle',    d.heroTitle    || d.businessName || '');
   setVal('heroSubtitle', d.heroSubtitle || d.description  || '');
   setVal('ctaText',      d.ctaText      || 'Reservar Ahora');
@@ -1078,6 +1120,69 @@ function onColorChange(field,val){
   // Auto-save debounced
   scheduleAutoSave();
 }
+// ── FONT PICKER ──
+const FONT_OPTIONS = [
+  { name:'Inter',       family:'Inter',            desc:'Moderna · Limpia',       google:'Inter:wght@400;700;800' },
+  { name:'Poppins',     family:'Poppins',           desc:'Amigable · Redondeada',  google:'Poppins:wght@400;700;800' },
+  { name:'Playfair',    family:'Playfair Display',  desc:'Elegante · Clásica',     google:'Playfair+Display:wght@400;700;800' },
+  { name:'Montserrat',  family:'Montserrat',        desc:'Fuerte · Profesional',   google:'Montserrat:wght@400;700;800' },
+  { name:'Raleway',     family:'Raleway',           desc:'Sofisticada · Ligera',   google:'Raleway:wght@400;700;800' },
+  { name:'Lato',        family:'Lato',              desc:'Legible · Neutral',      google:'Lato:wght@400;700' },
+  { name:'Oswald',      family:'Oswald',            desc:'Impactante · Condensada',google:'Oswald:wght@400;700' },
+  { name:'Nunito',      family:'Nunito',            desc:'Suave · Amigable',       google:'Nunito:wght@400;700;800' }
+];
+let _activeFont = 'Inter';
+
+function initFontPicker(){
+  // Preload all fonts
+  FONT_OPTIONS.forEach(f=>{
+    if(!document.querySelector(`link[data-font="${f.name}"]`)){
+      const l=document.createElement('link');
+      l.rel='stylesheet'; l.dataset.font=f.name;
+      l.href=`https://fonts.googleapis.com/css2?family=${f.google}&display=swap`;
+      document.head.appendChild(l);
+    }
+  });
+  const grid = document.getElementById('fontPickerGrid');
+  if(!grid) return;
+  grid.innerHTML = FONT_OPTIONS.map(f=>`
+    <button class="font-pick-btn" id="fpb_${f.name}"
+      onclick="applyFont('${f.name}')"
+      style="font-family:'${f.family}',sans-serif">
+      <span class="fp-name">${f.name}</span>
+      <span class="fp-sample">Aa Bb 123</span>
+      <span class="fp-desc">${f.desc}</span>
+    </button>
+  `).join('');
+  // Mark current active
+  const cur = editedData.fontFamily || 'Inter';
+  applyFont(cur, true);
+}
+
+function applyFont(name, silent=false){
+  const font = FONT_OPTIONS.find(f=>f.name===name);
+  if(!font) return;
+  _activeFont = name;
+  editedData.fontFamily = name;
+  editedData.fontFamilyCSS = `'${font.family}', sans-serif`;
+  // Highlight active button
+  document.querySelectorAll('.font-pick-btn').forEach(b=>b.classList.remove('active-font'));
+  const btn = document.getElementById(`fpb_${name}`);
+  if(btn) btn.classList.add('active-font');
+  // Update preview box
+  const style = `font-family:'${font.family}',sans-serif`;
+  const pt=document.getElementById('fontPreviewTitle'), pb=document.getElementById('fontPreviewBody'), pn=document.getElementById('fontPreviewName');
+  if(pt){ pt.style.fontFamily=`'${font.family}',sans-serif`; }
+  if(pb){ pb.style.fontFamily=`'${font.family}',sans-serif`; }
+  if(pn){ pn.textContent=font.name; }
+  // Push to preview iframe
+  try{
+    const f=document.getElementById('previewFrame');
+    if(f && f.contentWindow) f.contentWindow.postMessage({type:'UPDATE_FONT', fontFamily:`'${font.family}',sans-serif`},'*');
+  }catch(e){}
+  if(!silent){ markUnsaved(); scheduleAutoSave(); toast(`🔤 Fuente "${name}" aplicada`,'success'); }
+}
+
 function pushColorToPreview(){
   try{
     const f=document.getElementById('previewFrame');
