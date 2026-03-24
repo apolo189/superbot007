@@ -900,29 +900,54 @@ function startTimer() {
   }, 1000);
 }
 
-// ── ElevenLabs TTS — Fire-and-forget (never blocks the demo) ──
-function speak(text) {
-  // Launch audio async — demo NEVER waits for it
-  (async () => {
-    try {
-      const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`,{
-        method:'POST',
-        headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json'},
-        body:JSON.stringify({
-          text,
-          model_id:'eleven_turbo_v2_5',
-          voice_settings:{stability:0.32,similarity_boost:0.88,style:0.5,use_speaker_boost:true}
-        })
-      });
-      if(!r.ok) return;
+// ── ElevenLabs TTS — Serial queue: ONE voice at a time, never overlaps ──
+let audioQueue = [];
+let audioPlaying = false;
+let currentAudio = null;
+
+function stopAllAudio() {
+  if(currentAudio) { currentAudio.pause(); currentAudio = null; }
+  audioQueue = [];
+  audioPlaying = false;
+  document.getElementById('waveBar').classList.add('silent');
+}
+
+async function playNext() {
+  if(audioPlaying || audioQueue.length === 0) return;
+  audioPlaying = true;
+  const text = audioQueue.shift();
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`, {
+      method: 'POST',
+      headers: {'xi-api-key': EL_KEY, 'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        text,
+        model_id: 'eleven_turbo_v2_5',
+        voice_settings: {stability: 0.32, similarity_boost: 0.88, style: 0.5, use_speaker_boost: true}
+      })
+    });
+    if (r.ok) {
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
-      const a = new Audio(url);
+      currentAudio = new Audio(url);
       document.getElementById('waveBar').classList.remove('silent');
-      a.onended = () => document.getElementById('waveBar').classList.add('silent');
-      a.play().catch(()=>{});
-    } catch(e){}
-  })();
+      await new Promise(resolve => {
+        currentAudio.onended = resolve;
+        currentAudio.onerror = resolve;
+        currentAudio.play().catch(resolve);
+      });
+      document.getElementById('waveBar').classList.add('silent');
+      currentAudio = null;
+    }
+  } catch(e) {}
+  audioPlaying = false;
+  playNext(); // play next in queue
+}
+
+function speak(text) {
+  // Add to queue — plays when previous finishes
+  audioQueue.push(text);
+  playNext();
 }
 
 function addMsg(text, who='bot', sayIt=true) {
@@ -934,7 +959,6 @@ function addMsg(text, who='bot', sayIt=true) {
   d.textContent = text;
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
-  // Speak fire-and-forget — NEVER blocks demo flow
   if(who==='bot' && sayIt) speak(text);
 }
 
@@ -1209,6 +1233,7 @@ function startDemo() {
   ov.style.transition = 'opacity .5s';
   ov.style.opacity = '0';
   setTimeout(() => { ov.style.display='none'; }, 500);
+  stopAllAudio();
   startTime = Date.now();
   runDemo();
 }
