@@ -290,6 +290,21 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
 .modal-btn.cancel { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
 .modal-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
+/* THEME PRESET BUTTONS */
+.theme-preset-btn {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 0.7rem 0.8rem; border-radius: 12px; cursor: pointer;
+  transition: all 0.25s; position: relative; overflow: hidden;
+  color: white; text-align: left;
+}
+.theme-preset-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); filter: brightness(1.1); }
+.theme-preset-btn.active-theme { box-shadow: 0 0 0 3px white, 0 6px 20px rgba(0,0,0,0.5); }
+.preset-icon { font-size: 1.3rem; margin-bottom: 0.2rem; display: block; }
+.preset-name { font-size: 0.85rem; font-weight: 800; display: block; }
+.preset-desc { font-size: 0.65rem; opacity: 0.85; display: block; margin-bottom: 0.4rem; }
+.preset-swatches { display: flex; gap: 4px; }
+.preset-swatches span { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.4); display: inline-block; }
+
 @media (max-width: 1100px) {
   .editor-shell { grid-template-columns: 400px 1fr; }
 }
@@ -347,6 +362,70 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
       <!-- ██ COLORES ██ -->
       <div class="edit-section" id="sec-colors">
         <div class="sec-title" style="background:rgba(167,139,250,0.1);color:#A78BFA;border:1px solid rgba(167,139,250,0.25)"><i class="fas fa-palette"></i> COLORES DEL TEMA</div>
+
+        <!-- PRESETS DE TEMAS -->
+        <div style="margin-bottom:1.1rem;">
+          <div class="field-label" style="margin-bottom:0.6rem;">✨ Presets de Temas — 1 clic</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+
+            <button class="theme-preset-btn" onclick="applyThemePreset('dark-pro')"
+              style="background:linear-gradient(135deg,#6C63FF,#FF6584);border:2px solid transparent;">
+              <span class="preset-icon">🌑</span>
+              <span class="preset-name">Dark Pro</span>
+              <span class="preset-desc">Morado · Rosa · Negro</span>
+              <div class="preset-swatches">
+                <span style="background:#6C63FF"></span>
+                <span style="background:#FF6584"></span>
+                <span style="background:#43E97B"></span>
+                <span style="background:#07071A"></span>
+              </div>
+            </button>
+
+            <button class="theme-preset-btn" onclick="applyThemePreset('light-clean')"
+              style="background:linear-gradient(135deg,#6366F1,#8B5CF6);border:2px solid transparent;">
+              <span class="preset-icon">☀️</span>
+              <span class="preset-name">Light Clean</span>
+              <span class="preset-desc">Índigo · Blanco · Limpio</span>
+              <div class="preset-swatches">
+                <span style="background:#6366F1"></span>
+                <span style="background:#EC4899"></span>
+                <span style="background:#10B981"></span>
+                <span style="background:#F8FAFC"></span>
+              </div>
+            </button>
+
+            <button class="theme-preset-btn" onclick="applyThemePreset('luxury-gold')"
+              style="background:linear-gradient(135deg,#B8860B,#FFD700);border:2px solid transparent;">
+              <span class="preset-icon">👑</span>
+              <span class="preset-name">Luxury Gold</span>
+              <span class="preset-desc">Dorado · Negro · Elegante</span>
+              <div class="preset-swatches">
+                <span style="background:#D4AF37"></span>
+                <span style="background:#C9A96E"></span>
+                <span style="background:#FFD700"></span>
+                <span style="background:#0A0A0A"></span>
+              </div>
+            </button>
+
+            <button class="theme-preset-btn" onclick="applyThemePreset('ocean-blue')"
+              style="background:linear-gradient(135deg,#0EA5E9,#06B6D4);border:2px solid transparent;">
+              <span class="preset-icon">🌊</span>
+              <span class="preset-name">Ocean Blue</span>
+              <span class="preset-desc">Azul · Cyan · Marino</span>
+              <div class="preset-swatches">
+                <span style="background:#0EA5E9"></span>
+                <span style="background:#06B6D4"></span>
+                <span style="background:#38BDF8"></span>
+                <span style="background:#0C1A2E"></span>
+              </div>
+            </button>
+
+          </div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:0.5rem;opacity:0.8">💡 El preset cambia todos los colores de tu landing page de un solo clic</div>
+        </div>
+        <div class="sec-divider"></div>
+        <div class="field-label" style="margin-bottom:0.6rem;">🎨 Personalizar colores manualmente</div>
+
         <div class="color-grid">
           <div>
             <div class="field-label">Primario <button class="fa-btn restore" onclick="restoreColor('primaryColor','#6C63FF')">↺</button></div>
@@ -1029,6 +1108,52 @@ function restoreAllColors(){
   const defs={primaryColor:'#6C63FF',secondaryColor:'#FF6584',accentColor:'#43E97B',bgColor:'#000000'};
   Object.entries(defs).forEach(([f,v])=>restoreColor(f,v));
   toast('↺ Colores restaurados','info');
+}
+
+// ── THEME PRESETS ──
+const THEME_PRESETS = {
+  'dark-pro': {
+    primaryColor:   '#6C63FF',
+    secondaryColor: '#FF6584',
+    accentColor:    '#43E97B',
+    bgColor:        '#07071A'
+  },
+  'light-clean': {
+    primaryColor:   '#6366F1',
+    secondaryColor: '#EC4899',
+    accentColor:    '#10B981',
+    bgColor:        '#F8FAFC'
+  },
+  'luxury-gold': {
+    primaryColor:   '#D4AF37',
+    secondaryColor: '#C9A96E',
+    accentColor:    '#FFD700',
+    bgColor:        '#0A0A0A'
+  },
+  'ocean-blue': {
+    primaryColor:   '#0EA5E9',
+    secondaryColor: '#06B6D4',
+    accentColor:    '#38BDF8',
+    bgColor:        '#0C1A2E'
+  }
+};
+function applyThemePreset(presetKey){
+  const theme = THEME_PRESETS[presetKey];
+  if(!theme) return;
+  Object.entries(theme).forEach(([field, val]) => {
+    editedData[field] = val;
+    setColor(field, val);
+    if(field === 'bgColor') selectBgColor(val);
+  });
+  markUnsaved();
+  pushColorToPreview();
+  scheduleAutoSave();
+  // Highlight active preset button
+  document.querySelectorAll('.theme-preset-btn').forEach(b => b.classList.remove('active-theme'));
+  const btn = document.querySelector(`[onclick="applyThemePreset('${presetKey}')"]`);
+  if(btn) btn.classList.add('active-theme');
+  const names = {'dark-pro':'Dark Pro','light-clean':'Light Clean','luxury-gold':'Luxury Gold','ocean-blue':'Ocean Blue'};
+  toast(`✨ Tema "${names[presetKey]}" aplicado`,'success');
 }
 
 // ── AUTO-SAVE (debounce 1.5s) ──
