@@ -159,6 +159,45 @@ body{background:var(--dark);color:#fff;font-family:'Inter',system-ui,sans-serif;
 @keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
 .wave-bar.silent .wb{animation:none;transform:scaleY(.3);opacity:.25;}
 
+/* ─── START OVERLAY ─── */
+#startOverlay{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,#05050a 0%,#0d0820 50%,#05050a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1.5rem;cursor:pointer;
+}
+#startOverlay .ov-logo{
+  width:80px;height:80px;border-radius:22px;
+  background:linear-gradient(135deg,#ff4500,#ff0099);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.8rem;
+  box-shadow:0 0 60px rgba(255,69,0,.5);
+  animation:ovPulse 2s ease-in-out infinite;
+}
+@keyframes ovPulse{0%,100%{transform:scale(1);box-shadow:0 0 40px rgba(255,69,0,.4)}50%{transform:scale(1.06);box-shadow:0 0 80px rgba(255,69,0,.7)}}
+#startOverlay h1{
+  font-size:2rem;font-weight:900;text-align:center;line-height:1.2;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.7));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+#startOverlay p{
+  font-size:.95rem;color:rgba(255,255,255,.55);text-align:center;max-width:380px;
+  line-height:1.6;
+}
+#startOverlay .ov-btn{
+  padding:1rem 2.5rem;
+  background:linear-gradient(135deg,#ff4500,#ff0099);
+  color:#fff;border:none;border-radius:50px;
+  font-size:1.1rem;font-weight:900;cursor:pointer;
+  box-shadow:0 8px 40px rgba(255,69,0,.5);
+  transition:all .3s;
+  font-family:'Inter',system-ui,sans-serif;
+  animation:ovBtn 1.5s ease-in-out infinite;
+}
+@keyframes ovBtn{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+#startOverlay .ov-btn:hover{transform:scale(1.05)!important;box-shadow:0 12px 50px rgba(255,69,0,.7);}
+#startOverlay .ov-hint{font-size:.72rem;color:rgba(255,255,255,.3);margin-top:-.5rem;}
+
 /* ─── MIDDLE: FORM ─── */
 .form-panel{
   background:var(--dark);
@@ -521,6 +560,15 @@ body{background:var(--dark);color:#fff;font-family:'Inter',system-ui,sans-serif;
 </style>
 </head>
 <body>
+
+<!-- ═══ START OVERLAY ═══ -->
+<div id="startOverlay" onclick="startDemo()">
+  <div class="ov-logo">🤖</div>
+  <h1>SuperBot007<br>Demo en Vivo</h1>
+  <p>Ve cómo Amanda IA construye un bot completo, landing page y tarjeta digital para una Clínica Spa de lujo — en tiempo real.</p>
+  <button class="ov-btn">▶ Ver Demo con Voz</button>
+  <div class="ov-hint">🔊 Activa el volumen de tu dispositivo</div>
+</div>
 <div class="app">
 
   <!-- TOP BAR -->
@@ -852,31 +900,29 @@ function startTimer() {
   }, 1000);
 }
 
-// ── ElevenLabs TTS ──
-let audioQueue = [];
-let isPlaying = false;
-async function speak(text) {
-  try {
-    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`,{
-      method:'POST',
-      headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({
-        text,
-        model_id:'eleven_turbo_v2_5',
-        voice_settings:{stability:0.32,similarity_boost:0.88,style:0.5,use_speaker_boost:true}
-      })
-    });
-    if(!r.ok) return;
-    const blob = await r.blob();
-    const url = URL.createObjectURL(blob);
-    return new Promise(resolve => {
+// ── ElevenLabs TTS — Fire-and-forget (never blocks the demo) ──
+function speak(text) {
+  // Launch audio async — demo NEVER waits for it
+  (async () => {
+    try {
+      const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`,{
+        method:'POST',
+        headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({
+          text,
+          model_id:'eleven_turbo_v2_5',
+          voice_settings:{stability:0.32,similarity_boost:0.88,style:0.5,use_speaker_boost:true}
+        })
+      });
+      if(!r.ok) return;
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
       const a = new Audio(url);
       document.getElementById('waveBar').classList.remove('silent');
-      a.onended = () => { document.getElementById('waveBar').classList.add('silent'); resolve(); };
-      a.onerror = resolve;
-      a.play();
-    });
-  } catch(e){ return; }
+      a.onended = () => document.getElementById('waveBar').classList.add('silent');
+      a.play().catch(()=>{});
+    } catch(e){}
+  })();
 }
 
 function addMsg(text, who='bot', sayIt=true) {
@@ -888,8 +934,8 @@ function addMsg(text, who='bot', sayIt=true) {
   d.textContent = text;
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
-  if(who==='bot' && sayIt) return speak(text);
-  return Promise.resolve();
+  // Speak fire-and-forget — NEVER blocks demo flow
+  if(who==='bot' && sayIt) speak(text);
 }
 
 function showTyping() {
@@ -1013,6 +1059,7 @@ function activateBot() {
 //  MAIN DEMO SEQUENCE
 // ══════════════════════════════════════
 async function runDemo() {
+  console.log('🚀 runDemo started');
   startTimer();
   document.getElementById('waveBar').classList.add('silent');
 
@@ -1156,9 +1203,19 @@ async function runDemo() {
   activateBot();
 }
 
-window.addEventListener('load', () => {
+// ── Start (triggered by user click = unlocks audio) ──
+function startDemo() {
+  const ov = document.getElementById('startOverlay');
+  ov.style.transition = 'opacity .5s';
+  ov.style.opacity = '0';
+  setTimeout(() => { ov.style.display='none'; }, 500);
   startTime = Date.now();
   runDemo();
+}
+
+window.addEventListener('load', () => {
+  // Just show the overlay — demo starts on click
+  startTime = Date.now();
 });
 </script>
 </body>
