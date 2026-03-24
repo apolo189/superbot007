@@ -770,8 +770,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('botIdDisplay').textContent = 'DEMO';
     document.getElementById('sec-colors').classList.add('active');
-    populateFields(editedData);
-    if(jumpTo){ showSection(jumpTo, document.querySelector(`[onclick*="showSection('${jumpTo}'"]`)); }
+    populateForm();
+    if(jumpTo){
+      setTimeout(()=>{
+        const btn = document.querySelector(`[onclick*="showSection('${jumpTo}')"]`);
+        showSection(jumpTo, btn);
+      }, 100);
+    }
     return;
   }
 
