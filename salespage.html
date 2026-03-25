@@ -237,6 +237,24 @@ img{max-width:100%;display:block;}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
 .reveal.visible{opacity:1;transform:none;}
 
+/* ══ GENIE POPUP ══ */
+#genie-popup{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:flex-end;padding:1.5rem;pointer-events:none;opacity:0;transition:opacity .5s;}
+#genie-popup.show{opacity:1;pointer-events:all;}
+#genie-popup-inner{position:relative;display:flex;flex-direction:column;align-items:center;animation:genieRise 0.8s cubic-bezier(.22,1,.36,1) both;}
+@keyframes genieRise{from{opacity:0;transform:translateY(80px) scale(.7);}to{opacity:1;transform:translateY(0) scale(1);}}
+#genie-smoke{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:120px;height:40px;background:radial-gradient(ellipse,rgba(124,58,237,.35),transparent 70%);border-radius:50%;animation:smokeAnim 2s ease-in-out infinite alternate;pointer-events:none;}
+@keyframes smokeAnim{from{transform:translateX(-50%) scaleX(1);}to{transform:translateX(-50%) scaleX(1.3);}}
+#genie-img{width:160px;height:auto;border-radius:20px;box-shadow:0 20px 60px rgba(124,58,237,.5);border:3px solid rgba(255,204,0,.5);position:relative;z-index:2;}
+#genie-bubble{background:#fff;border-radius:20px 20px 4px 20px;padding:1rem 1.2rem;box-shadow:0 8px 32px rgba(0,0,0,.15);margin-bottom:.5rem;max-width:190px;text-align:center;position:relative;z-index:2;}
+#genie-bubble::after{content:'';position:absolute;bottom:-10px;right:16px;width:0;height:0;border-left:10px solid transparent;border-top:10px solid #fff;}
+#genie-bubble-text{font-size:.9rem;font-weight:700;color:#1a1a2e;line-height:1.5;margin-bottom:.75rem;}
+#genie-bubble-text span{font-size:.8rem;color:#7c3aed;font-weight:600;}
+#genie-cta{display:block;background:linear-gradient(135deg,#ff4500,#ff0099);color:#fff;font-weight:900;font-size:.82rem;padding:.6rem 1rem;border-radius:50px;box-shadow:0 4px 16px rgba(255,69,0,.4);transition:transform .2s;}
+#genie-cta:hover{transform:scale(1.05);}
+#genie-close{position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;background:#1a1a2e;color:#fff;font-size:.75rem;border:none;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:background .2s;}
+#genie-close:hover{background:#ff4500;}
+@media(max-width:480px){#genie-img{width:130px;}#genie-bubble{max-width:160px;}#genie-popup{padding:1rem;}}
+
 /* ══ FAQ ══ */
 #faq{background:#f8f5ff;}
 .faq-eyebrow{color:var(--purple);}
@@ -253,6 +271,19 @@ img{max-width:100%;display:block;}
 <body>
 
 <div id="sp"></div>
+
+<!-- ══ GENIE POPUP ══ -->
+<div id="genie-popup">
+  <div id="genie-popup-inner">
+    <button id="genie-close" onclick="closeGeniePopup()">✕</button>
+    <div id="genie-smoke"></div>
+    <img id="genie-img" src="genie_popup_frame.jpg" alt="Genie SuperBot007"/>
+    <div id="genie-bubble">
+      <div id="genie-bubble-text">¡Bienvenido! 🧞‍♀️<br><span>Pide tu deseo digital...</span></div>
+      <a href="https://apolo189.github.io/superbot007/form.html" id="genie-cta">✨ ¡Pedir Ahora — Gratis!</a>
+    </div>
+  </div>
+</div>
 
 <!-- ══ NAV ══ -->
 <nav id="nav">
@@ -692,6 +723,25 @@ updateCountdown();
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').style.boxShadow=window.scrollY>50?'0 4px 30px rgba(0,0,0,.1)':'0 2px 20px rgba(0,0,0,.06)';
 });
+
+// ══ GENIE POPUP ══
+function closeGeniePopup(){
+  const p=document.getElementById('genie-popup');
+  p.style.opacity='0';
+  p.style.pointerEvents='none';
+  setTimeout(()=>p.style.display='none',500);
+  sessionStorage.setItem('genie_shown','1');
+}
+// Aparece 2.5s después de abrir — solo una vez por sesión
+if(!sessionStorage.getItem('genie_shown')){
+  setTimeout(()=>{
+    document.getElementById('genie-popup').classList.add('show');
+    // Se cierra sola a los 8 segundos si no interactúan
+    setTimeout(()=>{
+      if(document.getElementById('genie-popup').classList.contains('show')) closeGeniePopup();
+    },8000);
+  },2500);
+}
 </script>
 </body>
 </html>
