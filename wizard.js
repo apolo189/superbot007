@@ -110,24 +110,24 @@
   /* ── STEP SCRIPTS ── */
   const STEP_SCRIPTS = {
     es: {
-      1: `Perfecto, empecemos con el primer paso. Esta sección es para que el bot te conozca — necesito saber el nombre de tu negocio, el tipo de negocio que tienes y en qué ciudad estás. Lo más importante aquí es la descripción: mientras más detallada sea, mejor va a responder tu bot a tus clientes, así que tómate tu tiempo para escribirla bien. También vas a poner el título principal y subtítulo que verán tus clientes al entrar a tu landing page, el mensaje de bienvenida de tu bot, y si quieres, la URL de una foto para el avatar del bot. Llena todos los campos y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      2: `Excelente, llegamos al paso de diseño. Esta sección va a definir la apariencia visual de tu landing page y tu tarjeta digital — los colores primario, secundario, de acento y el fondo. No te preocupes si no estás seguro de los colores ahora mismo, porque una vez que tu bot esté listo puedes cambiarlos cuando quieras en el editor visual. También aquí subes tu logo — puedes arrastrarlo directamente o pegar la URL si lo tienes en línea. Y la imagen principal de tu landing page, que es la foto grande que tus clientes ven al entrar. Por último el título y subtítulo de tu sección de servicios. Llena lo que puedas y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      3: `Muy bien, ahora vamos con tus servicios. Esta sección está diseñada para listar todo lo que ofrece tu negocio — con nombre, precio y descripción de cada servicio. Te recomiendo que la descripción de cada servicio sea lo más detallada posible, porque es exactamente lo que tu bot va a decirle a tus clientes cuando pregunten. Puedes agregar hasta 8 servicios. Si prefieres, en el último paso también puedes generarlos automáticamente con inteligencia artificial. Agrega al menos uno y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      4: `Ahora llegamos a la sección de pagos. Esta parte es donde configuras cómo quieres cobrar — tienes PayPal, Stripe, Zelle, Venmo y CashApp disponibles. Activa los que uses y llena tu información de pago. Si no vendes productos físicos también puedes saltar este paso. Con el Plan Pro todos los métodos de pago quedan activos y conectados al bot. Cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      5: `Llegamos a la galería de fotos. Aquí subes las imágenes que tus clientes van a ver cuando visiten tu landing page — fotos reales de tu negocio, de tu trabajo, de tu local. Puedes subir hasta 8 fotos, ya sea desde tu librería de archivos o pegando la URL directa de cada imagen. Entre más reales y de calidad sean las fotos, mejor impresión le das a tus clientes. Llena lo que puedas y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      6: `Perfecto, ahora el paso de contacto, horarios y Google Calendar. Aquí pones tu teléfono, WhatsApp con código de país, email y dirección. También puedes activar Google Calendar para que el bot agende citas reales directamente en tu calendario — solo necesitas tu Google Calendar ID. Y tu horario de atención activando cada día que trabajas. Cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
-      7: `Llegamos al último paso. Aquí seleccionas el idioma del bot, puedes agregar una instrucción especial, y tienes botones para generar automáticamente con IA tu descripción, servicios, testimonios y preguntas frecuentes. Para mejores resultados asegúrate de haber escrito una buena descripción en el paso 1. Cuando todo esté listo, presiona Activar Bot 007 y tu bot estará funcionando al 100%.`,
-      8: `¡Felicidades! Tu bot está activo y funcionando. Configura el plan para compartir tus enlaces con tus clientes. Recuerda que puedes cambiar cualquier cosa — colores, imágenes, textos, servicios — en el editor visual cuando quieras. ¡Empezaste algo increíble!`,
+      1: `Genial, empecemos. Necesito el nombre de tu negocio, el tipo, y la ciudad donde estás. Lo más importante es la descripción — entre más detallada, mejor responde tu bot. También pon el título y subtítulo de tu landing page y el mensaje de bienvenida del bot. ¿Tienes el nombre de tu negocio listo?`,
+      2: `Ahora le damos personalidad visual a tu landing. Elige los colores de tu marca — primario, secundario y fondo. Si no tienes colores definidos, no te preocupes, puedes cambiarlos después. También sube tu logo y la foto principal que tus clientes verán al entrar. ¿Ya tienes las fotos listas o las buscamos juntos?`,
+      3: `Perfecto, ahora los servicios. Lista todo lo que ofreces con nombre, precio y una buena descripción — eso es lo que tu bot va a decirle a los clientes. Puedes agregar hasta 8 servicios, o en el último paso los generamos con IA automáticamente. ¿Cuál es el servicio principal de tu negocio?`,
+      4: `Ahora configuramos cómo vas a cobrar. Tienes PayPal, Zelle, Venmo y CashApp — activa los que ya usas y pon tu info de pago. Si no cobras en línea todavía, puedes saltarte este paso por ahora. ¿Cuál método de pago usas más?`,
+      5: `Hora de las fotos. Sube imágenes reales de tu negocio, tu trabajo, tu local — lo que tus clientes van a ver al visitarte. Hasta 8 fotos desde tu galería o por URL. Las fotos reales generan más confianza que cualquier diseño. ¿Tienes fotos del negocio para subir?`,
+      6: `Casi listo. Aquí pones tu teléfono, WhatsApp con código de país, email y dirección. También activa tus días y horarios de atención para que el bot sepa cuándo estás disponible. ¿Tu negocio trabaja todos los días o solo ciertos días?`,
+      7: `¡Último paso! Selecciona el idioma del bot, y puedes generar con IA tu descripción, servicios, testimonios y preguntas frecuentes con un clic. Cuando todo esté listo, presiona "Activar Bot 007". ¡Tu bot está a segundos de vivir! 🚀`,
+      8: `¡Tu bot está ACTIVO! 🎉 Ahora activa tu plan para compartir los enlaces con tus clientes. Puedes editar colores, fotos, textos y servicios cuando quieras desde el editor visual. ¡Empieza a compartirlo hoy!`,
     },
     en: {
-      1: `Perfect, let's start with step one. This section is so the bot gets to know your business — I need your business name, type, and city. The most important part is the description: the more detailed it is, the better your bot answers clients. You'll also set the title, subtitle, welcome message, and optionally a bot avatar photo URL. Fill everything in and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      2: `Excellent, now the design step. This defines the visual look of your landing page and digital card — primary, secondary, accent, and background colors. Don't worry about colors now — you can change them anytime in the visual editor. You'll also upload your logo and main landing page image. Fill in what you can and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      3: `Great, now your services. List everything your business offers — name, price, and description for each. Make descriptions as detailed as possible — that's exactly what your bot tells clients when they ask. Add at least one and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      4: `Now the payments section. Configure how you want to get paid — PayPal, Stripe, Zelle, Venmo, and CashApp are all available. Enable the ones you use and fill in your payment info. With the Pro Plan all payment methods are active and connected to the bot. When you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      5: `Now the photo gallery. Upload images your clients will see — real photos of your business, work, and space. Up to 8 photos from files or direct URLs. The more real and high-quality, the better impression you make. Fill in what you can and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      6: `Perfect, now contact, hours, and Google Calendar. Enter your phone, WhatsApp with country code, email, and address. You can also activate Google Calendar so the bot books real appointments directly in your calendar — just need your Google Calendar ID. Set your business hours too. When you're done with this section, press Next and I'll be right here to guide you through the next step.`,
-      7: `Last step! Select the bot language, add any special instruction, and use the AI buttons to auto-generate your description, services, testimonials, and FAQs. For best results make sure you wrote a good description in step 1. When ready, press Activate Bot 007 and your bot goes live 100%.`,
-      8: `Congratulations! Your bot is live and active. Activate your plan to share your links with clients. Remember you can change anything — colors, images, text, services — in the visual editor anytime. You've started something amazing!`,
+      1: `Great, let's start. I need your business name, type, and city. The most important thing is the description — the more detailed it is, the better your bot responds. Also set your landing page title, subtitle, and bot welcome message. Do you have your business name ready?`,
+      2: `Now let's give your landing page some personality. Choose your brand colors — primary, secondary, and background. If you don't have set colors yet, no worries, you can change them later. Also upload your logo and the main photo your clients will see. Do you have photos ready or should we figure it out together?`,
+      3: `Perfect, now the services. List everything you offer with name, price, and a good description — that's what your bot will tell clients. You can add up to 8 services, or in the last step we can generate them with AI automatically. What's your main service?`,
+      4: `Now let's set up how you'll get paid. You have PayPal, Zelle, Venmo, and CashApp — activate the ones you already use and enter your payment info. If you don't take online payments yet, you can skip this for now. Which payment method do you use most?`,
+      5: `Time for photos. Upload real images of your business, your work, your space — what your clients will see when they visit. Up to 8 photos from your gallery or by URL. Real photos build more trust than any design. Do you have business photos to upload?`,
+      6: `Almost done. Enter your phone, WhatsApp with country code, email, and address. Also activate your business days and hours so the bot knows when you're available. Does your business work every day or only certain days?`,
+      7: `Last step! Select the bot language, and you can generate your description, services, testimonials, and FAQs with AI in one click. When everything's ready, press "Activate Bot 007". Your bot is seconds away from going live! 🚀`,
+      8: `Your bot is LIVE! 🎉 Now activate your plan to share the links with your clients. You can edit colors, photos, text, and services anytime from the visual editor. Start sharing it today!`,
     }
   };
 
@@ -135,16 +135,16 @@
   /* Sales page: lead with the 2 psychological questions */
   const PAGE_INTROS = {
     es: {
-      sales: '¿Tienes un negocio que necesita más clientes? Si la respuesta es sí, tengo algo que te va a encantar. Soy Amanda, tu guía de Super Bot 007. Cuéntame — ¿qué tipo de negocio tienes?',
-      form: 'Hola, soy Amanda. Estoy aquí para acompañarte en crear tu primer bot. Son 7 pasos — yo te explico cada uno. Cuando termines un paso, dime "listo" y avanzamos juntos. ¡Empecemos!',
-      editor: 'Hola, soy Amanda. Estás en el editor visual — aquí puedes cambiar colores, imágenes y textos en tiempo real. ¿Qué quieres personalizar?',
-      landing: 'Hola, soy Amanda. Esta es la landing page de tu negocio creada con Super Bot 007. ¿Te puedo ayudar con algo?',
+      sales: '¡Hola! Soy Amanda 🧞‍♀️, tu guía personal de Super Bot 007. Antes de todo, cuéntame — ¿qué tipo de negocio tienes tú?',
+      form: '¡Hola! Soy Amanda, estoy aquí para ayudarte a crear tu bot paso a paso 🎉. No te preocupes — te explico todo y lo hacemos juntos. Primero dime, ¿qué tipo de negocio tienes?',
+      editor: '¡Hola! Soy Amanda 🧞‍♀️. Estás en el editor visual — aquí cambias colores, fotos y textos en tiempo real. ¿Qué parte quieres personalizar primero?',
+      landing: '¡Hola! Soy Amanda 🧞‍♀️. Esta es la landing page de tu negocio creada con Super Bot 007. ¿En qué te puedo ayudar hoy?',
     },
     en: {
-      sales: 'Do you have a business that needs more clients? If the answer is yes, I have something you\'re going to love. I\'m Shirley, your Super Bot 007 guide. Tell me — what type of business do you have?',
-      form: "Hi, I'm Shirley. I'm here to help you create your first bot. There are 7 steps — I'll explain each one. When you finish a step, just say \"done\" and we'll move forward together. Let's go!",
-      editor: "Hi, I'm Shirley. You're in the visual editor — change colors, images and text in real time. What would you like to customize?",
-      landing: "Hi, I'm Shirley. This is your business landing page created with Super Bot 007. Can I help you with anything?",
+      sales: "Hi! I'm Shirley 🧞‍♀️, your personal Super Bot 007 guide. Before anything else, tell me — what type of business do you have?",
+      form: "Hi! I'm Shirley, I'm here to help you build your bot step by step 🎉. Don't worry — I'll explain everything and we'll do it together. First tell me, what type of business do you have?",
+      editor: "Hi! I'm Shirley 🧞‍♀️. You're in the visual editor — change colors, images, and text in real time. What part would you like to customize first?",
+      landing: "Hi! I'm Shirley 🧞‍♀️. This is your business landing page created with Super Bot 007. How can I help you today?",
     }
   };
 
@@ -608,17 +608,10 @@
       return;
     }
 
-    // On form page: greet, then immediately show & speak the current step explanation
+    // On form page: greet with conversational opener, then explain step AFTER user responds
     if (PAGE === 'form') {
-      const stepHint = STEP_SCRIPTS[LANG][currentStep];
-      if (stepHint) {
-        setTimeout(() => {
-          addAgentMsg(stepHint);
-          speak(stepHint); // speak ONLY the step hint (not the greeting)
-        }, 500);
-      } else {
-        speak(intro); // fallback
-      }
+      // Speak only the greeting/intro first — let the user respond naturally
+      speak(intro);
       return;
     }
     // Editor page: speak intro
@@ -671,15 +664,34 @@
     const kb = KB[LANG];
     const stepHints = STEP_SCRIPTS[LANG];
     const stepInfo = currentStep >= 1 && currentStep <= 8
-      ? `\nCurrent form step: ${currentStep}. Step hint: "${stepHints[currentStep]}"`
+      ? `\nPaso actual del formulario: ${currentStep}. Descripción del paso: "${stepHints[currentStep]}"`
       : '';
-    const bizInfo = businessType ? `\nClient's business type: ${businessType}` : '';
+    const bizInfo = businessType ? `\nTipo de negocio del cliente: ${businessType}` : '';
 
     if (IS_ES()) {
-      return `Eres Amanda, agente de ventas y guía personal de Super Bot 007.
-Personalidad: cálida, profesional, motivadora. Siempre en ESPAÑOL.
-Siempre responde directamente a lo que pregunta el cliente.
+      return `Eres Amanda, asistente personal y guía de Super Bot 007.
+Personalidad: CÁLIDA, conversacional, entusiasta, empática. Hablas como una amiga que conoce el producto. SIEMPRE en ESPAÑOL latino.
 Página actual: ${PAGE}${stepInfo}${bizInfo}
+
+🎯 TU MISIÓN PRINCIPAL — CONVERSAR NATURALMENTE:
+Cuando el cliente responde una pregunta tuya (como qué negocio tiene, cómo le va, qué problema tiene), TÚ DEBES:
+1. Primero reaccionar emocionalmente con entusiasmo genuino. Ej: si dice "tengo una barbería", responde "¡Ay qué bien! Las barberías son perfectas para esto..." o "¡Eso es increíble! Las barberías con un bot IA agendan solas..."
+2. Conectar esa respuesta con cómo SuperBot007 ayuda ESPECÍFICAMENTE a ese tipo de negocio
+3. Hacer UNA sola pregunta de seguimiento para continuar la conversación
+
+❌ NUNCA hagas esto:
+- Ignorar lo que el cliente acaba de decir y saltar a instrucciones genéricas
+- Dar una lista de instrucciones cuando el cliente está en modo conversación
+- Responder con frases robóticas o demasiado corporativas
+- Tratar un "sí", "bien", "ok" como si el cliente quiere avanzar de paso automáticamente
+- Dar respuestas de 1 sola oración cuando el cliente acaba de compartir algo sobre su negocio
+
+✅ SÍ DEBES:
+- Celebrar cuando el cliente menciona su negocio: "¡Qué bueno! Una ${businessType || 'negocio así'} con IA es un game changer..."
+- Mostrar curiosidad genuina: "¿Y cuántos clientes atiendes al día más o menos?"
+- Adaptar TODO al tipo de negocio que mencionó
+- Guiar suavemente hacia el formulario SIN forzar
+- En el formulario: ser específica sobre qué llenar, pero con entusiasmo y conversación
 
 CONOCIMIENTO DEL PRODUCTO:
 - ${kb.product}
@@ -687,14 +699,15 @@ CONOCIMIENTO DEL PRODUCTO:
 - Garantía: ${kb.guarantee}
 - Tiempo de setup: ${kb.howlong}
 - WhatsApp: ${kb.whatsapp}
-- Google Calendar: ${kb.calendar}
 - Pagos: ${kb.payments}
-- Modelo Agencia: ${kb.agency}
 - Negocios: ${kb.businesses}
 - Prueba gratis: ${kb.try}
-- Cancelar: ${kb.cancel}
-- Seguridad: ${kb.security}
-- Internacional: ${kb.worldwide}
+
+EJEMPLOS DE RESPUESTAS NATURALES:
+- Si dice "tengo una barbería": "¡Me encanta! Las barberías son uno de los mejores casos de uso. Tu bot puede agendar citas 24/7, mostrar tus cortes con fotos y aceptar pagos con Zelle o PayPal. ¿Cuántos barberos trabajan contigo?"
+- Si dice "tengo un restaurante": "¡Qué delicia! Un restaurante con bot IA es tremendo. Puede mostrar el menú, tomar reservas y responder a los clientes a las 2am cuando nadie está. ¿Tienes delivery también?"
+- Si dice "no sé por dónde empezar": "¡Normal, yo te guío todo! Son solo 7 pasos y te los explico uno por uno. Lo primero es el nombre de tu negocio — ¿cómo se llama?"
+- Si dice "¿cuánto cuesta?": "Desde $19.99 al mes tienes TODO — bot, landing page, tarjeta digital, pagos. Y tienes 7 días gratis para probarlo sin tarjeta. 😊 ¿Qué tipo de negocio tienes?"
 
 RESPUESTAS POR TIPO DE NEGOCIO:
 - Barbería: ${kb.barbershop}
@@ -709,23 +722,37 @@ RESPUESTAS POR TIPO DE NEGOCIO:
 - Guardería: ${kb.childcare}
 - E-commerce: ${kb.ecommerce}
 
-REGLAS ESTRICTAS:
-1. SIEMPRE responde la pregunta del cliente directamente
-2. Máximo 2-3 oraciones cortas y contundentes
-3. Termina SIEMPRE con una pregunta o llamada a la acción
-4. Máximo 1 emoji por respuesta
-5. Nunca inventes precios ni datos fuera del KB
-6. Si el cliente menciona su tipo de negocio, adapta tu respuesta con el ejemplo específico
-7. Cuando el cliente quiera crear su bot o llenar el formulario, dile que lo llevas ahora mismo
-8. En pasos del formulario: explica EXACTAMENTE qué llenar en el paso actual, sé específico y motivador
-9. NUNCA digas "haz click en el link" — tú manejas la navegación
-10. Si preguntan precio: menciona los 3 planes ($19.99/$49/$99) y el precio de introducción
-11. Si preguntan cómo funciona la prueba gratis: explica que configuran TODO gratis y al compartir activan el plan`;
+REGLAS DE FORMATO:
+1. Respuestas de 2-4 oraciones (NO más cortas — debes sonar humana y cálida)
+2. Máximo 1-2 emojis por respuesta
+3. Nunca inventes precios ni datos fuera del KB
+4. Termina con UNA pregunta natural de conversación
+5. NUNCA digas "haz click en el link"
+6. Si preguntan precio: menciona los 3 planes y el trial de 7 días gratis`;
     } else {
-      return `You are Shirley, sales agent and personal guide for Super Bot 007.
-Personality: friendly, professional, energetic. Always in ENGLISH.
-Always respond directly to what the client is asking.
+      return `You are Shirley, personal assistant and guide for Super Bot 007.
+Personality: WARM, conversational, enthusiastic, empathetic. You speak like a knowledgeable friend. Always in ENGLISH.
 Current page: ${PAGE}${stepInfo}${bizInfo}
+
+🎯 YOUR MAIN MISSION — CONVERSE NATURALLY:
+When the client answers one of your questions (like what business they have, how it's going, what problem they have), YOU MUST:
+1. First react emotionally with genuine enthusiasm. E.g. if they say "I have a barbershop", respond "Oh nice! Barbershops are perfect for this..." or "That's awesome! Barbershops with an AI bot book themselves..."
+2. Connect their answer to how SuperBot007 helps SPECIFICALLY for that business type
+3. Ask ONE follow-up question to continue the conversation
+
+❌ NEVER do this:
+- Ignore what the client just said and jump to generic instructions
+- Give a list of instructions when the client is in conversation mode
+- Respond with robotic or overly corporate phrases
+- Treat a "yes", "ok", "good" as if the client wants to automatically move to the next step
+- Give 1-sentence responses when the client just shared something about their business
+
+✅ YOU SHOULD:
+- Celebrate when the client mentions their business: "That's great! A ${businessType || 'business like that'} with AI is a game changer..."
+- Show genuine curiosity: "And how many clients do you serve per day roughly?"
+- Adapt EVERYTHING to the business type they mentioned
+- Guide gently toward the form WITHOUT forcing
+- In the form: be specific about what to fill in, but with enthusiasm and conversation
 
 PRODUCT KNOWLEDGE:
 - ${kb.product}
@@ -733,14 +760,15 @@ PRODUCT KNOWLEDGE:
 - Guarantee: ${kb.guarantee}
 - Setup time: ${kb.howlong}
 - WhatsApp: ${kb.whatsapp}
-- Google Calendar: ${kb.calendar}
 - Payments: ${kb.payments}
-- Agency model: ${kb.agency}
 - Businesses: ${kb.businesses}
 - Free trial: ${kb.try}
-- Cancel: ${kb.cancel}
-- Security: ${kb.security}
-- International: ${kb.worldwide}
+
+NATURAL RESPONSE EXAMPLES:
+- If they say "I have a barbershop": "Oh nice! Barbershops are one of the best use cases. Your bot can book appointments 24/7, show your cuts with photos, and accept payments via Zelle or PayPal. How many barbers work with you?"
+- If they say "I have a restaurant": "Awesome! A restaurant with an AI bot is incredible. It can show the menu, take reservations, and respond to customers at 2am when nobody's there. Do you also do delivery?"
+- If they say "I don't know where to start": "Totally normal, I'll guide you through everything! It's just 7 steps and I'll explain each one. First thing is your business name — what's it called?"
+- If they say "how much does it cost?": "Starting at $19.99/month you get EVERYTHING — bot, landing page, digital card, payments. And you get 7 days free to try it without a card. 😊 What type of business do you have?"
 
 BUSINESS-TYPE RESPONSES:
 - Barbershop: ${kb.barbershop}
@@ -755,18 +783,13 @@ BUSINESS-TYPE RESPONSES:
 - Childcare: ${kb.childcare}
 - E-commerce: ${kb.ecommerce}
 
-STRICT RULES:
-1. ALWAYS answer the client's question directly
-2. Maximum 2-3 short, punchy sentences
-3. ALWAYS end with a question or call to action
-4. Maximum 1 emoji per response
-5. Never invent prices or data outside the KB
-6. If the client mentions their business type, adapt with the specific example
-7. When the client wants to create their bot, tell them you're taking them there NOW
-8. In form steps: explain EXACTLY what to fill in, be specific and encouraging
-9. NEVER say "click the link" — you handle navigation automatically
-10. If asked about price: mention all 3 plans ($19.99/$49/$99) and intro pricing
-11. If asked about free trial: configure everything free, activate plan when sharing`;
+FORMAT RULES:
+1. 2-4 sentence responses (NOT shorter — you should sound human and warm)
+2. Max 1-2 emojis per response
+3. Never invent prices or data outside the KB
+4. End with ONE natural conversational question
+5. NEVER say "click the link"
+6. If asked about price: mention all 3 plans and the 7-day free trial`;
     }
   }
 
@@ -784,9 +807,14 @@ STRICT RULES:
   }
 
   /* ── INTENT: next step in form ── */
+  /* ONLY detect explicit "move forward" phrases — NOT generic agreement words */
   function detectNextStepIntent(text) {
     const t = text.toLowerCase().replace(/[¡!¿?]/g,'');
-    return /\b(siguiente|next|continue|continuar|listo|paso.*siguiente|siguiente.*paso|next.*step|step.*next|done|hecho|listo|ya|avanzar|sigue|go.*on|move.*on|forward|adelante|ok|okay|claro|si|sí|yes|yeah|sure)\b/.test(t);
+    // Must be EXPLICIT navigation intent — short phrases only, or explicit "next step" combos
+    // Do NOT catch: "si", "ok", "claro", "bien", "sí", "yes", "sure" alone — those are conversational
+    const explicit = /\b(siguiente paso|paso siguiente|ir al siguiente|ir al paso|avanzar al|next step|move to next|go to next|move forward|paso.*siguiente|siguiente.*paso|continua con el siguiente|vamos al siguiente|lleva.*siguiente|llevar.*paso)\b/.test(t);
+    const shortOk  = /^(listo|done|hecho|siguiente|next|continuar|continue|avanzar|sigue|adelante)$/.test(t.trim());
+    return explicit || shortOk;
   }
 
   /* ── SEND MESSAGE ── */
@@ -905,7 +933,7 @@ STRICT RULES:
     try {
       const messages = [
         { role: 'system', content: buildSystemPrompt() },
-        ...chatHistory.slice(-10) // keep last 10 for context
+        ...chatHistory.slice(-16) // keep last 16 messages for better conversational context
       ];
 
       const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -914,10 +942,10 @@ STRICT RULES:
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages,
-          max_tokens: 180,
-          temperature: 0.78,
-          presence_penalty: 0.2,
-          frequency_penalty: 0.1
+          max_tokens: 220,    // more room for natural warm responses
+          temperature: 0.85,  // more creative/natural
+          presence_penalty: 0.3,
+          frequency_penalty: 0.2
         })
       });
 
@@ -968,9 +996,16 @@ STRICT RULES:
     if (/ecommerce|e-commerce|tienda online|online store/.test(t)) return kb.ecommerce;
     if (/qué es|what is|como funciona|how does/.test(t)) return kb.product;
 
+    // Conversational fallback based on business context
+    if (businessType && IS_ES()) {
+      return `¡Perfecto! Para ${businessType}, Super Bot 007 es ideal — agenda citas solo, responde clientes 24/7 y acepta pagos automáticamente. ¿Qué parte te gustaría explorar más? 😊`;
+    }
+    if (businessType) {
+      return `Perfect! For a ${businessType}, Super Bot 007 is ideal — it books appointments automatically, responds to clients 24/7, and accepts payments. What would you like to explore? 😊`;
+    }
     return IS_ES()
-      ? '¡Claro! Con Super Bot 007 creas un bot IA completo en 5 minutos desde $19.99/mes. ¿Qué tipo de negocio tienes? 😊'
-      : 'Of course! With Super Bot 007 you create a full AI bot in 5 minutes starting at $19.99/month. What type of business do you have? 😊';
+      ? '¡Claro que sí! Cuéntame más sobre tu negocio — ¿qué tipo de negocio tienes? Así te explico exactamente cómo te puede ayudar el bot. 😊'
+      : "Of course! Tell me more about your business — what type of business do you have? That way I can explain exactly how the bot can help you. 😊";
   }
 
   /* ── DETECT BUSINESS TYPE ── */
@@ -1268,6 +1303,25 @@ STRICT RULES:
     const hint = STEP_SCRIPTS[LANG][step];
     if (!hint) return;
 
+    // Build a natural transition message that includes step context
+    const transitionPrefix = IS_ES()
+      ? (step === 2 ? '¡Excelente, vamos al paso 2! ' :
+         step === 3 ? '¡Perfecto, paso 3! ' :
+         step === 4 ? '¡Muy bien, ahora el paso 4! ' :
+         step === 5 ? '¡Genial, vamos con el paso 5! ' :
+         step === 6 ? '¡Casi listo, paso 6! ' :
+         step === 7 ? '¡Último paso, casi tienes tu bot! 🚀 ' :
+         step === 8 ? '¡FELICIDADES! 🎉 ' : '')
+      : (step === 2 ? 'Excellent, on to step 2! ' :
+         step === 3 ? 'Perfect, step 3! ' :
+         step === 4 ? 'Great, now step 4! ' :
+         step === 5 ? 'Awesome, on to step 5! ' :
+         step === 6 ? 'Almost there, step 6! ' :
+         step === 7 ? 'Last step, almost done! 🚀 ' :
+         step === 8 ? 'CONGRATULATIONS! 🎉 ' : '');
+
+    const fullMsg = transitionPrefix + hint;
+
     // Show hint in chat — speak only if panel is already open and user is engaged
     if (!isOpen) {
       // Panel closed: just update currentStep silently, don't auto-open or speak
@@ -1276,10 +1330,10 @@ STRICT RULES:
       // Panel open: show text + speak only if not already speaking
       setTimeout(() => {
         if (!isSpeaking) {
-          addAgentMsg(hint);
-          speak(hint);
+          addAgentMsg(fullMsg);
+          speak(fullMsg);
         } else {
-          addAgentMsg(hint); // show text even if speaking
+          addAgentMsg(fullMsg); // show text even if speaking
         }
       }, 500);
     }
