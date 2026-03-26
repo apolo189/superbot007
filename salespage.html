@@ -45,18 +45,19 @@ img{max-width:100%;display:block;}
 .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,150,.6)}50%{box-shadow:0 0 0 7px rgba(0,200,150,0)}}
 
-.hero-h1{font-size:clamp(2.8rem,6vw,5.5rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.2rem;color:var(--dark);}
+.hero-h1{font-size:clamp(1.9rem,5vw,5.5rem);font-weight:900;line-height:1.1;letter-spacing:-.03em;margin-bottom:1.2rem;color:var(--dark);}
 .hero-h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero-h1 .grad2{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-.hero-sub{font-size:clamp(1.05rem,2.2vw,1.3rem);color:#555;font-weight:500;margin-bottom:2rem;max-width:580px;line-height:1.75;}
+.hero-sub{font-size:clamp(.9rem,1.8vw,1.1rem);color:#555;font-weight:400;margin-bottom:2rem;max-width:560px;line-height:1.7;}
 
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;}
-.btn-primary{padding:1.1rem 2.8rem;background:var(--grad);border-radius:50px;color:#fff;font-weight:900;font-size:1.1rem;box-shadow:0 8px 35px rgba(255,69,0,.45);transition:transform .25s,box-shadow .25s;animation:gpulse 2.5s ease-in-out infinite;}
-@keyframes gpulse{0%,100%{box-shadow:0 8px 35px rgba(255,69,0,.45)}50%{box-shadow:0 8px 55px rgba(255,69,0,.75)}}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;}
+.btn-primary{padding:.9rem 2.2rem;background:var(--grad);border-radius:50px;color:#fff;font-weight:800;font-size:1rem;box-shadow:0 6px 28px rgba(255,69,0,.4);transition:transform .25s,box-shadow .25s;animation:gpulse 2.5s ease-in-out infinite;white-space:nowrap;}
+@keyframes gpulse{0%,100%{box-shadow:0 6px 28px rgba(255,69,0,.4)}50%{box-shadow:0 8px 40px rgba(255,69,0,.65)}}
 .btn-primary:hover{transform:translateY(-3px) scale(1.03);}
-.btn-secondary{padding:1.1rem 2.4rem;border:2px solid var(--purple);border-radius:50px;color:var(--purple);font-weight:800;font-size:1rem;transition:all .25s;background:rgba(124,58,237,.06);}
+.btn-secondary{padding:.9rem 1.8rem;border:2px solid var(--purple);border-radius:50px;color:var(--purple);font-weight:700;font-size:.95rem;transition:all .25s;background:rgba(124,58,237,.06);white-space:nowrap;}
 .btn-secondary:hover{background:var(--purple);color:#fff;}
+@media(max-width:480px){.btn-primary{padding:.8rem 1.6rem;font-size:.9rem;}.btn-secondary{padding:.8rem 1.4rem;font-size:.85rem;}}
 
 .hero-trust{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:.82rem;font-weight:700;color:#888;}
 .trust-item{display:flex;align-items:center;gap:.4rem;}
@@ -224,7 +225,8 @@ img{max-width:100%;display:block;}
 .final-h{font-size:clamp(2.2rem,5vw,4rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1rem;}
 .final-h .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .final-sub{color:rgba(255,255,255,.7);font-size:1.05rem;margin-bottom:2.5rem;max-width:480px;margin-left:auto;margin-right:auto;}
-.final-btn{display:inline-flex;align-items:center;gap:.7rem;padding:1.3rem 3.5rem;background:var(--grad);border-radius:50px;color:#fff;font-weight:900;font-size:1.2rem;box-shadow:0 10px 50px rgba(255,69,0,.55);transition:transform .25s,box-shadow .25s;animation:gpulse 2.5s ease-in-out infinite;}
+.final-btn{display:inline-flex;align-items:center;gap:.6rem;padding:1rem 2.5rem;background:var(--grad);border-radius:50px;color:#fff;font-weight:800;font-size:1.05rem;box-shadow:0 8px 36px rgba(255,69,0,.5);transition:transform .25s,box-shadow .25s;animation:gpulse 2.5s ease-in-out infinite;white-space:nowrap;}
+@media(max-width:480px){.final-btn{padding:.85rem 1.8rem;font-size:.95rem;}}
 .final-btn:hover{transform:translateY(-4px) scale(1.04);}
 .final-note{color:rgba(255,255,255,.5);font-size:.82rem;margin-top:1rem;}
 #countdown{display:flex;justify-content:center;gap:1rem;margin:2rem auto;max-width:400px;}
