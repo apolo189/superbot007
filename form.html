@@ -307,6 +307,53 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .bot-summary-sub.visible { display:block; }
 
 /* ══════════════════════════════════════
+   WELCOME GATE — Email capture before form
+══════════════════════════════════════ */
+#welcomeGate {
+  position: fixed; inset: 0; z-index: 99998;
+  background: linear-gradient(160deg,#0a0010,#0d0820,#001020);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  transition: opacity .5s ease;
+}
+#welcomeGate.hiding { opacity: 0; pointer-events: none; }
+#welcomeBox {
+  background: linear-gradient(160deg,#13131e,#0d0d18);
+  border: 1.5px solid rgba(124,58,237,.4);
+  border-radius: 28px;
+  max-width: 440px; width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 60px rgba(124,58,237,.15);
+}
+.wg-genie { font-size: 4rem; margin-bottom: .5rem; animation: wgBounce 1.8s ease-in-out infinite; }
+@keyframes wgBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.wg-title { font-size: 1.6rem; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: .5rem; }
+.wg-title span { background: linear-gradient(135deg,#ff4500,#ff0099); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.wg-sub { font-size: .9rem; color: rgba(255,255,255,.6); margin-bottom: 1.8rem; line-height: 1.6; }
+.wg-input {
+  width: 100%; padding: .9rem 1.2rem; border-radius: 14px;
+  background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.15);
+  color: #fff; font-size: .95rem; font-family: 'Inter',sans-serif;
+  outline: none; margin-bottom: .85rem; transition: border-color .2s;
+}
+.wg-input:focus { border-color: rgba(124,58,237,.6); }
+.wg-input::placeholder { color: rgba(255,255,255,.3); }
+.wg-btn {
+  width: 100%; padding: 1rem; border-radius: 50px; border: none;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  color: #fff; font-weight: 900; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 6px 28px rgba(255,69,0,.45);
+  transition: transform .2s, box-shadow .2s;
+}
+.wg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,69,0,.6); }
+.wg-skip { display: block; margin-top: 1rem; color: rgba(255,255,255,.35); font-size: .8rem; cursor: pointer; transition: color .2s; background: none; border: none; font-family: 'Inter',sans-serif; }
+.wg-skip:hover { color: rgba(255,255,255,.6); }
+.wg-trust { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 1.2rem; flex-wrap: wrap; }
+.wg-trust-item { font-size: .75rem; color: rgba(255,255,255,.4); display: flex; align-items: center; gap: .3rem; }
+.wg-trust-item i { font-size: .8rem; color: #00c896; }
+
+/* ══════════════════════════════════════
    UPGRADE POPUP — Try before you buy
 ══════════════════════════════════════ */
 #upgradeOverlay {
@@ -434,12 +481,106 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   font-size: .75rem; color: rgba(0,255,136,.8); font-weight: 700;
   margin-top: .8rem;
 }
+
+
+/* ══ LEAD CAPTURE MODAL ══ */
+#leadOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+}
+#leadOverlay.show { opacity: 1; pointer-events: all; }
+#leadModal {
+  background: linear-gradient(145deg, #13131e, #1a1a2e);
+  border: 1px solid rgba(139,92,246,.45);
+  border-radius: 24px;
+  padding: 2.2rem 2rem 2rem;
+  max-width: 420px; width: 100%;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(139,92,246,.25);
+  animation: leadPop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes leadPop {
+  from { transform: scale(.85) translateY(20px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+.lead-genie-img {
+  width: 100px; height: 100px; object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(139,92,246,.6);
+  margin: 0 auto 1rem;
+  display: block;
+  box-shadow: 0 0 20px rgba(139,92,246,.4);
+}
+.lead-title {
+  font-size: 1.45rem; font-weight: 900; color: #fff;
+  margin-bottom: .4rem; line-height: 1.25;
+}
+.lead-title span { background: linear-gradient(135deg,#8b5cf6,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.lead-sub {
+  font-size: .88rem; color: rgba(255,255,255,.65);
+  margin-bottom: 1.4rem; line-height: 1.5;
+}
+.lead-input {
+  width: 100%; padding: .85rem 1rem;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(139,92,246,.35);
+  border-radius: 12px;
+  color: #fff; font-size: .95rem; font-family: inherit;
+  margin-bottom: .8rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.lead-input:focus { border-color: rgba(139,92,246,.8); }
+.lead-input::placeholder { color: rgba(255,255,255,.35); }
+.lead-btn {
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border: none; border-radius: 14px;
+  color: #fff; font-size: 1.05rem; font-weight: 800;
+  cursor: pointer; margin-top: .4rem;
+  box-shadow: 0 4px 20px rgba(139,92,246,.45);
+  transition: transform .15s, box-shadow .15s;
+}
+.lead-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(139,92,246,.6); }
+.lead-btn:active { transform: translateY(0); }
+.lead-skip {
+  margin-top: .9rem; font-size: .78rem;
+  color: rgba(255,255,255,.35); cursor: pointer;
+  text-decoration: underline; display: inline-block;
+}
+.lead-skip:hover { color: rgba(255,255,255,.65); }
+.lead-privacy {
+  margin-top: .8rem; font-size: .72rem;
+  color: rgba(255,255,255,.3); line-height: 1.4;
+}
+.lead-privacy i { color: rgba(0,255,136,.6); margin-right: .25rem; }
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-text" id="overlayText">Procesando...</div></div>
 <div class="toast" id="toast"></div>
+
+<!-- ══ LEAD CAPTURE MODAL ══ -->
+<div id="leadOverlay">
+  <div id="leadModal">
+    <img src="genie_frame_01.jpg" alt="Genie" class="lead-genie-img">
+    <div class="lead-title">¡Antes de Empezar,<br><span>Pide Tu Deseo!</span> 🧞‍♀️</div>
+    <div class="lead-sub">Solo dame tu nombre y correo — Genie te guiará en cada paso y te enviará los datos de tu bot cuando esté listo.</div>
+    <input type="text"  id="leadName"  class="lead-input" placeholder="Tu nombre" autocomplete="given-name" maxlength="60">
+    <input type="email" id="leadEmail" class="lead-input" placeholder="tucorreo@email.com" autocomplete="email">
+    <button class="lead-btn" onclick="submitLead()">
+      <i class="fas fa-magic" style="margin-right:.5rem"></i>¡Empezar a Crear Mi Bot!
+    </button>
+    <div class="lead-skip" onclick="skipLead()">Continuar sin registrarme</div>
+    <div class="lead-privacy"><i class="fas fa-lock"></i>100% privado — nunca spam, solo los datos de tu bot.</div>
+  </div>
+</div>
 
 
 <header class="header">
@@ -1754,11 +1895,54 @@ function showOv(t){document.getElementById('overlayText').textContent=t||'...';d
 function hideOv(){document.getElementById('overlay').classList.remove('show');}
 function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
 
+// ───────── LEAD CAPTURE ─────────
+function showLeadModal(){
+  document.getElementById('leadOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function hideLeadModal(){
+  document.getElementById('leadOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function skipLead(){
+  localStorage.setItem('sb007_lead_captured','1');
+  hideLeadModal();
+}
+async function submitLead(){
+  const nameVal  = (document.getElementById('leadName').value||'').trim();
+  const emailVal = (document.getElementById('leadEmail').value||'').trim();
+  if(!nameVal){ document.getElementById('leadName').focus(); return; }
+  if(!emailVal || !emailVal.includes('@')){ document.getElementById('leadEmail').focus(); return; }
+  // Store locally
+  localStorage.setItem('sb007_lead_captured','1');
+  localStorage.setItem('sb007_lead_name', nameVal);
+  localStorage.setItem('sb007_lead_email', emailVal);
+  // Pre-fill email in the form if present
+  const emailField = document.getElementById('email');
+  if(emailField && !emailField.value) emailField.value = emailVal;
+  // Try to save to Firestore (non-blocking)
+  try {
+    if(window.db && window.fbDoc && window.fbSet){
+      const leadId = emailVal.replace(/[^a-z0-9]/gi,'_') + '_' + Date.now();
+      await window.fbSet(window.fbDoc(window.db,'leads',leadId),{
+        name: nameVal, email: emailVal,
+        source:'form.html', createdAt: new Date().toISOString()
+      });
+    }
+  } catch(e){ console.warn('Lead save skipped:',e.message); }
+  hideLeadModal();
+  toast('¡Bienvenido ' + nameVal.split(' ')[0] + '! 🎉 Vamos a crear tu bot.','success');
+}
+
 // ───────── INIT ─────────
 document.addEventListener('DOMContentLoaded',()=>{
   initGallery();
   initHours();
   addService(); addService(); addService();
+  // Show lead modal unless already captured this session
+  if(!localStorage.getItem('sb007_lead_captured')){
+    setTimeout(showLeadModal, 800);
+  }
 });
 </script>
 
