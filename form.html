@@ -1215,8 +1215,8 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 
     <div style="text-align:center;">
       <span class="upg-lock">🔒</span>
-      <div class="upg-title">¡Tu Bot Está Listo!<br>Actívalo para Compartirlo</div>
-      <p class="upg-sub">Configuraste todo perfectamente. Ahora activa tu plan para publicar tu bot, landing page y tarjeta digital.</p>
+      <div class="upg-title">Activa Tu Plan<br>Para Seguir</div>
+      <p class="upg-sub">Tu prueba gratuita de 7 días terminó. ¡Todo lo que creaste sigue aquí! Activa tu plan para seguir compartiendo tu bot, landing page y tarjeta digital.</p>
     </div>
 
     <!-- What they built -->
@@ -1673,6 +1673,10 @@ async function activateBot(){
   const slug=(rawData.businessName||'bot').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   const botId=slug+'-'+Date.now();
   rawData.botId=botId; rawData.createdAt=Date.now(); rawData.updatedAt=Date.now(); rawData.active=true;
+  // 7-day free trial start
+  const trialStart=Date.now(); rawData.trialStart=trialStart;
+  localStorage.setItem('sb007_trial_'+botId, trialStart);
+  localStorage.setItem('sb007_current_bot', botId);
   // Clean ALL data recursively before sending to Firestore
   const data=sanitizeForFirestore(rawData);
   try{
@@ -1794,9 +1798,11 @@ _Powered by Super Bot 007 ⚡_`);
     document.getElementById('waOwnerBtn').href = ownerHref;
 
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
-    toast('🎉 ¡Bot activado! Actívalo para compartirlo 🚀','success');
+    // Show trial badge
+    showTrialBadge(botId);
+    toast('🎉 ¡Bot activado! 7 días gratis comenzando ahora 🚀','success');
     window.scrollTo({top:0,behavior:'smooth'});
-    // ── Intercept share/copy to show upgrade popup ──
+    // ── Intercept share/copy — check trial first ──
     setTimeout(()=>{ interceptShareBtns(); interceptLinkCardBtns(); }, 500);
   }catch(e){
     hideOv();
@@ -1810,8 +1816,50 @@ function setText(id, val){ const el=document.getElementById(id); if(el) el.textC
 function copyToClipboard(text, msg){ navigator.clipboard.writeText(text).then(()=>toast(msg||'Copiado ✅','success')).catch(()=>{}); }
 function copyWebhook(el){ copyToClipboard(el.textContent.trim(),'Webhook copiado ✅'); }
 function copyAgentLink(){
-  // Show upgrade popup instead of copying directly
-  showUpgrade('copy');
+  if(isTrialActive()) {
+    // Free during trial — copy directly
+    const url = window._agentUrl;
+    if(!url) return;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = document.getElementById('copyAgentBtn');
+      if(btn){ btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!'; setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500); }
+      toast('Enlace copiado ✅','success');
+    });
+  } else {
+    showUpgrade('copy');
+  }
+}
+
+// ───────── 7-DAY FREE TRIAL ─────────
+function isTrialActive(){
+  const botId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(!botId) return false;
+  const ts = parseInt(localStorage.getItem('sb007_trial_'+botId)||'0');
+  if(!ts) return false;
+  const elapsed = Date.now() - ts;
+  const days7 = 7 * 24 * 60 * 60 * 1000;
+  return elapsed < days7;
+}
+function trialDaysLeft(){
+  const botId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(!botId) return 0;
+  const ts = parseInt(localStorage.getItem('sb007_trial_'+botId)||'0');
+  if(!ts) return 0;
+  const elapsed = Date.now() - ts;
+  const days7 = 7 * 24 * 60 * 60 * 1000;
+  const left = Math.ceil((days7 - elapsed) / (24*60*60*1000));
+  return Math.max(0, left);
+}
+function showTrialBadge(botId){
+  const days = trialDaysLeft();
+  const existing = document.getElementById('trialBadge');
+  if(existing) existing.remove();
+  const badge = document.createElement('div');
+  badge.id = 'trialBadge';
+  badge.style.cssText = 'position:fixed;top:70px;right:16px;z-index:9999;background:linear-gradient(135deg,#00c896,#00a878);color:#fff;padding:0.5rem 1rem;border-radius:20px;font-weight:700;font-size:0.82rem;box-shadow:0 4px 16px rgba(0,200,150,0.4);cursor:pointer;';
+  badge.innerHTML = `✅ Prueba gratis: <strong>${days} día${days!==1?'s':''}</strong> restante${days!==1?'s':''}`;
+  badge.title = 'Durante los 7 días de prueba puedes compartir y copiar libremente';
+  document.body.appendChild(badge);
 }
 
 // ───────── UPGRADE POPUP ─────────
@@ -1858,29 +1906,43 @@ function interceptShareBtns(){
     waShare.dataset.href = waShare.href;
     waShare.addEventListener('click', function(e){
       e.preventDefault();
-      showUpgrade('wa-share');
+      if(isTrialActive()){
+        window.open(waShare.dataset.href,'_blank');
+      } else {
+        showUpgrade('wa-share');
+      }
     });
   }
   if(waOwner){
     waOwner.dataset.href = waOwner.href;
     waOwner.addEventListener('click', function(e){
       e.preventDefault();
-      showUpgrade('wa-owner');
+      if(isTrialActive()){
+        window.open(waOwner.dataset.href,'_blank');
+      } else {
+        showUpgrade('wa-owner');
+      }
     });
   }
 }
 
 // Intercept ONLY copy buttons — open/preview buttons are always free
 function interceptLinkCardBtns(){
-  // ✅ Botones "Abrir" — LIBRES, el cliente puede ver su bot sin pagar
-  // 🔒 Botones "Copiar" — muestran popup de upgrade
+  // ✅ Botones "Abrir" — LIBRES siempre
+  // 🔒 Botones "Copiar" — libres en prueba, upgrade después
   document.querySelectorAll('.lci-btn.copy').forEach(btn => {
     if(btn.dataset.intercepted) return;
     btn.dataset.intercepted = '1';
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopPropagation();
-      showUpgrade('link-card');
+      if(isTrialActive()){
+        // Execute the original onclick during trial
+        const onc = btn.getAttribute('onclick');
+        if(onc) eval(onc);
+      } else {
+        showUpgrade('link-card');
+      }
     });
   });
 }
