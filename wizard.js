@@ -51,108 +51,104 @@
   /* ── KNOWLEDGE BASE ── */
   const KB = {
     es: {
-      product: 'Super Bot 007 crea un bot IA con GPT-4, landing page, pagos PayPal y tarjeta digital — todo sin código, en 5 minutos, por $10.99/mes.',
-      price: 'El Plan Pro cuesta $10.99/mes e incluye bot IA, landing page, editor visual, tarjeta digital y carrito PayPal.',
-      guarantee: 'Tienes 30 días de garantía total. Si no estás satisfecho, te devolvemos el dinero sin preguntas.',
-      howlong: 'En solo 5 minutos puedes tener tu bot listo. El proceso tiene 7 pasos sencillos.',
-      whatsapp: 'Tu bot puede conectarse a WhatsApp usando Twilio. En el paso final te damos la URL del webhook para configurarlo.',
-      agency: 'Con Super Bot 007 puedes crear bots para clientes y cobrar $50-$200/mes por cada uno. Con 5 clientes = $500-$2,000/mes.',
-      businesses: 'Funciona para cualquier negocio: barberías, restaurantes, clínicas, gimnasios, spas, tiendas, abogados, fotógrafos, hoteles y más.',
-      cancel: 'Puedes cancelar cuando quieras. Sin contratos ni penalizaciones.',
+      product: 'Super Bot 007 crea un bot IA con GPT-4, landing page cinematic, pagos (PayPal, Stripe, Zelle, Venmo, CashApp), Google Calendar para citas reales, WhatsApp integrado y tarjeta digital con QR — todo sin código, en 5 minutos.',
+      price: '3 planes: Starter $19.99/mes (bot + landing + tarjeta + editor), Pro $49/mes (todo activado + Calendar + pagos + WhatsApp), Agencia $99/mes (bots ilimitados + white-label). Precio de introducción — sube sin aviso.',
+      guarantee: 'Tienes 30 días de garantía total. Si no estás satisfecho, te devolvemos el dinero completo sin preguntas.',
+      howlong: 'En solo 5 minutos puedes tener tu bot listo. El proceso tiene 7 pasos súper sencillos guiados paso a paso.',
+      whatsapp: 'Tu bot se conecta a WhatsApp automáticamente. El sistema genera el webhook — solo lo pegas en Twilio y listo. Las notificaciones de citas llegan directo a tu WhatsApp.',
+      calendar: 'Integración nativa con Google Calendar. El bot agenda citas reales con duración personalizada, tiempo de anticipación y mensaje de confirmación automático. Las citas aparecen en tu Google Calendar al instante.',
+      payments: 'Acepta pagos con PayPal, Stripe, Zelle, Venmo y CashApp — los 5 métodos populares, sin comisión adicional nuestra. Solo necesitas configurar tu cuenta en el paso 4.',
+      agency: 'Con Super Bot 007 puedes crear bots para clientes y cobrar $50-$200/mes por cada uno. Con 5 clientes = $250-$1,000/mes de ingreso recurrente. Incluye licencia comercial completa.',
+      businesses: 'Funciona para cualquier negocio: barberías, restaurantes, clínicas, gimnasios, spas, tiendas, abogados, fotógrafos, hoteles, dentistas, coaches y más.',
+      cancel: 'Cancelas cuando quieras. Sin contratos ni penalizaciones. Sin letra pequeña.',
       security: 'Tu información está protegida con SSL y alojada en Google Firebase con 99.9% de uptime.',
-      worldwide: 'Funciona en cualquier país del mundo. Acepta pagos internacionales vía PayPal.',
-      barbershop: 'Para una barbería, el bot agenda citas, muestra servicios y precios, responde preguntas 24/7 y notifica por WhatsApp.',
-      restaurant: 'Para un restaurante, el bot muestra el menú, toma reservaciones, responde sobre horarios y promueve promociones.',
-      clinic: 'Para una clínica, el bot agenda consultas, informa sobre servicios médicos y envía recordatorios por WhatsApp.',
-      gym: 'Para un gimnasio, el bot muestra membresías, agenda clases y responde sobre horarios y precios.',
-      store: 'Para una tienda, el bot muestra productos, acepta pagos PayPal y responde sobre disponibilidad.',
-      salon: 'Para un salón de belleza, el bot agenda citas, muestra servicios con fotos y precios, y notifica por WhatsApp.',
-      spa: 'Para un spa, el bot muestra tratamientos, agenda citas y envía recordatorios automáticos.',
-      lawyer: 'Para un abogado, el bot califica prospectos, agenda consultas iniciales y responde preguntas frecuentes.',
-      realEstate: 'Para bienes raíces, el bot muestra propiedades, califica compradores y agenda visitas.',
-      childcare: 'Para una guardería, el bot informa sobre programas, acepta inscripciones y responde a padres 24/7.',
-      ecommerce: 'Para e-commerce, el bot muestra productos, procesa pedidos vía PayPal y hace seguimiento de envíos.',
+      worldwide: 'Funciona en cualquier país. Acepta pagos internacionales y el bot es bilingüe español/inglés nativo.',
+      try: 'Puedes configurar TODO tu bot gratis — bot, landing page, tarjeta digital — y verlo funcionando al 100%. Solo necesitas activar el plan ($19.99/mes) para poder compartirlo con tus clientes.',
+      barbershop: 'Para una barbería: el bot agenda citas con Google Calendar, muestra servicios y precios, notifica al dueño por WhatsApp y acepta pagos por adelantado con PayPal/Zelle.',
+      restaurant: 'Para un restaurante: el bot muestra el menú completo, toma reservaciones con Google Calendar, responde sobre horarios y promueve promociones especiales.',
+      clinic: 'Para una clínica: el bot agenda consultas con Google Calendar, informa sobre especialistas y servicios, envía recordatorios por WhatsApp y acepta pagos con Stripe.',
+      gym: 'Para un gimnasio: el bot muestra planes de membresía, agenda clases, acepta pagos mensuales con PayPal y responde sobre horarios e instructores.',
+      store: 'Para una tienda: el bot muestra catálogo de productos, acepta pagos con los 5 métodos, responde sobre disponibilidad y envío.',
+      salon: 'Para un salón de belleza: el bot agenda citas con Google Calendar, muestra servicios con fotos y precios, envía recordatorios y acepta pagos con Venmo o PayPal.',
+      spa: 'Para un spa: el bot muestra tratamientos con descripciones detalladas, agenda sesiones con Google Calendar y envía recordatorios automáticos por WhatsApp.',
+      lawyer: 'Para un abogado: el bot califica prospectos, agenda consultas iniciales con Google Calendar, responde preguntas frecuentes y acepta pagos de consulta con Zelle o PayPal.',
+      realEstate: 'Para bienes raíces: el bot muestra propiedades con fotos, califica compradores con preguntas inteligentes y agenda visitas con Google Calendar.',
+      childcare: 'Para una guardería: el bot informa sobre programas, acepta inscripciones con pagos vía PayPal, responde a padres 24/7 y agenda entrevistas.',
+      ecommerce: 'Para e-commerce: el bot muestra catálogo, procesa pedidos con PayPal o Stripe, confirma compras por WhatsApp y hace seguimiento de envíos.',
     },
     en: {
-      product: 'Super Bot 007 creates a GPT-4 AI bot, landing page, PayPal payments, and digital card — all with no code, in 5 minutes, for $10.99/month.',
-      price: 'The Pro Plan is $10.99/month and includes an AI bot, landing page, visual editor, digital card, and PayPal cart.',
-      guarantee: 'You have a 30-day full money-back guarantee. If you\'re not satisfied, we refund everything, no questions asked.',
-      howlong: 'In just 5 minutes you can have your bot live. The process has 7 simple steps.',
-      whatsapp: 'Your bot can connect to WhatsApp using Twilio. In the final step we give you the webhook URL to configure it.',
-      agency: 'With Super Bot 007 you can create bots for clients and charge $50-$200/month each. With 5 clients = $500-$2,000/month.',
-      businesses: 'Works for any business: barbershops, restaurants, clinics, gyms, spas, stores, lawyers, photographers, hotels and more.',
-      cancel: 'Cancel anytime. No contracts or penalties.',
+      product: 'Super Bot 007 creates a GPT-4 AI bot, cinematic landing page, payments (PayPal, Stripe, Zelle, Venmo, CashApp), Google Calendar for real appointments, integrated WhatsApp, and digital card with QR — all no-code, in 5 minutes.',
+      price: '3 plans: Starter $19.99/mo (bot + landing + card + editor), Pro $49/mo (everything + Calendar + payments + WhatsApp), Agency $99/mo (unlimited bots + white-label). Intro price — goes up without notice.',
+      guarantee: 'You get a full 30-day money-back guarantee. Not satisfied? Full refund, no questions asked.',
+      howlong: 'In just 5 minutes your bot can be live. There are 7 super simple steps, guided one by one.',
+      whatsapp: 'Your bot connects to WhatsApp automatically. The system generates the webhook — just paste it in Twilio and done. Appointment notifications go straight to your WhatsApp.',
+      calendar: 'Native Google Calendar integration. The bot books real appointments with custom duration, notice period, and automatic confirmation message. Appointments appear in your Google Calendar instantly.',
+      payments: 'Accept payments with PayPal, Stripe, Zelle, Venmo, and CashApp — all 5 popular methods, no extra commission from us. Just configure your account in step 4.',
+      agency: 'With Super Bot 007 you can create bots for clients and charge $50-$200/month each. With 5 clients = $250-$1,000/month recurring income. Full commercial license included.',
+      businesses: 'Works for any business: barbershops, restaurants, clinics, gyms, spas, stores, lawyers, photographers, hotels, dentists, coaches and more.',
+      cancel: 'Cancel anytime. No contracts, no penalties. No fine print.',
       security: 'Your data is SSL-protected and hosted on Google Firebase with 99.9% uptime.',
-      worldwide: 'Works in any country. Accepts international payments via PayPal.',
-      barbershop: 'For a barbershop, the bot books appointments, shows services and pricing, answers questions 24/7, and sends WhatsApp notifications.',
-      restaurant: 'For a restaurant, the bot shows the menu, takes reservations, answers questions about hours, and promotes specials.',
-      clinic: 'For a clinic, the bot schedules consultations, informs about medical services, and sends reminders via WhatsApp.',
-      gym: 'For a gym, the bot shows memberships, schedules classes, and answers questions about hours and pricing.',
-      store: 'For a store, the bot showcases products, accepts PayPal payments, and answers availability questions.',
-      salon: 'For a beauty salon, the bot books appointments, shows services with photos and pricing, and sends WhatsApp notifications.',
-      spa: 'For a spa, the bot shows treatments, books appointments, and sends automated reminders.',
-      lawyer: 'For a lawyer, the bot qualifies leads, schedules initial consultations, and answers common questions.',
-      realEstate: 'For real estate, the bot showcases properties, qualifies buyers, and schedules viewings.',
-      childcare: 'For a daycare, the bot informs about programs, accepts registrations, and answers parents 24/7.',
-      ecommerce: 'For e-commerce, the bot showcases products, processes orders via PayPal, and tracks shipments.',
+      worldwide: 'Works in any country. Accepts international payments and the bot is natively bilingual Spanish/English.',
+      try: 'You can configure your entire bot for free — bot, landing page, digital card — and see it working 100%. You only need to activate a plan ($19.99/mo) to share it with your clients.',
+      barbershop: 'For a barbershop: the bot books appointments with Google Calendar, shows services and pricing, notifies the owner via WhatsApp, and accepts advance payments with PayPal/Zelle.',
+      restaurant: 'For a restaurant: the bot shows the full menu, takes reservations with Google Calendar, answers hours questions, and promotes specials.',
+      clinic: 'For a clinic: the bot schedules consultations with Google Calendar, informs about specialists and services, sends WhatsApp reminders, and accepts payments with Stripe.',
+      gym: 'For a gym: the bot shows membership plans, schedules classes, accepts monthly payments with PayPal, and answers questions about hours and trainers.',
+      store: 'For a store: the bot shows the product catalog, accepts payments with all 5 methods, and answers availability and shipping questions.',
+      salon: 'For a beauty salon: the bot books appointments with Google Calendar, shows services with photos and pricing, sends reminders, and accepts payments with Venmo or PayPal.',
+      spa: 'For a spa: the bot shows treatments with detailed descriptions, books sessions with Google Calendar, and sends automatic WhatsApp reminders.',
+      lawyer: 'For a lawyer: the bot qualifies leads, schedules initial consultations with Google Calendar, answers FAQs, and accepts consultation payments with Zelle or PayPal.',
+      realEstate: 'For real estate: the bot showcases properties with photos, qualifies buyers with smart questions, and schedules viewings with Google Calendar.',
+      childcare: 'For a daycare: the bot informs about programs, accepts enrollments with PayPal payments, answers parents 24/7, and schedules interviews.',
+      ecommerce: 'For e-commerce: the bot showcases catalog, processes orders with PayPal or Stripe, confirms purchases via WhatsApp, and tracks shipments.',
     }
   };
 
   /* ── STEP SCRIPTS ── */
   const STEP_SCRIPTS = {
     es: {
-      1: `Perfecto, empecemos con el primer paso. Esta sección es para que el bot te conozca — necesito saber el nombre de tu negocio, el tipo de negocio que tienes y en qué ciudad estás. Lo más importante aquí es la descripción: mientras más detallada sea, mejor va a responder tu bot a tus clientes, así que tómate tu tiempo para escribirla bien. También vas a poner el título principal y subtítulo que verán tus clientes al entrar a tu landing page, el mensaje de bienvenida de tu bot, y si quieres, la URL de una foto para el avatar del bot. Llena todos los campos y cuando termines me avisas.`,
-
-      2: `Excelente, llegamos al paso de diseño. Esta sección va a definir la apariencia visual de tu landing page y tu tarjeta digital — los colores primario, secundario, de acento y el fondo. No te preocupes si no estás seguro de los colores ahora mismo, porque una vez que tu bot esté listo puedes cambiarlos cuando quieras en el editor visual. También aquí subes tu logo — puedes arrastrarlo directamente o pegar la URL si lo tienes en línea. Y la imagen principal de tu landing page, que es la foto grande que tus clientes ven al entrar. Por último el título y subtítulo de tu sección de servicios. Llena lo que puedas y me dices cuando estés listo.`,
-
-      3: `Muy bien, ahora vamos con tus servicios. Esta sección está diseñada para listar todo lo que ofrece tu negocio — con nombre, precio y descripción de cada servicio. Te recomiendo que la descripción de cada servicio sea lo más detallada posible, porque es exactamente lo que tu bot va a decirle a tus clientes cuando pregunten. Puedes agregar hasta 8 servicios. Si prefieres, en el último paso también puedes generarlos automáticamente con inteligencia artificial. Agrega al menos uno para poder continuar, y cuando termines me avisas.`,
-
-      4: `Ahora llegamos a la sección de productos y pagos. Esta parte es para que puedas cobrar ventas directamente desde tu bot o tu landing page usando PayPal. Para eso necesitas tu email de PayPal y si tienes un link de PayPal.me, también puedes agregarlo. Ten en cuenta que para recibir pagos necesitas tener tu propia cuenta de PayPal activa. Si tu negocio no vende productos físicos, puedes saltar este paso y continuar directo a la galería. Si sí vendes, agrega tus productos con nombre, precio e imagen. Cuando termines me cuentas.`,
-
-      5: `Llegamos a la galería de fotos. Aquí subes las imágenes que tus clientes van a ver cuando visiten tu landing page — fotos reales de tu negocio, de tu trabajo, de tu local. Puedes subir hasta 8 fotos, ya sea desde tu librería de archivos o pegando la URL directa de cada imagen. Entre más reales y de calidad sean las fotos, mejor impresión le das a tus clientes. También puedes editar el título de esta sección abajo. Recuerda que puedes cambiar o agregar fotos después en el editor. Llena lo que puedas y me dices.`,
-
-      6: `Perfecto, ahora el paso de contacto y horarios. Aquí pones toda la información que tu bot va a usar para responder a tus clientes — tu teléfono, tu WhatsApp con el código de país sin espacios ni símbolos, tu email y tu dirección. También puedes agregar tus redes sociales pegando el link directo de tu Instagram, Facebook, TikTok y YouTube. Y tu horario de atención, activando cada día que trabajas y poniendo la hora de apertura y cierre. Todo esto lo va a conocer tu bot para responder correctamente. Cuando lo tengas listo me avisas.`,
-
-      7: `Llegamos al último paso. Esta es la sección de inteligencia artificial donde vas a activar tu bot. Primero selecciona el idioma en el que quieres que responda tu bot — español, inglés o portugués. Si quieres que el bot tenga alguna regla especial, como por ejemplo no ofrecer descuentos mayores al diez por ciento, puedes escribirla en el campo de instrucción especial. También tienes botones para generar automáticamente con IA tu descripción, título, servicios, testimonios y preguntas frecuentes — para mejores resultados asegúrate de haber escrito una buena descripción en el primer paso. Cuando todo esté listo, presiona el botón de Activar Bot 007 y tu bot estará funcionando al cien por ciento.`,
-
-      8: `Felicidades, tu bot está cien por ciento activo y funcionando. Copia tus enlaces y compártelos con tus clientes. Recuerda que puedes cambiar cualquier cosa — colores, imágenes, textos, servicios — en el editor visual cuando quieras. Empezaste algo increíble y estoy aquí si necesitas ayuda.`,
+      1: `Perfecto, empecemos con el primer paso. Esta sección es para que el bot te conozca — necesito saber el nombre de tu negocio, el tipo de negocio que tienes y en qué ciudad estás. Lo más importante aquí es la descripción: mientras más detallada sea, mejor va a responder tu bot a tus clientes, así que tómate tu tiempo para escribirla bien. También vas a poner el título principal y subtítulo que verán tus clientes al entrar a tu landing page, el mensaje de bienvenida de tu bot, y si quieres, la URL de una foto para el avatar del bot. Llena todos los campos y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      2: `Excelente, llegamos al paso de diseño. Esta sección va a definir la apariencia visual de tu landing page y tu tarjeta digital — los colores primario, secundario, de acento y el fondo. No te preocupes si no estás seguro de los colores ahora mismo, porque una vez que tu bot esté listo puedes cambiarlos cuando quieras en el editor visual. También aquí subes tu logo — puedes arrastrarlo directamente o pegar la URL si lo tienes en línea. Y la imagen principal de tu landing page, que es la foto grande que tus clientes ven al entrar. Por último el título y subtítulo de tu sección de servicios. Llena lo que puedas y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      3: `Muy bien, ahora vamos con tus servicios. Esta sección está diseñada para listar todo lo que ofrece tu negocio — con nombre, precio y descripción de cada servicio. Te recomiendo que la descripción de cada servicio sea lo más detallada posible, porque es exactamente lo que tu bot va a decirle a tus clientes cuando pregunten. Puedes agregar hasta 8 servicios. Si prefieres, en el último paso también puedes generarlos automáticamente con inteligencia artificial. Agrega al menos uno y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      4: `Ahora llegamos a la sección de pagos. Esta parte es donde configuras cómo quieres cobrar — tienes PayPal, Stripe, Zelle, Venmo y CashApp disponibles. Activa los que uses y llena tu información de pago. Si no vendes productos físicos también puedes saltar este paso. Con el Plan Pro todos los métodos de pago quedan activos y conectados al bot. Cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      5: `Llegamos a la galería de fotos. Aquí subes las imágenes que tus clientes van a ver cuando visiten tu landing page — fotos reales de tu negocio, de tu trabajo, de tu local. Puedes subir hasta 8 fotos, ya sea desde tu librería de archivos o pegando la URL directa de cada imagen. Entre más reales y de calidad sean las fotos, mejor impresión le das a tus clientes. Llena lo que puedas y cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      6: `Perfecto, ahora el paso de contacto, horarios y Google Calendar. Aquí pones tu teléfono, WhatsApp con código de país, email y dirección. También puedes activar Google Calendar para que el bot agende citas reales directamente en tu calendario — solo necesitas tu Google Calendar ID. Y tu horario de atención activando cada día que trabajas. Cuando termines esta sección, aprieta Next y yo aparezco para seguir guiándote.`,
+      7: `Llegamos al último paso. Aquí seleccionas el idioma del bot, puedes agregar una instrucción especial, y tienes botones para generar automáticamente con IA tu descripción, servicios, testimonios y preguntas frecuentes. Para mejores resultados asegúrate de haber escrito una buena descripción en el paso 1. Cuando todo esté listo, presiona Activar Bot 007 y tu bot estará funcionando al 100%.`,
+      8: `¡Felicidades! Tu bot está activo y funcionando. Configura el plan para compartir tus enlaces con tus clientes. Recuerda que puedes cambiar cualquier cosa — colores, imágenes, textos, servicios — en el editor visual cuando quieras. ¡Empezaste algo increíble!`,
     },
     en: {
-      1: `Perfect, let's start with the first step. This section is so the bot gets to know your business — I need your business name, the type of business you run, and what city you're in. The most important part here is the description: the more detailed it is, the better your bot will answer your clients, so take your time writing it well. You'll also set the main title and subtitle your clients see when they land on your page, your bot's welcome message, and optionally a photo URL for the bot's avatar. Fill everything in and let me know when you're done.`,
-
-      2: `Excellent, we're now at the design step. This section defines the visual look of your landing page and digital card — the primary, secondary, accent, and background colors. Don't worry if you're not sure about the colors right now, because once your bot is ready you can change them anytime in the visual editor. You'll also upload your logo here — drag it in or paste the URL if it's online. And your main landing page image, the big photo your clients see when they arrive. Finally the title and subtitle for your services section. Fill in what you can and let me know when you're ready.`,
-
-      3: `Great, now let's add your services. This section is designed to list everything your business offers — with a name, price, and description for each service. I recommend making each service description as detailed as possible, because that's exactly what your bot will tell your clients when they ask. You can add up to 8 services. If you prefer, in the last step you can also auto-generate them with AI. Add at least one to continue, and let me know when you're done.`,
-
-      4: `Now we're at the products and payments section. This is where you can accept sales directly through your bot or landing page using PayPal. You'll need your PayPal email and your PayPal.me link if you have one. Keep in mind you need an active PayPal account to receive payments. If your business doesn't sell physical products, you can skip this step and go straight to the gallery. If you do sell products, add them with name, price, and image. Let me know when you're done.`,
-
-      5: `Now the photo gallery. Here you upload the images your clients will see when they visit your landing page — real photos of your business, your work, your space. You can upload up to 8 photos, either from your files or by pasting the direct URL of each image. The more real and high quality the photos, the better impression you give your clients. You can also edit the gallery section title below. Remember you can change or add photos later in the editor. Fill in what you can and let me know.`,
-
-      6: `Perfect, now contact and hours. Here you enter all the information your bot will use to answer your clients — your phone number, your WhatsApp with country code no spaces or symbols, your email, and your address. You can also add your social media by pasting the direct link for Instagram, Facebook, TikTok, and YouTube. And your business hours, enabling each day you work and setting your opening and closing times. Your bot will know all of this to answer correctly. Let me know when you have it ready.`,
-
-      7: `We're at the last step. This is the AI section where you activate your bot. First select the language you want your bot to respond in — Spanish, English, or Portuguese. If you want your bot to follow a special rule, like not offering discounts over ten percent, write it in the special instruction field. You also have buttons to auto-generate your description, title, services, testimonials, and FAQs with AI — for best results make sure you wrote a good description in step one. When everything is ready, press the Activate Bot 007 button and your bot will be live one hundred percent.`,
-
-      8: `Congratulations, your bot is one hundred percent active and live. Copy your links and share them with your clients. Remember you can change anything — colors, images, text, services — in the visual editor anytime. You've started something amazing and I'm here if you need help.`,
+      1: `Perfect, let's start with step one. This section is so the bot gets to know your business — I need your business name, type, and city. The most important part is the description: the more detailed it is, the better your bot answers clients. You'll also set the title, subtitle, welcome message, and optionally a bot avatar photo URL. Fill everything in and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      2: `Excellent, now the design step. This defines the visual look of your landing page and digital card — primary, secondary, accent, and background colors. Don't worry about colors now — you can change them anytime in the visual editor. You'll also upload your logo and main landing page image. Fill in what you can and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      3: `Great, now your services. List everything your business offers — name, price, and description for each. Make descriptions as detailed as possible — that's exactly what your bot tells clients when they ask. Add at least one and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      4: `Now the payments section. Configure how you want to get paid — PayPal, Stripe, Zelle, Venmo, and CashApp are all available. Enable the ones you use and fill in your payment info. With the Pro Plan all payment methods are active and connected to the bot. When you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      5: `Now the photo gallery. Upload images your clients will see — real photos of your business, work, and space. Up to 8 photos from files or direct URLs. The more real and high-quality, the better impression you make. Fill in what you can and when you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      6: `Perfect, now contact, hours, and Google Calendar. Enter your phone, WhatsApp with country code, email, and address. You can also activate Google Calendar so the bot books real appointments directly in your calendar — just need your Google Calendar ID. Set your business hours too. When you're done with this section, press Next and I'll be right here to guide you through the next step.`,
+      7: `Last step! Select the bot language, add any special instruction, and use the AI buttons to auto-generate your description, services, testimonials, and FAQs. For best results make sure you wrote a good description in step 1. When ready, press Activate Bot 007 and your bot goes live 100%.`,
+      8: `Congratulations! Your bot is live and active. Activate your plan to share your links with clients. Remember you can change anything — colors, images, text, services — in the visual editor anytime. You've started something amazing!`,
     }
   };
 
   /* ── PAGE INTROS ── */
+  /* Sales page: lead with the 2 psychological questions */
   const PAGE_INTROS = {
     es: {
-      sales: 'Hola, mi nombre es Amanda y estoy aquí para ayudarte en tu nueva aventura de crear tu primer bot con inteligencia artificial. Puedo explicarte cómo funciona todo, qué incluye, el precio, y cuando estés listo te llevo directamente al formulario para empezar. ¿Qué quieres saber?',
-      form: 'Hola, mi nombre es Amanda. Estoy aquí para acompañarte en esta nueva aventura de crear tu primer bot. Son 7 pasos sencillos — yo te explico cada uno. Cuando termines un paso, solo dime "listo" y avanzamos juntos.',
-      editor: 'Hola, soy Amanda. Estás en el editor visual de tu landing page — aquí puedes cambiar colores, imágenes y textos en tiempo real. Dime qué quieres personalizar.',
+      sales: '¿Tienes un negocio que necesita más clientes? Si la respuesta es sí, tengo algo que te va a encantar. Soy Amanda, tu guía de Super Bot 007. Cuéntame — ¿qué tipo de negocio tienes?',
+      form: 'Hola, soy Amanda. Estoy aquí para acompañarte en crear tu primer bot. Son 7 pasos — yo te explico cada uno. Cuando termines un paso, dime "listo" y avanzamos juntos. ¡Empecemos!',
+      editor: 'Hola, soy Amanda. Estás en el editor visual — aquí puedes cambiar colores, imágenes y textos en tiempo real. ¿Qué quieres personalizar?',
       landing: 'Hola, soy Amanda. Esta es la landing page de tu negocio creada con Super Bot 007. ¿Te puedo ayudar con algo?',
     },
     en: {
-      sales: "Hi, my name is Shirley and I'm here to help you on your new adventure of creating your first AI bot. I can explain how everything works, what's included, the price, and when you're ready I'll take you directly to the form to get started. What would you like to know?",
-      form: "Hi, my name is Shirley. I'm here to help you on your new adventure of creating your first bot. There are 7 simple steps — I'll explain each one. When you finish a step, just say \"done\" or \"ready\" and we'll move forward together.",
-      editor: "Hi, I'm Shirley. You're in the visual editor for your landing page — here you can change colors, images, and text in real time. Tell me what you'd like to customize.",
+      sales: 'Do you have a business that needs more clients? If the answer is yes, I have something you\'re going to love. I\'m Shirley, your Super Bot 007 guide. Tell me — what type of business do you have?',
+      form: "Hi, I'm Shirley. I'm here to help you create your first bot. There are 7 steps — I'll explain each one. When you finish a step, just say \"done\" and we'll move forward together. Let's go!",
+      editor: "Hi, I'm Shirley. You're in the visual editor — change colors, images and text in real time. What would you like to customize?",
       landing: "Hi, I'm Shirley. This is your business landing page created with Super Bot 007. Can I help you with anything?",
     }
   };
 
-  /* ── STATE ── */
+  /* ── 2-QUESTION FUNNEL STATE (sales page only) ── */
+  let _q2State = 0; // 0=not started, 1=asked Q1 (biz type), 2=asked Q2 (automate)
+
+
   let isOpen       = false;
   let isListening  = false;
   let isSpeaking   = false;
@@ -602,6 +598,13 @@
     addAgentMsg(intro);
     chatHistory = [{ role: 'system', content: buildSystemPrompt() }];
 
+    // On SALES page: start the 2-question funnel — Q1 is embedded in the intro
+    if (PAGE === 'sales') {
+      _q2State = 1; // waiting for Q1 answer (biz type)
+      speak(intro);
+      return;
+    }
+
     // On form page: greet, then immediately show & speak the current step explanation
     if (PAGE === 'form') {
       const stepHint = STEP_SCRIPTS[LANG][currentStep];
@@ -681,8 +684,11 @@ CONOCIMIENTO DEL PRODUCTO:
 - Garantía: ${kb.guarantee}
 - Tiempo de setup: ${kb.howlong}
 - WhatsApp: ${kb.whatsapp}
-- Agencia: ${kb.agency}
+- Google Calendar: ${kb.calendar}
+- Pagos: ${kb.payments}
+- Modelo Agencia: ${kb.agency}
 - Negocios: ${kb.businesses}
+- Prueba gratis: ${kb.try}
 - Cancelar: ${kb.cancel}
 - Seguridad: ${kb.security}
 - Internacional: ${kb.worldwide}
@@ -701,15 +707,17 @@ RESPUESTAS POR TIPO DE NEGOCIO:
 - E-commerce: ${kb.ecommerce}
 
 REGLAS ESTRICTAS:
-1. SIEMPRE responde la pregunta del cliente
-2. Máximo 2-3 oraciones cortas
-3. Termina con una pregunta o llamada a la acción
+1. SIEMPRE responde la pregunta del cliente directamente
+2. Máximo 2-3 oraciones cortas y contundentes
+3. Termina SIEMPRE con una pregunta o llamada a la acción
 4. Máximo 1 emoji por respuesta
-5. Nunca inventes precios ni datos
-6. Si el cliente menciona su tipo de negocio, adapta tu respuesta
-7. Cuando el cliente quiera crear su bot o llenar el formulario, dile que lo llevas ahora mismo — el sistema maneja la redirección automáticamente
+5. Nunca inventes precios ni datos fuera del KB
+6. Si el cliente menciona su tipo de negocio, adapta tu respuesta con el ejemplo específico
+7. Cuando el cliente quiera crear su bot o llenar el formulario, dile que lo llevas ahora mismo
 8. En pasos del formulario: explica EXACTAMENTE qué llenar en el paso actual, sé específico y motivador
-9. NUNCA digas "haz click en el link" — tú manejas la navegación automáticamente`;
+9. NUNCA digas "haz click en el link" — tú manejas la navegación
+10. Si preguntan precio: menciona los 3 planes ($19.99/$49/$99) y el precio de introducción
+11. Si preguntan cómo funciona la prueba gratis: explica que configuran TODO gratis y al compartir activan el plan`;
     } else {
       return `You are Shirley, sales agent and personal guide for Super Bot 007.
 Personality: friendly, professional, energetic. Always in ENGLISH.
@@ -722,8 +730,11 @@ PRODUCT KNOWLEDGE:
 - Guarantee: ${kb.guarantee}
 - Setup time: ${kb.howlong}
 - WhatsApp: ${kb.whatsapp}
-- Agency: ${kb.agency}
+- Google Calendar: ${kb.calendar}
+- Payments: ${kb.payments}
+- Agency model: ${kb.agency}
 - Businesses: ${kb.businesses}
+- Free trial: ${kb.try}
 - Cancel: ${kb.cancel}
 - Security: ${kb.security}
 - International: ${kb.worldwide}
@@ -742,15 +753,17 @@ BUSINESS-TYPE RESPONSES:
 - E-commerce: ${kb.ecommerce}
 
 STRICT RULES:
-1. ALWAYS answer the client's question
-2. Maximum 2-3 short sentences
-3. End with a question or call to action
+1. ALWAYS answer the client's question directly
+2. Maximum 2-3 short, punchy sentences
+3. ALWAYS end with a question or call to action
 4. Maximum 1 emoji per response
-5. Never invent prices or data
-6. If the client mentions their business type, adapt your response
-7. When the client says they want to create their bot or fill the form, tell them you are taking them there NOW and use action words like "Taking you there!" — the system handles the redirect automatically
-8. In form steps: explain EXACTLY what to fill in the current step, be specific and encouraging
-9. NEVER say "click the link" — you handle navigation automatically`;
+5. Never invent prices or data outside the KB
+6. If the client mentions their business type, adapt with the specific example
+7. When the client wants to create their bot, tell them you're taking them there NOW
+8. In form steps: explain EXACTLY what to fill in, be specific and encouraging
+9. NEVER say "click the link" — you handle navigation automatically
+10. If asked about price: mention all 3 plans ($19.99/$49/$99) and intro pricing
+11. If asked about free trial: configure everything free, activate plan when sharing`;
     }
   }
 
@@ -786,6 +799,65 @@ STRICT RULES:
 
     // Detect business type from user input
     detectBusinessType(text);
+
+    /* ── 2-QUESTION PSYCHOLOGICAL FUNNEL (sales page only) ── */
+    if (PAGE === 'sales' && !detectFormIntent(text)) {
+      const t = text.toLowerCase();
+
+      // Q1 answered: they told us their biz type → ask Q2
+      if (_q2State === 1) {
+        _q2State = 2;
+        // Detect biz type and give personalized hook
+        detectBusinessType(text);
+        const bizHook = businessType ? KB[LANG][businessType] || '' : '';
+        const q2 = IS_ES()
+          ? `¡Perfecto! ${bizHook ? 'Para ese tipo de negocio tu bot puede hacer maravillas. ' : ''}Segunda pregunta: ¿Te gustaría automatizar ese negocio y atender clientes 24/7 por menos de $1 al día? 🤔`
+          : `Perfect! ${bizHook ? 'For that type of business your bot can do wonders. ' : ''}Second question: Would you like to automate that business and serve clients 24/7 for less than $1 a day? 🤔`;
+        addAgentMsg(q2);
+        speak(q2);
+        chatHistory.push({ role: 'assistant', content: q2 });
+        return;
+      }
+
+      // Q2 answered with "yes" → take them to form with excitement
+      if (_q2State === 2 && /\b(si|sí|yes|yeah|sure|claro|ok|okay|quiero|dale|vamos|por.*supuesto|of course|definitely|absolutely|obvio|obviam|por.*favor)\b/.test(t)) {
+        _q2State = 0;
+        const goMsg = IS_ES()
+          ? '¡Eso es exactamente lo que hace SuperBot007! 🔥 Te llevo ahora mismo a crear tu bot gratis — en 5 minutos lo ves funcionando con TU negocio. ¡Vamos!'
+          : 'That\'s exactly what SuperBot007 does! 🔥 Taking you now to create your free bot — in 5 minutes you\'ll see it working with YOUR business. Let\'s go!';
+        addAgentMsg(goMsg);
+        speak(goMsg);
+        chatHistory.push({ role: 'assistant', content: goMsg });
+        setTimeout(() => { window.location.href = FORM_URL; }, 2800);
+        return;
+      }
+
+      // Q2 answered with "no" or doubt → overcome objection then redirect
+      if (_q2State === 2 && /\b(no|nop|nope|no.*creo|no.*sé|not sure|maybe|tal vez|quizas|quizás|depende)\b/.test(t)) {
+        _q2State = 0;
+        const objMsg = IS_ES()
+          ? 'Lo entiendo. ¿Sabes qué? Puedes configurarlo todo GRATIS primero — sin tarjeta, sin compromiso. Lo ves funcionando y decides. ¿Te parece? 🙂'
+          : 'I understand. You know what? You can set everything up FREE first — no card, no commitment. See it working and then decide. Sound good? 🙂';
+        addAgentMsg(objMsg);
+        speak(objMsg);
+        chatHistory.push({ role: 'assistant', content: objMsg });
+        _q2State = 3; // waiting for final yes after objection
+        return;
+      }
+
+      // After objection handling, any positive → send to form
+      if (_q2State === 3 && /\b(si|sí|yes|yeah|sure|claro|ok|okay|dale|vamos|por.*supuesto|of course|bueno|suena bien|sounds good|perfecto|listo|empezar|start|go|create|crear)\b/.test(t)) {
+        _q2State = 0;
+        const finalMsg = IS_ES()
+          ? '¡Genial! Te llevo ahora. ¡En 5 minutos tienes tu bot listo! 🚀'
+          : 'Great! Taking you there now. In 5 minutes your bot will be live! 🚀';
+        addAgentMsg(finalMsg);
+        speak(finalMsg);
+        chatHistory.push({ role: 'assistant', content: finalMsg });
+        setTimeout(() => { window.location.href = FORM_URL; }, 2400);
+        return;
+      }
+    }
 
     /* ── FORM REDIRECT INTENT (salespage only) ── */
     if (PAGE === 'sales' && detectFormIntent(text)) {
@@ -894,8 +966,8 @@ STRICT RULES:
     if (/qué es|what is|como funciona|how does/.test(t)) return kb.product;
 
     return IS_ES()
-      ? '¡Claro! Con Super Bot 007 creas un bot IA completo en 5 minutos por $10.99/mes. ¿Qué tipo de negocio tienes? 😊'
-      : 'Of course! With Super Bot 007 you create a full AI bot in 5 minutes for $10.99/month. What type of business do you have? 😊';
+      ? '¡Claro! Con Super Bot 007 creas un bot IA completo en 5 minutos desde $19.99/mes. ¿Qué tipo de negocio tienes? 😊'
+      : 'Of course! With Super Bot 007 you create a full AI bot in 5 minutes starting at $19.99/month. What type of business do you have? 😊';
   }
 
   /* ── DETECT BUSINESS TYPE ── */

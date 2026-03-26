@@ -1729,9 +1729,11 @@ function interceptShareBtns(){
   }
 }
 
-// Also intercept link card open/copy buttons after bot activation
+// Intercept ONLY copy buttons — open/preview buttons are always free
 function interceptLinkCardBtns(){
-  document.querySelectorAll('.lci-btn.open, .lci-btn.copy').forEach(btn => {
+  // ✅ Botones "Abrir" — LIBRES, el cliente puede ver su bot sin pagar
+  // 🔒 Botones "Copiar" — muestran popup de upgrade
+  document.querySelectorAll('.lci-btn.copy').forEach(btn => {
     if(btn.dataset.intercepted) return;
     btn.dataset.intercepted = '1';
     btn.addEventListener('click', function(e){
