@@ -1254,6 +1254,71 @@ window.fbSet = setDoc;
 console.log("✅ Firebase ready");
 </script>
 <script>
+// ───────── STEP CONFETTI (inline, no library) ─────────
+function launchStepConfetti(stepNum) {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999999;';
+  document.body.appendChild(canvas);
+  const ctx2 = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  // Last step = mega celebration
+  const isFinal = (stepNum === 7);
+  const emojis = isFinal
+    ? ['🏆','🎊','🎉','✨','🌟','💫','🎁','🚀','💥','🔥','⭐','🥳']
+    : ['🎉','✨','⭐','🎊','💫','👏','🌟','✅'];
+  const count = isFinal ? 120 : 70;
+  const dur   = isFinal ? 5000 : 2500;
+  const parts = [];
+  for(let i=0;i<count;i++){
+    parts.push({
+      x: Math.random()*canvas.width,
+      y: -20 - Math.random()*80,
+      vy: 2.5 + Math.random()*4,
+      vx: (Math.random()-0.5)*3.5,
+      rot: Math.random()*360,
+      rs: (Math.random()-0.5)*10,
+      sz: isFinal ? 20+Math.random()*22 : 14+Math.random()*18,
+      em: emojis[Math.floor(Math.random()*emojis.length)],
+      wo: Math.random()*Math.PI*2,
+      ws: 0.04+Math.random()*0.06
+    });
+  }
+  const t0 = Date.now();
+  function draw2(){
+    ctx2.clearRect(0,0,canvas.width,canvas.height);
+    const elapsed = Date.now()-t0;
+    const prog = elapsed/dur;
+    parts.forEach(p=>{
+      p.y += p.vy; p.x += p.vx + Math.sin(p.wo)*1.8;
+      p.wo += p.ws; p.rot += p.rs;
+      const alpha = Math.max(0, 1-Math.pow(prog,1.4));
+      ctx2.save();
+      ctx2.globalAlpha = alpha;
+      ctx2.translate(p.x, p.y);
+      ctx2.rotate(p.rot*Math.PI/180);
+      ctx2.font = p.sz+'px serif';
+      ctx2.textAlign='center'; ctx2.textBaseline='middle';
+      ctx2.fillText(p.em,0,0);
+      ctx2.restore();
+    });
+    if(elapsed < dur) requestAnimationFrame(draw2);
+    else if(canvas.parentNode) canvas.parentNode.removeChild(canvas);
+  }
+  draw2();
+  // Flash overlay
+  const fl=document.createElement('div');
+  fl.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99998;background:radial-gradient(circle at center,rgba(255,200,0,0.2) 0%,transparent 70%);animation:sb_flash 0.55s ease both;';
+  if(!document.getElementById('sb_flash_style')){
+    const st=document.createElement('style');
+    st.id='sb_flash_style';
+    st.textContent='@keyframes sb_flash{0%{opacity:0;transform:scale(0.85)}40%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.1)}}';
+    document.head.appendChild(st);
+  }
+  document.body.appendChild(fl);
+  setTimeout(()=>fl.remove(),700);
+}
+
 // ───────── STATE ─────────
 let step=1,svcN=0,prodN=0,testN=0,faqN=0;
 const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
@@ -1308,6 +1373,8 @@ function nextStep(from){
   document.getElementById('sdot'+from).classList.remove('active');
   document.getElementById('sdot'+from).classList.add('done');
   document.getElementById('sdot'+next)?.classList.add('active');
+  // 🎉 Celebration confetti on step completion
+  if(typeof launchStepConfetti === 'function') launchStepConfetti(from);
   goToStep(next);
 }
 function prevStep(from){
@@ -1664,6 +1731,8 @@ async function activateBot(){
     // Show success
     document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
     document.getElementById('step8').classList.add('active');
+    // Notify wizard — triggers confetti + voice celebration
+    if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(8);
 
     // ── Build URLs ──
     const base = `${location.origin}${location.pathname.replace('form.html','')}`;
