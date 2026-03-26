@@ -22,9 +22,12 @@
   /* ── KEYS & VOICES (same as salespage) ── */
   const OA_KEY     = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
   const EL_KEY     = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
-  const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku'; // Valentina — Spanish
-  const EL_VOICE_EN = 'dfeOmy6Uay63tNhyO99j'; // Shirley — English
-  const EL_MODEL    = 'eleven_flash_v2_5';
+  // 🎙️ VOICES — updated for best quality per language
+  const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku'; // Lily/Valentina — multilingual, sounds great in Spanish
+  const EL_VOICE_EN = 'XrExE9yKIg1WjnnlVkGX'; // Matilda — warm, American, natural (replaces Shirley)
+  const EL_MODEL_ES  = 'eleven_multilingual_v2'; // Better Spanish pronunciation
+  const EL_MODEL_EN  = 'eleven_flash_v2_5';      // Fast & clear English
+  const EL_MODEL     = 'eleven_flash_v2_5';      // default fallback
 
   /* ── DETECT LANGUAGE ── */
   function detectBrowserLang() {
@@ -43,8 +46,8 @@
     es: { name: 'Amanda', emoji: '🧙‍♀️', lang: 'es', voice: EL_VOICE_ES,
           welcome: '¡Hola! Soy Amanda, tu guía personal de Super Bot 007. Estoy aquí para ayudarte a crear tu bot perfecto paso a paso. ¿Empezamos? 🚀',
           color: '#ff4500' },
-    en: { name: 'Shirley', emoji: '🧙‍♀️', lang: 'en', voice: EL_VOICE_EN,
-          welcome: "Hi! I'm Shirley, your personal Super Bot 007 guide. I'm here to help you build your perfect bot step by step. Ready to start? 🚀",
+    en: { name: 'Matilda', emoji: '🧙‍♀️', lang: 'en', voice: EL_VOICE_EN,
+          welcome: "Hi! I'm Matilda, your personal Super Bot 007 guide. I'll walk you through every step so your bot is ready in minutes. Let's do this! 🚀",
           color: '#ff0099' }
   };
 
@@ -1023,11 +1026,16 @@ STRICT RULES:
 
     try {
       const voice = LANG === 'es' ? EL_VOICE_ES : EL_VOICE_EN;
-      console.log('[WIZARD TTS] Calling ElevenLabs, voice:', voice);
+      const model = LANG === 'es' ? EL_MODEL_ES : EL_MODEL_EN;
+      // Voice settings tuned per language
+      const vsES = { stability: 0.55, similarity_boost: 0.82, style: 0.25, use_speaker_boost: true };
+      const vsEN = { stability: 0.50, similarity_boost: 0.80, style: 0.40, use_speaker_boost: true };
+      const voiceSettings = LANG === 'es' ? vsES : vsEN;
+      console.log('[WIZARD TTS] Calling ElevenLabs, voice:', voice, '| model:', model);
       const elRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
         method: 'POST',
         headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: clean, model_id: EL_MODEL, voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.3 } })
+        body: JSON.stringify({ text: clean, model_id: model, voice_settings: voiceSettings })
       });
 
       console.log('[WIZARD TTS] ElevenLabs response status:', elRes.status);
@@ -1046,7 +1054,7 @@ STRICT RULES:
         const oaRes = await fetch('https://api.openai.com/v1/audio/speech', {
           method: 'POST',
           headers: { 'Authorization': 'Bearer ' + OA_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'tts-1', voice: 'shimmer', input: clean, speed: 1.05 })
+          body: JSON.stringify({ model: 'tts-1', voice: LANG === 'es' ? 'nova' : 'alloy', input: clean, speed: 1.0 })
         });
         console.log('[WIZARD TTS] OpenAI TTS response status:', oaRes.status);
         if (!oaRes.ok) {
