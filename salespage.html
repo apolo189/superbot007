@@ -37,109 +37,94 @@ img{max-width:100%;display:block;}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,69,0,.55);}
 
 /* ══ HERO ══ */
-#hero{min-height:100vh;display:flex;align-items:center;padding:6rem 1.5rem 3rem;background:linear-gradient(160deg,#fff8f0 0%,#fdf4ff 45%,#f0f4ff 100%);position:relative;overflow:hidden;}
-#hero::before{content:'';position:absolute;top:-100px;right:-50px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,69,0,.07),transparent 70%);pointer-events:none;}
-#hero::after{content:'';position:absolute;bottom:-80px;left:200px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.07),transparent 70%);pointer-events:none;}
-
-/* Hero 2-col layout */
-.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;padding-left:220px;}
-@media(max-width:1280px){.hero-inner{padding-left:170px;}}
-@media(max-width:900px){.hero-inner{grid-template-columns:1fr;text-align:center;gap:2rem;padding-left:0;}}
-
-.hero-left{position:relative;z-index:2;}
-.hero-right{position:relative;z-index:2;}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 1.5rem 4rem;background:linear-gradient(160deg,#fff8f0 0%,#fdf4ff 40%,#f0f4ff 100%);position:relative;overflow:hidden;}
+#hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,69,0,.08),transparent 70%);pointer-events:none;}
+#hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.08),transparent 70%);pointer-events:none;}
 
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,rgba(255,69,0,.1),rgba(255,0,153,.08));border:1px solid rgba(255,69,0,.3);border-radius:50px;padding:.4rem 1.2rem;font-size:.8rem;font-weight:800;color:var(--orange);margin-bottom:1.5rem;letter-spacing:.06em;text-transform:uppercase;}
-.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite;flex-shrink:0;}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,150,.6)}50%{box-shadow:0 0 0 7px rgba(0,200,150,0)}}
 
-.hero-h1{font-size:clamp(2.4rem,4.5vw,4.4rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.2rem;color:var(--dark);}
+.hero-h1{font-size:clamp(2.8rem,6vw,5.5rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:1.2rem;color:var(--dark);}
 .hero-h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero-h1 .grad2{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-.hero-sub{font-size:clamp(.95rem,1.8vw,1.15rem);color:#555;font-weight:500;margin-bottom:2rem;max-width:520px;line-height:1.8;}
-@media(max-width:900px){.hero-sub{margin-left:auto;margin-right:auto;}}
+.hero-sub{font-size:clamp(1.05rem,2.2vw,1.3rem);color:#555;font-weight:500;margin-bottom:2rem;max-width:580px;line-height:1.75;}
 
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;}
-@media(max-width:900px){.hero-btns{justify-content:center;}}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;}
 .btn-primary{padding:1.1rem 2.8rem;background:var(--grad);border-radius:50px;color:#fff;font-weight:900;font-size:1.1rem;box-shadow:0 8px 35px rgba(255,69,0,.45);transition:transform .25s,box-shadow .25s;animation:gpulse 2.5s ease-in-out infinite;}
 @keyframes gpulse{0%,100%{box-shadow:0 8px 35px rgba(255,69,0,.45)}50%{box-shadow:0 8px 55px rgba(255,69,0,.75)}}
 .btn-primary:hover{transform:translateY(-3px) scale(1.03);}
 .btn-secondary{padding:1.1rem 2.4rem;border:2px solid var(--purple);border-radius:50px;color:var(--purple);font-weight:800;font-size:1rem;transition:all .25s;background:rgba(124,58,237,.06);}
 .btn-secondary:hover{background:var(--purple);color:#fff;}
 
-.hero-trust{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;font-size:.82rem;font-weight:700;color:#888;}
-@media(max-width:900px){.hero-trust{justify-content:center;}}
+.hero-trust{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:.82rem;font-weight:700;color:#888;}
 .trust-item{display:flex;align-items:center;gap:.4rem;}
 .trust-item i{font-size:.9rem;}
 .trust-item.green i{color:var(--green);}
 .trust-item.gold i{color:var(--gold);}
 .trust-item.purple i{color:var(--purple);}
 
-/* ── HERO RIGHT: video grande ── */
-.hero-video-wrap{position:relative;width:100%;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(124,58,237,.3),0 0 0 2px rgba(124,58,237,.15);}
-.hero-video-wrap video{width:100%;display:block;}
-.hero-video-label{position:absolute;top:1rem;left:1rem;background:rgba(255,69,0,.92);color:#fff;font-size:.72rem;font-weight:800;padding:.3rem .9rem;border-radius:50px;letter-spacing:.06em;}
+/* ── VIDEO WRAP (centrado, ancho generoso) ── */
+.hero-video-wrap{position:relative;width:100%;max-width:580px;margin:2.5rem auto 0;border-radius:24px;overflow:visible;}
+.hero-video-wrap video{width:100%;display:block;border-radius:24px;box-shadow:0 30px 80px rgba(124,58,237,.25),0 0 0 1px rgba(124,58,237,.15);}
+.hero-video-label{position:absolute;top:1rem;left:1rem;background:rgba(255,69,0,.92);color:#fff;font-size:.72rem;font-weight:800;padding:.3rem .9rem;border-radius:50px;letter-spacing:.06em;z-index:3;}
 
-/* ── GENIE SIDE ENTRANCE ── */
-#genie-side{position:absolute;left:0;bottom:0;width:260px;pointer-events:none;z-index:10;}
-@media(max-width:1280px){#genie-side{width:200px;}}
-@media(max-width:900px){#genie-side{display:none;}}
-
-/* Smoke particles */
-.smoke-wrap{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:200px;height:180px;pointer-events:none;}
-.smoke-puff{
-  position:absolute;border-radius:50%;
-  background:radial-gradient(circle,rgba(139,92,246,.45),rgba(236,72,153,.2),transparent 70%);
-  animation:smokePuff 3s ease-out infinite;
-  bottom:0;left:50%;transform:translateX(-50%) scale(0);
-  opacity:0;
-}
-.smoke-puff:nth-child(1){width:120px;height:120px;animation-delay:0s;}
-.smoke-puff:nth-child(2){width:160px;height:160px;animation-delay:.6s;}
-.smoke-puff:nth-child(3){width:200px;height:200px;animation-delay:1.2s;}
-.smoke-puff:nth-child(4){width:90px;height:90px;animation-delay:1.8s;left:30%;}
-.smoke-puff:nth-child(5){width:110px;height:110px;animation-delay:2.4s;left:70%;}
-@keyframes smokePuff{
-  0%  {transform:translateX(-50%) scale(0) translateY(0);   opacity:0;}
-  20% {transform:translateX(-50%) scale(1) translateY(-10px); opacity:.9;}
-  100%{transform:translateX(-50%) scale(2.5) translateY(-120px);opacity:0;}
-}
-
-/* Genie image rise */
-.genie-side-img{
-  display:block;width:100%;position:relative;z-index:2;
-  animation:genieRiseIn 1.2s cubic-bezier(.22,1,.36,1) 0.4s both;
-  filter:drop-shadow(0 20px 40px rgba(139,92,246,.6));
-}
-@keyframes genieRiseIn{
-  from{opacity:0;transform:translateY(120px) scale(.7);}
-  to  {opacity:1;transform:translateY(0)      scale(1);}
-}
-
-/* Golden glow under genie */
-.genie-glow{
-  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
-  width:160px;height:30px;
-  background:radial-gradient(ellipse,rgba(255,204,0,.6),transparent 70%);
-  border-radius:50%;
-  animation:glowPulse 2s ease-in-out infinite alternate;
-  z-index:1;
-}
-@keyframes glowPulse{from{opacity:.5;width:140px;}to{opacity:1;width:200px;}}
-
-/* Sparkles */
-.genie-sparkle{
-  position:absolute;font-size:1.2rem;
-  animation:sparkleFly 2.5s ease-in-out infinite;
+/* ── GENIE SOBRE EL VIDEO ── */
+#hero-genie{
+  position:absolute;
+  right:-30px; bottom:-10px;
+  width:170px;
   pointer-events:none;
+  z-index:10;
 }
-.genie-sparkle:nth-child(1){top:20%;left:5%;animation-delay:0s;}
-.genie-sparkle:nth-child(2){top:35%;right:0%;animation-delay:.7s;font-size:1rem;}
-.genie-sparkle:nth-child(3){top:55%;left:10%;animation-delay:1.4s;font-size:.9rem;}
-@keyframes sparkleFly{
-  0%,100%{transform:translateY(0)   rotate(0deg);  opacity:.8;}
-  50%     {transform:translateY(-18px) rotate(20deg); opacity:1;}
+/* humo bajo genie */
+#hero-genie .hg-smoke{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:100px;height:80px;pointer-events:none;
+}
+#hero-genie .hg-puff{
+  position:absolute;border-radius:50%;bottom:0;left:50%;transform:translateX(-50%) scale(0);opacity:0;
+  background:radial-gradient(circle,rgba(139,92,246,.55),rgba(236,72,153,.25),transparent 68%);
+  animation:hgSmoke 2.8s ease-out infinite;
+}
+#hero-genie .hg-puff:nth-child(1){width:80px;height:80px;animation-delay:0s;}
+#hero-genie .hg-puff:nth-child(2){width:60px;height:60px;animation-delay:.7s;left:35%;}
+#hero-genie .hg-puff:nth-child(3){width:70px;height:70px;animation-delay:1.4s;left:65%;}
+@keyframes hgSmoke{
+  0%  {transform:translateX(-50%) scale(0);opacity:0;}
+  25% {transform:translateX(-50%) scale(1) translateY(-8px);opacity:.85;}
+  100%{transform:translateX(-50%) scale(2) translateY(-70px);opacity:0;}
+}
+/* genie sube */
+#hero-genie .hg-img{
+  display:block;width:100%;position:relative;z-index:2;
+  filter:drop-shadow(0 10px 28px rgba(139,92,246,.65));
+  animation:hgRise 1s cubic-bezier(.22,1,.36,1) .5s both;
+}
+@keyframes hgRise{
+  from{opacity:0;transform:translateY(50px) scale(.75);}
+  to  {opacity:1;transform:translateY(0)     scale(1);}
+}
+/* brillo dorado */
+#hero-genie .hg-glow{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  width:90px;height:18px;
+  background:radial-gradient(ellipse,rgba(255,210,0,.7),transparent 70%);
+  border-radius:50%;z-index:1;
+  animation:hgGlow 2s ease-in-out infinite alternate;
+}
+@keyframes hgGlow{from{opacity:.4;width:70px;}to{opacity:1;width:110px;}}
+/* sparkle pequeño */
+#hero-genie .hg-spark{
+  position:absolute;font-size:.9rem;pointer-events:none;
+  animation:hgSpark 2s ease-in-out infinite;
+}
+#hero-genie .hg-spark:nth-child(4){top:10%;left:-5%;animation-delay:0s;}
+#hero-genie .hg-spark:nth-child(5){top:30%;right:-8%;animation-delay:.8s;font-size:.75rem;}
+@keyframes hgSpark{
+  0%,100%{transform:translateY(0) scale(1);opacity:.9;}
+  50%     {transform:translateY(-10px) scale(1.2);opacity:1;}
 }
 
 /* ══ SECTION BASE ══ */
@@ -368,63 +353,51 @@ img{max-width:100%;display:block;}
 
 <!-- ══ HERO ══ -->
 <section id="hero">
-
-  <!-- Genie side entrance (desktop only) -->
-  <div id="genie-side">
-    <div class="smoke-wrap">
-      <div class="smoke-puff"></div>
-      <div class="smoke-puff"></div>
-      <div class="smoke-puff"></div>
-      <div class="smoke-puff"></div>
-      <div class="smoke-puff"></div>
-    </div>
-    <span class="genie-sparkle">✨</span>
-    <span class="genie-sparkle">⭐</span>
-    <span class="genie-sparkle">💫</span>
-    <div class="genie-glow"></div>
-    <img src="genie_frame_01.jpg" alt="Genie SuperBot007" class="genie-side-img">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    🔥 Oferta de Lanzamiento — Solo 20 Lugares
   </div>
 
-  <div class="hero-inner">
-    <!-- LEFT: texto -->
-    <div class="hero-left">
-      <div class="hero-badge">
-        <span class="dot"></span>
-        🔥 Oferta de Lanzamiento — Solo 20 Lugares
-      </div>
+  <h1 class="hero-h1">
+    ¿Llevas Meses Intentando<br>
+    <span class="grad">Crear Tu Bot</span><br>
+    y Todavía Nada?
+  </h1>
 
-      <h1 class="hero-h1">
-        ¿Llevas Meses Intentando<br>
-        <span class="grad">Crear Tu Bot</span><br>
-        y Todavía Nada?
-      </h1>
+  <p class="hero-sub">
+    Cansado de perder citas y ventas — <strong>SuperBot007 tiene la solución.</strong><br>
+    Te lleva paso a paso a configurar tu bot <strong>sin saber nada de nada.</strong>
+  </p>
 
-      <p class="hero-sub">
-        Cansado de perder citas y ventas — <strong>SuperBot007 tiene la solución.</strong><br>
-        Te lleva paso a paso a configurar tu bot <strong>sin saber nada de nada.</strong>
-      </p>
-
-      <div class="hero-btns">
-        <a href="https://apolo189.github.io/superbot007/form.html" class="btn-primary">🧞‍♀️ Pide Tu Deseo Gratis</a>
-        <a href="#how" class="btn-secondary">Ver Cómo Funciona</a>
-      </div>
-
-      <div class="hero-trust">
-        <div class="trust-item green"><i class="fas fa-check-circle"></i> Sin tarjeta de crédito</div>
-        <div class="trust-item gold"><i class="fas fa-star"></i> 4.9/5 Calificación</div>
-        <div class="trust-item purple"><i class="fas fa-shield-alt"></i> 30 días garantía</div>
-      </div>
-    </div>
-
-    <!-- RIGHT: video grande -->
-    <div class="hero-right">
-      <div class="hero-video-wrap">
-        <div class="hero-video-label">▶ VER DEMO</div>
-        <video autoplay loop muted playsinline src="videos/hero-superbot007.mp4"></video>
-      </div>
-    </div>
+  <div class="hero-btns">
+    <a href="https://apolo189.github.io/superbot007/form.html" class="btn-primary">🧞‍♀️ Pide Tu Deseo Gratis</a>
+    <a href="#how" class="btn-secondary">Ver Cómo Funciona</a>
   </div>
 
+  <div class="hero-trust">
+    <div class="trust-item green"><i class="fas fa-check-circle"></i> Sin tarjeta de crédito</div>
+    <div class="trust-item gold"><i class="fas fa-star"></i> 4.9/5 Calificación</div>
+    <div class="trust-item purple"><i class="fas fa-shield-alt"></i> 30 días garantía</div>
+  </div>
+
+  <!-- Video + Genie emergiendo encima -->
+  <div class="hero-video-wrap reveal">
+    <div class="hero-video-label">▶ VER DEMO</div>
+    <video autoplay loop muted playsinline src="videos/hero-superbot007.mp4"></video>
+
+    <!-- Genie emerge desde la esquina del video -->
+    <div id="hero-genie">
+      <div class="hg-smoke">
+        <div class="hg-puff"></div>
+        <div class="hg-puff"></div>
+        <div class="hg-puff"></div>
+      </div>
+      <div class="hg-glow"></div>
+      <span class="hg-spark">✨</span>
+      <span class="hg-spark">💫</span>
+      <img src="genie_frame_01.jpg" alt="Genie" class="hg-img">
+    </div>
+  </div>
 </section>
 
 <!-- ══ STATS STRIP ══ -->
