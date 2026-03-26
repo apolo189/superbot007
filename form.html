@@ -2068,16 +2068,23 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ══ WIZARD VOICE AGENT ══ -->
 <script>
-/* Sync language preference from salespage if available */
+/* Detect language: URL param > localStorage > browser language > default ES */
 (function(){
-  let lang = 'en';
-  try { lang = localStorage.getItem('sb007_lang') || lang; } catch(e){}
-  if(!['en','es'].includes(lang)) lang = 'en';
+  // 1. Check URL param ?lang=es or ?lang=en
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  // 2. Check localStorage (set by salespage)
+  let storedLang = null;
+  try { storedLang = localStorage.getItem('sb007_lang'); } catch(e){}
+  // 3. Browser language
+  const browserLang = (navigator.language || navigator.userLanguage || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+  // Priority: URL > localStorage > browser > 'es' (default Spanish)
+  let lang = urlLang || storedLang || browserLang || 'es';
+  if(!['en','es'].includes(lang)) lang = 'es';
   window.WIZARD_CONTEXT = {
     page: 'form',
     step: 1,
     language: lang,
-    agentName: lang === 'es' ? 'Amanda' : 'Shirley',
+    agentName: 'Genie',
     businessType: ''
   };
 })();
