@@ -204,14 +204,14 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 
 /* LANG TOGGLE BUTTON */
 .lang-btn {
-  width: auto; min-width: 44px; height: 30px; border-radius: 8px;
-  border: 1px solid var(--border); background: rgba(108,99,255,0.1);
-  color: var(--text); cursor: pointer; display: flex; align-items: center;
-  justify-content: center; font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.5px; gap: 0.25rem; padding: 0 0.5rem;
-  transition: all 0.2s;
+  width: auto; min-width: 54px; height: 34px; border-radius: 10px;
+  border: 1.5px solid rgba(108,99,255,0.5); background: rgba(108,99,255,0.18);
+  color: #fff; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.5px; gap: 0.3rem; padding: 0 0.65rem;
+  transition: all 0.2s; box-shadow: 0 2px 10px rgba(108,99,255,0.25);
 }
-.lang-btn:hover { border-color: var(--p); background: rgba(108,99,255,0.2); color: var(--p); }
+.lang-btn:hover { border-color: var(--p); background: rgba(108,99,255,0.35); transform: scale(1.05); }
 
 /* QUICK BUTTONS */
 .quick-btns {
@@ -751,7 +751,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-topbar-count" id="cartTopbarCount">0</span>
         </button>
-        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language">🌐 <span id="langBtnLabel">ES</span></button>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language"><span id="langBtnFlag">🇪🇸</span> <span id="langBtnLabel">ES</span></button>
         <button class="topbar-btn" onclick="toggleTutorialPanel()" title="Tutorial" id="tutorialTopBtn"><i class="fas fa-book-open"></i></button>
         <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
         <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
@@ -991,8 +991,10 @@ let isTyping = false;
 let appointmentMode = false;
 let cart = [];
 // UI language override: null = use botData.botLanguage, 'en' or 'es'
-let uiLangOverride = null;
-const botId = new URLSearchParams(location.search).get('id');
+// Support ?lang=es or ?lang=en in URL to force language
+const _urlParams = new URLSearchParams(location.search);
+let uiLangOverride = _urlParams.get('lang') || null; // e.g. ?lang=es forces Spanish
+const botId = _urlParams.get('id');
 
 // ══════ PARTICLES (black deep bg) ══════
 (function(){
@@ -1104,11 +1106,14 @@ async function loadBot(){
 function initChat(){
   const d = botData;
 
-  // Set lang toggle button to show opposite (what clicking it will switch TO)
-  const currentLang = d.botLanguage || 'es';
-  const langBtn = document.getElementById('langBtnLabel');
-  // Show CURRENT language on the button (click to toggle)
-  if(langBtn) langBtn.textContent = currentLang === 'en' ? 'EN' : 'ES';
+  // Determine effective language (URL param overrides bot setting)
+  const currentLang = uiLangOverride || d.botLanguage || 'es';
+  // Apply URL lang override to botData
+  if(uiLangOverride) d.botLanguage = uiLangOverride;
+  const langBtn  = document.getElementById('langBtnLabel');
+  const langFlag = document.getElementById('langBtnFlag');
+  if(langBtn)  langBtn.textContent  = currentLang === 'en' ? 'EN' : 'ES';
+  if(langFlag) langFlag.textContent = currentLang === 'en' ? '🇺🇸' : '🇪🇸';
 
   // Colors
   if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
@@ -2514,10 +2519,12 @@ function toggleChatLang(){
   const curLang = uiLangOverride || (botData ? botData.botLanguage : 'es') || 'es';
   // Toggle between 'en' and 'es'
   uiLangOverride = (curLang === 'en') ? 'es' : 'en';
-  // Update button label to show the NOW-ACTIVE language
-  const btn = document.getElementById('langBtnLabel');
-  if(btn) btn.textContent = uiLangOverride === 'en' ? 'EN' : 'ES';
-  // Temporarily override botData.botLanguage so buildSystemPrompt uses new lang
+  // Update button label and flag
+  const btn  = document.getElementById('langBtnLabel');
+  const flag = document.getElementById('langBtnFlag');
+  if(btn)  btn.textContent  = uiLangOverride === 'en' ? 'EN' : 'ES';
+  if(flag) flag.textContent = uiLangOverride === 'en' ? '🇺🇸' : '🇪🇸';
+  // Apply to botData so buildSystemPrompt uses new lang
   if(botData) botData.botLanguage = uiLangOverride;
   // Rebuild system prompt with new language
   buildSystemPrompt();
