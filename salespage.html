@@ -149,14 +149,17 @@ img{max-width:100%;display:block;}
 .compare-table th.col-super{background:var(--grad);color:#fff;font-size:1rem;}
 .compare-table td{padding:1rem 1.5rem;border-bottom:1px solid rgba(0,0,0,.06);font-size:.92rem;}
 .compare-table td:first-child{font-weight:600;color:var(--dark);background:#fafafa;}
-.compare-table td:nth-child(2){text-align:center;background:#fff8f8;color:#cc0000;font-size:1.1rem;}
-.compare-table td:nth-child(3){text-align:center;background:#f0fff8;color:#00a878;font-size:1.1rem;font-weight:700;}
+.compare-table td:nth-child(2){text-align:center;background:#fff8f8;color:#cc0000;font-size:1rem;}
+.compare-table td:nth-child(3){text-align:center;background:#fffdf0;font-size:1rem;}
+.compare-table td:nth-child(4){text-align:center;background:#f0fff8;color:#00a878;font-size:1rem;font-weight:700;}
 .compare-table tr:last-child td{border-bottom:none;}
-.compare-table .price-row td{font-weight:900;font-size:1.1rem;}
+.compare-table .price-row td{font-weight:900;font-size:1rem;}
 .compare-table .price-row td:first-child{background:#fafafa;}
-.compare-table .price-row td:nth-child(2){background:#ffe8e8;color:#cc0000;font-size:1.3rem;}
-.compare-table .price-row td:nth-child(3){background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.05));color:var(--orange);font-size:1.4rem;}
-@media(max-width:600px){.compare-table th,.compare-table td{padding:.75rem .8rem;font-size:.82rem;}}
+.compare-table .price-row td:nth-child(2){background:#ffe8e8;color:#cc0000;font-size:1.15rem;}
+.compare-table .price-row td:nth-child(3){background:#fff8e0;color:#7d5a00;font-size:1.15rem;}
+.compare-table .price-row td:nth-child(4){background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.05));color:var(--orange);font-size:1.25rem;}
+@media(max-width:700px){.compare-table th,.compare-table td{padding:.6rem .55rem;font-size:.75rem;}}
+@media(max-width:480px){.compare-table{font-size:.7rem;}.compare-table th,.compare-table td{padding:.5rem .4rem;}}
 
 /* ══ TESTIMONIALS ══ */
 #testi{background:linear-gradient(160deg,#fff8f0,#fdf4ff);}
@@ -461,31 +464,105 @@ img{max-width:100%;display:block;}
 <section id="compare" class="section">
   <div class="wr">
     <div class="eyebrow comp-eyebrow reveal">Comparación Honesta</div>
-    <h2 class="sh2 reveal" style="color:var(--dark);">SuperBot007 <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">vs. Hacerlo Solo</span></h2>
-    <p class="ssub reveal">¿Cuánto tiempo y dinero te está costando NO tener esto?</p>
+    <h2 class="sh2 reveal" style="color:var(--dark);">SuperBot007 <span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">vs. La Competencia</span></h2>
+    <p class="ssub reveal">Mira exactamente qué obtienes — y qué no obtienes — en cada opción.</p>
 
     <div class="reveal" style="overflow-x:auto;">
       <table class="compare-table">
         <thead>
           <tr>
             <th></th>
-            <th class="col-manual">❌ Hacerlo Solo / Freelancer</th>
-            <th class="col-super">✅ SuperBot007</th>
+            <th class="col-manual">❌ Hacerlo Solo<br><span style="font-size:.78rem;font-weight:600;opacity:.8;">Freelancer / Agencia</span></th>
+            <th style="background:#fff3cd;color:#7d5a00;font-weight:800;padding:1.2rem 1.5rem;font-size:.95rem;text-align:center;">🟡 Butternut AI<br><span style="font-size:.78rem;font-weight:600;opacity:.75;">Competidor directo</span></th>
+            <th class="col-super">🏆 SuperBot007<br><span style="font-size:.78rem;font-weight:600;opacity:.9;">Todo en uno</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>⏱️ Tiempo de setup</td><td>3–6 meses</td><td>5 minutos</td></tr>
-          <tr><td>💻 Necesitas saber código</td><td>Sí (o pagar)</td><td>❌ Cero</td></tr>
-          <tr><td>🤖 Bot IA con GPT-4</td><td>$3,000–$10,000</td><td>✅ Incluido</td></tr>
-          <tr><td>🌐 Landing Page profesional</td><td>$500–$2,000</td><td>✅ Incluida</td></tr>
-          <tr><td>📇 Tarjeta Digital</td><td>$100–$300</td><td>✅ Incluida</td></tr>
-          <tr><td>💳 Pagos PayPal/Stripe/Zelle</td><td>$200–$800 setup</td><td>✅ Incluido</td></tr>
-          <tr><td>📅 Agenda de citas online</td><td>$20–$50/mes extra</td><td>✅ Incluida</td></tr>
-          <tr><td>🎨 Editor visual sin código</td><td>$50–$200/cambio</td><td>✅ Incluido</td></tr>
-          <tr><td>🌍 Soporte en 2 idiomas</td><td>Extra</td><td>✅ Español + Inglés</td></tr>
-          <tr class="price-row"><td>💰 Costo Total</td><td>$5,000–$15,000 + meses</td><td>Desde $19.99/mes</td></tr>
+          <tr>
+            <td>⏱️ Tiempo de setup</td>
+            <td>3–6 meses</td>
+            <td style="text-align:center;background:#fffdf0;">~15 min</td>
+            <td>✅ 5–10 min</td>
+          </tr>
+          <tr>
+            <td>💻 Sin saber código</td>
+            <td>❌ Necesitas o pagas</td>
+            <td style="text-align:center;background:#fffdf0;">✅ Sí</td>
+            <td>✅ Cero código</td>
+          </tr>
+          <tr>
+            <td>🏠 Hosting incluido</td>
+            <td>❌ $10–30/mes extra</td>
+            <td style="text-align:center;background:#fffdf0;">✅ Gratis</td>
+            <td>✅ Gratis para siempre<br><span style="font-size:.78rem;color:#00a878;">(GitHub + Firebase + Cloudflare)</span></td>
+          </tr>
+          <tr>
+            <td>🌐 Dominio gratis</td>
+            <td>❌ $10–15/año extra</td>
+            <td style="text-align:center;background:#fffdf0;">✅ 1er año gratis<br><span style="font-size:.78rem;color:#b8860b;">después $15/año</span></td>
+            <td>✅ URL pública gratis<br><span style="font-size:.78rem;color:#00a878;">+ dominio propio en plan Pro</span></td>
+          </tr>
+          <tr>
+            <td>🌍 Landing Page</td>
+            <td>$500–$2,000</td>
+            <td style="text-align:center;background:#fffdf0;">✅ Incluida</td>
+            <td>✅ Incluida + editor visual</td>
+          </tr>
+          <tr>
+            <td>🤖 Bot IA con GPT-4</td>
+            <td>$3,000–$10,000</td>
+            <td style="text-align:center;background:#fffdf0;">⚠️ Add-on extra<br><span style="font-size:.78rem;color:#b8860b;">no incluido en base</span></td>
+            <td>✅ Incluido desde día 1</td>
+          </tr>
+          <tr>
+            <td>💬 WhatsApp integrado</td>
+            <td>$500+ setup</td>
+            <td style="text-align:center;background:#fffdf0;">❌ No tiene</td>
+            <td>✅ Incluido</td>
+          </tr>
+          <tr>
+            <td>📇 Tarjeta Digital + QR</td>
+            <td>$100–$300</td>
+            <td style="text-align:center;background:#fffdf0;">❌ No tiene</td>
+            <td>✅ Incluida</td>
+          </tr>
+          <tr>
+            <td>💳 Pagos PayPal/Zelle/Venmo</td>
+            <td>$200–$800 setup</td>
+            <td style="text-align:center;background:#fffdf0;">❌ No tiene</td>
+            <td>✅ Incluido</td>
+          </tr>
+          <tr>
+            <td>📅 Agenda de citas</td>
+            <td>$20–$50/mes extra</td>
+            <td style="text-align:center;background:#fffdf0;">❌ No tiene</td>
+            <td>✅ Incluida + Google Calendar</td>
+          </tr>
+          <tr>
+            <td>🌍 Bilingüe ES / EN</td>
+            <td>Extra</td>
+            <td style="text-align:center;background:#fffdf0;">⚠️ Inglés solo</td>
+            <td>✅ Español + Inglés automático</td>
+          </tr>
+          <tr>
+            <td>🧞 Guía paso a paso con IA</td>
+            <td>❌ Nada</td>
+            <td style="text-align:center;background:#fffdf0;">❌ Formulario frío</td>
+            <td>✅ Genie te acompaña</td>
+          </tr>
+          <tr class="price-row">
+            <td>💰 Precio</td>
+            <td>$5,000–$15,000<br>+ meses de espera</td>
+            <td style="text-align:center;background:#fffdf0;font-size:1.1rem;font-weight:900;color:#7d5a00;">$20–$69/mes<br><span style="font-size:.8rem;font-weight:600;">sin bot IA real</span></td>
+            <td>Desde $19.99/mes<br><span style="font-size:.82rem;font-weight:700;color:#00a878;">todo incluido ✅</span></td>
+          </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="reveal" style="margin-top:2rem;background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.06));border:1px solid rgba(255,69,0,.25);border-radius:16px;padding:1.4rem 2rem;text-align:center;">
+      <div style="font-size:1.1rem;font-weight:800;color:var(--dark);margin-bottom:.4rem;">🏆 El veredicto es claro</div>
+      <div style="font-size:.95rem;color:#444;line-height:1.6;">SuperBot007 = Bot IA + Landing + Tarjeta + Pagos + WhatsApp + Hosting + Agenda<br><strong style="color:var(--orange);">Todo por menos de lo que pagas en Netflix al mes.</strong></div>
     </div>
   </div>
 </section>
