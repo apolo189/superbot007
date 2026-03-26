@@ -250,6 +250,7 @@ tr:hover td{background:rgba(255,255,255,0.018);}
     <div class="dash-tab active" onclick="switchTab('bots')"><i class="fas fa-robot"></i> Bots</div>
     <div class="dash-tab" onclick="switchTab('appointments')"><i class="fas fa-calendar-check"></i> Citas <span id="apptCount" style="background:var(--p);color:white;border-radius:10px;padding:0.1rem 0.45rem;font-size:0.65rem;margin-left:0.2rem;font-weight:800;">0</span></div>
     <div class="dash-tab" onclick="switchTab('messages')"><i class="fas fa-comments"></i> WhatsApp</div>
+    <div class="dash-tab" onclick="switchTab('leads')"><i class="fas fa-envelope"></i> Leads <span id="leadsCount" style="background:#ff4500;color:white;border-radius:10px;padding:0.1rem 0.45rem;font-size:0.65rem;margin-left:0.2rem;font-weight:800;">0</span></div>
     <div class="dash-tab" onclick="switchTab('settings')"><i class="fas fa-cog"></i> Config</div>
   </div>
 
@@ -338,6 +339,17 @@ tr:hover td{background:rgba(255,255,255,0.018);}
           <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);">Cargando mensajes...</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ── LEADS TAB ── -->
+  <div class="tab-panel" id="tab-leads">
+    <div class="section-hdr">
+      <h3><i class="fas fa-envelope" style="color:#ff4500;margin-right:0.4rem;"></i> Leads Capturados</h3>
+      <button class="action-btn" onclick="exportLeadsCSV()" style="background:rgba(0,200,150,0.15);border:1px solid rgba(0,200,150,0.4);color:#00c896;"><i class="fas fa-download"></i> Exportar CSV</button>
+    </div>
+    <div id="leadsContainer">
+      <div class="empty-state"><div class="empty-icon">📧</div><p>Cargando leads...</p></div>
     </div>
   </div>
 
@@ -465,9 +477,10 @@ initAdmin();
 // ══════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════
-let allBots = [];
+let allBots  = [];
 let allAppts = [];
 let allMsgs  = [];
+let allLeads = [];
 let botsViewGrid = true; // true=grid, false=table
 let pendingDeleteId = null;
 
@@ -492,7 +505,7 @@ async function initAdmin(){
   showOverlay('Cargando datos...');
   try{
     await waitFor(()=>window.db);
-    await Promise.all([ loadBots(), loadAppointments(), loadMessages() ]);
+    await Promise.all([ loadBots(), loadAppointments(), loadMessages(), loadLeads() ]);
     updateKPIs();
     renderBots();
     renderAppts();
@@ -536,6 +549,74 @@ async function loadMessages(){
     snap.forEach(d=>{ allMsgs.push({id:d.id,...d.data()}); });
     allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }catch(e){ allMsgs=[]; }
+}
+
+async function loadLeads(){
+  if(!window.db) return;
+  try{
+    const snap = await window.fbGetDocs(window.fbCollection(window.db,'leads'));
+    allLeads = [];
+    snap.forEach(d=>{ allLeads.push({id:d.id,...d.data()}); });
+    allLeads.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    document.getElementById('leadsCount').textContent = allLeads.length;
+    renderLeads();
+  }catch(e){ allLeads=[]; console.log('leads error:',e); }
+}
+
+function renderLeads(){
+  const container = document.getElementById('leadsContainer');
+  if(!container) return;
+  if(!allLeads.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>No hay leads aún — los emails aparecen aquí cuando alguien llena el modal de registro</p></div>';
+    return;
+  }
+  container.innerHTML = `
+  <table style="width:100%;border-collapse:collapse;font-size:0.83rem;">
+    <thead>
+      <tr style="background:rgba(255,69,0,0.1);">
+        <th style="padding:0.7rem;text-align:left;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">#</th>
+        <th style="padding:0.7rem;text-align:left;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">Nombre</th>
+        <th style="padding:0.7rem;text-align:left;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">Email</th>
+        <th style="padding:0.7rem;text-align:left;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">Fecha</th>
+        <th style="padding:0.7rem;text-align:left;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border);">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${allLeads.map((l,i)=>{
+        const d = l.createdAt ? new Date(l.createdAt).toLocaleDateString('es-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+        return `<tr style="border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='rgba(255,69,0,0.05)'" onmouseout="this.style.background=''">
+          <td style="padding:0.65rem 0.7rem;color:var(--muted);">${i+1}</td>
+          <td style="padding:0.65rem 0.7rem;font-weight:700;color:var(--text);">${l.name||'—'}</td>
+          <td style="padding:0.65rem 0.7rem;color:#00c896;">
+            <a href="mailto:${l.email||''}" style="color:#00c896;text-decoration:none;">${l.email||'—'}</a>
+          </td>
+          <td style="padding:0.65rem 0.7rem;color:var(--muted);font-size:0.78rem;">${d}</td>
+          <td style="padding:0.65rem 0.7rem;">
+            <a href="mailto:${l.email||''}" style="display:inline-flex;align-items:center;gap:0.3rem;background:rgba(0,200,150,0.12);border:1px solid rgba(0,200,150,0.3);color:#00c896;padding:0.3rem 0.7rem;border-radius:8px;font-size:0.75rem;font-weight:700;text-decoration:none;">
+              <i class="fas fa-envelope"></i> Contactar
+            </a>
+          </td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>
+  <div style="margin-top:0.8rem;font-size:0.78rem;color:var(--muted);text-align:right;">
+    Total: <strong style="color:var(--text);">${allLeads.length} leads</strong>
+  </div>`;
+}
+
+function exportLeadsCSV(){
+  if(!allLeads.length){ alert('No hay leads para exportar'); return; }
+  const rows = [['Nombre','Email','Fecha']];
+  allLeads.forEach(l=>{
+    const d = l.createdAt ? new Date(l.createdAt).toLocaleDateString() : '';
+    rows.push([l.name||'',l.email||'',d]);
+  });
+  const csv = rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = 'leads-superbot007-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
 }
 
 // ══════════════════════════════════════════════
@@ -985,6 +1066,7 @@ function switchTab(name){
   document.querySelectorAll('.dash-tab').forEach(t=>{ if(t.getAttribute('onclick')?.includes("'"+name+"'")) t.classList.add('active'); });
   if(name==='appointments') renderAppts();
   if(name==='messages') renderMsgs();
+  if(name==='leads') renderLeads();
 }
 
 // ══════════════════════════════════════════════
