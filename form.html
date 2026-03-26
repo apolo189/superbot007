@@ -1036,14 +1036,21 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
       document.getElementById('openaiKey').value = saved || atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
     })();
   </script>
+  <!-- ══ IDIOMA DEL BOT — MUY IMPORTANTE ══ -->
+  <div style="background:linear-gradient(135deg,rgba(255,69,0,0.12),rgba(255,0,153,0.08));border:2px solid var(--primary);border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;">
+    <div style="font-size:1.05rem;font-weight:800;margin-bottom:0.5rem;color:var(--primary);">🌎 Idioma del Bot</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem;">Elige el idioma en que tu bot hablará con tus clientes. <strong style="color:var(--text);">¡Importante!</strong> Esta selección no se puede cambiar fácilmente después.</div>
+    <select id="botLanguage" style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.07);border:1px solid var(--primary);border-radius:12px;color:#fff;font-size:1rem;font-weight:700;font-family:inherit;outline:none;cursor:pointer;">
+      <option value="es">🇪🇸 Español</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="pt">🇧🇷 Português</option>
+    </select>
+  </div>
+
   <div class="form-row">
     <div class="form-group">
       <label>Modelo GPT</label>
       <select id="gptModel"><option value="gpt-4o-mini" selected>GPT-4o Mini (Recomendado)</option><option value="gpt-4o">GPT-4o (Potente)</option><option value="gpt-3.5-turbo">GPT-3.5 Turbo (Económico)</option></select>
-    </div>
-    <div class="form-group">
-      <label>Idioma del Bot</label>
-      <select id="botLanguage"><option value="es" selected>Español</option><option value="en">English</option><option value="pt">Português</option></select>
     </div>
   </div>
 
@@ -1053,7 +1060,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Usa estos botones para generar tu contenido automáticamente con IA ✨</div>
     <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
       <button class="btn-ai" onclick="aiGen('description')" style="margin-bottom:0;"><span class="sparkle">✨</span> Descripción</button>
-      <button class="btn-ai" onclick="aiGen('heroTitle')" style="margin-bottom:0;"><span class="sparkle">✨</span> Título Hero</button>
+      <button class="btn-ai" onclick="aiGen('heroTitle')" style="margin-bottom:0;"><span class="sparkle">✨</span> Título Encabezado</button>
       <button class="btn-ai" onclick="aiGen('services')" style="margin-bottom:0;"><span class="sparkle">✨</span> Servicios</button>
       <button class="btn-ai" onclick="aiGen('testimonials')" style="margin-bottom:0;"><span class="sparkle">✨</span> Testimonios</button>
       <button class="btn-ai" onclick="aiGen('faqs')" style="margin-bottom:0;"><span class="sparkle">✨</span> FAQs</button>
@@ -1725,6 +1732,14 @@ async function activateBot(){
   // API key is optional - bot can work with template responses
   document.getElementById('activateBtn').disabled=true;
   showOv('Activando Super Bot 007... 🚀');
+
+  // ── Wait for Firebase (module script loads async) ──
+  let dbWait = 0;
+  while(!window.db && dbWait < 8000){
+    await new Promise(r => setTimeout(r, 250));
+    dbWait += 250;
+  }
+
   const rawData=collect();
   const slug=(rawData.businessName||'bot').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   const botId=slug+'-'+Date.now();
@@ -1736,7 +1751,7 @@ async function activateBot(){
   // Clean ALL data recursively before sending to Firestore
   const data=sanitizeForFirestore(rawData);
   try{
-    if(!window.db) throw new Error('Firebase no listo, recarga la página');
+    if(!window.db) throw new Error('Firebase no listo — recarga la página e intenta de nuevo');
     await window.fbSet(window.fbDoc(window.db,'bots',botId),data);
     hideOv();
     localStorage.setItem('lastBotId',botId);
@@ -2025,10 +2040,15 @@ function hideLeadModal(){
   document.body.style.overflow = '';
 }
 function skipLead(){
+  // Tell Genie the form is now visible — she can start guiding
+  if(window.wzFormReady) window.wzFormReady();
   localStorage.setItem('sb007_lead_captured','1');
   hideLeadModal();
 }
-async function submitLead(){
+async function _notifyGenieFormReady(){
+  if(window.wzFormReady) window.wzFormReady();
+}
+function submitLead(){
   const nameVal  = (document.getElementById('leadName').value||'').trim();
   const emailVal = (document.getElementById('leadEmail').value||'').trim();
   if(!nameVal){ document.getElementById('leadName').focus(); return; }
@@ -2085,7 +2105,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     step: 1,
     language: lang,
     agentName: 'Genie',
-    businessType: ''
+    businessType: '',
+    holdUntilFormVisible: true  // Genie waits until lead modal is dismissed
   };
 })();
 </script>

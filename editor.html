@@ -355,7 +355,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
     <!-- Section Nav -->
     <div class="sections-nav">
       <button class="sec-nav-btn active" style="color:#A78BFA" onclick="showSection('colors',this)">🎨 Colores</button>
-      <button class="sec-nav-btn" style="color:#F472B6" onclick="showSection('hero',this)">🦸 Hero</button>
+      <button class="sec-nav-btn" style="color:#F472B6" onclick="showSection('hero',this)">🦸 Encabezado</button>
       <button class="sec-nav-btn" style="color:#FB923C" onclick="showSection('negocio',this)">🏢 Negocio</button>
       <button class="sec-nav-btn" style="color:#34D399" onclick="showSection('servicios',this)">⚙️ Servicios</button>
       <button class="sec-nav-btn" style="color:#60A5FA" onclick="showSection('productos',this)">🛒 Productos</button>
@@ -474,9 +474,9 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
         <button class="add-btn" style="border-color:rgba(167,139,250,0.4);color:#A78BFA" onclick="restoreAllColors()"><i class="fas fa-undo"></i> Restaurar todos los colores</button>
       </div>
 
-      <!-- ██ HERO ██ -->
+      <!-- ██ ENCABEZADO ██ -->
       <div class="edit-section" id="sec-hero">
-        <div class="sec-title" style="background:rgba(244,114,182,0.1);color:#F472B6;border:1px solid rgba(244,114,182,0.25)"><i class="fas fa-star"></i> SECCIÓN HERO</div>
+        <div class="sec-title" style="background:rgba(244,114,182,0.1);color:#F472B6;border:1px solid rgba(244,114,182,0.25)"><i class="fas fa-star"></i> ENCABEZADO DE LA PÁGINA</div>
         <div class="field-group">
           <div class="field-label">Título Principal <div class="field-actions"><button class="fa-btn restore" onclick="restoreField('heroTitle')">↺</button></div></div>
           <input class="e-input" id="f_heroTitle" type="text" placeholder="Título principal..." oninput="markUnsaved();editedData.heroTitle=this.value">
@@ -490,7 +490,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--d
           <input class="e-input" id="f_ctaText" type="text" placeholder="Ej: Reservar Ahora" oninput="markUnsaved();editedData.ctaText=this.value">
         </div>
         <div class="field-group">
-          <div class="field-label">Imagen Hero (URL) <div class="field-actions"><button class="fa-btn restore" onclick="restoreField('heroImage')">↺</button><button class="fa-btn del" onclick="clearField('heroImage','heroImgPrev')">✕</button></div></div>
+          <div class="field-label">Imagen Principal del Encabezado (URL) <div class="field-actions"><button class="fa-btn restore" onclick="restoreField('heroImage')">↺</button><button class="fa-btn del" onclick="clearField('heroImage','heroImgPrev')">✕</button></div></div>
           <div class="img-upload-area">
             <input type="file" accept="image/*" onchange="uploadImg(this,'heroImage','heroImgPrev','f_heroImage')">
             <img id="heroImgPrev" alt="">

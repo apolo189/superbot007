@@ -650,32 +650,78 @@
     if (PAGE === 'form') {
       watchSteps();
 
-      /* Show step 1 intro after 1.2s */
-      setTimeout(() => {
-        const script = STEP_SCRIPTS[LANG][1];
-        if (document.getElementById('wz-text'))
-          document.getElementById('wz-text').textContent = script;
-        showPanel();
-        startAutoCloseBar(18);
-        autoCloseTimer = setTimeout(hidePanel, 18000);
+      /* ── Wait for lead modal to be dismissed before showing Genie ── */
+      function startGenie() {
+        /* Show step 1 intro after 1.2s */
+        setTimeout(() => {
+          const script = STEP_SCRIPTS[LANG][1];
+          if (document.getElementById('wz-text'))
+            document.getElementById('wz-text').textContent = script;
+          showPanel();
+          startAutoCloseBar(18);
+          autoCloseTimer = setTimeout(hidePanel, 18000);
 
-        /* Try speaking — will succeed if user already interacted */
-        setTimeout(() => speak(script), 500);
-      }, 1200);
+          /* Try speaking — will succeed if user already interacted */
+          setTimeout(() => speak(script), 500);
+        }, 1200);
 
-      /* Unlock audio on first user interaction */
-      const unlockOnce = () => {
-        unlockAudio();
-        document.removeEventListener('click',    unlockOnce);
-        document.removeEventListener('touchstart', unlockOnce);
-        /* Retry speech for step 1 if not yet spoken */
-        if (!isSpeaking && currentStep === 1 && !hasGreeted) {
-          hasGreeted = true;
-          speak(STEP_SCRIPTS[LANG][1]);
+        /* Unlock audio on first user interaction */
+        const unlockOnce = () => {
+          unlockAudio();
+          document.removeEventListener('click',    unlockOnce);
+          document.removeEventListener('touchstart', unlockOnce);
+          /* Retry speech for step 1 if not yet spoken */
+          if (!isSpeaking && currentStep === 1 && !hasGreeted) {
+            hasGreeted = true;
+            speak(STEP_SCRIPTS[LANG][1]);
+          }
+        };
+        document.addEventListener('click',     unlockOnce);
+        document.addEventListener('touchstart', unlockOnce);
+      }
+
+      /* Check if lead modal already dismissed (returning visitor) */
+      const alreadyCaptured = (() => {
+        try { return !!localStorage.getItem('sb007_lead_captured'); } catch(e){ return false; }
+      })();
+
+      if (alreadyCaptured) {
+        /* No modal will appear — start Genie normally */
+        startGenie();
+      } else {
+        /* Lead modal will appear. Watch for it to disappear, then start Genie. */
+        const leadOverlay = document.getElementById('leadOverlay');
+        if (!leadOverlay) {
+          startGenie();
+        } else {
+          /* Hide FAB until modal dismissed */
+          const fab = document.getElementById('wz-fab');
+          if (fab) fab.style.display = 'none';
+
+          const obs = new MutationObserver(() => {
+            const isHidden = !leadOverlay.classList.contains('show') &&
+                             getComputedStyle(leadOverlay).opacity === '0';
+            if (isHidden) {
+              obs.disconnect();
+              if (fab) fab.style.display = '';
+              startGenie();
+            }
+          });
+          obs.observe(leadOverlay, { attributes: true, attributeFilter: ['class', 'style'] });
+
+          /* Fallback: if localStorage shows captured, stop waiting */
+          const poll = setInterval(() => {
+            try {
+              if (localStorage.getItem('sb007_lead_captured')) {
+                clearInterval(poll);
+                obs.disconnect();
+                if (fab) fab.style.display = '';
+                startGenie();
+              }
+            } catch(e){}
+          }, 500);
         }
-      };
-      document.addEventListener('click',     unlockOnce);
-      document.addEventListener('touchstart', unlockOnce);
+      }
     }
   }
 

@@ -1179,6 +1179,14 @@ function initPage(){
   const lang = d.botLanguage || 'es';
   const isEN = lang === 'en' || lang === 'bilingual';
 
+  // ── Hide reseller/agency section on CLIENT landing pages ──
+  // The reseller section should only appear on the MAIN Super Bot 007 landing,
+  // not on the client's landing page (which always has a botId in the URL).
+  if(botId){
+    const resellerSection = document.getElementById('reseller');
+    if(resellerSection) resellerSection.style.display = 'none';
+  }
+
   // ── Translation helper ──
   function t(es, en){ return isEN ? en : es; }
 
