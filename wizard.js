@@ -1,18 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *  SUPER BOT 007 — GENIE STEP GUIDE  v3.0
- *  Auto-voice bubble on each step change. No chat, no button.
- *  Confetti + celebration on every step completion.
+ *  SUPER BOT 007 — GENIE STEP GUIDE  v4.0
  *
- *  Usage: Add to any page:
- *    <script src="wizard.js"></script>
- *
- *  Optional context (set BEFORE the script tag):
- *    window.WIZARD_CONTEXT = {
- *      page: 'form',        // sales|form|editor|landing
- *      step: 1,
- *      language: 'es'
- *    }
+ *  - Floating Genie bubble (image + name + voice wave)
+ *  - Auto-speaks on every step change
+ *  - NO text input, NO microphone — guide only
+ *  - First message tells client: "I'm only here to guide you,
+ *    let me know when you move to the next step"
+ *  - Confetti on every step completion
  * ═══════════════════════════════════════════════════════════════
  */
 (function () {
@@ -20,8 +15,8 @@
 
   /* ── KEYS & VOICES ── */
   const EL_KEY      = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
-  const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku'; // multilingual warm Spanish
-  const EL_VOICE_EN = 'XrExE9yKIg1WjnnlVkGX'; // warm English
+  const EL_VOICE_ES = 'pFZP5JQG7iQjIQuC4Bku';
+  const EL_VOICE_EN = 'XrExE9yKIg1WjnnlVkGX';
   const EL_MODEL_ES = 'eleven_multilingual_v2';
   const EL_MODEL_EN = 'eleven_flash_v2_5';
   const OA_KEY      = atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
@@ -29,537 +24,616 @@
   /* ── CONTEXT ── */
   const CTX  = window.WIZARD_CONTEXT || {};
   const PAGE = CTX.page || 'form';
-  let   LANG = CTX.language || (navigator.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
+  const langRaw = (navigator.language || navigator.userLanguage || 'es').toLowerCase();
+  let LANG = CTX.language || (langRaw.startsWith('es') ? 'es' : 'en');
   const IS_ES = () => LANG === 'es';
 
   /* ── STATE ── */
-  let currentStep    = CTX.step || 1;
-  let isSpeaking     = false;
-  let audioUnlocked  = false;
-  let bubbleTimer    = null;
-  let currentAudio   = null;
+  let currentStep   = CTX.step || 1;
+  let isSpeaking    = false;
+  let audioUnlocked = false;
+  let autoCloseTimer = null;
+  let currentAudio  = null;
+  let hasGreeted    = false;
+
+  /* ── GENIE IMAGE ── */
+  const GENIE_IMG = 'genie_frame_01.jpg';
 
   /* ══════════════════════════════════════════════
-     STEP SCRIPTS — short, warm, conversational
+     STEP SCRIPTS
   ══════════════════════════════════════════════ */
   const STEP_SCRIPTS = {
     es: {
-      1: `¡Hola! Soy Amanda, tu guía de Super Bot 007. 🧞‍♀️ Vamos a crear tu bot juntos — son 7 pasos súper sencillos. Empieza llenando el nombre de tu negocio, el tipo, y la ciudad. La descripción es clave — entre más detallada, mejor responde tu bot a tus clientes. ¡Tú puedes!`,
-      2: `¡Excelente, paso 2! Ahora le damos estilo a tu landing page. Elige los colores de tu marca — primario, secundario y fondo. Sube tu logo y la foto principal que tus clientes verán al entrar. Si no tienes colores definidos, no te preocupes — los cambias después en el editor.`,
-      3: `Paso 3 — Servicios. Si tu negocio ofrece servicios como cortes, consultas o clases, agrégalos aquí con nombre, precio y descripción. Si solo vendes productos, puedes omitir este paso con el botón «Omitir» que está abajo y pasar directo a configurar tus productos. ¿Tienes servicios o solo vendes productos?`,
-      4: `¡Vamos, paso 4! Ahora configuras cómo cobrar. Activa PayPal, Zelle, Venmo o CashApp — los que ya usas. Solo pon tu info de pago y listo. Si no cobras en línea todavía, puedes saltar este paso por ahora.`,
-      5: `¡Casi a la mitad, paso 5! Sube fotos reales de tu negocio — tu local, tu trabajo, tu equipo. Hasta 8 fotos desde tu galería o por URL. Las fotos reales generan muchísima más confianza que cualquier diseño.`,
-      6: `¡Paso 6, ya casi! Pon tu teléfono, WhatsApp con código de país, email y dirección. Activa tus días y horarios de atención para que el bot sepa cuándo estás disponible para citas. ¡Un paso más y terminamos!`,
-      7: `¡Último paso! 🚀 Selecciona el idioma del bot y usa los botones de IA para generar automáticamente tu descripción, servicios, testimonios y preguntas frecuentes. Cuando todo esté listo, presiona Activar Bot 007. ¡Tu bot está a segundos de vivir!`,
-      8: `¡FELICIDADES! 🎉 ¡Tu bot está ACTIVO! Tienes 7 días completamente GRATIS para probarlo — sin tarjeta de crédito, sin cobros. Comparte tu bot y tu landing page con tus clientes ahora mismo. Cuando termines el trial, activas tu plan desde $19.99 al mes. ¡Empezaste algo increíble, mucho éxito! 🧞‍♀️✨`,
+      1: `¡Hola! Soy Genie, tu guía de Super Bot 007. 🧞‍♀️ Solo estoy aquí para guiarte paso a paso — no puedo responder preguntas, pero no te preocupes, el formulario es muy sencillo. Empieza llenando el nombre de tu negocio, el tipo de negocio y la ciudad. La descripción es muy importante — entre más detallada, mejor va a responder tu bot. ¡Cuando termines esta sección, pasa a la siguiente hoja y yo aparezco de nuevo! 😊`,
+      2: `¡Perfecto, llegaste al paso 2! 🎨 Ahora le damos estilo visual a tu landing page. Elige los colores de tu marca, sube tu logo y la foto principal que tus clientes van a ver. Si no tienes colores definidos no te preocupes — los puedes cambiar después en el editor. ¡Cuando termines esta sección, pasa a la siguiente forma y vuelvo a aparecer! 😊`,
+      3: `¡Excelente, paso 3! ✂️ Aquí listas los servicios que ofreces — nombre, precio y descripción de cada uno. Eso es exactamente lo que tu bot le va a decir a tus clientes. Si solo vendes productos y no tienes servicios, usa el botón "Omitir" de abajo. ¡Cuando termines, pasa a la siguiente hoja! 😊`,
+      4: `¡Muy bien, paso 4! 💳 Configura cómo quieres cobrar — activa PayPal, Zelle, Venmo o CashApp, los que ya usas. Si no cobras en línea todavía, puedes saltar este paso. ¡Cuando termines esta sección, pasa a la siguiente forma! 😊`,
+      5: `¡Genial, paso 5! 📸 Sube fotos reales de tu negocio — tu local, tu trabajo, tu equipo. Las fotos reales generan mucha más confianza que cualquier diseño. Hasta 8 fotos desde tu galería o por URL. ¡Cuando termines, avanza a la siguiente hoja! 😊`,
+      6: `¡Ya casi, paso 6! 📞 Pon tu teléfono, WhatsApp con código de país, email y dirección. Activa los días y horarios que trabajas para que el bot sepa cuándo estás disponible. ¡Un paso más y terminamos — pasa a la siguiente forma! 😊`,
+      7: `¡Último paso! 🚀 Selecciona el idioma de tu bot y usa los botones de IA para generar automáticamente tu descripción, servicios y preguntas frecuentes. Cuando todo esté listo, presiona el botón "Activar Bot 007". ¡Estás a segundos de tener tu bot activo! 🎉`,
+      8: `¡FELICIDADES! 🎉🏆 ¡Tu bot está ACTIVO y funcionando! Tienes 7 días completamente GRATIS — sin tarjeta, sin cobros. Comparte tu bot y tu landing page con tus clientes ahora mismo. Fue un placer guiarte. ¡Tu deseo es mi orden! 🧞‍♀️✨`,
     },
     en: {
-      1: `Hi! I'm Amanda, your Super Bot 007 guide. 🧞‍♀️ We're going to create your bot together — just 7 super simple steps. Start by filling in your business name, type, and city. The description is key — the more detailed it is, the better your bot responds to clients. You've got this!`,
-      2: `Excellent, step 2! Now let's style your landing page. Choose your brand colors — primary, secondary, and background. Upload your logo and the main photo your clients will see when they arrive. If you don't have set colors, no worries — you can change them later in the editor.`,
-      3: `Step 3 — Services. If your business offers services like haircuts, consultations, or classes, add them here with name, price, and description. If you only sell products, you can skip this step using the «Skip» button below and go straight to setting up your products. Do you offer services or do you only sell products?`,
-      4: `Let's go, step 4! Now set up how you get paid. Activate PayPal, Zelle, Venmo, or CashApp — whichever you already use. Just enter your payment info and you're done. If you don't take online payments yet, you can skip this step for now.`,
-      5: `Almost halfway, step 5! Upload real photos of your business — your space, your work, your team. Up to 8 photos from your gallery or by URL. Real photos build way more trust than any design.`,
-      6: `Step 6, almost there! Enter your phone, WhatsApp with country code, email, and address. Activate your business days and hours so the bot knows when you're available for appointments. One more step and we're done!`,
-      7: `Last step! 🚀 Select the bot language and use the AI buttons to auto-generate your description, services, testimonials, and FAQs. When everything's ready, press Activate Bot 007. Your bot is seconds away from going live!`,
-      8: `CONGRATULATIONS! 🎉 Your bot is LIVE! You have 7 days completely FREE to try it out — no credit card, no charges. Share your bot and landing page with your clients right now. When your trial ends, activate your plan starting at $19.99 per month. You started something amazing, great success! 🧞‍♀️✨`,
+      1: `Hi! I'm Genie, your Super Bot 007 guide. 🧞‍♀️ I'm only here to guide you step by step — I can't answer questions, but don't worry, the form is very simple. Start by filling in your business name, type, and city. The description is very important — the more detailed, the better your bot responds. When you finish this section, move to the next page and I'll appear again! 😊`,
+      2: `Perfect, you made it to step 2! 🎨 Now let's give your landing page a visual style. Choose your brand colors, upload your logo and the main photo your clients will see. If you don't have set colors, no worries — you can change them later in the editor. When you finish this section, move to the next form and I'll be back! 😊`,
+      3: `Excellent, step 3! ✂️ List the services you offer — name, price, and description for each. That's exactly what your bot will tell your clients. If you only sell products and don't have services, use the "Skip" button below. When you finish, move to the next page! 😊`,
+      4: `Great job, step 4! 💳 Set up how you want to get paid — activate PayPal, Zelle, Venmo, or CashApp, whichever you already use. If you don't take online payments yet, you can skip this step. When you finish this section, move to the next form! 😊`,
+      5: `Awesome, step 5! 📸 Upload real photos of your business — your space, your work, your team. Real photos build way more trust than any design. Up to 8 photos from your gallery or by URL. When you finish, move to the next page! 😊`,
+      6: `Almost there, step 6! 📞 Enter your phone, WhatsApp with country code, email, and address. Set the days and hours you work so the bot knows when you're available. One more step and we're done — move to the next form! 😊`,
+      7: `Last step! 🚀 Select your bot's language and use the AI buttons to auto-generate your description, services, and FAQs. When everything's ready, press the "Activate Bot 007" button. You're seconds away from having your bot live! 🎉`,
+      8: `CONGRATULATIONS! 🎉🏆 Your bot is ACTIVE and running! You have 7 days completely FREE — no card, no charges. Share your bot and landing page with your clients right now. It was a pleasure guiding you. Your wish is my command! 🧞‍♀️✨`,
     }
   };
 
   /* ══════════════════════════════════════════════
-     CONFETTI ENGINE — pure canvas, no library
-  ══════════════════════════════════════════════ */
-  function launchConfetti(duration) {
-    duration = duration || 3000;
-    const canvas = document.createElement('canvas');
-    canvas.id = 'wz-confetti-canvas';
-    canvas.style.cssText = `
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      pointer-events:none;z-index:999999;
-    `;
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const emojis = ['🎉','🎊','✨','🌟','💫','🎁','🏆','⭐','🎈','🚀','💥','🔥'];
-    const particles = [];
-    const count = 90;
-
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: -20 - Math.random() * 100,
-        vy: 2 + Math.random() * 4,
-        vx: (Math.random() - 0.5) * 3,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 8,
-        size: 16 + Math.random() * 20,
-        emoji: emojis[Math.floor(Math.random() * emojis.length)],
-        opacity: 1,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.05 + Math.random() * 0.05
-      });
-    }
-
-    const startTime = Date.now();
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const elapsed = Date.now() - startTime;
-      const progress = elapsed / duration;
-
-      particles.forEach(p => {
-        p.y += p.vy;
-        p.x += p.vx + Math.sin(p.wobble) * 1.5;
-        p.wobble += p.wobbleSpeed;
-        p.rotation += p.rotSpeed;
-        p.opacity = Math.max(0, 1 - Math.pow(progress, 1.5));
-
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.font = `${p.size}px serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(p.emoji, 0, 0);
-        ctx.restore();
-      });
-
-      if (elapsed < duration) {
-        requestAnimationFrame(draw);
-      } else {
-        if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
-      }
-    }
-    draw();
-  }
-
-  /* special big celebration for last step */
-  function launchMegaCelebration() {
-    launchConfetti(5000);
-    // second wave after 800ms
-    setTimeout(() => launchConfetti(4000), 800);
-  }
-
-  /* ══════════════════════════════════════════════
-     BUBBLE UI
+     STYLES
   ══════════════════════════════════════════════ */
   function injectStyles() {
     if (document.getElementById('wz-styles')) return;
-    const style = document.createElement('style');
-    style.id = 'wz-styles';
-    style.textContent = `
-      /* ── GENIE BUBBLE ── */
-      #wz-bubble {
+    const s = document.createElement('style');
+    s.id = 'wz-styles';
+    s.textContent = `
+      /* ══ GENIE FLOATING BUTTON ══ */
+      #wz-fab {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 99990;
+        bottom: 28px;
+        right: 28px;
+        z-index: 99992;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        overflow: hidden;
+        box-shadow: 0 6px 28px rgba(255,69,0,0.65), 0 0 0 0 rgba(255,0,153,0.4);
+        animation: wz-fab-pulse 2.2s ease-in-out infinite;
+        transition: transform .2s;
+        background: transparent;
+      }
+      #wz-fab:hover { transform: scale(1.1); }
+      #wz-fab img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        display: block;
+      }
+      @keyframes wz-fab-pulse {
+        0%,100% { box-shadow: 0 6px 28px rgba(255,69,0,.65), 0 0 0 0 rgba(255,0,153,.5); }
+        50%      { box-shadow: 0 8px 40px rgba(255,69,0,.9), 0 0 0 14px rgba(255,0,153,0); }
+      }
+      /* label under button */
+      #wz-fab-label {
+        position: fixed;
+        bottom: 8px;
+        right: 28px;
+        z-index: 99992;
+        font-size: 0.6rem;
+        font-weight: 800;
+        color: rgba(255,100,0,.9);
+        text-align: center;
+        width: 72px;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        font-family: 'Inter', sans-serif;
+        pointer-events: none;
+      }
+      /* step badge on fab */
+      #wz-fab-badge {
+        position: absolute;
+        top: -2px; left: -2px;
+        width: 22px; height: 22px;
+        background: linear-gradient(135deg,#f59e0b,#f97316);
+        border-radius: 50%;
+        border: 2px solid #0a0a0f;
+        font-size: .62rem; font-weight: 900;
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Inter', sans-serif;
+      }
+
+      /* ══ PANEL ══ */
+      #wz-panel {
+        position: fixed;
+        bottom: 112px;
+        right: 28px;
+        z-index: 99991;
         width: 340px;
         max-width: calc(100vw - 32px);
-        background: linear-gradient(160deg, #0d0d1f 0%, #13132a 100%);
-        border: 1.5px solid rgba(255,69,0,0.45);
-        border-radius: 20px;
-        box-shadow: 0 16px 60px rgba(0,0,0,0.75), 0 0 40px rgba(255,69,0,0.15);
-        padding: 0;
+        background: linear-gradient(160deg,#0d0d1f 0%,#13132a 100%);
+        border: 1.5px solid rgba(255,69,0,.4);
+        border-radius: 22px;
+        box-shadow: 0 20px 70px rgba(0,0,0,.8), 0 0 50px rgba(255,69,0,.14);
         overflow: hidden;
-        transform: translateY(30px) scale(0.92);
+        transform: scale(.9) translateY(18px);
         opacity: 0;
         pointer-events: none;
-        transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+        transition: transform .32s cubic-bezier(.34,1.56,.64,1), opacity .24s ease;
       }
-      #wz-bubble.visible {
-        transform: translateY(0) scale(1);
+      #wz-panel.visible {
+        transform: scale(1) translateY(0);
         opacity: 1;
         pointer-events: all;
       }
 
-      /* header strip */
-      #wz-bubble-header {
+      /* ── HEADER ── */
+      #wz-header {
         display: flex;
         align-items: center;
-        gap: 0.6rem;
-        padding: 0.65rem 0.9rem;
-        background: rgba(255,69,0,0.09);
-        border-bottom: 1px solid rgba(255,0,153,0.18);
+        gap: .7rem;
+        padding: .75rem 1rem;
+        background: rgba(255,69,0,.08);
+        border-bottom: 1px solid rgba(255,0,153,.18);
       }
-      .wz-bav {
-        width: 36px; height: 36px;
+      #wz-genie-av {
+        width: 46px; height: 46px;
         border-radius: 50%;
-        background: linear-gradient(135deg,#ff4500,#ff0099);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.15rem; flex-shrink: 0;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 2px solid rgba(255,69,0,.5);
         position: relative;
       }
-      .wz-bav-dot {
-        position: absolute; bottom: 0px; right: 0px;
-        width: 10px; height: 10px;
+      #wz-genie-av img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+      }
+      .wz-av-dot {
+        position: absolute; bottom: 1px; right: 1px;
+        width: 11px; height: 11px;
         background: #00c853; border-radius: 50%;
         border: 2px solid #0d0d1f;
       }
-      .wz-bname {
-        font-size: 0.85rem; font-weight: 800;
+      .wz-hinfo { flex: 1; min-width: 0; }
+      .wz-hname {
+        font-size: .88rem; font-weight: 800;
         color: #f0f0ff; font-family: 'Inter',sans-serif;
-        flex: 1;
       }
-      .wz-bstep {
-        font-size: 0.68rem; color: rgba(255,150,50,0.85);
+      .wz-hstatus {
+        font-size: .62rem; color: rgba(0,200,83,.85);
+        font-weight: 600; font-family: 'Inter',sans-serif;
+        display: flex; align-items: center; gap: .3rem;
+      }
+      .wz-hstatus::before {
+        content: ''; width: 6px; height: 6px;
+        background: #00c853; border-radius: 50%;
+        display: inline-block;
+      }
+      #wz-step-label {
+        font-size: .68rem; color: rgba(255,150,50,.9);
         font-weight: 700; font-family: 'Inter',sans-serif;
-        background: rgba(255,69,0,0.12);
-        padding: 0.2rem 0.5rem; border-radius: 20px;
+        background: rgba(255,69,0,.12);
+        padding: .22rem .55rem; border-radius: 20px;
+        white-space: nowrap;
       }
-      #wz-bubble-close {
+      #wz-close-btn {
         background: none; border: none;
-        color: rgba(255,255,255,0.35); font-size: 0.9rem;
-        cursor: pointer; padding: 0.2rem 0.4rem;
-        transition: color 0.2s; line-height: 1;
-      }
-      #wz-bubble-close:hover { color: #fff; }
-
-      /* body */
-      #wz-bubble-body {
-        padding: 0.85rem 1rem 1rem;
-        display: flex; gap: 0.55rem; align-items: flex-start;
-      }
-
-      /* wave animation (speaking) */
-      #wz-bwave {
-        display: none;
+        color: rgba(255,255,255,.3); font-size: .9rem;
+        cursor: pointer; padding: .2rem .4rem;
+        transition: color .2s; line-height: 1;
         flex-shrink: 0;
-        align-items: flex-end;
-        gap: 2px;
-        height: 28px;
+      }
+      #wz-close-btn:hover { color: #fff; }
+
+      /* ── BODY — text + wave ── */
+      #wz-body {
+        padding: .9rem 1rem 1rem;
+        display: flex;
+        gap: .6rem;
+        align-items: flex-start;
+      }
+
+      /* voice wave */
+      #wz-wave {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        flex-shrink: 0;
         margin-top: 2px;
       }
-      #wz-bwave.active { display: flex; }
-      #wz-bwave span {
+      #wz-wave.active { display: flex; }
+      #wz-wave span {
+        display: block;
         width: 3px; border-radius: 2px;
-        background: linear-gradient(to top,#ff4500,#ff0099);
-        animation: wz-wbar 0.65s ease-in-out infinite alternate;
+        background: linear-gradient(to bottom,#ff4500,#ff0099);
+        animation: wz-wbar .65s ease-in-out infinite alternate;
       }
-      #wz-bwave span:nth-child(1){height:6px; animation-delay:0s;}
-      #wz-bwave span:nth-child(2){height:14px;animation-delay:0.08s;}
-      #wz-bwave span:nth-child(3){height:22px;animation-delay:0.15s;}
-      #wz-bwave span:nth-child(4){height:14px;animation-delay:0.1s;}
-      #wz-bwave span:nth-child(5){height:6px; animation-delay:0.2s;}
+      #wz-wave span:nth-child(1){height:5px;  animation-delay:0s;}
+      #wz-wave span:nth-child(2){height:12px; animation-delay:.08s;}
+      #wz-wave span:nth-child(3){height:20px; animation-delay:.15s;}
+      #wz-wave span:nth-child(4){height:12px; animation-delay:.1s;}
+      #wz-wave span:nth-child(5){height:5px;  animation-delay:.2s;}
       @keyframes wz-wbar {
-        from { transform:scaleY(0.25); opacity:0.3; }
-        to   { transform:scaleY(1);    opacity:1; }
+        from { transform:scaleY(.2); opacity:.3; }
+        to   { transform:scaleY(1);  opacity:1; }
       }
 
-      /* text */
-      #wz-bubble-text {
-        font-size: 0.83rem;
-        line-height: 1.65;
+      /* message text */
+      #wz-text {
+        font-size: .83rem;
+        line-height: 1.68;
         color: #dde3f0;
         font-family: 'Inter',sans-serif;
         flex: 1;
       }
 
-      /* progress dots */
+      /* ── HINT ROW (no questions notice) ── */
+      #wz-hint {
+        margin: 0 1rem .85rem;
+        padding: .5rem .75rem;
+        background: rgba(255,150,0,.07);
+        border: 1px solid rgba(255,150,0,.2);
+        border-radius: 10px;
+        font-size: .72rem;
+        color: rgba(255,180,80,.85);
+        font-family: 'Inter',sans-serif;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        line-height: 1.4;
+      }
+
+      /* ── PROGRESS DOTS ── */
       #wz-progress {
-        display: flex; justify-content: center; gap: 5px;
-        padding: 0 1rem 0.85rem;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 1rem .85rem;
       }
       .wz-pdot {
-        width: 7px; height: 7px; border-radius: 50%;
-        background: rgba(255,255,255,0.12);
-        transition: all 0.3s;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.1);
+        transition: all .3s;
       }
-      .wz-pdot.done  { background: #00c853; }
-      .wz-pdot.active { background: #ff4500; transform: scale(1.3); }
+      .wz-pdot.done   { background: #00c853; }
+      .wz-pdot.active { background: #ff4500; transform: scale(1.35); }
 
-      /* auto-close bar */
-      #wz-autoclose-bar {
+      /* ── AUTO-CLOSE BAR ── */
+      #wz-bar {
         height: 3px;
         background: linear-gradient(90deg,#ff4500,#ff0099);
-        width: 100%;
         transform-origin: left;
-        transition: none;
-      }
-      #wz-autoclose-bar.running {
-        transition: transform linear;
+        width: 100%;
       }
 
-      /* step celebration flash */
-      .wz-step-flash {
+      /* ── STEP FLASH ── */
+      .wz-flash {
         position: fixed; inset: 0;
         pointer-events: none; z-index: 99988;
-        background: radial-gradient(circle at center, rgba(255,180,0,0.18) 0%, transparent 70%);
-        animation: wz-flash 0.6s ease both;
+        background: radial-gradient(circle at center,rgba(255,200,0,.2) 0%,transparent 68%);
+        animation: wz-flash-anim .55s ease both;
       }
-      @keyframes wz-flash {
-        0%   { opacity: 0; transform: scale(0.8); }
-        40%  { opacity: 1; transform: scale(1.05); }
-        100% { opacity: 0; transform: scale(1.1); }
+      @keyframes wz-flash-anim {
+        0%   { opacity:0; transform:scale(.85); }
+        40%  { opacity:1; transform:scale(1.04); }
+        100% { opacity:0; transform:scale(1.1); }
       }
 
       /* MOBILE */
-      @media (max-width: 480px) {
-        #wz-bubble { width: calc(100vw - 24px); right: 12px; bottom: 16px; }
+      @media (max-width:480px){
+        #wz-panel  { width:calc(100vw - 24px); right:12px; bottom:96px; }
+        #wz-fab    { bottom:16px; right:16px; width:62px; height:62px; }
+        #wz-fab-label { right:16px; width:62px; }
       }
     `;
-    document.head.appendChild(style);
-  }
-
-  function buildUI() {
-    const bubble = document.createElement('div');
-    bubble.id = 'wz-bubble';
-    bubble.innerHTML = `
-      <div id="wz-bubble-header">
-        <div class="wz-bav">🧞‍♀️<span class="wz-bav-dot"></span></div>
-        <div class="wz-bname">Amanda</div>
-        <span class="wz-bstep" id="wz-bstep-label">${IS_ES() ? 'Paso 1 de 7' : 'Step 1 of 7'}</span>
-        <button id="wz-bubble-close" title="Cerrar">✕</button>
-      </div>
-      <div id="wz-autoclose-bar"></div>
-      <div id="wz-bubble-body">
-        <div id="wz-bwave">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div id="wz-bubble-text"></div>
-      </div>
-      <div id="wz-progress"></div>
-    `;
-    document.body.appendChild(bubble);
-
-    document.getElementById('wz-bubble-close').addEventListener('click', hideBubble);
-
-    // Build 7 progress dots
-    const prog = document.getElementById('wz-progress');
-    for (let i = 1; i <= 7; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'wz-pdot';
-      dot.id = `wz-pdot-${i}`;
-      prog.appendChild(dot);
-    }
-    updateProgressDots(currentStep);
-  }
-
-  function updateProgressDots(step) {
-    for (let i = 1; i <= 7; i++) {
-      const dot = document.getElementById(`wz-pdot-${i}`);
-      if (!dot) continue;
-      dot.className = 'wz-pdot' + (i < step ? ' done' : i === step ? ' active' : '');
-    }
-  }
-
-  function showBubble(text, stepNum, autoCloseSec) {
-    const bubble   = document.getElementById('wz-bubble');
-    const textEl   = document.getElementById('wz-bubble-text');
-    const stepLbl  = document.getElementById('wz-bstep-label');
-    const bar      = document.getElementById('wz-autoclose-bar');
-    if (!bubble || !textEl) return;
-
-    // Update content
-    textEl.textContent = text;
-    if (stepLbl && stepNum) {
-      stepLbl.textContent = IS_ES()
-        ? (stepNum <= 7 ? `Paso ${stepNum} de 7` : '¡Listo!')
-        : (stepNum <= 7 ? `Step ${stepNum} of 7` : 'Done!');
-    }
-    updateProgressDots(stepNum || currentStep);
-
-    // Show
-    bubble.classList.add('visible');
-
-    // Auto-close bar
-    clearTimeout(bubbleTimer);
-    bar.style.transition = 'none';
-    bar.style.transform  = 'scaleX(1)';
-    if (autoCloseSec && autoCloseSec > 0) {
-      // Trigger reflow then animate
-      void bar.offsetWidth;
-      bar.classList.add('running');
-      bar.style.transition  = `transform ${autoCloseSec}s linear`;
-      bar.style.transform   = 'scaleX(0)';
-      bubbleTimer = setTimeout(() => hideBubble(), autoCloseSec * 1000);
-    }
-  }
-
-  function hideBubble() {
-    const bubble = document.getElementById('wz-bubble');
-    if (bubble) bubble.classList.remove('visible');
-    clearTimeout(bubbleTimer);
-    stopSpeaking();
+    document.head.appendChild(s);
   }
 
   /* ══════════════════════════════════════════════
-     STEP CHANGED — main trigger
+     BUILD UI
+  ══════════════════════════════════════════════ */
+  function buildUI() {
+    /* ── FAB button ── */
+    const fab = document.createElement('button');
+    fab.id = 'wz-fab';
+    fab.title = IS_ES() ? 'Genie — tu guía' : 'Genie — your guide';
+    fab.innerHTML = `
+      <img src="${GENIE_IMG}" alt="Genie" onerror="this.style.display='none';this.parentElement.textContent='🧞‍♀️'">
+      <span id="wz-fab-badge">${currentStep}</span>
+    `;
+    fab.addEventListener('click', togglePanel);
+    document.body.appendChild(fab);
+
+    const fabLabel = document.createElement('div');
+    fabLabel.id = 'wz-fab-label';
+    fabLabel.textContent = IS_ES() ? 'Tu Guía' : 'Your Guide';
+    document.body.appendChild(fabLabel);
+
+    /* ── Panel ── */
+    const panel = document.createElement('div');
+    panel.id = 'wz-panel';
+    panel.innerHTML = `
+      <div id="wz-header">
+        <div id="wz-genie-av">
+          <img src="${GENIE_IMG}" alt="Genie"
+               onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:1.6rem;line-height:46px;text-align:center;display:block\\'>🧞‍♀️</span>'">
+          <span class="wz-av-dot"></span>
+        </div>
+        <div class="wz-hinfo">
+          <div class="wz-hname">Genie 🧞‍♀️</div>
+          <div class="wz-hstatus" id="wz-status">${IS_ES() ? 'En línea · Guiándote' : 'Online · Guiding you'}</div>
+        </div>
+        <span id="wz-step-label">${IS_ES() ? 'Paso 1 de 7' : 'Step 1 of 7'}</span>
+        <button id="wz-close-btn" title="Cerrar">✕</button>
+      </div>
+
+      <div id="wz-bar"></div>
+
+      <div id="wz-body">
+        <div id="wz-wave">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div id="wz-text">${IS_ES() ? 'Cargando...' : 'Loading...'}</div>
+      </div>
+
+      <div id="wz-hint">
+        <span style="font-size:.9rem;">ℹ️</span>
+        <span>${IS_ES()
+          ? 'Solo estoy aquí para guiarte — avísame cuando pases a la siguiente sección.'
+          : 'I\'m only here to guide you — let me know when you move to the next section.'
+        }</span>
+      </div>
+
+      <div id="wz-progress"></div>
+    `;
+    document.body.appendChild(panel);
+
+    document.getElementById('wz-close-btn').addEventListener('click', hidePanel);
+
+    /* Progress dots (7 steps) */
+    const prog = document.getElementById('wz-progress');
+    for (let i = 1; i <= 7; i++) {
+      const d = document.createElement('div');
+      d.className = 'wz-pdot';
+      d.id = `wz-pd-${i}`;
+      prog.appendChild(d);
+    }
+    refreshDots(currentStep);
+  }
+
+  /* ══════════════════════════════════════════════
+     PANEL TOGGLE
+  ══════════════════════════════════════════════ */
+  let panelOpen = false;
+  function togglePanel() {
+    unlockAudio();
+    panelOpen ? hidePanel() : showPanel();
+  }
+  function showPanel() {
+    panelOpen = true;
+    document.getElementById('wz-panel').classList.add('visible');
+  }
+  function hidePanel() {
+    panelOpen = false;
+    document.getElementById('wz-panel').classList.remove('visible');
+    clearTimeout(autoCloseTimer);
+  }
+
+  /* ══════════════════════════════════════════════
+     STEP CHANGED
   ══════════════════════════════════════════════ */
   function onStepChanged(newStep) {
-    // Fire confetti on completing step (going from step N to N+1)
-    if (newStep > currentStep && newStep > 1) {
-      fireCelebration(newStep);
-    }
+    const isForward = newStep > currentStep;
     currentStep = newStep;
+
+    /* confetti when moving forward */
+    if (isForward && newStep > 1) fireCelebration(newStep);
 
     const script = STEP_SCRIPTS[LANG][newStep];
     if (!script) return;
 
-    // Show bubble — last step stays longer
-    const autoSec = newStep === 8 ? 0 : 14; // step 8 stays until closed
-    showBubble(script, newStep, autoSec);
+    /* Update panel content */
+    const textEl    = document.getElementById('wz-text');
+    const stepLbl   = document.getElementById('wz-step-label');
+    const fabBadge  = document.getElementById('wz-fab-badge');
 
-    // Speak it (TTS)
+    if (textEl)   textEl.textContent  = script;
+    if (stepLbl)  stepLbl.textContent = IS_ES()
+      ? (newStep <= 7 ? `Paso ${newStep} de 7` : '¡Listo!')
+      : (newStep <= 7 ? `Step ${newStep} of 7` : 'Done!');
+    if (fabBadge) fabBadge.textContent = newStep <= 7 ? newStep : '✓';
+
+    refreshDots(newStep);
+
+    /* Auto-open panel + auto-close after 16s (step 8 stays open) */
+    showPanel();
+    clearTimeout(autoCloseTimer);
+    startAutoCloseBar(newStep === 8 ? 0 : 16);
+    if (newStep !== 8) {
+      autoCloseTimer = setTimeout(hidePanel, 16000);
+    }
+
+    /* Speak */
     unlockAudio();
     speak(script);
+  }
+
+  /* ── progress dots ── */
+  function refreshDots(step) {
+    for (let i = 1; i <= 7; i++) {
+      const d = document.getElementById(`wz-pd-${i}`);
+      if (!d) continue;
+      d.className = 'wz-pdot' + (i < step ? ' done' : i === step ? ' active' : '');
+    }
+  }
+
+  /* ── auto-close progress bar ── */
+  function startAutoCloseBar(sec) {
+    const bar = document.getElementById('wz-bar');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.transform  = 'scaleX(1)';
+    if (sec > 0) {
+      void bar.offsetWidth; // reflow
+      bar.style.transition = `transform ${sec}s linear`;
+      bar.style.transform  = 'scaleX(0)';
+    }
   }
 
   /* ══════════════════════════════════════════════
      CELEBRATION
   ══════════════════════════════════════════════ */
   function fireCelebration(stepNum) {
-    // Flash overlay
-    const flash = document.createElement('div');
-    flash.className = 'wz-step-flash';
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 700);
+    /* flash */
+    const fl = document.createElement('div');
+    fl.className = 'wz-flash';
+    document.body.appendChild(fl);
+    setTimeout(() => fl.remove(), 700);
 
-    // Confetti — bigger for last step
-    if (stepNum === 8) {
-      launchMegaCelebration();
-    } else {
-      launchConfetti(2800);
-    }
+    /* confetti */
+    const isFinal = stepNum === 8;
+    launchConfetti(isFinal ? 5500 : 2800, isFinal ? 130 : 75);
+    if (isFinal) setTimeout(() => launchConfetti(4000, 100), 900);
+  }
+
+  function launchConfetti(duration, count) {
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999999;';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const EMOJIS_NORMAL = ['🎉','✨','⭐','🎊','💫','👏','🌟','✅','🎈'];
+    const EMOJIS_FINAL  = ['🏆','🎊','🎉','✨','🌟','💫','🎁','🚀','💥','🔥','⭐','🥳','🧞‍♀️'];
+    const pool = (count > 100) ? EMOJIS_FINAL : EMOJIS_NORMAL;
+
+    const parts = Array.from({length: count}, () => ({
+      x:  Math.random() * canvas.width,
+      y:  -20 - Math.random() * 80,
+      vy: 2.5 + Math.random() * 4,
+      vx: (Math.random() - .5) * 3.5,
+      rot: Math.random() * 360,
+      rs:  (Math.random() - .5) * 10,
+      sz:  (count > 100 ? 20 : 14) + Math.random() * 18,
+      em:  pool[Math.floor(Math.random() * pool.length)],
+      wo:  Math.random() * Math.PI * 2,
+      ws:  .04 + Math.random() * .06
+    }));
+
+    const t0 = Date.now();
+    (function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const prog = (Date.now() - t0) / duration;
+      parts.forEach(p => {
+        p.y += p.vy; p.x += p.vx + Math.sin(p.wo) * 1.8;
+        p.wo += p.ws; p.rot += p.rs;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - Math.pow(prog, 1.4));
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.font = p.sz + 'px serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(p.em, 0, 0);
+        ctx.restore();
+      });
+      if (Date.now() - t0 < duration) requestAnimationFrame(draw);
+      else if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    })();
   }
 
   /* ══════════════════════════════════════════════
-     TTS — speak text
+     TTS
   ══════════════════════════════════════════════ */
   function stopSpeaking() {
-    if (currentAudio) {
-      try { currentAudio.pause(); currentAudio.src = ''; } catch(e) {}
-      currentAudio = null;
-    }
+    if (currentAudio) { try { currentAudio.pause(); currentAudio.src=''; } catch(e){} currentAudio=null; }
     isSpeaking = false;
     setWave(false);
   }
-
-  function setWave(active) {
-    const w = document.getElementById('wz-bwave');
-    if (w) w.classList.toggle('active', active);
+  function setWave(on) {
+    const w = document.getElementById('wz-wave');
+    if (w) w.classList.toggle('active', on);
+    const st = document.getElementById('wz-status');
+    if (st) st.textContent = on
+      ? (IS_ES() ? '🔊 Hablando...' : '🔊 Speaking...')
+      : (IS_ES() ? 'En línea · Guiándote' : 'Online · Guiding you');
   }
 
   async function speak(text) {
     if (!text) return;
-    stopSpeaking(); // stop any previous audio
+    stopSpeaking();
     isSpeaking = true;
     setWave(true);
 
-    const clean = text
-      .replace(/https?:\/\/\S+/g, '')
-      .replace(/[•*_`#\[\]>~]/g, '')
-      .replace(/\n+/g, '. ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 500);
-
-    if (!clean) { isSpeaking = false; setWave(false); return; }
+    const clean = text.replace(/https?:\/\/\S+/g,'').replace(/[•*_`#\[\]>~]/g,'')
+                      .replace(/\n+/g,'. ').replace(/\s+/g,' ').trim().slice(0, 500);
+    if (!clean) { isSpeaking=false; setWave(false); return; }
 
     try {
-      const voice = IS_ES() ? EL_VOICE_ES : EL_VOICE_EN;
-      const model = IS_ES() ? EL_MODEL_ES : EL_MODEL_EN;
-      const vs    = IS_ES()
-        ? { stability:0.55, similarity_boost:0.82, style:0.25, use_speaker_boost:true }
-        : { stability:0.50, similarity_boost:0.80, style:0.40, use_speaker_boost:true };
-
-      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
-        method: 'POST',
-        headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: clean, model_id: model, voice_settings: vs })
+      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${IS_ES()?EL_VOICE_ES:EL_VOICE_EN}`, {
+        method:'POST',
+        headers:{'xi-api-key':EL_KEY,'Content-Type':'application/json'},
+        body: JSON.stringify({
+          text: clean,
+          model_id: IS_ES() ? EL_MODEL_ES : EL_MODEL_EN,
+          voice_settings:{ stability:.55, similarity_boost:.82, style:.25, use_speaker_boost:true }
+        })
       });
-      if (!res.ok) throw new Error('EL ' + res.status);
-      const blob = await res.blob();
-      await playBlob(blob);
-    } catch (e) {
-      // Fallback: OpenAI TTS
+      if (!res.ok) throw new Error('EL '+res.status);
+      await playBlob(await res.blob());
+    } catch(e) {
       try {
-        const res2 = await fetch('https://api.openai.com/v1/audio/speech', {
-          method: 'POST',
-          headers: { 'Authorization': 'Bearer ' + OA_KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model:'tts-1', voice: IS_ES() ? 'nova' : 'alloy', input: clean, speed: 1.0 })
+        const r2 = await fetch('https://api.openai.com/v1/audio/speech',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+OA_KEY,'Content-Type':'application/json'},
+          body: JSON.stringify({ model:'tts-1', voice: IS_ES()?'nova':'alloy', input:clean, speed:1.0 })
         });
-        if (!res2.ok) throw new Error('OA ' + res2.status);
-        const blob2 = await res2.blob();
-        await playBlob(blob2);
-      } catch (e2) {
-        isSpeaking = false;
-        setWave(false);
-      }
+        if (!r2.ok) throw new Error('OA '+r2.status);
+        await playBlob(await r2.blob());
+      } catch(e2) { isSpeaking=false; setWave(false); }
     }
   }
 
   function playBlob(blob) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const url   = URL.createObjectURL(blob);
       const audio = new Audio(url);
       currentAudio = audio;
-      audio.volume = 1;
-      audio.onended = () => {
-        isSpeaking = false; setWave(false);
-        URL.revokeObjectURL(url); resolve();
-      };
-      audio.onerror = () => {
-        isSpeaking = false; setWave(false);
-        URL.revokeObjectURL(url); resolve();
-      };
+      const done = () => { isSpeaking=false; setWave(false); URL.revokeObjectURL(url); resolve(); };
+      audio.onended = done;
+      audio.onerror = done;
       const p = audio.play();
-      if (p) p.catch(() => { isSpeaking = false; setWave(false); resolve(); });
+      if (p) p.catch(done);
     });
   }
 
   /* ══════════════════════════════════════════════
-     AUDIO UNLOCK (browser autoplay policy)
+     AUDIO UNLOCK
   ══════════════════════════════════════════════ */
   function unlockAudio() {
     if (audioUnlocked) return;
     audioUnlocked = true;
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const buf = ctx.createBuffer(1, 1, 22050);
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const buf = ctx.createBuffer(1,1,22050);
       const src = ctx.createBufferSource();
-      src.buffer = buf; src.connect(ctx.destination); src.start(0); ctx.resume();
+      src.buffer=buf; src.connect(ctx.destination); src.start(0); ctx.resume();
     } catch(e) {}
   }
 
   /* ══════════════════════════════════════════════
-     PUBLIC HOOKS
+     PUBLIC API
   ══════════════════════════════════════════════ */
-
-  /* Called by form.html when step changes */
   window.wzUpdateStep = function(step) {
-    if (step !== currentStep) {
-      onStepChanged(step);
-    }
+    if (step !== currentStep) onStepChanged(step);
   };
-
-  /* Called by form.html on any user interaction (unlock audio) */
-  window.wzUnlockAudio = function() { unlockAudio(); };
-
-  /* Legacy open/close kept for compatibility */
-  window.wizardOpen  = function() {};
-  window.wizardClose = function() { hideBubble(); };
-
-  /* Expose lang toggle if needed */
-  window.wizardSetLang = function(newLang) {
-    LANG = newLang;
-  };
+  window.wzUnlockAudio   = unlockAudio;
+  window.wizardOpen      = showPanel;
+  window.wizardClose     = hidePanel;
+  window.wizardSetLang   = function(l) { LANG = l; };
 
   /* ══════════════════════════════════════════════
-     OBSERVER — watch for step-card class changes
+     OBSERVER (watches .step-card.active class)
   ══════════════════════════════════════════════ */
   function watchSteps() {
     const observer = new MutationObserver(() => {
       const active = document.querySelector('.step-card.active');
       if (!active) return;
-      const n = parseInt(active.id.replace('step', ''), 10);
-      if (!isNaN(n) && n !== currentStep) {
-        onStepChanged(n);
-      }
+      const n = parseInt(active.id.replace('step',''), 10);
+      if (!isNaN(n) && n !== currentStep) onStepChanged(n);
     });
-    const root = document.querySelector('.form-wrap, form, main, body');
-    observer.observe(root || document.body, {
+    observer.observe(document.querySelector('.form-wrap, form, main, body') || document.body, {
       attributes: true, subtree: true, attributeFilter: ['class']
     });
   }
@@ -568,35 +642,39 @@
      INIT
   ══════════════════════════════════════════════ */
   function init() {
-    if (PAGE !== 'form' && PAGE !== 'editor') return; // only on form/editor pages
+    if (PAGE !== 'form' && PAGE !== 'editor') return;
 
     injectStyles();
     buildUI();
 
-    // Show step 1 intro after short delay (wait for user first interaction for audio)
     if (PAGE === 'form') {
       watchSteps();
 
-      // Show text immediately, speak on first user gesture
+      /* Show step 1 intro after 1.2s */
       setTimeout(() => {
         const script = STEP_SCRIPTS[LANG][1];
-        showBubble(script, 1, 18);
+        if (document.getElementById('wz-text'))
+          document.getElementById('wz-text').textContent = script;
+        showPanel();
+        startAutoCloseBar(18);
+        autoCloseTimer = setTimeout(hidePanel, 18000);
 
-        // Try to speak after a small delay — will succeed if user already interacted
-        setTimeout(() => speak(script), 600);
+        /* Try speaking — will succeed if user already interacted */
+        setTimeout(() => speak(script), 500);
       }, 1200);
 
-      // Unlock audio on first click/touch anywhere on page
+      /* Unlock audio on first user interaction */
       const unlockOnce = () => {
         unlockAudio();
-        document.removeEventListener('click', unlockOnce);
+        document.removeEventListener('click',    unlockOnce);
         document.removeEventListener('touchstart', unlockOnce);
-        // Retry speaking step 1 if not already speaking
-        if (!isSpeaking && currentStep === 1) {
+        /* Retry speech for step 1 if not yet spoken */
+        if (!isSpeaking && currentStep === 1 && !hasGreeted) {
+          hasGreeted = true;
           speak(STEP_SCRIPTS[LANG][1]);
         }
       };
-      document.addEventListener('click', unlockOnce);
+      document.addEventListener('click',     unlockOnce);
       document.addEventListener('touchstart', unlockOnce);
     }
   }
