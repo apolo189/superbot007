@@ -2079,6 +2079,8 @@ async function sendMessage(){
 
   try{
     const response = await callGPT(messages);
+    // Small natural pause before showing response (feels more human)
+    await new Promise(r => setTimeout(r, 320));
     removeTyping(typingId);
     isTyping = false;
     document.getElementById('sendBtn').disabled = false;
@@ -2092,7 +2094,15 @@ async function sendMessage(){
     isTyping = false;
     document.getElementById('sendBtn').disabled = false;
     setAvatarThinking(false);
-    addBotMsgTypewriter('Lo siento, algo salió mal. ¡Intenta de nuevo! 😊');
+    // Use smart fallback instead of generic error
+    const lastUserMsg = messages.filter(m=>m.role==='user').slice(-1)[0]?.content || '';
+    const smart = fallbackResponse(lastUserMsg);
+    if(smart){
+      messages.push({ role:'assistant', content:smart });
+      addBotMsgTypewriter(smart);
+    } else {
+      addBotMsgTypewriter('Un momento, déjame verificar eso. ¿Puedes repetir tu pregunta? 😊');
+    }
   }
 }
 
@@ -2116,7 +2126,7 @@ async function callGPT(msgs){
   // Try Cloudflare Worker proxy first (key is safe server-side)
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+    const timeout = setTimeout(() => controller.abort(), 15000); // 15 second timeout
     const res = await fetch(PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2130,7 +2140,7 @@ async function callGPT(msgs){
       if (content) return content;
     }
   } catch(e) {
-    console.warn('Proxy unavailable, using direct fallback:', e.message);
+    console.warn('Proxy unavailable or slow, using direct API:', e.message);
   }
   
   // Direct fallback (uses bot's own key from Firebase, or platform master key)
@@ -2324,7 +2334,7 @@ function addBotMsgTypewriter(text, actions=[]){
       playReceiveSound();
       scrollToBottom();
     }
-  }, 18); // speed of typewriter
+  }, 28); // speed of typewriter — slightly slower for natural reading pace
 
   return div;
 }
