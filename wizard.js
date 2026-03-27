@@ -665,13 +665,8 @@
   /* ══════════════════════════════════════════════
      PUBLIC API
   ══════════════════════════════════════════════ */
-  let _directStepUpdate = false;
   window.wzUpdateStep = function(step) {
-    if (step !== currentStep) {
-      _directStepUpdate = true;          // flag: direct call, observer must skip
-      onStepChanged(step);
-      setTimeout(() => { _directStepUpdate = false; }, 300);
-    }
+    if (step !== currentStep) onStepChanged(step);
   };
   window.wzUnlockAudio   = unlockAudio;
   window.wizardOpen      = showPanel;
@@ -679,20 +674,12 @@
   window.wizardSetLang   = function(l) { LANG = l; };
 
   /* ══════════════════════════════════════════════
-     OBSERVER — fallback only when wzUpdateStep is NOT called directly
-     (e.g. if goToStep in form.html changes class without calling API)
+     watchSteps — no-op: goToStep() calls wzUpdateStep() directly,
+     MutationObserver removed to prevent double TTS completely.
   ══════════════════════════════════════════════ */
   function watchSteps() {
-    const observer = new MutationObserver(() => {
-      if (_directStepUpdate) return;   // wzUpdateStep already handled it → skip
-      const active = document.querySelector('.step-card.active');
-      if (!active) return;
-      const n = parseInt(active.id.replace('step',''), 10);
-      if (!isNaN(n) && n !== currentStep) onStepChanged(n);
-    });
-    observer.observe(document.querySelector('.form-wrap, form, main, body') || document.body, {
-      attributes: true, subtree: true, attributeFilter: ['class']
-    });
+    // Nothing — wzUpdateStep() is called explicitly by goToStep() in form.html
+    // No observer needed, and it caused two voices speaking simultaneously.
   }
 
   /* ══════════════════════════════════════════════
