@@ -1837,31 +1837,19 @@ async function activateBot(){
     window._agentUrl = agentUrl;
     window._webhookUrl = webhookUrl;
 
-    // ── Webhook box — solo si tiene WhatsApp configurado ──
+    // ── Webhook box — oculto para el cliente (es configuración técnica) ──
     document.getElementById('webhookUrl').textContent = webhookUrl;
-    if(hasWhatsApp){
-      document.getElementById('webhookBox').classList.add('visible');
-    }
+    // webhookBox stays hidden — not needed by the client
 
-    // ── Link Cards (base 4 + WhatsApp si configurado) ──
+    // ── Link Cards — solo lo que el cliente necesita ──
+    // Dashboard y Webhook se ocultan: Dashboard es del dueño de agencia,
+    // Webhook es técnico y confunde al cliente.
     const links = [
       { icon:'fa-robot',        label:'Chatbot',        color:'rgba(0,255,136,0.12)',  border:'rgba(0,255,136,0.35)',  url: agentUrl   },
-      { icon:'fa-globe',        label:'Landing Page',   color:'rgba(255,69,0,0.1)',  border:'rgba(255,69,0,0.4)',  url: landingUrl },
-      { icon:'fa-edit',         label:'Editor',         color:'rgba(255,101,132,0.1)',  border:'rgba(255,101,132,0.3)', url: editorUrl  },
-      { icon:'fa-chart-bar',    label:'Dashboard',      color:'rgba(255,215,0,0.08)',   border:'rgba(255,215,0,0.3)',   url: dashUrl    },
-      { icon:'fa-id-card',      label:'Digital Card ✨', color:'rgba(255,215,0,0.1)',   border:'rgba(255,200,0,0.45)',  url: cardUrl    },
+      { icon:'fa-globe',        label:'Landing Page',   color:'rgba(255,69,0,0.1)',    border:'rgba(255,69,0,0.4)',    url: landingUrl },
+      { icon:'fa-edit',         label:'Editor',         color:'rgba(255,101,132,0.1)', border:'rgba(255,101,132,0.3)', url: editorUrl  },
+      { icon:'fa-id-card',      label:'Digital Card ✨', color:'rgba(255,215,0,0.1)',  border:'rgba(255,200,0,0.45)',  url: cardUrl    },
     ];
-    // 5th card: Webhook WhatsApp — solo si el usuario configuró un número
-    if(hasWhatsApp){
-      links.push({
-        icon:'fab fa-whatsapp',
-        label:'Webhook WhatsApp',
-        color:'rgba(37,211,102,0.08)',
-        border:'rgba(37,211,102,0.4)',
-        url: webhookUrl,
-        isWebhook: true
-      });
-    }
     document.getElementById('linkCardsGrid').innerHTML = links.map(l=>`
       <div class="link-card-item" style="background:${l.color};border-color:${l.border}">
         <div class="lci-header"><i class="${l.icon.startsWith('fab') ? l.icon : 'fas '+l.icon}"></i> ${l.label}</div>
