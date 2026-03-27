@@ -1359,12 +1359,14 @@ const TO  =['18:00','18:00','18:00','18:00','18:00','16:00','14:00'];
 // ───────── NAV ─────────
 function tryGoStep(n){ if(n<=step) goToStep(n); }
 function goToStep(n){
+  /* Tell wizard FIRST (sets _directStepUpdate flag) before DOM changes
+     so MutationObserver sees the flag and skips — prevents double TTS */
+  if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
+  if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
+  /* Now update the DOM */
   document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
   step=n; updateBar(n); window.scrollTo({top:0,behavior:'smooth'});
-  /* notify wizard of step change */
-  if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
-  if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
 }
 function toggleCalendarSection(){
   const enabled = document.getElementById('calendarEnabled').checked;
