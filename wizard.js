@@ -24,8 +24,17 @@
   /* ── CONTEXT ── */
   const CTX  = window.WIZARD_CONTEXT || {};
   const PAGE = CTX.page || 'form';
-  const langRaw = (navigator.language || navigator.userLanguage || 'es').toLowerCase();
-  let LANG = CTX.language || (langRaw.startsWith('es') ? 'es' : 'en');
+  // Language priority: 1) URL ?lang=  2) WIZARD_CONTEXT  3) localStorage  4) DEFAULT SPANISH
+  // We do NOT use browser language — the form is in Spanish by default.
+  // Only switch to English if explicitly requested via URL or context.
+  (function resolveLang(){
+    const urlLang = new URLSearchParams(location.search).get('lang');
+    const stored  = (() => { try { return localStorage.getItem('sb007_lang'); } catch(e){ return null; } })();
+    // CTX.language may have been set by form.html from URL/localStorage already
+    const resolved = urlLang || CTX.language || stored || 'es';
+    CTX.language = ['en','es','pt'].includes(resolved) ? resolved : 'es';
+  })();
+  let LANG = CTX.language || 'es';
   const IS_ES = () => LANG === 'es';
 
   /* ── STATE ── */
@@ -205,6 +214,16 @@
         padding: .22rem .55rem; border-radius: 20px;
         white-space: nowrap;
       }
+      #wz-lang-btn {
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 6px;
+        color: #fff; font-size: .8rem; font-weight: 700;
+        cursor: pointer; padding: .18rem .38rem;
+        transition: background .2s; line-height: 1.5;
+        flex-shrink: 0;
+      }
+      #wz-lang-btn:hover { background: rgba(255,255,255,.22); }
       #wz-close-btn {
         background: none; border: none;
         color: rgba(255,255,255,.3); font-size: .9rem;
@@ -355,6 +374,7 @@
           <div class="wz-hstatus" id="wz-status">${IS_ES() ? 'En línea · Guiándote' : 'Online · Guiding you'}</div>
         </div>
         <span id="wz-step-label">${IS_ES() ? 'Paso 1 de 7' : 'Step 1 of 7'}</span>
+        <button id="wz-lang-btn" title="Cambiar idioma / Switch language">${IS_ES() ? '🇪🇸' : '🇺🇸'}</button>
         <button id="wz-close-btn" title="Cerrar">✕</button>
       </div>
 
@@ -380,6 +400,36 @@
     document.body.appendChild(panel);
 
     document.getElementById('wz-close-btn').addEventListener('click', hidePanel);
+
+    /* Language toggle */
+    document.getElementById('wz-lang-btn').addEventListener('click', () => {
+      LANG = IS_ES() ? 'en' : 'es';
+      // Persist choice
+      try { localStorage.setItem('sb007_lang', LANG); } catch(e){}
+      if (CTX) CTX.language = LANG;
+      // Update all text in the panel
+      const btn    = document.getElementById('wz-lang-btn');
+      const status = document.getElementById('wz-status');
+      const lbl    = document.getElementById('wz-step-label');
+      const hint   = document.querySelector('#wz-hint span:last-child');
+      const textEl = document.getElementById('wz-text');
+      const fabLbl = document.getElementById('wz-fab-label');
+      if (btn)    btn.textContent    = IS_ES() ? '🇪🇸' : '🇺🇸';
+      if (status) status.textContent = IS_ES() ? 'En línea · Guiándote' : 'Online · Guiding you';
+      if (lbl)    lbl.textContent    = IS_ES()
+        ? (currentStep <= 7 ? `Paso ${currentStep} de 7` : '¡Listo!')
+        : (currentStep <= 7 ? `Step ${currentStep} of 7` : 'Done!');
+      if (hint)   hint.textContent   = IS_ES()
+        ? 'Solo estoy aquí para guiarte — avísame cuando pases a la siguiente sección.'
+        : "I'm only here to guide you — let me know when you move to the next section.";
+      if (fabLbl) fabLbl.textContent = IS_ES() ? 'Tu Guía' : 'Your Guide';
+      // Replace script text
+      const script = STEP_SCRIPTS[LANG][currentStep];
+      if (textEl && script) textEl.textContent = script;
+      // Re-speak in new language
+      stopSpeaking();
+      if (script) setTimeout(() => speak(script), 300);
+    });
 
     /* Progress dots (7 steps) */
     const prog = document.getElementById('wz-progress');

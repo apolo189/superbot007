@@ -2088,18 +2088,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ══ WIZARD VOICE AGENT ══ -->
 <script>
-/* Detect language: URL param > localStorage > browser language > default ES */
+/* Detect language: URL param > localStorage > DEFAULT SPANISH
+   NOTE: We do NOT use browser language — the form is in Spanish.
+   Only switch to English if explicitly requested via ?lang=en */
 (function(){
-  // 1. Check URL param ?lang=es or ?lang=en
+  // 1. URL param has highest priority: ?lang=es or ?lang=en
   const urlLang = new URLSearchParams(location.search).get('lang');
-  // 2. Check localStorage (set by salespage)
+  // 2. Explicit user choice previously saved (e.g. after toggling in Genie panel)
   let storedLang = null;
   try { storedLang = localStorage.getItem('sb007_lang'); } catch(e){}
-  // 3. Browser language
-  const browserLang = (navigator.language || navigator.userLanguage || 'es').toLowerCase().startsWith('es') ? 'es' : 'en';
-  // Priority: URL > localStorage > browser > 'es' (default Spanish)
-  let lang = urlLang || storedLang || browserLang || 'es';
-  if(!['en','es'].includes(lang)) lang = 'es';
+  // 3. Default = ESPAÑOL (regardless of browser language)
+  let lang = urlLang || storedLang || 'es';
+  if(!['en','es','pt'].includes(lang)) lang = 'es';
   window.WIZARD_CONTEXT = {
     page: 'form',
     step: 1,
