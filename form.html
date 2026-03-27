@@ -1385,9 +1385,9 @@ function nextStep(from){
   document.getElementById('sdot'+from).classList.remove('active');
   document.getElementById('sdot'+from).classList.add('done');
   document.getElementById('sdot'+next)?.classList.add('active');
-  // 🎉 Celebration confetti on step completion
-  if(typeof launchStepConfetti === 'function') launchStepConfetti(from);
   goToStep(next);
+  // 🎉 Confetti AFTER step transition (200ms delay so it plays on the new step)
+  setTimeout(()=>{ if(typeof launchStepConfetti==='function') launchStepConfetti(from); }, 200);
 }
 function prevStep(from){
   const prev=from-1;
@@ -1427,6 +1427,30 @@ function validate(n){
       highlightField('heroTitle'); return false;
     }
   }
+  if(n===3){
+    // Must have at least 1 service with a name, OR explicitly clicked Skip
+    if(!window._step3Skipped){
+      const filledServices = Array.from(
+        document.querySelectorAll('#servicesList .list-item')
+      ).filter(item => {
+        const nameInput = item.querySelector('input[type="text"]');
+        return nameInput && nameInput.value.trim().length > 0;
+      });
+      if(filledServices.length === 0){
+        toast('⚠️ Agrega al menos 1 servicio con nombre, o usa "Omitir — Solo vendo productos"','error');
+        // Highlight the first service name field
+        const firstNameInput = document.querySelector('#servicesList .list-item input[type="text"]');
+        if(firstNameInput){
+          firstNameInput.style.borderColor='#ff4757';
+          firstNameInput.style.boxShadow='0 0 0 3px rgba(255,71,87,0.35)';
+          firstNameInput.scrollIntoView({behavior:'smooth',block:'center'});
+          firstNameInput.focus();
+          setTimeout(()=>{ firstNameInput.style.borderColor=''; firstNameInput.style.boxShadow=''; },3000);
+        }
+        return false;
+      }
+    }
+  }
   if(n===6){
     if(!g('phone').trim()){
       toast('⚠️ El teléfono es requerido','error');
@@ -1437,11 +1461,12 @@ function validate(n){
 }
 function skipStep3(){
   // Skip services step — client only sells products
+  window._step3Skipped = true;
   document.getElementById('sdot3').classList.remove('active');
   document.getElementById('sdot3').classList.add('done');
   document.getElementById('sdot4')?.classList.add('active');
-  if(typeof launchStepConfetti==='function') launchStepConfetti(3);
   goToStep(4);
+  setTimeout(()=>{ if(typeof launchStepConfetti==='function') launchStepConfetti(3); }, 200);
 }
 function g(id){ return document.getElementById(id)?.value||''; }
 
