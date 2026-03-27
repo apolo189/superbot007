@@ -2085,16 +2085,18 @@ function submitLead(){
   // Pre-fill email in the form if present
   const emailField = document.getElementById('email');
   if(emailField && !emailField.value) emailField.value = emailVal;
-  // Try to save to Firestore (non-blocking)
-  try {
-    if(window.db && window.fbDoc && window.fbSet){
-      const leadId = emailVal.replace(/[^a-z0-9]/gi,'_') + '_' + Date.now();
-      await window.fbSet(window.fbDoc(window.db,'leads',leadId),{
-        name: nameVal, email: emailVal,
-        source:'form.html', createdAt: new Date().toISOString()
-      });
-    }
-  } catch(e){ console.warn('Lead save skipped:',e.message); }
+  // Try to save to Firestore (non-blocking, fire-and-forget)
+  (async function(){
+    try {
+      if(window.db && window.fbDoc && window.fbSet){
+        const leadId = emailVal.replace(/[^a-z0-9]/gi,'_') + '_' + Date.now();
+        await window.fbSet(window.fbDoc(window.db,'leads',leadId),{
+          name: nameVal, email: emailVal,
+          source:'form.html', createdAt: new Date().toISOString()
+        });
+      }
+    } catch(e){ console.warn('Lead save skipped:',e.message); }
+  })();
   hideLeadModal();
   toast('¡Bienvenido ' + nameVal.split(' ')[0] + '! 🎉 Vamos a crear tu bot.','success');
 }
