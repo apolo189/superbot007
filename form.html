@@ -2141,6 +2141,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   initGallery();
   initHours();
   addService(); addService(); addService();
+
+  // ── Auto-recover Bot ID if user comes back after already activating ──
+  const savedBotId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(savedBotId){
+    const el = document.getElementById('resultBotId');
+    if(el && el.textContent === 'cargando...') el.textContent = savedBotId;
+    const sBotId = document.getElementById('sBotId');
+    if(sBotId && sBotId.textContent === '—') sBotId.textContent = savedBotId;
+  }
+
   // Show lead modal unless already captured this session
   if(!localStorage.getItem('sb007_lead_captured')){
     setTimeout(showLeadModal, 800);

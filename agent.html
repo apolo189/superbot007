@@ -685,6 +685,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <div class="biz-name" id="bizNameEl">Super Bot 007</div>
       <div class="biz-type" id="bizTypeEl">Asistente Virtual</div>
       <div class="online-badge"><span class="online-dot"></span> En línea</div>
+      <div id="botIdBadge" style="display:none;margin-top:0.4rem;font-size:0.65rem;color:var(--muted);font-family:monospace;cursor:pointer;background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.25);border-radius:6px;padding:0.2rem 0.5rem;" onclick="navigator.clipboard.writeText(this.dataset.id).then(()=>{this.textContent='\u2705 Copiado!';setTimeout(()=>{this.textContent='\U0001f194 '+this.dataset.id;},1500)})" title="Haz clic para copiar tu Bot ID"></div>
     </div>
     <div class="info-section" id="contactSection" style="display:none">
       <div class="info-section-title"><i class="fas fa-address-card"></i> Contacto</div>
@@ -1033,6 +1034,9 @@ function _startAgent(){
   // Fix absolute URLs for GitHub Pages
   const pageBase = location.origin + location.pathname.replace('agent.html','');
   document.getElementById('landingBtn').href = `${pageBase}landing.html?id=${botId}`;
+  // Show Bot ID badge in sidebar (owner can click to copy)
+  const botIdBadge = document.getElementById('botIdBadge');
+  if(botIdBadge && botId){ botIdBadge.dataset.id = botId; botIdBadge.textContent = '🆔 '+botId; botIdBadge.style.display=''; }
   // Editor button
   const edBtnL = document.getElementById('editorBtnLeft');
   if(edBtnL) edBtnL.href = `${pageBase}editor.html?id=${botId}`;
