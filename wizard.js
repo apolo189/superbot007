@@ -38,12 +38,13 @@
   const IS_ES = () => LANG === 'es';
 
   /* ── STATE ── */
-  let currentStep   = CTX.step || 1;
-  let isSpeaking    = false;
-  let audioUnlocked = false;
-  let autoCloseTimer = null;
-  let currentAudio  = null;
-  let hasGreeted    = false;
+  let currentStep      = CTX.step || 1;
+  let isSpeaking       = false;
+  let audioUnlocked    = false;
+  let autoCloseTimer   = null;
+  let currentAudio     = null;
+  let hasGreeted       = false;
+  let pendingSpeakTimer = null;   // cleared whenever a new step overrides pending speech
 
   /* ── GENIE IMAGE ── */
   const GENIE_IMG = 'genie_frame_01.jpg';
@@ -466,6 +467,7 @@
   function onStepChanged(newStep) {
     const isForward = newStep > currentStep;
     currentStep = newStep;
+    hasGreeted = true;   // prevent unlockOnce retry from double-speaking
 
     /* confetti when moving forward */
     if (isForward && newStep > 1) fireCelebration(newStep);
@@ -602,6 +604,8 @@
 
   async function speak(text) {
     if (!text) return;
+    /* Cancel any pending delayed speak() scheduled by startGenie */
+    if (pendingSpeakTimer) { clearTimeout(pendingSpeakTimer); pendingSpeakTimer = null; }
     stopSpeaking();
     isSpeaking = true;
     setWave(true);
@@ -706,16 +710,26 @@
           autoCloseTimer = setTimeout(hidePanel, 18000);
 
           /* Try speaking — will succeed if user already interacted */
-          setTimeout(() => speak(script), 500);
+          pendingSpeakTimer = setTimeout(() => {
+            pendingSpeakTimer = null;
+            /* Only speak step 1 if we're still on step 1 */
+            if (currentStep === 1) speak(script);
+          }, 500);
         }, 1200);
 
         /* Unlock audio on first user interaction */
-        const unlockOnce = () => {
+        const unlockOnce = (e) => {
           unlockAudio();
           document.removeEventListener('click',    unlockOnce);
           document.removeEventListener('touchstart', unlockOnce);
-          /* Retry speech for step 1 if not yet spoken */
-          if (!isSpeaking && currentStep === 1 && !hasGreeted) {
+          /* Retry speech for step 1 ONLY if:
+             - still on step 1 (user hasn't navigated yet)
+             - not already speaking
+             - haven't greeted yet
+             - the click wasn't a form navigation button (to avoid double-speak) */
+          const target = e && e.target;
+          const isNavBtn = target && (target.closest('.btn-next') || target.closest('.btn-back') || target.closest('[onclick*="nextStep"]') || target.closest('[onclick*="goToStep"]'));
+          if (!isSpeaking && currentStep === 1 && !hasGreeted && !isNavBtn) {
             hasGreeted = true;
             speak(STEP_SCRIPTS[LANG][1]);
           }
