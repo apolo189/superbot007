@@ -1081,7 +1081,7 @@ function loadPreviewFrame(){
   let url, label;
   if(_previewMode === 'bot'){
     // Load bot (agent.html) directly — no nested iframe
-    url   = 'https://apolo189.github.io/superbot007/agent.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
+    url   = 'https://superbot007.com/agent.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
     label = 'agent.html?id=' + botId;
   } else {
     url   = 'landing.html?id=' + encodeURIComponent(botId) + '&_t=' + Date.now();
@@ -1121,7 +1121,7 @@ function showFallback(){
 function openInNewTab(){
   if(!botId){ toast('⚠️ No hay Bot ID cargado','error'); return; }
   if(_previewMode === 'bot'){
-    window.open('https://apolo189.github.io/superbot007/agent.html?id='+encodeURIComponent(botId),'_blank');
+    window.open('https://superbot007.com/agent.html?id='+encodeURIComponent(botId),'_blank');
   } else {
     window.open('landing.html?id='+encodeURIComponent(botId),'_blank');
   }

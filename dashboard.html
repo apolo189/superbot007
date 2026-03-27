@@ -718,7 +718,7 @@ async function checkCloudflare(){
 
 async function checkGitHub(){
   try{
-    const r = await fetch('https://apolo189.github.io/superbot007/admin.html',{
+    const r = await fetch('https://superbot007.com/admin.html',{
       method:'HEAD', signal: AbortSignal.timeout(8000)
     });
     setHealth('github', r.ok, 'Pages Online ✅', 'Sin respuesta ❌');
