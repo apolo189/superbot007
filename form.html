@@ -220,7 +220,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .overlay-text { font-size: 1rem; font-weight: 600; color: var(--text); }
 
 /* ── Toast ── */
-.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; padding: 0.9rem 1.4rem; border-radius: 14px; font-weight: 600; font-size: 0.88rem; transform: translateX(200%); transition: transform 0.4s ease; max-width: 320px; }
+.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 999995; padding: 0.9rem 1.4rem; border-radius: 14px; font-weight: 600; font-size: 0.88rem; transform: translateX(200%); transition: transform 0.4s ease; max-width: 320px; }
 .toast.show { transform: translateX(0); }
 .toast.success { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.35); color: var(--success); }
 .toast.error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.4); color: var(--danger); }
@@ -639,11 +639,12 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   </div>
   <hr class="section-div">
   <div class="form-group">
-    <label>Título Principal Hero <span class="required">*</span></label>
+    <label>Título Principal de tu Página <span class="required">*</span></label>
     <input type="text" id="heroTitle" placeholder="Ej: Transforma Tu Belleza con Nosotros" maxlength="80">
+    <div style="font-size:0.74rem;color:var(--muted);margin-top:0.3rem;">📌 Este es el título grande que verán tus clientes al abrir tu landing page.</div>
   </div>
   <div class="form-group">
-    <label>Subtítulo Hero</label>
+    <label>Subtítulo de tu Página</label>
     <input type="text" id="heroSubtitle" placeholder="Ej: Servicios premium en el corazón de Miami" maxlength="120">
   </div>
   <div class="form-row">
@@ -1398,15 +1399,39 @@ function prevStep(from){
 function updateBar(n){ document.getElementById('progressFill').style.width=(n/7*100)+'%'; document.getElementById('stepLabel').textContent=`Paso ${n} de 7`; }
 
 // ───────── VALIDATE ─────────
+function highlightField(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.borderColor = '#ff4757';
+  el.style.boxShadow   = '0 0 0 3px rgba(255,71,87,0.35)';
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.focus();
+  setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; }, 3000);
+}
 function validate(n){
   if(n===1){
-    if(!g('businessName').trim()){toast('Nombre del negocio es requerido','error');return false;}
-    if(!g('businessType')){toast('Selecciona el tipo de negocio','error');return false;}
-    if(!g('description').trim()){toast('La descripción es requerida','error');return false;}
-    if(!g('heroTitle').trim()){toast('El título principal es requerido','error');return false;}
+    if(!g('businessName').trim()){
+      toast('⚠️ Escribe el nombre de tu negocio','error');
+      highlightField('businessName'); return false;
+    }
+    if(!g('businessType')){
+      toast('⚠️ Selecciona el tipo de negocio','error');
+      highlightField('businessType'); return false;
+    }
+    if(!g('description').trim()){
+      toast('⚠️ Escribe la descripción de tu negocio','error');
+      highlightField('description'); return false;
+    }
+    if(!g('heroTitle').trim()){
+      toast('⚠️ Escribe el Título Principal de tu Página (campo resaltado en rojo)','error');
+      highlightField('heroTitle'); return false;
+    }
   }
   if(n===6){
-    if(!g('phone').trim()){toast('El teléfono es requerido','error');return false;}
+    if(!g('phone').trim()){
+      toast('⚠️ El teléfono es requerido','error');
+      highlightField('phone'); return false;
+    }
   }
   return true;
 }
