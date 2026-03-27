@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceder a mi Bot — Super Bot 007</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #ff4500;
+      --secondary: #ff0099;
+      --bg: #0a0a0f;
+      --card: #13131a;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0;
+      --muted: #888;
+      --green: #00ff88;
+      --gold: #FFD700;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .logo-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem; text-align: center; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem 1.8rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    .card-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 1.6rem;
+      line-height: 1.5;
+    }
+
+    /* ── INPUT ── */
+    .input-wrap { position: relative; margin-bottom: 1rem; }
+    .input-wrap i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.6rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="email"]:focus { border-color: var(--primary); }
+    input[type="email"]::placeholder { color: var(--muted); }
+
+    /* ── BUTTON ── */
+    .btn-primary {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CREATE NEW ── */
+    .btn-new {
+      width: 100%;
+      padding: 0.85rem;
+      background: rgba(0,255,136,0.08);
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 12px;
+      color: var(--green);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-new:hover { background: rgba(0,255,136,0.15); }
+
+    /* ── RESULTS ── */
+    #results { margin-top: 1.4rem; }
+    .result-title {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.8rem;
+    }
+    .bot-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.8rem;
+    }
+    .bot-card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .bot-card-type {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .bot-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .bot-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 0.5rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      border: 1px solid transparent;
+    }
+    .bot-link-btn:hover { opacity: 0.8; }
+    .btn-chatbot  { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.35); color: var(--green); }
+    .btn-landing  { background: rgba(255,69,0,0.1);   border-color: rgba(255,69,0,0.4);   color: #ff7043; }
+    .btn-editor   { background: rgba(255,101,132,0.1);border-color: rgba(255,101,132,0.3);color: #ff6584; }
+    .btn-card     { background: rgba(255,215,0,0.1);  border-color: rgba(255,200,0,0.4);  color: var(--gold); }
+
+    /* ── STATES ── */
+    #errorMsg {
+      background: rgba(255,69,0,0.12);
+      border: 1px solid rgba(255,69,0,0.3);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #ff7043;
+      margin-top: 0.8rem;
+      display: none;
+    }
+    #loadingMsg {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.15);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    .footer-link {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer-link a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <div class="logo">⚡ Super Bot 007</div>
+  <div class="logo-sub">Tu asistente de IA personal</div>
+
+  <div class="card">
+    <div class="card-title">🔑 Acceder a mi Bot</div>
+    <div class="card-sub">Ingresa el email que usaste al crear tu bot y te mostramos tus links directo.</div>
+
+    <div class="input-wrap">
+      <i class="fas fa-envelope"></i>
+      <input type="email" id="emailInput" placeholder="tucorreo@email.com" autocomplete="email" onkeydown="if(event.key==='Enter') buscarBot()">
+    </div>
+
+    <button class="btn-primary" id="buscarBtn" onclick="buscarBot()">
+      <i class="fas fa-search"></i> Buscar mi Bot
+    </button>
+
+    <div id="loadingMsg"><span class="spinner"></span> Buscando tus bots...</div>
+    <div id="errorMsg"></div>
+    <div id="results"></div>
+
+    <div class="divider">o</div>
+
+    <a href="form.html" class="btn-new">
+      <i class="fas fa-plus-circle"></i> Crear un Bot Nuevo
+    </a>
+  </div>
+
+  <div class="footer-link">
+    ¿Problemas? <a href="mailto:soporte@superbot007.com">Contáctanos</a>
+  </div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp }           from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs }
+                                      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  const cfg = {
+    apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+    authDomain:"super-bot-007.firebaseapp.com",
+    projectId:"super-bot-007",
+    storageBucket:"super-bot-007.firebasestorage.app",
+    messagingSenderId:"929685785305",
+    appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+  };
+  const app = initializeApp(cfg);
+  const db  = getFirestore(app);
+
+  const base = location.origin + location.pathname.replace('acceso.html','');
+
+  window.buscarBot = async function() {
+    const emailRaw = document.getElementById('emailInput').value.trim().toLowerCase();
+    const btn      = document.getElementById('buscarBtn');
+    const loading  = document.getElementById('loadingMsg');
+    const errorDiv = document.getElementById('errorMsg');
+    const results  = document.getElementById('results');
+
+    // Reset
+    errorDiv.style.display  = 'none';
+    results.innerHTML       = '';
+
+    if(!emailRaw || !emailRaw.includes('@')){
+      errorDiv.textContent  = '⚠️ Ingresa un email válido.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    btn.disabled       = true;
+    loading.style.display = 'block';
+
+    try {
+      // Search bots by email field
+      const q    = query(collection(db,'bots'), where('email','==',emailRaw));
+      const snap = await getDocs(q);
+
+      loading.style.display = 'none';
+      btn.disabled = false;
+
+      if(snap.empty){
+        // Try with original casing
+        const q2    = query(collection(db,'bots'), where('email','==', document.getElementById('emailInput').value.trim()));
+        const snap2 = await getDocs(q2);
+        if(snap2.empty){
+          errorDiv.innerHTML  = '😕 No encontramos ningún bot con ese email.<br><small>¿Usaste otro email? O <a href="form.html" style="color:var(--primary)">crea un bot nuevo</a>.</small>';
+          errorDiv.style.display = 'block';
+          return;
+        }
+        renderBots(snap2);
+      } else {
+        renderBots(snap);
+      }
+
+    } catch(e) {
+      loading.style.display = 'none';
+      btn.disabled = false;
+      errorDiv.textContent  = '❌ Error al conectar. Intenta de nuevo.';
+      errorDiv.style.display = 'block';
+      console.error(e);
+    }
+  };
+
+  function renderBots(snap) {
+    const results = document.getElementById('results');
+    const bots = [];
+    snap.forEach(doc => bots.push({ id: doc.id, ...doc.data() }));
+
+    // Sort newest first
+    bots.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+
+    results.innerHTML = `<div class="result-title">✅ ${bots.length} bot${bots.length>1?'s':''} encontrado${bots.length>1?'s':''}</div>`;
+
+    bots.forEach(bot => {
+      const botId      = bot.botId || bot.id;
+      const name       = bot.businessName  || 'Mi Bot';
+      const type       = bot.businessType  || '';
+      const agentUrl   = `${base}agent.html?id=${botId}`;
+      const landingUrl = `${base}landing.html?id=${botId}`;
+      const editorUrl  = `${base}editor.html?id=${botId}`;
+      const cardUrl    = `${base}card.html?id=${botId}`;
+
+      results.innerHTML += `
+        <div class="bot-card">
+          <div class="bot-card-name">🤖 ${esc(name)}</div>
+          <div class="bot-card-type">${esc(type)}</div>
+          <div class="bot-links">
+            <a class="bot-link-btn btn-chatbot" href="${agentUrl}"   target="_blank"><i class="fas fa-robot"></i> Chatbot</a>
+            <a class="bot-link-btn btn-landing"  href="${landingUrl}" target="_blank"><i class="fas fa-globe"></i> Landing</a>
+            <a class="bot-link-btn btn-editor"   href="${editorUrl}"  target="_blank"><i class="fas fa-edit"></i> Editor</a>
+            <a class="bot-link-btn btn-card"     href="${cardUrl}"    target="_blank"><i class="fas fa-id-card"></i> Tarjeta</a>
+          </div>
+        </div>`;
+    });
+  }
+
+  function esc(str){ return (str||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+
+</body>
+</html>
