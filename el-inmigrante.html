@@ -380,7 +380,7 @@ body {
   <button class="nav-arrow" id="btn-next" onclick="nextPage()">›</button>
 </div>
 
-<audio id="narration" preload="auto" src="comic_audio_v3.mp3"></audio>
+<audio id="narration" preload="auto" src="comic_audio_v4.mp3"></audio>
 <audio id="music" preload="auto" src="comic_music.mp3" loop></audio>
 
 <script>
@@ -447,7 +447,7 @@ body {
   // Page 1 (Llegada): 5s-28s  
   // Page 2 (Rechazo): 28s-50s
   // Page 3 (Hombre misterioso): 50s-70s
-  const pageTimes = [0, 8, 38, 65]; // Ajustado para v3 (99s total)
+  const pageTimes = [0, 10, 55, 100]; // Ajustado para v4 (150s total)
 
   narration.addEventListener('timeupdate', () => {
     if(narration.duration) {
