@@ -380,7 +380,7 @@ body {
   <button class="nav-arrow" id="btn-next" onclick="nextPage()">›</button>
 </div>
 
-<audio id="narration" preload="auto" src="comic_audio.mp3"></audio>
+<audio id="narration" preload="auto" src="comic_audio_v2.mp3"></audio>
 <audio id="music" preload="auto" src="comic_music.mp3" loop></audio>
 
 <script>
@@ -442,14 +442,23 @@ body {
     }
   }
 
+  // Narration timestamps per page (seconds) — synced to script
+  // Page 0 (Portada): 0s-5s
+  // Page 1 (Llegada): 5s-28s  
+  // Page 2 (Rechazo): 28s-50s
+  // Page 3 (Hombre misterioso): 50s-70s
+  const pageTimes = [0, 5, 28, 50];
+
   narration.addEventListener('timeupdate', () => {
     if(narration.duration) {
       const pct = (narration.currentTime / narration.duration) * 100;
       document.getElementById('progress-fill').style.width = pct + '%';
-      // Auto page turn with audio
-      const pageTime = narration.duration / TOTAL;
-      const newPage = Math.min(Math.floor(narration.currentTime / pageTime), TOTAL-1);
-      if(newPage > cur && !flipping) nextPage();
+      // Auto page turn synced to narration
+      let targetPage = 0;
+      for(let i = pageTimes.length - 1; i >= 0; i--) {
+        if(narration.currentTime >= pageTimes[i]) { targetPage = i; break; }
+      }
+      if(targetPage > cur && !flipping) nextPage();
     }
   });
 
