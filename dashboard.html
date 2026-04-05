@@ -412,13 +412,31 @@ async function loadAppts(){
 }
 
 async function loadMsgs(){
-  if(!window.db) return;
+  allMsgs = [];
+  // 1) Try loading from Firestore
+  if(window.db){
+    try{
+      const snap = await window._getDocs(window._col(window.db,'messages'));
+      snap.forEach(d=>allMsgs.push({id:d.id,...d.data()}));
+    }catch(e){ /* Firestore rules may block — use Worker fallback */ }
+  }
+  // 2) Fallback / merge: read from Worker memory endpoint
   try{
-    const snap = await window._getDocs(window._col(window.db,'messages'));
-    allMsgs=[];
-    snap.forEach(d=>allMsgs.push({id:d.id,...d.data()}));
-    allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  }catch(e){ allMsgs=[]; }
+    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/messages?limit=200',
+      { signal: AbortSignal.timeout(5000) });
+    if(r.ok){
+      const data = await r.json();
+      if(Array.isArray(data.messages) && data.messages.length > 0){
+        // merge Worker messages, avoid duplicates by createdAt+from
+        const existing = new Set(allMsgs.map(m=>`${m.createdAt}_${m.from}`));
+        data.messages.forEach(m=>{
+          const key = `${m.createdAt}_${m.from}`;
+          if(!existing.has(key)){ allMsgs.push(m); existing.add(key); }
+        });
+      }
+    }
+  }catch(e){ /* Worker unreachable */ }
+  allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 
 function buildClients(){
