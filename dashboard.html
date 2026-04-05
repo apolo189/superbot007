@@ -344,8 +344,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
   import { getFirestore, collection, getDocs, doc, updateDoc, getDoc }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
-  import { getAuth, signInAnonymously }
-    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
   const app = initializeApp({
     apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
@@ -355,8 +353,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
     messagingSenderId:"929685785305",
     appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
   });
-  const db   = getFirestore(app);
-  const auth = getAuth(app);
+  const db = getFirestore(app);
 
   window.db        = db;
   window._getDocs  = getDocs;
@@ -365,14 +362,9 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
   window._updateDoc= updateDoc;
   window._getDoc   = getDoc;
 
-  // Sign in anonymously so Firestore rules (request.auth != null) pass for reads
-  try {
-    await signInAnonymously(auth);
-    console.log('✅ Firebase anon auth OK');
-  } catch(e) {
-    console.warn('⚠️ Firebase anon auth failed:', e.message);
-  }
-
+  // Note: Anonymous auth is disabled in Firebase project.
+  // Reads for bots collection work without auth (public read allowed).
+  // Appointments and messages are read via Cloudflare Worker KV endpoints.
   window._fbReady  = true;
   window.dispatchEvent(new Event('fbReady'));
 </script>
@@ -415,40 +407,48 @@ async function loadBots(){
 }
 
 async function loadAppts(){
-  if(!window.db) return;
+  allAppts = [];
+  // Primary: Cloudflare Worker KV endpoint (persistent across all worker instances)
   try{
-    const snap = await window._getDocs(window._col(window.db,'appointments'));
-    allAppts=[];
-    snap.forEach(d=>allAppts.push({id:d.id,...d.data()}));
-    allAppts.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  }catch(e){ console.warn('loadAppts',e); }
+    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/appointments?limit=200',
+      { signal: AbortSignal.timeout(8000) });
+    if(r.ok){
+      const data = await r.json();
+      if(Array.isArray(data.appointments)){
+        allAppts = data.appointments;
+      }
+    }
+  }catch(e){ console.warn('loadAppts Worker error:', e.message); }
+  // Fallback: Try Firestore JS SDK (only if Worker returned nothing)
+  if(allAppts.length === 0 && window.db){
+    try{
+      const snap = await window._getDocs(window._col(window.db,'appointments'));
+      snap.forEach(d=>allAppts.push({id:d.id,...d.data()}));
+    }catch(e){ /* Firestore rules block unauthenticated reads */ }
+  }
+  allAppts.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 
 async function loadMsgs(){
   allMsgs = [];
-  // 1) Try loading from Firestore
-  if(window.db){
+  // Primary: Cloudflare Worker KV endpoint (persistent across all worker instances)
+  try{
+    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/messages?limit=200',
+      { signal: AbortSignal.timeout(8000) });
+    if(r.ok){
+      const data = await r.json();
+      if(Array.isArray(data.messages)){
+        allMsgs = data.messages;
+      }
+    }
+  }catch(e){ console.warn('loadMsgs Worker error:', e.message); }
+  // Fallback: Try Firestore (only if Worker returned nothing and rules allow)
+  if(allMsgs.length === 0 && window.db){
     try{
       const snap = await window._getDocs(window._col(window.db,'messages'));
       snap.forEach(d=>allMsgs.push({id:d.id,...d.data()}));
-    }catch(e){ /* Firestore rules may block — use Worker fallback */ }
+    }catch(e){ /* Firestore rules may block unauthenticated reads */ }
   }
-  // 2) Fallback / merge: read from Worker memory endpoint
-  try{
-    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/messages?limit=200',
-      { signal: AbortSignal.timeout(5000) });
-    if(r.ok){
-      const data = await r.json();
-      if(Array.isArray(data.messages) && data.messages.length > 0){
-        // merge Worker messages, avoid duplicates by createdAt+from
-        const existing = new Set(allMsgs.map(m=>`${m.createdAt}_${m.from}`));
-        data.messages.forEach(m=>{
-          const key = `${m.createdAt}_${m.from}`;
-          if(!existing.has(key)){ allMsgs.push(m); existing.add(key); }
-        });
-      }
-    }
-  }catch(e){ /* Worker unreachable */ }
   allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 

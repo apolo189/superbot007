@@ -986,7 +986,6 @@ function playCartSound(){
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 const cfg = {
   apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
   authDomain:"super-bot-007.firebaseapp.com",
@@ -995,14 +994,11 @@ const cfg = {
   messagingSenderId:"929685785305",
   appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
 };
-const app  = initializeApp(cfg);
-const db   = getFirestore(app);
-const auth = getAuth(app);
+const app = initializeApp(cfg);
+const db  = getFirestore(app);
 
-// Sign in anonymously so Firestore rules allow read/write with auth token
-try { await signInAnonymously(auth); console.log("✅ Firebase anon auth OK"); }
-catch(e){ console.warn("⚠️ Firebase anon auth:", e.message); }
-
+// Note: Anonymous auth disabled. Bots collection is publicly readable.
+// Appointments are also saved via Cloudflare Worker KV (primary persistent storage).
 window.db = db;
 window.fbDoc = doc;
 window.fbGetDoc = getDoc;
@@ -2454,7 +2450,11 @@ async function submitApptForm(formId){
   const note=document.getElementById(formId+'_note')?.value.trim();
   if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
   if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
-  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-form'}); }catch(e){}
+  const apptData = {botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-form'};
+  // Save to Firebase Firestore
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),apptData); }catch(e){}
+  // ALSO save to Cloudflare Worker (backup — ensures dashboard always sees it)
+  try{ fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/save-appointment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(apptData)}); }catch(e){}
   const form=document.getElementById(formId);
   if(form) form.innerHTML=`<div class="appt-success"><div class="check-icon">✅</div><strong>¡Cita agendada!</strong><p>Hola <strong>${name}</strong>, tu solicitud está registrada${service?' para <strong>'+service+'</strong>':''}${date?' el <strong>'+date+'</strong>':''}.</p><p>Te contactamos al <strong>${phone}</strong> 😊</p></div>`;
   appointmentMode=false;
@@ -2472,7 +2472,9 @@ async function submitApptFormWA(formId){
   const note=document.getElementById(formId+'_note')?.value.trim();
   if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
   if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
-  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-wa'}); }catch(e){}
+  const apptDataWA = {botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-wa'};
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),apptDataWA); }catch(e){}
+  try{ fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/save-appointment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(apptDataWA)}); }catch(e){}
   const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
   const biz=botData?.businessName||'';
   let msg=`Hola ${biz}! Me llamo *${name}*\n📞 ${phone}`;
