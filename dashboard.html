@@ -344,6 +344,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
   import { getFirestore, collection, getDocs, doc, updateDoc, getDoc }
     from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+  import { getAuth, signInAnonymously }
+    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
   const app = initializeApp({
     apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
@@ -353,13 +355,24 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
     messagingSenderId:"929685785305",
     appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
   });
-  const db = getFirestore(app);
+  const db   = getFirestore(app);
+  const auth = getAuth(app);
+
   window.db        = db;
   window._getDocs  = getDocs;
   window._col      = collection;
   window._doc      = doc;
   window._updateDoc= updateDoc;
   window._getDoc   = getDoc;
+
+  // Sign in anonymously so Firestore rules (request.auth != null) pass for reads
+  try {
+    await signInAnonymously(auth);
+    console.log('✅ Firebase anon auth OK');
+  } catch(e) {
+    console.warn('⚠️ Firebase anon auth failed:', e.message);
+  }
+
   window._fbReady  = true;
   window.dispatchEvent(new Event('fbReady'));
 </script>

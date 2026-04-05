@@ -986,6 +986,7 @@ function playCartSound(){
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 const cfg = {
   apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
   authDomain:"super-bot-007.firebaseapp.com",
@@ -994,8 +995,14 @@ const cfg = {
   messagingSenderId:"929685785305",
   appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
 };
-const app = initializeApp(cfg);
-const db = getFirestore(app);
+const app  = initializeApp(cfg);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+// Sign in anonymously so Firestore rules allow read/write with auth token
+try { await signInAnonymously(auth); console.log("✅ Firebase anon auth OK"); }
+catch(e){ console.warn("⚠️ Firebase anon auth:", e.message); }
+
 window.db = db;
 window.fbDoc = doc;
 window.fbGetDoc = getDoc;
