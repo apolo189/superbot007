@@ -1281,10 +1281,15 @@ function initChat(){
   // Second message with services after delay
   if(d.services && d.services.length > 0){
     setTimeout(()=>{
+      const isEN_bot = d.botLanguage === 'en';
       const serviceList = d.services.slice(0,4).map(s=>`• **${s.name}**${s.price?' – '+s.price:''}`).join('\n');
       const actions = d.services.slice(0,3).map(s=>s.name);
-      if(d.products && d.products.length > 0) actions.push('🛒 Ver productos');
-      const serviceIntros = [
+      if(d.products && d.products.length > 0) actions.push(isEN_bot ? '🛒 Products' : '🛒 Ver productos');
+      const serviceIntros = isEN_bot ? [
+        `Here's a quick look at our most popular services 😊\n\n${serviceList}\n\nAnything catch your eye?`,
+        `Just so you know, here's what we do best:\n\n${serviceList}\n\nWant to know more about any of these? 😄`,
+        `Here's what we offer:\n\n${serviceList}\n\nIs there something specific you're looking for? 🙌`
+      ] : [
         `Por si te interesa saber, estos son los servicios que más gustan 😊\n\n${serviceList}\n\n¿Alguno te llama la atención?`,
         `Rápidamente, lo que más hacemos por aquí:\n\n${serviceList}\n\n¿Quieres saber más de alguno? 😄`,
         `Para que tengas idea de lo que ofrecemos:\n\n${serviceList}\n\n¿Hay algo que ya estabas buscando? 🙌`
