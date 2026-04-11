@@ -2152,8 +2152,7 @@ async function sendMessage(){
     const intro = lang === 'en'
       ? 'Great! Let me ask you a few quick questions so I can give you the most accurate info. It\'ll only take a minute! 🙌'
       : '¡Perfecto! Antes de continuar, déjame hacerte unas preguntas rápidas para darte la información más precisa. ¡Solo toma un minuto! 🙌';
-    addBotMsgTypewriter(intro);
-    setTimeout(()=> startPrequal(), 900);
+    addBotMsgTypewriter(intro, [], ()=> startPrequal()); // ← startPrequal runs AFTER typewriter finishes
     return;
   }
 
@@ -2573,7 +2572,7 @@ function isShoppingIntent(msg){
 }
 
 // ══════ TYPEWRITER BOT MESSAGE ══════
-function addBotMsgTypewriter(text, actions=[]){
+function addBotMsgTypewriter(text, actions=[], onDone=null){
   const div = document.createElement('div');
   div.className = 'msg bot';
   const avatarHtml = botData?.botAvatar
@@ -2617,6 +2616,7 @@ function addBotMsgTypewriter(text, actions=[]){
       }
       playReceiveSound();
       scrollToBottom();
+      if(onDone) onDone(); // ← callback when typewriter finishes
     }
   }, 28); // speed of typewriter — slightly slower for natural reading pace
 
