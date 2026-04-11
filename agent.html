@@ -1016,6 +1016,25 @@ let messages = [];
 let isTyping = false;
 let appointmentMode = false;
 let cart = [];
+
+// ══════ PRE-QUALIFICATION STATE ══════
+let prequalMode = false;
+let prequalStep = 0;
+let prequalData = {};
+const PREQUAL_QUESTIONS_ES = [
+  { key: 'projectType', q: '¿Qué tipo de trabajo necesitas? 🏗️', chips: ['🏠 Kitchen / Cocina', '🚿 Bathroom / Baño', '🏚️ Roofing / Techo', '🪟 Flooring / Pisos', '🏡 Room Addition', '🎨 Full Renovation'] },
+  { key: 'location',    q: '¿En qué ciudad o área está la propiedad? 📍', chips: ['Miami', 'Doral', 'Kendall', 'Hialeah', 'Coral Gables', 'Broward'] },
+  { key: 'ownership',   q: '¿Es tu propiedad o es una renta/inversión? 🔑', chips: ['🏠 Es mi casa', '🏢 Es una inversión', '🔑 Es una renta'] },
+  { key: 'timeline',    q: '¿Cuándo quieres empezar el proyecto? 📅', chips: ['🔥 ASAP (menos de 30 días)', '📆 1-3 meses', '🗓️ Más de 3 meses', '🤔 Solo explorando'] },
+  { key: 'budget',      q: '¿Tienes un rango de presupuesto en mente? 💰', chips: ['$3K - $8K', '$8K - $20K', '$20K - $50K', '$50K+', '🤷 No sé aún'] }
+];
+const PREQUAL_QUESTIONS_EN = [
+  { key: 'projectType', q: 'What type of project are you looking for? 🏗️', chips: ['🏠 Kitchen', '🚿 Bathroom', '🏚️ Roofing', '🪟 Flooring', '🏡 Room Addition', '🎨 Full Renovation'] },
+  { key: 'location',    q: 'Where is the property located? 📍', chips: ['Miami', 'Doral', 'Kendall', 'Hialeah', 'Coral Gables', 'Broward'] },
+  { key: 'ownership',   q: 'Is this your own property or a rental/investment? 🔑', chips: ['🏠 My own home', '🏢 Investment property', '🔑 Rental'] },
+  { key: 'timeline',    q: 'When are you looking to start? 📅', chips: ['🔥 ASAP (within 30 days)', '📆 1-3 months', '🗓️ 3+ months', '🤔 Just exploring'] },
+  { key: 'budget',      q: 'Do you have a budget range in mind? 💰', chips: ['$3K - $8K', '$8K - $20K', '$20K - $50K', '$50K+', '🤷 Not sure yet'] }
+];
 // UI language override: null = use botData.botLanguage, 'en' or 'es'
 // Support ?lang=es or ?lang=en in URL to force language
 const _urlParams = new URLSearchParams(location.search);
@@ -1285,7 +1304,7 @@ function buildQuickReplies(d){
 
   // Detect language
   const lang = d.botLanguage || 'es';
-  const isEN = lang === 'en' || lang === 'bilingual';
+  const isEN = lang === 'en'; // bilingual = show Spanish by default (bot will match user language)
 
   // Core quick replies — bilingual
   const baseReplies = isEN ? [
@@ -1311,6 +1330,19 @@ function buildQuickReplies(d){
     btn.onclick = ()=>sendQuick(r.msg);
     qb.appendChild(btn);
   });
+
+  // 🎯 Pre-qualification button — only if bot has pre-qual instruction
+  if(d.botInstruction && (d.botInstruction.includes('PRE-QUALIFY') || d.botInstruction.includes('PRE-CALIF'))){
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn';
+    btn.style.cssText = 'background:linear-gradient(135deg,rgba(249,115,22,0.25),rgba(250,204,21,0.15));border-color:#F97316;color:#FACC15;font-weight:700;';
+    btn.textContent = isEN ? '🎯 Get Free Estimate' : '🎯 Estimado Gratis';
+    btn.onclick = ()=>{
+      const msg = isEN ? 'I need a free estimate' : 'Necesito un estimado gratis';
+      sendQuick(msg);
+    };
+    qb.appendChild(btn);
+  }
 
   // Products button — only if products exist
   if(d.products && d.products.length > 0){
@@ -2092,6 +2124,29 @@ async function sendMessage(){
   addUserMsg(text);
   messages.push({ role:'user', content:text });
 
+  // ── Pre-qualification flow: if active, handle chip or typed answer ──
+  if(prequalMode){
+    const lang = detectConversationLang();
+    const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+    if(prequalStep < questions.length){
+      prequalData[questions[prequalStep].key] = text;
+      prequalStep++;
+      setTimeout(()=> showPrequalStep(), 400);
+      return;
+    }
+  }
+
+  // ── Trigger pre-qualification if bot has it configured ──
+  if(isPrequalIntent(text) && !prequalMode && !appointmentMode){
+    const lang = detectConversationLang();
+    const intro = lang === 'en'
+      ? '¡Great! Let me ask you a few quick questions so I can give you the most accurate info and connect you with the right team. It\'ll only take a minute! 🙌'
+      : '¡Perfecto! Déjame hacerte unas preguntas rápidas para darte la información más precisa y conectarte con el equipo correcto. ¡Solo toma un minuto! 🙌';
+    addBotMsgTypewriter(intro);
+    setTimeout(()=> startPrequal(), 800);
+    return;
+  }
+
   // Check for product/shopping intent
   if(isShoppingIntent(text) && botData?.products?.length > 0){
     showProductsInChat();
@@ -2313,6 +2368,188 @@ function fallbackResponse(userMsg){
 }
 
 // ══════ INTENT DETECTION ══════
+// ══════ PRE-QUALIFICATION FLOW ══════
+function isPrequalIntent(msg){
+  if(!botData?.botInstruction?.includes('PRE-QUALIFY') && !botData?.botInstruction?.includes('PRE-CALIF')) return false;
+  const k=['estimate','estimado','presupuesto','quote','cotización','cotizacion','remodel','remodelacion','remodelación','renovation','roofing','techo','kitchen','cocina','bathroom','baño','flooring','pisos','addition','quiero hacer','necesito hacer','tengo un proyecto','i need','i want','cuanto cuesta','how much'];
+  return k.some(kw=>msg.toLowerCase().includes(kw));
+}
+
+function startPrequal(){
+  prequalMode = true;
+  prequalStep = 0;
+  prequalData = {};
+  showPrequalStep();
+}
+
+function showPrequalStep(){
+  const lang = detectConversationLang();
+  const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+  if(prequalStep >= questions.length){ finishPrequal(); return; }
+  const q = questions[prequalStep];
+  const total = questions.length;
+
+  // Progress bar HTML
+  const pct = Math.round((prequalStep / total) * 100);
+  const progressHtml = `<div style="margin-bottom:8px;">
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-bottom:3px;">
+      <span>${lang==='en'?'Lead Qualification':'Pre-Calificación'} · ${lang==='en'?'Step':'Paso'} ${prequalStep+1}/${total}</span>
+      <span>${pct}%</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:99px;height:4px;">
+      <div style="background:var(--p);width:${pct}%;height:100%;border-radius:99px;transition:width 0.4s;"></div>
+    </div>
+  </div>`;
+
+  // Chip buttons
+  const chipsHtml = q.chips.map(c =>
+    `<button onclick="selectPrequalChip('${c.replace(/'/g,"&#39;")}')"
+      style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#fff;
+             padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;margin:3px;
+             transition:all 0.2s;" 
+      onmouseover="this.style.background='rgba(var(--p-rgb,108,99,255),0.3)';this.style.borderColor='var(--p)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'"
+    >${c}</button>`
+  ).join('');
+
+  const fullHtml = `${progressHtml}<div style="margin-bottom:6px;font-weight:600;font-size:0.9rem;">${q.q}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:6px;">${chipsHtml}</div>
+  <div style="margin-top:8px;font-size:0.7rem;color:var(--muted);">${lang==='en'?'Or type your answer below ↓':'O escribe tu respuesta abajo ↓'}</div>`;
+
+  addBotMsgHTML(fullHtml);
+}
+
+function selectPrequalChip(value){
+  const lang = detectConversationLang();
+  const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+  const key = questions[prequalStep]?.key;
+  if(!key) return;
+  prequalData[key] = value;
+  addUserMsg(value);
+  messages.push({ role:'user', content: value });
+  prequalStep++;
+  setTimeout(()=> showPrequalStep(), 400);
+}
+
+function finishPrequal(){
+  prequalMode = false;
+  const lang = detectConversationLang();
+  const grade = scoreLeadGrade(prequalData);
+
+  // Build summary context for GPT
+  const summary = lang === 'en'
+    ? `Project: ${prequalData.projectType||'?'} | Location: ${prequalData.location||'?'} | Ownership: ${prequalData.ownership||'?'} | Timeline: ${prequalData.timeline||'?'} | Budget: ${prequalData.budget||'?'} | GRADE: ${grade}`
+    : `Proyecto: ${prequalData.projectType||'?'} | Ubicación: ${prequalData.location||'?'} | Propiedad: ${prequalData.ownership||'?'} | Timeline: ${prequalData.timeline||'?'} | Presupuesto: ${prequalData.budget||'?'} | GRADO: ${grade}`;
+
+  // Inject context into conversation so GPT knows the grade
+  messages.push({ role:'system', content:`[LEAD PRE-QUALIFICATION RESULT]: ${summary}. ACT ACCORDINGLY based on grade.` });
+
+  // Show result card
+  const gradeConfig = {
+    A: { emoji:'🔥', color:'#22c55e', label: lang==='en'?'HOT LEAD':'LEAD CALIENTE',   msg: lang==='en'?'Great news! Based on your answers, our team can come do a FREE in-home estimate. We\'d measure everything and give you a written quote within 24 hours. 📋':'¡Excelentes noticias! Basándome en lo que me dijiste, nuestro equipo puede ir a darte un estimado GRATIS en tu casa. Medimos todo y te damos una cotización por escrito en 24 horas. 📋' },
+    B: { emoji:'⚡', color:'#f59e0b', label: lang==='en'?'WARM LEAD':'LEAD TIBIO',     msg: lang==='en'?'Thanks for the info! I\'ll connect you with our project coordinator who can walk you through options and give you a virtual estimate. 📞':'¡Gracias por la info! Te voy a conectar con nuestro coordinador de proyectos para que te explique las opciones y te haga un estimado virtual. 📞' },
+    C: { emoji:'💬', color:'#6b7280', label: lang==='en'?'EXPLORING':'EXPLORANDO',    msg: lang==='en'?'No worries! Here\'s a general price range for your project type. When you\'re ready, we\'re here for a free estimate. 😊':'¡Sin problema! Aquí te dejo un rango general de precios para tu tipo de proyecto. Cuando estés listo, estamos aquí para un estimado gratis. 😊' }
+  };
+  const g = gradeConfig[grade];
+
+  const cardHtml = `<div style="background:linear-gradient(135deg,rgba(${grade==='A'?'34,197,94':'grade'==='B'?'245,158,11':'107,114,128'},0.15) 0%,rgba(0,0,0,0.3) 100%);border:1px solid ${g.color}40;border-radius:12px;padding:14px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:1.4rem;">${g.emoji}</span>
+      <div>
+        <div style="font-size:0.65rem;color:var(--muted);font-weight:700;letter-spacing:1px;">${lang==='en'?'QUALIFICATION RESULT':'RESULTADO DE CALIFICACIÓN'}</div>
+        <div style="font-weight:800;color:${g.color};font-size:0.95rem;">${g.label}</div>
+      </div>
+    </div>
+    <div style="font-size:0.82rem;line-height:1.5;color:#e2e8f0;">${g.msg}</div>
+  </div>`;
+
+  setTimeout(()=>{
+    addBotMsgHTML(cardHtml);
+    // Follow-up action after card
+    setTimeout(()=>{
+      if(grade === 'A'){
+        const actions = lang==='en'
+          ? ['📅 Schedule Free Estimate','📞 Call Us Now','💰 See Pricing']
+          : ['📅 Agendar Estimado Gratis','📞 Llamarnos Ahora','💰 Ver Precios'];
+        addBotMsgTypewriter(lang==='en'
+          ? `Perfect! Here\'s what happens next: our project manager visits your property (${prequalData.location||'your area'}), takes measurements, and gives you a detailed written quote — completely FREE, no commitment. When works best for you this week? 🗓️`
+          : `¡Perfecto! Lo que sigue es: nuestro project manager visita tu propiedad en ${prequalData.location||'tu área'}, toma medidas y te da una cotización detallada por escrito — completamente GRATIS, sin compromiso. ¿Qué día te queda mejor esta semana? 🗓️`
+        , actions);
+      } else if(grade === 'B'){
+        const actions = lang==='en'
+          ? ['📞 Schedule a Call','📋 See Services','💰 Financing Options']
+          : ['📞 Agendar Llamada','📋 Ver Servicios','💰 Opciones de Financiamiento'];
+        addBotMsgTypewriter(lang==='en'
+          ? `Got it! For a ${prequalData.projectType||'project'} like this, budget range is typically ${prequalData.budget||'varies by scope'}. I can have our coordinator reach out to discuss details and timeline. What\'s the best way to contact you?`
+          : `¡Entendido! Para un proyecto de ${prequalData.projectType||'este tipo'}, el rango típico es ${prequalData.budget||'varía según el alcance'}. Puedo hacer que nuestro coordinador te contacte para hablar detalles. ¿Cuál es la mejor forma de comunicarse contigo?`
+        , actions);
+      } else {
+        const actions = lang==='en'
+          ? ['📸 See Our Portfolio','💰 General Pricing','📞 Contact Us']
+          : ['📸 Ver Nuestros Proyectos','💰 Precios Generales','📞 Contáctanos'];
+        addBotMsgTypewriter(lang==='en'
+          ? `No pressure at all! 😊 For a ${prequalData.projectType||'project'} in ${prequalData.location||'Miami'}, typical range is around ${getPriceRange(prequalData.projectType)}. When you\'re ready to move forward, we offer FREE estimates. Check our Instagram @miamiproconstruction to see recent projects! 📸`
+          : `¡Sin presión! 😊 Para un proyecto de ${prequalData.projectType||'este tipo'} en ${prequalData.location||'Miami'}, el rango típico es alrededor de ${getPriceRange(prequalData.projectType)}. Cuando estés listo, ofrecemos estimados GRATIS. ¡Mira nuestro Instagram @miamiproconstruction para ver proyectos recientes! 📸`
+        , actions);
+      }
+    }, 600);
+  }, 300);
+}
+
+function scoreLeadGrade(data){
+  let score = 0;
+  // Ownership (max 3 pts)
+  if(data.ownership?.includes('Mi casa') || data.ownership?.includes('My own')) score += 3;
+  else if(data.ownership?.includes('inversión') || data.ownership?.includes('Investment')) score += 2;
+  else score += 1;
+  // Timeline (max 3 pts)
+  if(data.timeline?.includes('ASAP') || data.timeline?.includes('30')) score += 3;
+  else if(data.timeline?.includes('1-3') || data.timeline?.includes('month')) score += 2;
+  else score += 0;
+  // Budget (max 3 pts)
+  if(data.budget?.includes('50K') || data.budget?.includes('20K')) score += 3;
+  else if(data.budget?.includes('8K') || data.budget?.includes('20K')) score += 2;
+  else if(data.budget?.includes('3K')) score += 1;
+  else score += 0;
+  // Grade
+  if(score >= 7) return 'A';
+  if(score >= 4) return 'B';
+  return 'C';
+}
+
+function getPriceRange(projectType){
+  const t = (projectType||'').toLowerCase();
+  if(t.includes('kitchen') || t.includes('cocina')) return '$8,500 – $25,000';
+  if(t.includes('bathroom') || t.includes('baño')) return '$4,500 – $12,000';
+  if(t.includes('roof') || t.includes('techo')) return '$6,000 – $18,000';
+  if(t.includes('floor') || t.includes('piso')) return '$3,500 – $9,000';
+  if(t.includes('addition') || t.includes('cuarto')) return '$25,000 – $80,000';
+  if(t.includes('renovation') || t.includes('renovaci')) return '$30,000 – $150,000+';
+  return '$3,500 – $50,000+';
+}
+
+function detectConversationLang(){
+  // Check last few user messages to detect language
+  const userMsgs = messages.filter(m=>m.role==='user').slice(-3).map(m=>m.content||'').join(' ').toLowerCase();
+  const esWords = ['hola','necesito','quiero','tengo','para','como','que','mi','tu','es','por'];
+  const enWords = ['hello','need','want','have','for','how','what','my','your','is','the','i'];
+  const esCount = esWords.filter(w=>userMsgs.includes(w)).length;
+  const enCount = enWords.filter(w=>userMsgs.includes(w)).length;
+  return enCount > esCount ? 'en' : 'es';
+}
+
+function addBotMsgHTML(html){
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const avatarUrl = botData?.avatarUrl || botData?.botAvatar || '';
+  const avatarHtml = avatarUrl
+    ? `<div class="msg-avatar"><img src="${avatarUrl}" alt="bot" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"></div>`
+    : `<div class="msg-avatar">🤖</div>`;
+  div.innerHTML = `${avatarHtml}<div class="msg-bubble" style="max-width:90%;">${html}</div>`;
+  document.getElementById('chatMessages').appendChild(div);
+  scrollToBottom();
+}
+
 function isAppointmentIntent(msg){
   const k=['cita','reserva','agendar','appointment','book','reservar','quiero ir','programar','apartar','separar lugar','pedir turno','turno','quiero una cita','me gustaría ir'];
   return k.some(kw=>msg.toLowerCase().includes(kw));
