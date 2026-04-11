@@ -2559,7 +2559,7 @@ function addBotMsgHTML(html){
     ? `<div class="msg-avatar"><img src="${avatarUrl}" alt="bot" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"></div>`
     : `<div class="msg-avatar">🤖</div>`;
   div.innerHTML = `${avatarHtml}<div class="msg-bubble" style="max-width:90%;">${html}</div>`;
-  document.getElementById('chatMessages').appendChild(div);
+  document.getElementById('messages').appendChild(div);
   scrollToBottom();
 }
 
