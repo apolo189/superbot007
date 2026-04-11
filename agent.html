@@ -1279,7 +1279,9 @@ function initChat(){
   addBotMsgTypewriter(welcome);
 
   // Second message with services after delay
-  if(d.services && d.services.length > 0){
+  // Only show service list on welcome if bot does NOT have pre-qualification
+  const hasPrequalWelcome = d.botInstruction?.includes('PRE-QUALIFY') || d.botInstruction?.includes('PRE-CALIF');
+  if(d.services && d.services.length > 0 && !hasPrequalWelcome){
     setTimeout(()=>{
       const isEN_bot = d.botLanguage === 'en';
       const serviceList = d.services.slice(0,4).map(s=>`• **${s.name}**${s.price?' – '+s.price:''}`).join('\n');
@@ -2142,13 +2144,16 @@ async function sendMessage(){
   }
 
   // ── Trigger pre-qualification if bot has it configured ──
-  if(isPrequalIntent(text) && !prequalMode && !appointmentMode){
-    const lang = detectConversationLang();
+  // Activates on ANY first message if bot has PRE-QUALIFY — or on specific keywords
+  const hasPrequal = botData?.botInstruction?.includes('PRE-QUALIFY') || botData?.botInstruction?.includes('PRE-CALIF');
+  const isFirstUserMsg = messages.filter(m=>m.role==='user').length === 1;
+  if(hasPrequal && !prequalMode && !appointmentMode && (isFirstUserMsg || isPrequalIntent(text))){
+    const lang = botData?.botLanguage === 'en' ? 'en' : 'es';
     const intro = lang === 'en'
-      ? '¡Great! Let me ask you a few quick questions so I can give you the most accurate info and connect you with the right team. It\'ll only take a minute! 🙌'
-      : '¡Perfecto! Déjame hacerte unas preguntas rápidas para darte la información más precisa y conectarte con el equipo correcto. ¡Solo toma un minuto! 🙌';
+      ? 'Great! Let me ask you a few quick questions so I can give you the most accurate info. It\'ll only take a minute! 🙌'
+      : '¡Perfecto! Antes de continuar, déjame hacerte unas preguntas rápidas para darte la información más precisa. ¡Solo toma un minuto! 🙌';
     addBotMsgTypewriter(intro);
-    setTimeout(()=> startPrequal(), 800);
+    setTimeout(()=> startPrequal(), 900);
     return;
   }
 
@@ -2534,10 +2539,13 @@ function getPriceRange(projectType){
 }
 
 function detectConversationLang(){
-  // Check last few user messages to detect language
+  // First check bot's configured language
+  if(botData?.botLanguage === 'en') return 'en';
+  if(botData?.botLanguage === 'es' || botData?.botLanguage === 'pt') return botData.botLanguage;
+  // For bilingual: detect from last user messages
   const userMsgs = messages.filter(m=>m.role==='user').slice(-3).map(m=>m.content||'').join(' ').toLowerCase();
-  const esWords = ['hola','necesito','quiero','tengo','para','como','que','mi','tu','es','por'];
-  const enWords = ['hello','need','want','have','for','how','what','my','your','is','the','i'];
+  const esWords = ['hola','necesito','quiero','tengo','para','como','que','mi','tu','es','por','remodelacion','baño','cocina'];
+  const enWords = ['hello','need','want','have','for','how','what','my','your','is','the',' i '];
   const esCount = esWords.filter(w=>userMsgs.includes(w)).length;
   const enCount = enWords.filter(w=>userMsgs.includes(w)).length;
   return enCount > esCount ? 'en' : 'es';
