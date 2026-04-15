@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>El Inmigrante — Capítulo 1: El Último Dólar</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --red: #cc0000;
+  --dark: #080808;
+  --panel-bg: #0f0f0f;
+  --narrator: #1a0000;
+  --gold: #f5a623;
+}
+
+body {
+  background: var(--dark);
+  font-family: 'Bangers', 'Impact', 'Arial Black', sans-serif;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ═══ INTRO SCREEN ═══ */
+#intro {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  text-align: center;
+  padding: 2em;
+}
+
+#intro .logo {
+  font-size: clamp(3rem, 12vw, 7rem);
+  color: var(--red);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(200,0,0,0.6), 4px 4px 0 #000;
+  margin-bottom: 0.1em;
+}
+
+#intro .cap {
+  color: #555;
+  font-size: clamp(0.9rem, 3vw, 1.3rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-family: Georgia, serif;
+  margin-bottom: 0.5em;
+}
+
+#intro .titulo {
+  color: #fff;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  letter-spacing: 0.1em;
+  margin-bottom: 2em;
+  text-shadow: 2px 2px 0 #000;
+}
+
+#intro .warning {
+  color: #444;
+  font-size: 0.75rem;
+  font-family: Georgia, serif;
+  margin-bottom: 2em;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.start-btn {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 1em 3em;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-family: 'Bangers', Impact, sans-serif;
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 4px 4px 0 #800000;
+}
+.start-btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #800000; }
+.start-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #800000; }
+
+/* ═══ READER ═══ */
+#reader {
+  display: none;
+  min-height: 100vh;
+}
+
+/* ═══ TOP BAR ═══ */
+#topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 50px;
+  background: rgba(0,0,0,0.95);
+  border-bottom: 2px solid var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 100;
+}
+
+#topbar .serie { color: var(--red); font-size: clamp(0.9rem,3vw,1.2rem); letter-spacing:0.15em; }
+#topbar .cap-num { color: #444; font-size: 0.7rem; font-family: Georgia,serif; letter-spacing:0.2em; }
+
+.controls { display: flex; gap: 8px; align-items: center; }
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid #333;
+  color: #666;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  font-family: Georgia, serif;
+  transition: all 0.2s;
+}
+.ctrl-btn:hover, .ctrl-btn.active { border-color: var(--red); color: var(--red); }
+
+/* ═══ PAGES CONTAINER ═══ */
+#pages {
+  padding-top: 50px;
+  padding-bottom: 80px;
+}
+
+/* ═══ COMIC PAGE ═══ */
+.comic-page {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 15px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.comic-page.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Page number */
+.page-num {
+  text-align: center;
+  color: #333;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  margin-bottom: 10px;
+  font-family: Georgia, serif;
+}
+
+/* ═══ COVER PAGE ═══ */
+.cover-page {
+  position: relative;
+  border: 3px solid #222;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,0.3);
+}
+
+.cover-page img {
+  width: 100%;
+  display: block;
+}
+
+/* ═══ PANEL GRID ═══ */
+.panel-grid {
+  display: grid;
+  gap: 4px;
+  background: #000;
+  border: 3px solid #111;
+  padding: 4px;
+  box-shadow: 0 5px 30px rgba(0,0,0,0.7);
+}
+
+.grid-2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+.grid-1-2 { grid-template-columns: 1fr; }
+.grid-wide-2 { grid-template-columns: 2fr 1fr; }
+.grid-5panel {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+}
+
+/* ═══ SINGLE PANEL ═══ */
+.panel {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  min-height: 200px;
+}
+
+.panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.05);
+}
+
+.panel.span-full { grid-column: 1 / -1; }
+.panel.tall { min-height: 320px; }
+
+/* ═══ NARRATOR BOX ═══ */
+.narrator {
+  position: absolute;
+  background: var(--narrator);
+  border: 2px solid var(--red);
+  color: #fff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(0.6rem, 2vw, 0.8rem);
+  font-style: italic;
+  padding: 5px 10px;
+  line-height: 1.4;
+  max-width: 80%;
+  z-index: 10;
+}
+
+.narrator.top-left { top: 8px; left: 8px; }
+.narrator.top-right { top: 8px; right: 8px; }
+.narrator.bottom-left { bottom: 8px; left: 8px; }
+.narrator.bottom-right { bottom: 8px; right: 8px; }
+.narrator.top-center { top: 8px; left: 50%; transform: translateX(-50%); text-align:center; }
+.narrator.bottom-center { bottom: 8px; left: 50%; transform: translateX(-50%); text-align:center; }
+
+/* ═══ SPEECH BUBBLE ═══ */
+.bubble {
+  position: absolute;
+  background: #fff;
+  border: 2.5px solid #000;
+  border-radius: 50%;
+  color: #000;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+  font-size: clamp(0.55rem, 1.8vw, 0.75rem);
+  padding: 6px 10px;
+  line-height: 1.3;
+  text-align: center;
+  z-index: 10;
+  max-width: 55%;
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid #000;
+}
+
+.bubble.top-left { top: 8px; left: 8px; }
+.bubble.top-left::after { bottom: -12px; left: 15px; }
+.bubble.top-right { top: 8px; right: 8px; }
+.bubble.top-right::after { bottom: -12px; right: 15px; }
+.bubble.bottom-left { bottom: 30px; left: 8px; }
+.bubble.bottom-left::after { top: -12px; left: 15px; border-top: none; border-bottom: 12px solid #000; }
+.bubble.bottom-right { bottom: 30px; right: 8px; }
+.bubble.bottom-right::after { top: -12px; right: 15px; border-top: none; border-bottom: 12px solid #000; }
+.bubble.center-top { top: 8px; left: 50%; transform: translateX(-50%); }
+.bubble.center-top::after { bottom: -12px; left: 50%; transform: translateX(-50%); }
+
+/* THOUGHT BUBBLE */
+.thought {
+  background: #e8f4fd;
+  border-radius: 20px;
+  border-style: dashed;
+}
+
+/* VILLAIN BUBBLE - dark */
+.villain-bubble {
+  background: #1a1a2e;
+  color: #e0e0ff;
+  border-color: #4444aa;
+}
+.villain-bubble::after { border-top-color: #4444aa; }
+
+/* ═══ CHAPTER TITLE CARD ═══ */
+.chapter-card {
+  background: linear-gradient(135deg, #0a0000, #1a0000, #0a0000);
+  border: 2px solid var(--red);
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 4px;
+  box-shadow: inset 0 0 50px rgba(200,0,0,0.1);
+}
+
+.chapter-card .ch-label {
+  color: #555;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  font-family: Georgia, serif;
+  margin-bottom: 8px;
+}
+
+.chapter-card .ch-title {
+  color: var(--red);
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  letter-spacing: 0.1em;
+  text-shadow: 3px 3px 0 #000, 0 0 20px rgba(200,0,0,0.4);
+  margin-bottom: 8px;
+}
+
+.chapter-card .ch-sub {
+  color: #888;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  font-family: Georgia, serif;
+  font-style: italic;
+  letter-spacing: 0.15em;
+}
+
+/* ═══ CLIFFHANGER CARD ═══ */
+.cliffhanger {
+  background: #000;
+  border: 3px solid var(--red);
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cliffhanger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(200,0,0,0.15), transparent 70%);
+}
+
+.cliffhanger .cliff-text {
+  color: #fff;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  position: relative;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-family: Georgia, serif;
+}
+
+.cliffhanger .cliff-text em {
+  color: var(--red);
+  font-style: normal;
+}
+
+.cliffhanger .next-label {
+  color: #555;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  font-family: Georgia, serif;
+  margin-top: 20px;
+}
+
+/* ═══ BOTTOM BAR ═══ */
+#bottombar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(0,0,0,0.95);
+  border-top: 2px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+  padding: 0 15px;
+}
+
+.nav-btn {
+  background: none;
+  border: 2px solid #333;
+  color: #666;
+  width: 40px; height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.nav-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
+.nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+#page-info {
+  color: #444;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  font-family: Georgia, serif;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* AUDIO PLAYER */
+#audio-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.play-btn {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.play-btn:hover { background: #aa0000; transform: scale(1.05); }
+
+#progress-bar {
+  width: 100px;
+  height: 3px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#progress-fill {
+  height: 100%;
+  background: var(--red);
+  width: 0%;
+  transition: width 0.5s linear;
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+}
+
+.panel { animation: flicker 8s infinite; }
+
+/* RESPONSIVE */
+@media(max-width: 500px) {
+  .panel { min-height: 150px; }
+  .panel.tall { min-height: 220px; }
+  #progress-bar { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ INTRO ═══ -->
+<div id="intro">
+  <div class="logo">El Inmigrante</div>
+  <div class="cap">Capítulo I</div>
+  <div class="titulo">"El Último Dólar"</div>
+  <div class="warning">
+    Una historia de sacrificio, peligro y redención.<br>
+    Basada en la vida real de miles de latinos en USA.
+  </div>
+  <button class="start-btn" onclick="startReading()">▶ Comenzar Lectura</button>
+</div>
+
+<!-- ═══ TOP BAR ═══ -->
+<div id="topbar" style="display:none">
+  <div>
+    <div class="serie">El Inmigrante</div>
+    <div class="cap-num">CAPÍTULO I — EL ÚLTIMO DÓLAR</div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" id="sound-toggle" onclick="toggleSound()">🔇 SONIDO</button>
+    <button class="ctrl-btn" id="music-toggle" onclick="toggleMusic()">🎵 MÚSICA</button>
+  </div>
+</div>
+
+<!-- ═══ PAGES ═══ -->
+<div id="reader">
+<div id="pages">
+
+  <!-- PAGE 0: COVER -->
+  <div class="comic-page" id="pg-0">
+    <div class="page-num">PORTADA</div>
+    <div class="cover-page">
+      <img src="https://www.genspark.ai/api/files/s/LqPQO7dN?cache_control=3600" alt="Portada El Inmigrante">
+    </div>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="comic-page" id="pg-1">
+    <div class="page-num">PÁGINA 1</div>
+    <div class="chapter-card">
+      <div class="ch-label">CAPÍTULO UNO</div>
+      <div class="ch-title">El Último Dólar</div>
+      <div class="ch-sub">Nueva York. Invierno. 2:47am.</div>
+    </div>
+    <div class="panel-grid grid-2x2">
+      <div class="panel tall" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/uTTELpnu?cache_control=3600" alt="Panel 1-1" style="object-position: top left">
+        <div class="narrator top-left">Día 1. 3am.<br>JFK Airport.</div>
+        <div class="bubble bottom-right">Bienvenido a<br>Nueva York,<br>Miguel...</div>
+      </div>
+      <div class="panel tall" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/uTTELpnu?cache_control=3600" alt="Panel 1-2" style="object-position: top right">
+        <div class="narrator top-right">La ciudad no<br>te da la bienvenida.<br>Te evalúa.</div>
+      </div>
+      <div class="panel" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/uTTELpnu?cache_control=3600" alt="Panel 1-3" style="object-position: bottom left">
+        <div class="bubble thought top-left">Tengo para<br>4 días...<br>máximo.</div>
+      </div>
+      <div class="panel" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/uTTELpnu?cache_control=3600" alt="Panel 1-4" style="object-position: bottom right">
+        <div class="narrator bottom-center">María. Sofía.<br>Valentina.<br>Por ellas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="comic-page" id="pg-2">
+    <div class="page-num">PÁGINA 2</div>
+    <div class="panel-grid grid-2x2">
+      <div class="panel tall span-full" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/VJqnuE2R?cache_control=3600" alt="Panel 2-1" style="object-position: top">
+        <div class="narrator top-left">Día 2. Sin papeles.<br>Sin inglés.<br>Sin opciones.</div>
+        <div class="bubble top-right villain-bubble">"Sin documentos<br>no hay trabajo,<br>amigo."</div>
+      </div>
+      <div class="panel" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/VJqnuE2R?cache_control=3600" alt="Panel 2-2" style="object-position: center">
+        <div class="bubble top-right villain-bubble" style="font-size:0.6rem">¡Más rápido!<br>¡Eres un inútil!</div>
+        <div class="bubble thought bottom-left" style="font-size:0.6rem">Aguanta,<br>Miguel...</div>
+      </div>
+      <div class="panel" style="position:relative">
+        <img src="https://www.genspark.ai/api/files/s/VJqnuE2R?cache_control=3600" alt="Panel 2-3" style="object-position: bottom">
+        <div class="narrator top-center">Temperatura:<br>-8°C</div>
+      </div>
+      <div class="panel span-full" style="position:relative; min-height:180px">
+        <img src="https://www.genspark.ai/api/files/s/VJqnuE2R?cache_control=3600" alt="Panel 2-4">
+        <div class="bubble bottom-left">"Solo esta noche,<br>Dios... solo<br>esta noche."</div>
+        <div class="narrator bottom-right">El dinero: $147.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="comic-page" id="pg-3">
+    <div class="page-num">PÁGINA 3</div>
+    <div class="panel-grid">
+      <div class="panel span-full tall" style="position:relative; min-height:280px">
+        <img src="https://www.genspark.ai/api/files/s/qYrMQmFA?cache_control=3600" alt="Panel 3-1">
+        <div class="narrator top-left">Día 3. 11:47pm.<br>Estación Canal Street.</div>
+        <div class="bubble top-right villain-bubble">"Cara de hombre<br>que necesita<br>trabajo..."</div>
+      </div>
+      <div class="panel" style="position:relative; min-height:200px">
+        <img src="https://www.genspark.ai/api/files/s/qYrMQmFA?cache_control=3600" alt="Panel 3-2" style="object-position: left">
+        <div class="bubble top-left villain-bubble" style="font-size:0.6rem">"Tengo algo para ti.<br>Paga bien.<br>Muy bien."</div>
+      </div>
+      <div class="panel" style="position:relative; min-height:200px">
+        <img src="https://www.genspark.ai/api/files/s/qYrMQmFA?cache_control=3600" alt="Panel 3-3" style="object-position: right">
+        <div class="bubble thought bottom-right" style="font-size:0.55rem">Algo no está bien...<br>pero tengo $89 y<br>mañana vence el cuarto.</div>
+      </div>
+      <div class="panel" style="position:relative; min-height:180px">
+        <img src="https://www.genspark.ai/api/files/s/qYrMQmFA?cache_control=3600" alt="Panel 3-4" style="object-position: bottom left">
+        <div class="bubble top-right villain-bubble" style="font-size:0.6rem">"Llámame mañana.<br>Seis de la mañana."</div>
+      </div>
+      <div class="panel" style="position:relative; min-height:180px">
+        <img src="https://www.genspark.ai/api/files/s/qYrMQmFA?cache_control=3600" alt="Panel 3-5" style="object-position: bottom right">
+        <div class="narrator bottom-center" style="font-size:0.6rem">Esa noche Miguel<br>no pudo dormir.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: CLIFFHANGER -->
+  <div class="comic-page" id="pg-4">
+    <div class="page-num">FIN DEL CAPÍTULO I</div>
+    <div class="panel-grid">
+      <div class="cliffhanger">
+        <div class="cliff-text">
+          "El trabajo que ese hombre<br>le ofrecía...<br><br>
+          <em>...no era exactamente legal."</em>
+        </div>
+        <div style="width:60px;height:3px;background:var(--red);margin:0 auto 20px;"></div>
+        <div class="cliff-text" style="font-size:clamp(0.9rem,3vw,1.3rem); color:#aaa;">
+          ¿Qué decidió Miguel?<br>
+          ¿Aceptó el trabajo?<br>
+          ¿O perdió todo?
+        </div>
+        <div class="next-label">CONTINÚA EN → CAPÍTULO II: "LA TRAMPA"</div>
+      </div>
+      <div style="background:#000; padding:30px 20px; text-align:center; border:2px solid #1a0000;">
+        <div style="color:#555; font-size:0.7rem; letter-spacing:0.3em; font-family:Georgia,serif; margin-bottom:15px;">¿QUIERES SABER QUÉ PASA?</div>
+        <div style="color:#fff; font-size:clamp(1rem,3vw,1.3rem); font-family:Georgia,serif; margin-bottom:20px; line-height:1.5;">
+          Comenta <span style="color:var(--red); font-family:Impact,sans-serif; font-size:1.4em;">MIGUEL</span><br>
+          y te avisamos cuando<br>salga el Capítulo 2
+        </div>
+        <a href="https://apolo189.github.io/superbot007/agent.html" style="display:inline-block; background:var(--red); color:#fff; padding:12px 30px; text-decoration:none; font-family:Impact,sans-serif; font-size:clamp(0.9rem,3vw,1.1rem); letter-spacing:0.2em; box-shadow:4px 4px 0 #800000;">
+          HABLAR CON MIGUEL →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end pages -->
+</div><!-- end reader -->
+
+<!-- ═══ BOTTOM BAR ═══ -->
+<div id="bottombar" style="display:none">
+  <button class="nav-btn" id="btn-prev" onclick="changePage(-1)" disabled>‹</button>
+  <div id="audio-bar">
+    <button class="play-btn" id="play-btn" onclick="toggleNarration()">▶</button>
+    <div id="progress-bar" onclick="seekAudio(event)">
+      <div id="progress-fill"></div>
+    </div>
+  </div>
+  <div id="page-info">1 / 5</div>
+  <button class="nav-btn" id="btn-next" onclick="changePage(1)">›</button>
+</div>
+
+<audio id="narration" preload="auto">
+  <source src="https://www.genspark.ai/api/files/s/NzFtLENa" type="audio/mpeg">
+</audio>
+<audio id="music" preload="auto" loop>
+  <source src="https://www.genspark.ai/api/files/s/kZ1EzSxa" type="audio/mpeg">
+</audio>
+
+<script>
+  let currentPage = 0;
+  const totalPages = 5;
+  let soundEnabled = false;
+  let musicEnabled = false;
+  const narration = document.getElementById('narration');
+  const music = document.getElementById('music');
+  music.volume = 0.2;
+
+  function startReading() {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('topbar').style.display = 'flex';
+    document.getElementById('reader').style.display = 'block';
+    document.getElementById('bottombar').style.display = 'flex';
+    showPage(0);
+    // Reveal all pages with stagger
+    document.querySelectorAll('.comic-page').forEach((p, i) => {
+      setTimeout(() => p.classList.add('visible'), i * 200);
+    });
+  }
+
+  function showPage(n) {
+    currentPage = Math.max(0, Math.min(totalPages - 1, n));
+    const pg = document.getElementById(`pg-${currentPage}`);
+    if(pg) pg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateNav();
+  }
+
+  function changePage(dir) {
+    showPage(currentPage + dir);
+    if(soundEnabled) playPageTurn();
+  }
+
+  function updateNav() {
+    document.getElementById('btn-prev').disabled = currentPage === 0;
+    document.getElementById('btn-next').disabled = currentPage === totalPages - 1;
+    document.getElementById('page-info').textContent = `${currentPage + 1} / ${totalPages}`;
+  }
+
+  // Narration
+  function toggleNarration() {
+    soundEnabled = true;
+    document.getElementById('sound-toggle').classList.add('active');
+    document.getElementById('sound-toggle').textContent = '🔊 SONIDO';
+    if(narration.paused) {
+      narration.play();
+      document.getElementById('play-btn').textContent = '⏸';
+    } else {
+      narration.pause();
+      document.getElementById('play-btn').textContent = '▶';
+    }
+  }
+
+  narration.addEventListener('timeupdate', () => {
+    const pct = (narration.currentTime / narration.duration) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    // Auto advance pages based on narration time
+    const dur = narration.duration || 97;
+    const pageTime = dur / totalPages;
+    const newPage = Math.min(Math.floor(narration.currentTime / pageTime), totalPages - 1);
+    if(newPage !== currentPage) showPage(newPage);
+  });
+
+  narration.addEventListener('ended', () => {
+    document.getElementById('play-btn').textContent = '▶';
+  });
+
+  function seekAudio(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    narration.currentTime = pct * narration.duration;
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    const btn = document.getElementById('sound-toggle');
+    btn.textContent = soundEnabled ? '🔊 SONIDO' : '🔇 SONIDO';
+    btn.classList.toggle('active', soundEnabled);
+    if(!soundEnabled && !narration.paused) {
+      narration.pause();
+      document.getElementById('play-btn').textContent = '▶';
+    }
+  }
+
+  function toggleMusic() {
+    musicEnabled = !musicEnabled;
+    const btn = document.getElementById('music-toggle');
+    btn.textContent = musicEnabled ? '🎵 ON' : '🎵 MÚSICA';
+    btn.classList.toggle('active', musicEnabled);
+    if(musicEnabled) music.play().catch(()=>{});
+    else music.pause();
+  }
+
+  function playPageTurn() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.08, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for(let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.015));
+      }
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      gain.gain.value = 0.2;
+      src.buffer = buf;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.start();
+    } catch(e) {}
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changePage(1); }
+    if(e.key === 'ArrowLeft') changePage(-1);
+    if(e.key === 'p' || e.key === 'P') toggleNarration();
+    if(e.key === 'm' || e.key === 'M') toggleMusic();
+  });
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    const diff = tx - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 60) { if(diff > 0) changePage(1); else changePage(-1); }
+  }, {passive:true});
+
+  // Scroll-based page detection
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        const id = entry.target.id;
+        const n = parseInt(id.replace('pg-',''));
+        if(!isNaN(n)) { currentPage = n; updateNav(); }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.comic-page').forEach(p => observer.observe(p));
+</script>
+</body>
+</html>

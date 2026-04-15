@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Inmigrante - La Historia de Miguel</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* INTRO SCREEN */
+  #intro {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    cursor: pointer;
+  }
+
+  #intro h1 {
+    font-size: clamp(2rem, 8vw, 5rem);
+    color: #cc0000;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 30px rgba(200,0,0,0.5);
+    margin-bottom: 0.3em;
+  }
+
+  #intro p {
+    color: #888;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    margin-bottom: 2em;
+    text-align: center;
+    padding: 0 1em;
+  }
+
+  #intro .start-btn {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 1em 3em;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,0,0,0.5); }
+    50% { box-shadow: 0 0 0 15px rgba(200,0,0,0); }
+  }
+
+  /* BOOK CONTAINER */
+  #book-wrapper {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    perspective: 2000px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #book-wrapper.active {
+    display: flex;
+  }
+
+  .book {
+    position: relative;
+    width: min(90vw, 800px);
+    height: min(85vh, 700px);
+    transform-style: preserve-3d;
+  }
+
+  /* PAGE STYLES */
+  .page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    cursor: pointer;
+  }
+
+  .page-front, .page-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 0 8px 8px 0;
+    overflow: hidden;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.8);
+  }
+
+  .page-back {
+    transform: rotateY(180deg);
+    border-radius: 8px 0 0 8px;
+  }
+
+  .page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .page.flipped {
+    transform: rotateY(-180deg);
+  }
+
+  /* PAGE OVERLAY TEXT */
+  .page-label {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  /* NAVIGATION */
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(200,0,0,0.8);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 50;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-btn:hover { background: #cc0000; transform: translateY(-50%) scale(1.1); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn:disabled:hover { transform: translateY(-50%) scale(1); }
+
+  #btn-prev { left: 10px; }
+  #btn-next { right: 10px; }
+
+  /* PAGE COUNTER */
+  #page-counter {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #666;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    z-index: 50;
+  }
+
+  /* PROGRESS DOTS */
+  #dots {
+    position: fixed;
+    bottom: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 50;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #333;
+    transition: background 0.3s;
+  }
+
+  .dot.active { background: #cc0000; }
+
+  /* TITLE BAR */
+  #title-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+
+  #title-bar h2 {
+    color: #cc0000;
+    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  #title-bar .subtitle {
+    color: #555;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* SOUND BUTTON */
+  #sound-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #666;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+  }
+  #sound-btn:hover { border-color: #cc0000; color: #cc0000; }
+
+  /* LOADING */
+  .page-loading {
+    position: absolute;
+    inset: 0;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+  }
+
+  /* FLIP ANIMATION EFFECT */
+  @keyframes shimmer {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .flip-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 0.8s ease-in-out;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* LAST PAGE CTA */
+  .cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2em;
+    text-align: center;
+  }
+
+  .cta-overlay h3 {
+    color: #fff;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+  }
+
+  .cta-overlay p {
+    color: #aaa;
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    margin-bottom: 1.2em;
+  }
+
+  .cta-btn {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 0.8em 2.5em;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    animation: pulse 2s infinite;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+    #btn-prev { left: 5px; }
+    #btn-next { right: 5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro" onclick="startComic()">
+  <h1>El Inmigrante</h1>
+  <p>Una historia real de sacrificio, dolor y esperanza<br>basada en miles de latinos que lo dieron todo</p>
+  <button class="start-btn">Leer Historia →</button>
+</div>
+
+<!-- TITLE BAR -->
+<div id="title-bar" style="display:none;">
+  <h2>El Inmigrante</h2>
+  <span class="subtitle">La Historia de Miguel</span>
+  <button id="sound-btn" onclick="toggleSound()">🔇 SONIDO</button>
+</div>
+
+<!-- BOOK -->
+<div id="book-wrapper">
+  <div class="book" id="book">
+
+    <!-- PAGE 0: COVER -->
+    <div class="page" id="page-0" style="z-index:6;">
+      <div class="page-front">
+        <img src="https://www.genspark.ai/api/files/s/PHKJs4ww?cache_control=3600" alt="Portada El Inmigrante" onerror="this.parentElement.innerHTML='<div class=page-loading>CARGANDO...</div>'">
+      </div>
+      <div class="page-back">
+        <img src="https://www.genspark.ai/api/files/s/PhQk438I?cache_control=3600" alt="Página 1">
+        <div class="page-label">Página 1</div>
+      </div>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div class="page" id="page-1" style="z-index:5;">
+      <div class="page-front">
+        <img src="https://www.genspark.ai/api/files/s/rnAhuOYA?cache_control=3600" alt="Página 2">
+        <div class="page-label">Página 2</div>
+      </div>
+      <div class="page-back">
+        <img src="https://www.genspark.ai/api/files/s/63Wr6Koy?cache_control=3600" alt="Página 3">
+        <div class="page-label">Página 3</div>
+      </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page" id="page-2" style="z-index:4;">
+      <div class="page-front">
+        <img src="https://www.genspark.ai/api/files/s/ovMOAbiS?cache_control=3600" alt="Página 4">
+        <div class="page-label">Página 4</div>
+      </div>
+      <div class="page-back">
+        <img src="https://www.genspark.ai/api/files/s/MvpprTOu?cache_control=3600" alt="Página 5">
+        <div class="cta-overlay">
+          <h3>¿Quieres saber qué había en ese anuncio?</h3>
+          <p>Miles de latinos ya lo están usando para cambiar su vida</p>
+          <a href="https://apolo189.github.io/superbot007/agent.html" class="cta-btn">Quiero saber más →</a>
+        </div>
+        <div class="page-label">Página 5 - FIN</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NAV BUTTONS -->
+<button class="nav-btn" id="btn-prev" onclick="prevPage()" disabled>‹</button>
+<button class="nav-btn" id="btn-next" onclick="nextPage()">›</button>
+
+<!-- DOTS -->
+<div id="dots"></div>
+<div id="page-counter"></div>
+
+<!-- AUDIO -->
+<audio id="flip-sound" preload="auto">
+  <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA..." type="audio/wav">
+</audio>
+
+<script>
+  const TOTAL_PAGES = 3; // 3 spreads (cover+p1, p2+p3, p4+p5)
+  let currentPage = -1; // -1 = intro
+  let soundOn = false;
+  let isFlipping = false;
+
+  // Generate dots
+  const dotsEl = document.getElementById('dots');
+  for(let i = 0; i < TOTAL_PAGES; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = `dot-${i}`;
+    dotsEl.appendChild(d);
+  }
+
+  function startComic() {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('title-bar').style.display = 'flex';
+    document.getElementById('book-wrapper').classList.add('active');
+    dotsEl.style.display = 'flex';
+    currentPage = 0;
+    updateUI();
+  }
+
+  function nextPage() {
+    if(isFlipping || currentPage >= TOTAL_PAGES - 1) return;
+    isFlipping = true;
+    playFlip();
+    const pageEl = document.getElementById(`page-${currentPage}`);
+    pageEl.classList.add('flipped');
+    addShimmer(pageEl);
+    currentPage++;
+    setTimeout(() => { isFlipping = false; updateUI(); }, 850);
+  }
+
+  function prevPage() {
+    if(isFlipping || currentPage <= 0) return;
+    isFlipping = true;
+    playFlip();
+    currentPage--;
+    const pageEl = document.getElementById(`page-${currentPage}`);
+    pageEl.classList.remove('flipped');
+    addShimmer(pageEl);
+    setTimeout(() => { isFlipping = false; updateUI(); }, 850);
+  }
+
+  function addShimmer(pageEl) {
+    const shimmer = document.createElement('div');
+    shimmer.className = 'flip-shimmer';
+    pageEl.appendChild(shimmer);
+    setTimeout(() => shimmer.remove(), 800);
+  }
+
+  function updateUI() {
+    // Nav buttons
+    document.getElementById('btn-prev').disabled = currentPage === 0;
+    document.getElementById('btn-next').disabled = currentPage === TOTAL_PAGES - 1;
+
+    // Dots
+    for(let i = 0; i < TOTAL_PAGES; i++) {
+      document.getElementById(`dot-${i}`).className = 'dot' + (i === currentPage ? ' active' : '');
+    }
+
+    // Counter
+    const labels = ['Portada', 'Páginas 1-2', 'Páginas 3-4', 'Páginas 5-6'];
+    document.getElementById('page-counter').textContent = labels[currentPage] || `Página ${currentPage}`;
+
+    // Z-index for proper layering
+    for(let i = 0; i < TOTAL_PAGES; i++) {
+      const p = document.getElementById(`page-${i}`);
+      if(p) p.style.zIndex = TOTAL_PAGES - i;
+    }
+  }
+
+  function toggleSound() {
+    soundOn = !soundOn;
+    document.getElementById('sound-btn').textContent = soundOn ? '🔊 SONIDO' : '🔇 SONIDO';
+  }
+
+  function playFlip() {
+    if(!soundOn) return;
+    // Simple click sound using Web Audio API
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.1, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for(let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.02));
+      }
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      gain.gain.value = 0.3;
+      src.buffer = buf;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.start();
+    } catch(e) {}
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight' || e.key === ' ') nextPage();
+    if(e.key === 'ArrowLeft') prevPage();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if(Math.abs(diff) > 50) {
+      if(diff > 0) nextPage();
+      else prevPage();
+    }
+  });
+</script>
+</body>
+</html>

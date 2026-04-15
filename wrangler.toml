@@ -1,0 +1,4 @@
+name = "superbot007-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+account_id = "bacef02447c4158d74bd20cc1eb0443f"

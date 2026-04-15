@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>(function(){if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});})}if(window.caches){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});}})();</script>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- v1774097963 -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SuperBot007 — Bot IA + Landing Page + Pagos. Sin Código. En 5 Minutos.</title>
+<meta name="description" content="Crea tu bot IA con GPT-4, landing page cinematic y carrito PayPal — sin código, en 5 minutos. Modelo de agencia incluido.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+<style>
+/* ═══ RESET ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#0a0a0f;color:#ffffff;font-family:'Inter',sans-serif;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+
+:root{
+  --orange:#ff4500;
+  --o2:#ff0099;
+  --grad:linear-gradient(135deg,#ff4500,#ff0099);
+  --green:#00ff88;
+  --gold:#ffcc00;
+  --dark:#0a0a0f;
+  --card:#12121a;
+  --bd:rgba(255,0,153,0.25);
+  --mu:#ffffff;
+  --txt:#ffffff;
+  --accent:#8b5cf6;
+}
+
+/* ═══ SCROLL PROGRESS ═══ */
+#sp{position:fixed;top:0;left:0;height:3px;z-index:9999;background:var(--grad);width:0;transition:width .1s;}
+
+/* ═══ CURSOR ═══ */
+#cdot{position:fixed;pointer-events:none;z-index:99999;width:10px;height:10px;border-radius:50%;background:rgba(255,69,0,.9);transform:translate(-50%,-50%);mix-blend-mode:screen;}
+#cring{position:fixed;pointer-events:none;z-index:99998;width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,69,0,.4);transform:translate(-50%,-50%);}
+
+/* ═══ PARTICLES ═══ */
+#bgC{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* ═══ FLASH BAR ═══ */
+#flash{background:linear-gradient(90deg,#08001a,#120030,#08001a);border-bottom:1px solid rgba(255,69,0,.45);text-align:center;padding:.55rem 1rem;font-size:.84rem;font-weight:700;color:var(--gold);letter-spacing:.03em;position:relative;z-index:5;}
+#flash span.w{color:#fff;}
+.fcoupon{background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.45);border-radius:6px;padding:.1rem .55rem;font-size:.84rem;margin:0 .3rem;color:var(--gold);}
+.ldot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#00ff88;vertical-align:middle;animation:lpulse 1.4s infinite;}
+@keyframes lpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.8)}50%{box-shadow:0 0 0 7px rgba(0,255,136,0)}}
+
+/* ═══ HERO ═══ */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 1.5rem 4rem;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(255,69,0,.22),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(139,92,246,.12),transparent 50%);}
+
+.hero-tag{font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;animation:fadeUp .6s ease both;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.35);padding:.35rem 1.1rem;border-radius:50px;display:inline-block;}
+.hero-h1{font-size:clamp(2.6rem,6vw,5.2rem);font-weight:900;line-height:1.04;letter-spacing:-.03em;margin-bottom:.8rem;animation:fadeUp .7s .05s ease both;max-width:920px;text-shadow:0 4px 40px rgba(255,69,0,.25);}
+.hero-h1 .hl{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-h2{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:500;color:rgba(255,255,255,.85);margin-bottom:.8rem;animation:fadeUp .7s .1s ease both;line-height:1.8;}
+.hero-sub2{font-size:clamp(.88rem,1.8vw,1.05rem);font-weight:700;color:var(--gold);margin-bottom:2rem;animation:fadeUp .7s .13s ease both;display:inline-block;background:rgba(255,204,0,.08);border:1px solid rgba(255,204,0,.3);padding:.4rem 1.2rem;border-radius:50px;}
+.hero-h2 em{color:var(--txt);font-style:normal;}
+
+/* CTA BUTTON */
+.btn-access{display:inline-flex;align-items:center;gap:.65rem;padding:1.2rem 3.2rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:900;font-size:1.18rem;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;animation:fadeUp .7s .15s ease both, gp 3s ease-in-out infinite;box-shadow:0 8px 40px rgba(255,69,0,.65),0 0 80px rgba(255,0,153,.3);letter-spacing:.01em;}
+.btn-access:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 18px 55px rgba(255,69,0,.8);}
+@keyframes gp{0%,100%{box-shadow:0 6px 25px rgba(255,69,0,.4)}50%{box-shadow:0 6px 55px rgba(255,69,0,.85)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* PAYMENT CARD IMAGE ROW */
+.pay-row{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;animation:fadeUp .7s .2s ease both;}
+.pay-row img{height:26px;opacity:.82;filter:brightness(1.1);}
+.pay-chip{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:700;color:var(--mu);}
+.pay-chip i{font-size:.82rem;}
+.pay-chip.g i{color:var(--green);}
+.pay-chip.o i{color:var(--orange);}
+.pay-chip.gl i{color:var(--gold);}
+
+/* GUARANTEE ROW */
+.guar-row{display:inline-flex;align-items:center;gap:.55rem;padding:.6rem 1.5rem;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.3);border-radius:50px;font-size:.82rem;font-weight:700;color:var(--green);margin:1rem 0;animation:fadeUp .7s .25s ease both;}
+
+/* URGENCY PILL */
+.upill{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem 1.1rem;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.4);border-radius:50px;font-size:.8rem;font-weight:700;color:var(--orange);margin-bottom:1.8rem;animation:fadeUp .6s ease both;}
+
+/* HERO VIDEO (legacy) */
+.hvw{position:relative;z-index:2;width:100%;max-width:920px;border-radius:18px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.7),0 0 80px rgba(255,69,0,.18);border:1px solid rgba(255,69,0,.25);animation:fadeUp .7s .3s ease both;margin-top:1.5rem;}
+.hvw video{width:100%;display:block;}
+.hvlabel{position:absolute;top:1rem;left:1rem;background:rgba(255,69,0,.92);color:#fff;font-size:.7rem;font-weight:800;padding:.25rem .7rem;border-radius:50px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ══ HERO PHONE MOCKUP ══ */
+.phone-wrap{position:relative;z-index:2;margin-top:2rem;animation:fadeUp .7s .3s ease both;display:flex;flex-direction:column;align-items:center;}
+.phone-frame{width:320px;background:#0a0a0f;border-radius:38px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,255,255,.25),0 0 0 4px rgba(255,255,255,.08),0 30px 90px rgba(0,0,0,.85),0 0 80px rgba(255,69,0,.15);border:1px solid rgba(255,255,255,.4);}
+/* STATUS BAR */
+.phone-bar{display:flex;justify-content:space-between;align-items:center;padding:.5rem 1.1rem .3rem;background:#0a0a0f;font-size:.7rem;color:#ffffff;}
+.phone-time{font-weight:700;font-size:.75rem;}
+.phone-icons{display:flex;gap:.4rem;font-size:.65rem;color:#ffffff;}
+/* WA HEADER */
+.wa-header{display:flex;align-items:center;gap:.7rem;padding:.55rem .9rem;background:#0a0a0f;border-bottom:1px solid rgba(255,255,255,.2);}
+.wa-back{color:#00a884;font-size:.85rem;cursor:pointer;padding-right:.2rem;}
+.wa-avatar-wrap{position:relative;flex-shrink:0;}
+.wa-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.wa-online-dot{position:absolute;bottom:1px;right:1px;width:9px;height:9px;background:#00a884;border-radius:50%;border:2px solid #000000;}
+.wa-info{flex:1;min-width:0;}
+.wa-name{font-size:.82rem;font-weight:700;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wa-status{font-size:.65rem;color:#00a884;font-weight:600;}
+.wa-actions{display:flex;gap:.8rem;color:#ffffff;font-size:.85rem;}
+/* CHAT BODY */
+.wa-body{background:#0a0a0f;min-height:370px;max-height:370px;overflow-y:auto;padding:.75rem .6rem;display:flex;flex-direction:column;gap:.45rem;scrollbar-width:none;}
+.wa-body::-webkit-scrollbar{display:none;}
+.wa-date-sep{text-align:center;font-size:.6rem;color:#000000;background:#ffffff;padding:.2rem .6rem;border-radius:6px;align-self:center;margin-bottom:.3rem;}
+/* MESSAGES */
+.wm{max-width:82%;padding:.5rem .75rem .4rem;border-radius:12px;font-size:.78rem;line-height:1.45;position:relative;word-break:break-word;animation:wmpop .25s ease both;}
+@keyframes wmpop{from{opacity:0;transform:scale(.92) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.wm.out{background:#005c4b;align-self:flex-end;border-bottom-right-radius:3px;color:#ffffff;}
+.wm.in{background:#0a0a0f;align-self:flex-start;border-bottom-left-radius:3px;color:#ffffff;}
+.wm .wm-time{font-size:.58rem;color:#ffffff;float:right;margin-left:.5rem;margin-top:.2rem;}
+.wm.out .wm-time::after{content:' ✓✓';color:#53bdeb;font-size:.6rem;}
+/* TYPING INDICATOR */
+.wa-typing{display:flex;gap:.3rem;align-items:center;padding:.55rem .75rem;background:#0a0a0f;border-radius:12px;border-bottom-left-radius:3px;align-self:flex-start;animation:wmpop .2s ease both;}
+.wa-typing span{width:6px;height:6px;background:#ffffff;border-radius:50%;animation:watyp 1.2s infinite;}
+.wa-typing span:nth-child(2){animation-delay:.2s;}
+.wa-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes watyp{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+/* INPUT BAR */
+.wa-input-bar{display:flex;align-items:center;gap:.5rem;padding:.6rem .7rem;background:#0a0a0f;border-top:1px solid rgba(255,255,255,.2);}
+.wa-emoji-btn,.wa-attach{color:#ffffff;font-size:.95rem;cursor:pointer;flex-shrink:0;}
+.wa-input-box{flex:1;background:#0a0a0f;border-radius:20px;padding:.4rem .75rem;font-size:.72rem;color:#ffffff;min-height:24px;display:flex;align-items:center;border:none;outline:none;overflow:hidden;white-space:nowrap;}
+.wa-mic-btn{width:34px;height:34px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;cursor:pointer;flex-shrink:0;}
+/* LIVE BADGE */
+.phone-live-badge{margin-top:.85rem;display:flex;align-items:center;gap:.45rem;background:rgba(0,168,132,.12);border:1px solid rgba(0,168,132,.3);border-radius:50px;padding:.35rem 1rem;font-size:.72rem;font-weight:700;color:#00a884;letter-spacing:.04em;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#00a884;box-shadow:0 0 0 0 rgba(0,168,132,.4);animation:livepulse 1.4s infinite;}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(0,168,132,.5)}70%{box-shadow:0 0 0 7px rgba(0,168,132,0)}100%{box-shadow:0 0 0 0 rgba(0,168,132,0)}}
+@media(max-width:480px){.phone-frame{width:290px;}.wa-body{min-height:320px;max-height:320px;}}
+
+/* SCROLL DOWN ARROW */
+.scroll-arrow{margin-top:2.5rem;animation:fadeUp .7s .35s ease both;}
+.scroll-arrow i{font-size:1.6rem;color:rgba(255,69,0,.5);animation:bob 1.8s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ═══ TAGLINE STRIP ═══ */
+#tagline{background:linear-gradient(90deg,#0d0820,#120028,#0d0820);border-top:1px solid rgba(139,92,246,.35);border-bottom:1px solid rgba(139,92,246,.35);padding:1.3rem 1.5rem;position:relative;z-index:1;overflow:hidden;}
+#tagline::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(139,92,246,.06),transparent);pointer-events:none;}
+.tl-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;}
+.tl-it{display:flex;align-items:center;gap:.55rem;padding:.45rem 1.6rem;font-size:.88rem;font-weight:700;color:#ffffff;border-right:1px solid rgba(139,92,246,.25);transition:color .2s;}
+.tl-it:last-child{border-right:none;}
+.tl-it:hover{color:var(--gold);}
+.tl-it i{color:var(--accent);font-size:1rem;}
+@media(max-width:560px){.tl-it{border-right:none;border-bottom:1px solid rgba(139,92,246,.2);width:100%;justify-content:center;padding:.5rem 1rem;}}
+
+/* ═══ SECTION COMMONS ═══ */
+.sec{position:relative;z-index:1;background:#0a0a0f;}
+.wr{max-width:1100px;margin:0 auto;padding:5rem 1.5rem;}
+.wr-sm{max-width:800px;margin:0 auto;padding:5rem 1.5rem;}
+.eyebrow{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);text-align:center;margin-bottom:.65rem;display:flex;align-items:center;justify-content:center;gap:.45rem;}
+.eyebrow::before,.eyebrow::after{content:'';flex:1;max-width:55px;height:1px;background:rgba(255,69,0,.32);}
+.sh2{font-size:clamp(1.85rem,3.6vw,2.9rem);font-weight:900;text-align:center;line-height:1.1;margin-bottom:.65rem;letter-spacing:-.02em;}
+.sh2 .hl{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ssub{text-align:center;color:#ffffff;font-size:.98rem;max-width:540px;margin:0 auto 3rem;line-height:1.75;opacity:.88;}
+
+/* DIVIDER */
+.dline{height:1px;background:linear-gradient(90deg,transparent,rgba(255,69,0,.38),transparent);margin:0;}
+
+/* ═══ WHAT IS IT — 2 col ═══ */
+.what-cols{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1200px;margin:0 auto;}
+@media(max-width:760px){.what-cols{grid-template-columns:1fr;gap:2rem;}}
+.what-vid{border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(255,69,0,.25),0 0 0 1px rgba(255,69,0,.2);border:1px solid rgba(255,69,0,.3);position:relative;}
+.what-vid::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:linear-gradient(135deg,rgba(255,69,0,.5),rgba(255,0,153,.3),transparent);z-index:-1;}
+.what-vid video{width:100%;display:block;}
+.blist{list-style:none;display:flex;flex-direction:column;gap:1.4rem;}
+.blist li{display:flex;align-items:flex-start;gap:1rem;font-size:1.02rem;line-height:1.7;color:#ffffff;}
+.blist li strong{color:#ffffff;font-size:1.06rem;display:block;margin-bottom:.2rem;text-shadow:0 0 20px rgba(255,255,255,.3);}
+.bico{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,rgba(255,69,0,.18),rgba(255,0,153,.1));border:1px solid rgba(255,69,0,.35);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--orange);flex-shrink:0;margin-top:.05rem;box-shadow:0 0 18px rgba(255,69,0,.15);transition:all .3s;}
+
+/* ═══ DEMO GRID 2×4 ═══ */
+.demo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;}
+@media(max-width:860px){.demo-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:460px){.demo-grid{grid-template-columns:repeat(2,1fr);gap:.45rem;}}
+.dc{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#0a0a0f;border:1px solid rgba(255,255,255,.45);box-shadow:0 6px 22px rgba(0,0,0,.4);cursor:pointer;transition:transform .35s,box-shadow .35s,border-color .35s;}
+.dc:hover{transform:translateY(-5px) scale(1.02);border-color:rgba(255,69,0,.5);box-shadow:0 18px 45px rgba(0,0,0,.55),0 0 35px rgba(255,69,0,.18);}
+.dc video{width:100%;height:100%;object-fit:cover;display:block;animation:kb 28s ease-in-out infinite alternate;}
+.dc:nth-child(2n) video{animation-duration:34s;animation-delay:-14s;}
+.dc:nth-child(3n) video{animation-duration:22s;animation-delay:-7s;}
+.dc:nth-child(4n) video{animation-duration:38s;animation-delay:-20s;}
+@keyframes kb{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+.dc::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.05)50%,transparent 62%);background-size:220% 100%;animation:shim 24s ease-in-out infinite;pointer-events:none;}
+.dc:nth-child(2n)::after{animation-delay:-9s;}
+.dc:nth-child(3n)::after{animation-delay:-17s;}
+.dc:nth-child(4n)::after{animation-delay:-23s;}
+@keyframes shim{0%{background-position:220% 0;opacity:0}12%{opacity:1}55%{background-position:-220% 0;opacity:1}70%{opacity:0}100%{opacity:0}}
+.dc-lbl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.9),transparent);padding:1.1rem .7rem .55rem;font-size:.74rem;font-weight:700;color:#fff;opacity:0;transition:opacity .3s;}
+.dc:hover .dc-lbl{opacity:1;}
+
+/* ═══ MID CTA BLOCK ═══ */
+.cta-mid{background:radial-gradient(ellipse at 50% 50%,rgba(255,69,0,.13),transparent 62%);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:4.5rem 1.5rem;text-align:center;position:relative;z-index:1;}
+.cta-mid-eye{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:.55rem;}
+.cta-mid-h{font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:900;margin-bottom:.55rem;}
+.cta-mid-sub{color:#ffffff;font-size:.97rem;margin-bottom:1.8rem;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto;opacity:.9;}
+.btn-mid{display:inline-flex;align-items:center;gap:.55rem;padding:.95rem 2.5rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;box-shadow:0 6px 25px rgba(255,69,0,.45);animation:gp 3s ease-in-out infinite;}
+.btn-mid:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,69,0,.7);}
+
+/* ═══ FEATURES — BIG NUMBERED CARDS LAYOUT ═══ */
+#features{background:linear-gradient(180deg,#050508 0%,#0a0a0f 40%,#08050f 100%);overflow:hidden;padding:5rem 0;}
+@keyframes fnfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cardglow{0%{box-shadow:0 0 0 0 rgba(255,69,0,0)}50%{box-shadow:0 0 40px 0 rgba(255,69,0,.18)}100%{box-shadow:0 0 0 0 rgba(255,69,0,0)}}
+/* ── FEATURES 2-COL GRID ── */
+.feat-list{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;max-width:1160px;margin:0 auto;}
+/* ── INDIVIDUAL CARD ── */
+.fi{display:flex;gap:1.6rem;align-items:flex-start;padding:2rem 2.2rem;background:rgba(255,255,255,.026);border:1px solid rgba(255,69,0,.14);border-radius:20px;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;}
+.fi::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 15% 50%,rgba(255,69,0,.07) 0%,transparent 70%);opacity:0;transition:opacity .4s;}
+.fi:hover{border-color:rgba(255,69,0,.55);transform:translateY(-6px);box-shadow:0 20px 60px rgba(255,69,0,.18),0 0 0 1px rgba(255,69,0,.25);animation:cardglow 2s ease-in-out;}
+.fi:hover::before{opacity:1;}
+/* ── NUMBER + ICON BOX ── */
+.fi-num{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;min-width:72px;width:72px;height:80px;border-radius:16px;background:linear-gradient(160deg,rgba(255,69,0,.14) 0%,rgba(255,0,153,.09) 100%);border:1px solid rgba(255,69,0,.3);flex-shrink:0;position:relative;}
+.fi-num::after{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(255,69,0,.4),transparent,rgba(255,0,153,.2));opacity:0;transition:opacity .3s;}
+.fi:hover .fi-num::after{opacity:1;}
+.fi-n{font-size:.72rem;font-weight:900;color:var(--orange);letter-spacing:.1em;text-shadow:0 0 12px rgba(255,69,0,.7);}
+.fi-ico{font-size:1.9rem;line-height:1;}
+.fi-new{display:inline-flex;align-items:center;padding:.16rem .5rem;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:5px;font-size:.6rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-left:.5rem;vertical-align:middle;}
+.fi-pop{display:inline-flex;align-items:center;padding:.16rem .5rem;background:rgba(255,165,0,.14);border:1px solid rgba(255,165,0,.35);border-radius:5px;font-size:.6rem;font-weight:800;color:#ffa500;text-transform:uppercase;letter-spacing:.06em;margin-left:.5rem;vertical-align:middle;}
+/* ── TEXT SIDE ── */
+.fi-body{flex:1;min-width:0;}
+.fi-title{font-size:1.08rem;font-weight:900;color:#ffffff;margin-bottom:.55rem;line-height:1.3;text-shadow:0 0 20px rgba(255,255,255,.15);}
+.fi-desc{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.76;}
+/* ── Responsive ── */
+@media(max-width:860px){
+  .feat-list{grid-template-columns:1fr;gap:1.1rem;}
+  .fi{padding:1.5rem 1.6rem;gap:1.2rem;}
+  .fi-num{min-width:60px;width:60px;height:68px;}
+  .fi-ico{font-size:1.6rem;}
+}
+@media(max-width:480px){
+  .fi{padding:1.2rem 1.1rem;gap:1rem;}
+  .fi-num{min-width:50px;width:50px;height:58px;border-radius:12px;}
+  .fi-n{font-size:.65rem;}
+  .fi-ico{font-size:1.4rem;}
+  .fi-title{font-size:.97rem;}
+  .fi-desc{font-size:.84rem;}
+}
+
+/* ═══ EARN WAYS — cards grid ═══ */
+#earn{background:#0a0a0f;}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+@media(max-width:900px){.earn-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.earn-grid{grid-template-columns:1fr 1fr;}}
+.ec{background:var(--card);border:1px solid rgba(255,255,255,.5);border-radius:18px;padding:1.6rem 1.3rem;transition:all .35s;position:relative;overflow:hidden;text-align:center;}
+.ec::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);}
+.ec:hover{transform:translateY(-6px);border-color:rgba(255,69,0,.35);box-shadow:0 18px 45px rgba(255,69,0,.12);}
+.ec-ico{font-size:2.1rem;margin-bottom:.8rem;}
+.ec-title{font-size:.9rem;font-weight:800;margin-bottom:.3rem;}
+.ec-desc{font-size:.8rem;color:#ffffff;line-height:1.6;opacity:.85;}
+
+/* ═══ SAVINGS / NO NEED FOR ═══ */
+#saves{background:var(--dark);}
+/* ═══ SAVES — IMPACT REDESIGN ═══ */
+#saves{background:radial-gradient(ellipse at 50% 0%,rgba(255,69,0,.07),transparent 60%);}
+.saves-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;max-width:1000px;margin:0 auto;}
+@media(max-width:720px){.saves-wrap{grid-template-columns:1fr;gap:1.2rem;}}
+.saves-pain{background:linear-gradient(160deg,rgba(255,71,87,.08),rgba(180,0,0,.04));border:1px solid rgba(255,71,87,.25);border-radius:22px 0 0 22px;padding:2rem 1.8rem;position:relative;overflow:hidden;}
+.saves-gain{background:linear-gradient(160deg,rgba(0,255,136,.08),rgba(0,180,80,.04));border:1px solid rgba(0,255,136,.25);border-radius:0 22px 22px 0;padding:2rem 1.8rem;position:relative;overflow:hidden;}
+@media(max-width:720px){.saves-pain,.saves-gain{border-radius:18px;}}
+.saves-pain::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF4757,#ff0000);}
+.saves-gain::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00ff88,#00c853);}
+.saves-col-title{font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem;}
+.saves-col-title.pain{color:#FF4757;}
+.saves-col-title.gain{color:var(--green);}
+.saves-item{display:flex;align-items:center;gap:.85rem;padding:.75rem .9rem;border-radius:12px;margin-bottom:.6rem;transition:all .25s;}
+.saves-item.pain-item{background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.15);}
+.saves-item.pain-item:hover{background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.35);transform:translateX(-3px);}
+.saves-item.gain-item{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.15);}
+.saves-item.gain-item:hover{background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.35);transform:translateX(3px);}
+.saves-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+.saves-ico.x{background:rgba(255,71,87,.15);color:#FF4757;}
+.saves-ico.chk{background:rgba(0,255,136,.12);color:var(--green);}
+.saves-item-text{font-size:.86rem;color:#fff;font-weight:600;line-height:1.3;}
+.saves-item-price{font-size:.75rem;font-weight:800;margin-top:.1rem;}
+.saves-item-price.red{color:#FF4757;}
+.saves-item-price.grn{color:var(--green);}
+/* Center divider */
+.saves-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 .5rem;gap:1rem;position:relative;z-index:2;}
+@media(max-width:720px){.saves-divider{flex-direction:row;padding:.5rem 0;}}
+.saves-vs{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#ff4500,#ff0099);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;color:#fff;box-shadow:0 0 30px rgba(255,69,0,.5);flex-shrink:0;}
+.saves-arrow{font-size:1.4rem;color:rgba(255,255,255,.2);}
+/* Bottom total bar */
+.saves-total-bar{max-width:1000px;margin:1.5rem auto 0;padding:1.3rem 2rem;background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.06));border:1px solid rgba(255,0,153,.25);border-radius:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.saves-total-left{display:flex;flex-direction:column;}
+.saves-total-label{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#ffffff;margin-bottom:.2rem;opacity:.85;}
+.saves-total-old{font-size:1.1rem;font-weight:900;color:#FF4757;text-decoration:line-through;opacity:.8;}
+.saves-total-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.35);border-radius:50px;font-size:.88rem;font-weight:900;color:var(--green);animation:sv-pulse 2s ease-in-out infinite;}
+@keyframes sv-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.4);}50%{box-shadow:0 0 0 10px rgba(0,255,136,0);}}
+.saves-total-new{font-size:2rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+
+/* ═══ VENUS ═══ */
+#venus{background:radial-gradient(ellipse at 50% 50%,rgba(168,85,247,.11),transparent 60%);border-top:1px solid rgba(168,85,247,.18);border-bottom:1px solid rgba(168,85,247,.18);position:relative;z-index:1;}
+.vwrap{max-width:760px;margin:0 auto;padding:5rem 1.5rem;display:flex;flex-direction:column;align-items:center;}
+.veye{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#a855f7;margin-bottom:.65rem;display:flex;align-items:center;justify-content:center;gap:.45rem;}
+.veye::before,.veye::after{content:'';flex:1;max-width:48px;height:1px;background:rgba(168,85,247,.32);}
+.vh2{font-size:clamp(1.65rem,3vw,2.5rem);font-weight:900;text-align:center;margin-bottom:.45rem;}
+.vh2 .hlv{background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.vsub{color:#ffffff;text-align:center;font-size:.93rem;margin-bottom:2.2rem;line-height:1.75;max-width:540px;opacity:.88;}
+/* orb — upgraded avatar display */
+.vow{position:relative;margin-bottom:1.3rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.vorb-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.vorb{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:4.5rem;box-shadow:0 0 50px rgba(168,85,247,.55),0 0 100px rgba(168,85,247,.2);animation:op 3s ease-in-out infinite;position:relative;z-index:2;transition:all .35s ease;overflow:hidden;}
+.vorb:hover{transform:scale(1.06);}
+/* inner glow ring that pulses */
+.vorb::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.35),transparent 65%);pointer-events:none;}
+@keyframes op{0%,100%{box-shadow:0 0 40px rgba(168,85,247,.45),0 0 75px rgba(168,85,247,.18)}50%{box-shadow:0 0 75px rgba(168,85,247,.85),0 0 145px rgba(168,85,247,.35)}}
+.vorb.lst{animation:ol .35s ease-in-out infinite alternate;box-shadow:0 0 75px rgba(0,255,136,.8)!important;}
+@keyframes ol{from{transform:scale(1)}to{transform:scale(1.13)}}
+.vorb.spk{animation:os .22s ease-in-out infinite alternate;box-shadow:0 0 95px rgba(168,85,247,.98)!important;}
+@keyframes os{from{transform:scale(1)}to{transform:scale(1.1)}}
+/* agent name badge below orb */
+.vorb-badge{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .9rem;border-radius:20px;background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;box-shadow:0 2px 12px rgba(168,85,247,.4);margin-top:.2rem;}
+/* rings */
+.vring{position:absolute;inset:-18px;border-radius:50%;border:2px solid rgba(168,85,247,.3);animation:ra 2s ease-in-out infinite;}
+.vring2{position:absolute;inset:-34px;border-radius:50%;border:1.5px solid rgba(168,85,247,.13);animation:ra 2.4s .6s ease-in-out infinite;}
+.vring3{position:absolute;inset:-52px;border-radius:50%;border:1px solid rgba(168,85,247,.07);animation:ra 3s 1.2s ease-in-out infinite;}
+@keyframes ra{0%{transform:scale(.93);opacity:.9}100%{transform:scale(1.08);opacity:.05}}
+/* speaking pulse indicator */
+.vorb-pulse{position:absolute;bottom:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#22c55e;border:2px solid #000000;animation:none;z-index:10;}
+.vorb.spk .vorb-pulse{animation:pu .6s ease-in-out infinite alternate;}
+@keyframes pu{from{transform:scale(.8);opacity:.7}to{transform:scale(1.25);opacity:1}}
+/* wave */
+#vwave{display:flex;align-items:center;gap:4px;height:44px;margin-bottom:1rem;}
+.wb{width:5px;border-radius:3px;background:linear-gradient(135deg,#a855f7,#ec4899);animation:wa .65s ease-in-out infinite alternate;}
+.wb:nth-child(1){height:12px;animation-delay:0s}.wb:nth-child(2){height:24px;animation-delay:.08s}.wb:nth-child(3){height:38px;animation-delay:.15s}.wb:nth-child(4){height:30px;animation-delay:.1s}.wb:nth-child(5){height:44px;animation-delay:.04s}.wb:nth-child(6){height:30px;animation-delay:.19s}.wb:nth-child(7){height:38px;animation-delay:.08s}.wb:nth-child(8){height:24px;animation-delay:.22s}.wb:nth-child(9){height:12px;animation-delay:.15s}
+@keyframes wa{from{transform:scaleY(.2);opacity:.3}to{transform:scaleY(1);opacity:1}}
+#vwave.idle .wb{animation:none;height:4px!important;opacity:.17;}
+#vstatus{font-size:.78rem;font-weight:600;color:#a855f7;margin-bottom:.9rem;text-align:center;letter-spacing:.03em;min-height:20px;}
+/* chat */
+.vchat{width:100%;max-width:680px;background:rgba(168,85,247,.04);backdrop-filter:blur(18px);border:1px solid rgba(168,85,247,.2);border-radius:22px;overflow:hidden;box-shadow:0 18px 50px rgba(168,85,247,.09);}
+#vmsg{height:275px;overflow-y:auto;padding:1.2rem;display:flex;flex-direction:column;gap:.75rem;}
+#vmsg::-webkit-scrollbar{width:4px;}
+#vmsg::-webkit-scrollbar-thumb{background:rgba(168,85,247,.28);border-radius:2px;}
+.msg{max-width:84%;padding:.75rem .95rem;border-radius:18px;font-size:.87rem;line-height:1.65;animation:mi .3s ease;}
+@keyframes mi{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.msg.v{align-self:flex-start;background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(124,58,237,.07));border:1px solid rgba(168,85,247,.18);border-bottom-left-radius:4px;}
+.msg.u{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:4px;}
+.mtyp{align-self:flex-start;display:flex;align-items:center;gap:5px;padding:.75rem .95rem;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.17);border-radius:18px;border-bottom-left-radius:4px;}
+.mtyp span{width:7px;height:7px;border-radius:50%;background:#a855f7;animation:db 1.2s infinite;}
+.mtyp span:nth-child(2){animation-delay:.2s}.mtyp span:nth-child(3){animation-delay:.4s}
+@keyframes db{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.5);opacity:1}}
+.vci{display:flex;gap:.45rem;padding:.85rem .95rem;border-top:1px solid rgba(168,85,247,.11);background:rgba(0,0,0,.22);align-items:center;}
+/* mic hint */
+.mic-hint{display:flex;align-items:center;gap:.4rem;justify-content:flex-start;padding:.35rem .95rem .1rem;font-size:.72rem;font-weight:700;color:rgba(0,255,136,.9);letter-spacing:.02em;animation:mh 1.8s ease-in-out infinite;}
+.mic-hint-arrow{font-size:1rem;animation:mha .9s ease-in-out infinite alternate;}
+@keyframes mh{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes mha{from{transform:translateY(0)}to{transform:translateY(3px)}}
+#vin{flex:1;padding:.68rem .9rem;background:#0a0a0f;border:1px solid rgba(168,85,247,.4);border-radius:11px;color:var(--txt);font-family:'Inter',sans-serif;font-size:.87rem;outline:none;transition:border-color .2s;}
+#vin:focus{border-color:#a855f7;}
+#vin::placeholder{color:rgba(168,85,247,.36);}
+.vbsend{width:38px;height:38px;background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s;}
+.vbsend:hover{transform:scale(1.1);}
+#vbmic{width:38px;height:38px;background:rgba(0,255,136,.09);border:1.5px solid rgba(0,255,136,.26);border-radius:10px;color:var(--green);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+#vbmic:hover{background:rgba(0,255,136,.18);}
+#vbmic.rec{background:rgba(255,71,87,.14);border-color:rgba(255,71,87,.48);color:#FF4757;animation:mp .6s ease-in-out infinite;}
+@keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}50%{box-shadow:0 0 0 10px rgba(255,71,87,0)}}
+/* ── HOW-TO BOX ── */
+.how-box{background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:18px;padding:1.4rem 1.6rem;margin-bottom:2rem;width:100%;max-width:680px;}
+.how-title{font-size:.85rem;font-weight:800;color:#a855f7;margin-bottom:1rem;text-align:center;}
+.how-steps{display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem;}
+.how-step{display:flex;align-items:flex-start;gap:.55rem;flex:1;min-width:140px;max-width:180px;}
+.how-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-size:.78rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.how-text{font-size:.75rem;color:var(--mu);line-height:1.5;}
+.how-text strong{color:var(--txt);}
+.how-arr{font-size:1.1rem;color:rgba(168,85,247,.5);flex-shrink:0;}
+.how-mic-ico{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);border-radius:6px;color:var(--green);font-size:.7rem;}
+.how-note{font-size:.73rem;color:var(--mu);background:rgba(0,0,0,.2);border-radius:10px;padding:.65rem .85rem;line-height:1.7;border-left:3px solid rgba(168,85,247,.4);}
+.how-note strong{color:#a855f7;}
+/* ── AGENT SELECTOR ── */
+.agent-selector{display:flex;gap:1.2rem;margin-bottom:1.5rem;justify-content:center;flex-wrap:wrap;}
+.agent-btn{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:1rem 2rem;background:rgba(168,85,247,.06);border:2px solid rgba(168,85,247,.2);border-radius:18px;cursor:pointer;transition:all .3s;min-width:180px;}
+.agent-btn:hover{border-color:#a855f7;background:rgba(168,85,247,.12);transform:translateY(-2px);}
+.agent-btn.active{border-color:#a855f7;background:rgba(168,85,247,.18);box-shadow:0 0 28px rgba(168,85,247,.3);}
+.agent-flag{font-size:2rem;}
+.agent-name{font-size:1.2rem;font-weight:900;color:var(--txt);}
+.agent-badge-es,.agent-badge-en{font-size:.58rem;font-weight:800;letter-spacing:.1em;padding:.15rem .55rem;border-radius:50px;background:rgba(168,85,247,.2);color:#a855f7;border:1px solid rgba(168,85,247,.35);}
+.agent-label{font-size:.7rem;color:var(--mu);text-align:center;line-height:1.4;}
+/* ── ACTIVE BAR ── */
+.agent-active-bar{display:flex;align-items:center;gap:.55rem;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.25);border-radius:50px;padding:.5rem 1.2rem;font-size:.78rem;font-weight:700;color:rgba(0,255,136,.9);margin-bottom:1.2rem;max-width:580px;text-align:center;}
+.aab-dot{width:8px;height:8px;border-radius:50%;background:#00ff88;flex-shrink:0;box-shadow:0 0 0 0 rgba(0,255,136,.4);animation:aabp 1.4s infinite;}
+@keyframes aabp{0%{box-shadow:0 0 0 0 rgba(0,255,136,.5)}70%{box-shadow:0 0 0 7px rgba(0,255,136,0)}100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}}
+/* ── CHAT WINDOW ── */
+.vchat{width:100%;max-width:640px;background:var(--card);border-radius:20px;overflow:hidden;border:1px solid rgba(168,85,247,.18);box-shadow:0 20px 60px rgba(0,0,0,.4);}
+/* Chat header bar */
+.vchat-header{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.1rem;background:rgba(168,85,247,.1);border-bottom:1px solid rgba(168,85,247,.12);}
+.vch-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.vch-info{flex:1;}
+.vch-name{font-size:.88rem;font-weight:800;color:var(--txt);}
+.vch-online{display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:rgba(0,255,136,.85);}
+.vch-dot{width:6px;height:6px;border-radius:50%;background:#00ff88;display:inline-block;}
+.vch-lang{font-size:.75rem;font-weight:700;color:var(--mu);background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:.2rem .5rem;}
+/* Messages */
+#vmsg{min-height:200px;max-height:360px;overflow-y:auto;padding:.85rem .95rem;display:flex;flex-direction:column;gap:.5rem;scrollbar-width:thin;scrollbar-color:rgba(168,85,247,.25) transparent;}
+/* Input row */
+.vci{display:flex;gap:.45rem;padding:.75rem .85rem;border-top:1px solid rgba(168,85,247,.11);background:rgba(0,0,0,.22);align-items:center;}
+#vbmic{display:flex;flex-direction:column;align-items:center;gap:.1rem;padding:.35rem .6rem;background:rgba(0,255,136,.09);border:1.5px solid rgba(0,255,136,.26);border-radius:10px;color:var(--green);font-size:.85rem;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.vmic-label{font-size:.55rem;font-weight:700;color:var(--green);letter-spacing:.03em;}
+#vbmic:hover{background:rgba(0,255,136,.18);}
+#vbmic.rec{background:rgba(255,71,87,.14);border-color:rgba(255,71,87,.48);color:#FF4757;animation:mp .6s ease-in-out infinite;}
+#vin{flex:1;background:rgba(168,85,247,.07);border:1.5px solid rgba(168,85,247,.18);border-radius:10px;padding:.55rem .85rem;font-size:.85rem;color:var(--txt);font-family:'Inter',sans-serif;outline:none;}
+#vin:focus{border-color:#a855f7;background:rgba(168,85,247,.12);}
+.vbsend{width:40px;height:40px;background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s;flex-shrink:0;}
+.vbsend:hover{transform:scale(1.1);}
+/* Hint below input */
+.vci-hint{font-size:.68rem;color:var(--mu);text-align:center;padding:.4rem .85rem .65rem;line-height:1.6;}
+.vci-hint strong{color:rgba(168,85,247,.9);}
+/* Suggestion pills */
+.vsug-label{font-size:.75rem;font-weight:700;color:var(--mu);margin-top:1.2rem;margin-bottom:.4rem;text-align:center;}
+.vsug{display:flex;flex-wrap:wrap;gap:.42rem;justify-content:center;margin-top:.2rem;max-width:680px;}
+.sg{padding:.4rem .85rem;background:rgba(168,85,247,.09);border:1px solid rgba(168,85,247,.18);border-radius:50px;color:#a855f7;font-size:.77rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.sg:hover{background:rgba(168,85,247,.22);border-color:#a855f7;transform:translateY(-2px);}
+@keyframes mp{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}50%{box-shadow:0 0 0 10px rgba(255,71,87,0)}}
+
+/* ═══ PRICING — Psychological Funnel ═══ */
+#pricing{background:var(--dark);}
+
+/* ── 2 Questions CTA ── */
+.two-q-wrap{max-width:700px;margin:0 auto 3.5rem;text-align:center;}
+.two-q-box{background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(255,0,153,.06));border:1px solid rgba(255,0,153,.25);border-radius:20px;padding:2.2rem 2rem;margin-bottom:1.5rem;}
+.two-q-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(0,0,0,.3);border-radius:14px;margin-bottom:.8rem;text-align:left;}
+.two-q-item:last-child{margin-bottom:0;}
+.two-q-num{width:38px;height:38px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0;}
+.two-q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.4;}
+.two-q-yes{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3);border-radius:50px;padding:.5rem 1.4rem;font-size:.88rem;font-weight:800;color:var(--green);margin-top:1rem;}
+
+/* ── Recap Features Grid (ClickSites style) ── */
+.recap-section{background:linear-gradient(180deg,rgba(255,69,0,.04),transparent);border:1px solid rgba(255,0,153,.2);border-radius:24px;padding:2.5rem 2rem;max-width:900px;margin:0 auto 3rem;}
+.recap-title{text-align:center;font-size:1.6rem;font-weight:900;margin-bottom:.4rem;}
+.recap-subtitle{text-align:center;font-size:.88rem;color:#ffffff;margin-bottom:2rem;opacity:.9;}
+.recap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;}
+@media(max-width:700px){.recap-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:420px){.recap-grid{grid-template-columns:1fr;}}
+.recap-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:13px;transition:all .3s;}
+.recap-item:hover{border-color:rgba(255,69,0,.4);background:rgba(255,69,0,.06);transform:translateY(-2px);}
+.recap-icon{font-size:1.3rem;flex-shrink:0;width:36px;text-align:center;}
+.recap-text{font-size:.83rem;font-weight:800;color:#ffffff;line-height:1.3;text-shadow:0 0 6px rgba(255,255,255,.25);}
+.recap-val{font-size:.72rem;color:var(--orange);font-weight:800;}
+.recap-total{text-align:center;margin-top:1.8rem;padding:1.2rem;background:rgba(255,69,0,.06);border-radius:14px;border:1px dashed rgba(255,69,0,.3);}
+.recap-total-strike{font-size:1rem;color:#ffffff;text-decoration:line-through;margin-bottom:.25rem;opacity:.75;}
+.recap-total-price{font-size:2.2rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.recap-total-note{font-size:.78rem;color:#ffffff;margin-top:.2rem;opacity:.8;}
+
+/* ── Comparison Table ── */
+.comp-section{width:100%;max-width:1100px;margin:0 auto 4rem;}
+.comp-title{text-align:center;font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:900;margin-bottom:.6rem;color:#ffffff;text-shadow:0 0 30px rgba(255,255,255,.5),0 2px 0 rgba(0,0,0,.8);letter-spacing:-.01em;line-height:1.15;}
+.comp-sub{text-align:center;font-size:clamp(.9rem,1.8vw,1.1rem);color:#ffffff;margin-bottom:2rem;opacity:.9;font-weight:600;}
+.comp-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:22px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08);}
+.comp-table th{padding:1.2rem 1.4rem;font-size:.9rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;background:#0a0a14;color:#ffffff;text-shadow:0 0 16px rgba(255,255,255,.7);border-bottom:2px solid rgba(255,255,255,.1);}
+.comp-table th:first-child{text-align:left;font-size:.82rem;min-width:180px;}
+.comp-table th.ours{background:linear-gradient(160deg,#ff4500,#cc0077);color:#ffffff;font-size:1rem;font-weight:900;text-shadow:0 0 20px rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.8);position:relative;min-width:160px;box-shadow:inset 0 -3px 0 rgba(255,255,255,.3);}
+.comp-table td{padding:1.1rem 1.4rem;font-size:.96rem;border-top:1px solid rgba(255,255,255,.07);text-align:center;color:#ffffff;font-weight:600;background:#0d0d1a;}
+.comp-table td:first-child{text-align:left;font-weight:800;color:#ffffff;font-size:.96rem;background:#0a0a14;}
+.comp-table tr:hover td{background:rgba(255,255,255,.04);}
+.comp-table tr:hover td:first-child{background:rgba(255,255,255,.04);}
+.comp-table .ours-col{background:rgba(255,69,0,.15)!important;font-weight:900;color:#ffffff;border-left:2px solid rgba(255,69,0,.5);border-right:2px solid rgba(255,69,0,.5);}
+.comp-table tr:last-child td.ours-col{border-bottom:3px solid rgba(255,69,0,.8);}
+.comp-yes{color:#00ff88;font-size:1.05rem;font-weight:900;text-shadow:0 0 14px rgba(0,255,136,.8);display:inline-block;}
+.comp-no{color:#ff6b78;font-size:.9rem;opacity:.95;font-weight:700;display:inline-block;}
+.comp-price{font-weight:900;font-size:1.05rem;}
+.comp-price.ours{color:#ff6a00;font-size:1.3rem;font-weight:900;text-shadow:0 0 18px rgba(255,100,0,.9);display:block;}
+.comp-price.them{color:#ff6b78;font-weight:700;font-size:.95rem;}
+.comp-savings{text-align:center;margin-top:1.5rem;padding:1.3rem 2rem;background:linear-gradient(135deg,rgba(0,255,136,.1),rgba(0,200,100,.06));border:2px solid rgba(0,255,136,.4);border-radius:18px;font-size:clamp(.9rem,1.8vw,1.1rem);font-weight:900;color:#00ff88;text-shadow:0 0 12px rgba(0,255,136,.5);box-shadow:0 0 30px rgba(0,255,136,.1);}
+
+/* ── 3-Plan Price Table ── */
+.price-table{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto;}
+@media(max-width:760px){.price-table{grid-template-columns:1fr;max-width:420px;}}
+.pbox{background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:2.2rem 1.8rem;position:relative;overflow:hidden;transition:all .4s;box-shadow:0 8px 30px rgba(0,0,0,.3);}
+.pbox::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);}
+.pbox.hot{border:2px solid var(--orange);background:linear-gradient(145deg,rgba(255,69,0,.09),var(--card));box-shadow:0 24px 65px rgba(255,69,0,.25);transform:scale(1.03);}
+.pbox.hot::before{background:var(--grad);}
+.pbox.agency{border:1px solid rgba(139,92,246,.35);background:linear-gradient(145deg,rgba(139,92,246,.08),var(--card));}
+.pbox.agency::before{background:linear-gradient(135deg,#8b5cf6,#a855f7);}
+.pbox:hover{transform:translateY(-6px);}
+.pbox.hot:hover{transform:scale(1.03) translateY(-6px);}
+.pbadge{position:absolute;top:1.1rem;right:1.1rem;padding:.22rem .7rem;background:var(--grad);border-radius:50px;font-size:.66rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.04em;}
+.pbadge.agency{background:linear-gradient(135deg,#8b5cf6,#a855f7);}
+.pname{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#ffffff;margin-bottom:.5rem;opacity:.9;}
+.pprice{font-size:2.8rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:.18rem;}
+.pprice.agency-price{background:linear-gradient(135deg,#8b5cf6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.pper{font-size:.8rem;color:#ffffff;margin-bottom:1.4rem;opacity:.85;font-weight:600;}
+.pfeats{list-style:none;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.8rem;}
+.pfeats li{display:flex;align-items:center;gap:.62rem;font-size:.84rem;color:#ffffff;font-weight:600;}
+.pfeats li i{color:var(--green);width:14px;flex-shrink:0;}
+.pfeats li.no i{color:#FF4757;}
+.pfeats li.no{opacity:.5;}
+.pbtn{width:100%;padding:.85rem;border:none;border-radius:13px;font-weight:800;font-size:.92rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;}
+.pbtn.main{background:var(--grad);color:#fff;box-shadow:0 6px 22px rgba(255,69,0,.38);animation:gp 3s ease-in-out infinite;}
+.pbtn.main:hover{transform:translateY(-2px);}
+.pbtn.sec{background:#0a0a0f;border:1.5px solid rgba(255,255,255,.4);color:#ffffff;}
+.pbtn.sec:hover{border-color:var(--orange);color:var(--orange);}
+.pbtn.agency-btn{background:linear-gradient(135deg,#8b5cf6,#a855f7);color:#fff;box-shadow:0 6px 22px rgba(139,92,246,.35);}
+.pbtn.agency-btn:hover{transform:translateY(-2px);}
+/* big pricing blurb like ClickSites */
+.price-blurb{text-align:center;padding:3.5rem 1.5rem;position:relative;z-index:1;}
+.price-blurb-sub{color:#ffffff;font-size:.93rem;max-width:560px;margin:.4rem auto 1.8rem;line-height:1.7;opacity:.88;}
+
+/* ═══ TESTIMONIALS ═══ */
+#testi{background:#0a0a0f;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;}
+@media(max-width:700px){.tgrid{grid-template-columns:1fr;max-width:400px;margin:0 auto;}}
+.tc{background:var(--card);border:1px solid rgba(255,255,255,.5);border-radius:18px;padding:1.7rem;transition:all .4s;box-shadow:0 6px 26px rgba(0,0,0,.26);}
+.tc:hover{transform:translateY(-6px);border-color:rgba(255,69,0,.32);box-shadow:0 18px 45px rgba(255,69,0,.1);}
+.tstars{color:var(--gold);font-size:.86rem;margin-bottom:.7rem;letter-spacing:.04em;}
+.ttxt{font-size:.87rem;color:#ffffff;line-height:1.75;margin-bottom:.95rem;font-style:italic;opacity:.9;}
+.tauth{display:flex;align-items:center;gap:.7rem;}
+.tav{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.97rem;color:#fff;flex-shrink:0;}
+.tname{font-weight:700;font-size:.86rem;}
+.trole{font-size:.72rem;color:#ffffff;opacity:.75;}
+.tres{margin-top:.75rem;padding:.38rem .7rem;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.18);border-radius:8px;font-size:.77rem;color:var(--green);font-weight:700;}
+
+/* ═══ GUARANTEE ═══ */
+#guar{background:linear-gradient(135deg,rgba(0,255,136,.05),rgba(255,69,0,.02));border-top:1px solid rgba(0,255,136,.13);border-bottom:1px solid rgba(0,255,136,.13);position:relative;z-index:1;}
+.ginner{max-width:640px;margin:0 auto;padding:5rem 1.5rem;text-align:center;}
+.gbadge{width:110px;height:110px;border-radius:50%;background:rgba(0,255,136,.07);border:3px solid rgba(0,255,136,.38);display:flex;align-items:center;justify-content:center;font-size:3rem;margin:0 auto 1.4rem;box-shadow:0 0 55px rgba(0,255,136,.18);animation:gg 3s ease-in-out infinite;}
+@keyframes gg{0%,100%{box-shadow:0 0 32px rgba(0,255,136,.16)}50%{box-shadow:0 0 70px rgba(0,255,136,.42)}}
+.gtitle{font-size:1.85rem;font-weight:900;color:var(--green);margin-bottom:.65rem;}
+.gtext{font-size:.97rem;color:#ffffff;line-height:1.85;opacity:.9;}
+.gtext strong{color:var(--txt);}
+
+/* ═══ FAQ ═══ */
+#faq{background:linear-gradient(180deg,#08080f,#0d0d1a,#08080f);}
+.flist{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+.fi-faq{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1.5px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden;transition:all .3s;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.fi-faq:hover{border-color:rgba(255,69,0,.6);box-shadow:0 8px 32px rgba(255,69,0,.2);transform:translateY(-2px);}
+.fi-faq.open{border-color:rgba(255,69,0,.7);box-shadow:0 12px 40px rgba(255,69,0,.25);}
+.fq{padding:1.35rem 1.7rem;font-weight:800;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.9rem;transition:color .2s;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,.8);letter-spacing:-.01em;}
+.fq:hover{color:#ff8c4a;}
+.fi-faq.open .fq{color:#ff6a20;}
+.fa-arr{transition:transform .3s;color:#ff6a20;font-size:.9rem;flex-shrink:0;}
+.fi-faq.open .fa-arr{transform:rotate(180deg);}
+.fa-ans{max-height:0;overflow:hidden;transition:max-height .45s ease;}
+.fa-ans.open{max-height:300px;}
+.fa-inner{padding:.2rem 1.7rem 1.4rem;font-size:.93rem;color:#ffffff;line-height:1.85;opacity:.92;border-top:1px solid rgba(255,255,255,.07);}
+
+/* ═══ FINAL CTA ═══ */
+#cfinal{background:radial-gradient(ellipse at 50% 50%,rgba(255,69,0,.16),transparent 60%);border-top:1px solid var(--bd);position:relative;z-index:1;}
+.cf-inner{max-width:720px;margin:0 auto;padding:6rem 1.5rem;text-align:center;}
+.cf-h{font-size:clamp(1.9rem,4.2vw,3.3rem);font-weight:900;margin-bottom:.7rem;line-height:1.1;}
+.cf-h .hl{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cf-sub{color:#ffffff;font-size:.98rem;margin-bottom:2.2rem;line-height:1.75;opacity:.9;}
+.unote{display:inline-flex;align-items:center;gap:.55rem;padding:.55rem 1.4rem;background:rgba(255,69,0,.08);border:1px solid rgba(255,69,0,.28);border-radius:50px;font-size:.82rem;font-weight:700;color:var(--orange);margin-top:1.5rem;}
+
+/* ═══ FOOTER ═══ */
+footer{background:rgba(0,0,0,.5);border-top:1px solid var(--bd);padding:2.5rem 1.5rem;text-align:center;position:relative;z-index:1;}
+/* ── VENUS CONVERSATIONAL FORM ── */
+#venus .agent-card:hover{transform:translateY(-6px) scale(1.03);border-color:rgba(255,69,0,.5)!important;box-shadow:0 20px 50px rgba(255,69,0,.15);}
+#venus .agent-card.selected-amanda{border-color:rgba(255,69,0,.6)!important;box-shadow:0 0 40px rgba(255,69,0,.25)!important;transform:translateY(-4px);}
+#venus .agent-card.selected-shirley{border-color:rgba(108,99,255,.6)!important;box-shadow:0 0 40px rgba(108,99,255,.25)!important;transform:translateY(-4px);}
+/* Chat bubbles */
+.msg-agent{display:flex;align-items:flex-start;gap:.75rem;animation:fadeUp .4s ease;}
+.msg-agent .bubble{background:#0a0a0f;border:1px solid rgba(255,255,255,.4);border-radius:4px 18px 18px 18px;padding:.8rem 1.1rem;max-width:85%;font-size:.9rem;color:#ffffff;line-height:1.6;}
+.msg-user{display:flex;justify-content:flex-end;animation:fadeUp .3s ease;}
+.msg-user .bubble{background:linear-gradient(135deg,rgba(255,69,0,.25),rgba(255,106,0,.2));border:1px solid rgba(255,69,0,.35);border-radius:18px 4px 18px 18px;padding:.8rem 1.1rem;max-width:80%;font-size:.9rem;color:#fff;line-height:1.6;}
+.msg-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ff4500,#ff0099);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px;}
+.msg-avatar.shirley{background:linear-gradient(135deg,#6c63ff,#a78bfa);}
+/* Quick reply chips */
+.qr-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem;}
+.qr-chip{background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.3);border-radius:50px;padding:.4rem .9rem;font-size:.8rem;color:var(--orange);cursor:pointer;transition:all .2s;font-weight:600;}
+.qr-chip:hover{background:rgba(255,69,0,.25);transform:scale(1.04);}
+.qr-chip.purple{background:rgba(108,99,255,.1);border-color:rgba(108,99,255,.3);color:#8b85ff;}
+.qr-chip.purple:hover{background:rgba(108,99,255,.25);}
+/* Color picker row */
+.color-swatches{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;}
+.color-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0;}
+.color-swatch:hover,.color-swatch.active{border-color:#fff;transform:scale(1.2);}
+/* Thinking dots */
+.thinking{display:flex;align-items:center;gap:.35rem;padding:.6rem .2rem;}
+.thinking span{width:8px;height:8px;background:#ffffff;border-radius:50%;animation:tdot 1.2s ease-in-out infinite;}
+.thinking span:nth-child(2){animation-delay:.2s;}
+.thinking span:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,80%,100%{transform:scale(0);opacity:.4}40%{transform:scale(1);opacity:1}}
+/* Result cards */
+.result-card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:1.2rem;transition:all .3s;text-decoration:none;display:block;}
+.result-card:hover{border-color:rgba(255,69,0,.4);transform:translateY(-3px);box-shadow:0 12px 30px rgba(255,69,0,.1);}
+/* Progress creation bar */
+#creationProgress{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;max-width:700px;margin:1.5rem auto;}
+.cp-step{display:flex;align-items:center;gap:.8rem;padding:.5rem 0;font-size:.85rem;color:var(--mu);transition:color .3s;}
+.cp-step.done{color:#43e97b;}
+.cp-step.active{color:#fff;}
+.cp-icon{width:28px;height:28px;border-radius:50%;background:#0a0a0f;border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;transition:all .3s;}
+.cp-step.done .cp-icon{background:rgba(67,233,123,.15);border-color:rgba(67,233,123,.5);color:#43e97b;}
+.cp-step.active .cp-icon{background:rgba(255,69,0,.15);border-color:rgba(255,69,0,.5);color:var(--orange);animation:hubpulse 1.5s ease-in-out infinite;}
+/* Photo upload */
+#photoUploadArea{border:2px dashed rgba(255,69,0,.3);border-radius:16px;padding:2rem;text-align:center;cursor:pointer;transition:all .3s;background:rgba(255,69,0,.03);}
+#photoUploadArea:hover{border-color:rgba(255,69,0,.6);background:rgba(255,69,0,.07);}
+@media(max-width:600px){.msg-agent .bubble,.msg-user .bubble{font-size:.82rem;padding:.65rem .85rem;}}
+.flinks{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;margin-bottom:.8rem;}
+.flinks a{font-size:.82rem;color:var(--mu);transition:color .2s;}
+.flinks a:hover{color:var(--orange);}
+.fcopy{font-size:.75rem;color:rgba(255,255,255,.6);}
+
+/* ═══ MOBILE STICKY ═══ */
+#sticky{position:fixed;bottom:0;left:0;right:0;z-index:600;padding:.8rem 1.1rem;background:rgba(0,0,0,.96);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:.9rem;transform:translateY(100%);transition:transform .4s cubic-bezier(.22,1,.36,1);}
+#sticky.show{transform:translateY(0);}
+.stxt{font-size:.78rem;color:var(--mu);line-height:1.4;}
+.stxt strong{color:var(--txt);display:block;font-size:.88rem;}
+.sbtn{padding:.62rem 1.5rem;background:var(--grad);border:none;border-radius:50px;color:#fff;font-weight:800;font-size:.86rem;white-space:nowrap;cursor:pointer;text-decoration:none;flex-shrink:0;animation:gp 3s ease-in-out infinite;}
+@media(min-width:960px){#sticky{display:none;}}
+
+/* ═══ REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .65s ease,transform .65s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+
+/* COUNTDOWN */
+#cntdn{font-weight:900;font-size:.92rem;letter-spacing:2px;color:#fff;}
+
+/* VENUS PILLS */
+.vpill{display:inline-flex;align-items:center;gap:.4rem;background:#0a0a0f;border:1px solid rgba(255,255,255,.4);border-radius:50px;padding:.45rem 1rem;font-size:.82rem;color:#ffffff;font-weight:600;}
+/* ══ 4x2 VIDEO GRID ══ */
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;width:100%;}
+@media(max-width:900px){.vgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.vgrid{grid-template-columns:repeat(2,1fr);gap:.6rem;}}
+.vcard{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/9;width:100%;background:#111;border:1px solid rgba(255,255,255,0.08);box-shadow:0 6px 24px rgba(0,0,0,0.4);transition:transform .35s,box-shadow .35s,border-color .35s;min-width:0;}
+.vcard:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(255,69,0,.5);box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 40px rgba(255,69,0,.18);}
+.vcard video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+.voverlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:.8rem;}
+.vcard:hover .voverlay{opacity:1;}
+.vlabel{font-size:.78rem;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<canvas id="bgC"></canvas>
+<!-- SCROLL PROGRESS -->
+<div id="sp"></div>
+<!-- CURSOR -->
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<!-- ═══ LANGUAGE TOGGLE ═══ -->
+<button id="langToggleBtn" onclick="togglePageLang()"
+  style="position:fixed;top:14px;right:16px;z-index:9999;background:#0a0a0f;border:1px solid rgba(255,255,255,.4);border-radius:50px;padding:.35rem .9rem;font-size:.8rem;font-weight:700;color:#fff;cursor:pointer;backdrop-filter:blur(8px);transition:all .2s;"
+  onmouseenter="this.style.background='rgba(255,255,255,.1)'" onmouseleave="this.style.background='#000000'">
+  🇪🇸 ES
+</button>
+
+<!-- ═══ FLASH BAR ═══ -->
+<div id="flash">
+  ⚡ OFERTA DE LANZAMIENTO — Precio $19.99/mes · Precio introducción · vence en: <span id="cntdn">23:59:47</span> &nbsp;|&nbsp; <span class="ldot"></span> <span id="vwrs">47</span> <span class="w">personas viendo esto ahora</span>
+</div>
+
+<!-- ════════════ HERO ════════════ -->
+<section id="hero">
+  <div class="upill">
+    <span class="ldot"></span>
+    🔥 Solo quedan <span id="slots">23</span> lugares al precio de lanzamiento
+  </div>
+
+  <p class="hero-tag">🤖 La plataforma #1 de bots IA para negocios locales</p>
+
+  <h1 class="hero-h1">
+    Tu Negocio Merece<br>
+    <span class="hl">Trabajar Solo Mientras Duermes</span>
+  </h1>
+
+  <p class="hero-h2">
+    Crea tu bot IA, landing page y tarjeta digital profesional<br>
+    en minutos — sin código, sin complicaciones, sin excusas.
+  </p>
+
+  <p class="hero-sub2">⚡ Solo quedan <span id="slots2">20</span> lugares al precio de lanzamiento — $19.99/mes</p>
+
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-magic"></i> Pide Tu Deseo Gratis — Sin Tarjeta</a>
+
+  <div class="pay-row">
+    <div class="pay-chip g"><i class="fas fa-lock"></i> Pago Seguro</div>
+    <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5 Calificación</div>
+    <div class="pay-chip o"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+  </div>
+
+  <div class="guar-row">
+    <i class="fas fa-shield-alt"></i> Sin Contrato · Sin Costos Ocultos · Cancela Cuando Quieras
+  </div>
+
+  <!-- ══ HERO PHONE MOCKUP ══ -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <!-- STATUS BAR -->
+      <div class="phone-bar">
+        <span class="phone-time" id="phoneTime">9:41</span>
+        <span class="phone-icons"><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+      </div>
+      <!-- WHATSAPP HEADER -->
+      <div class="wa-header">
+        <div class="wa-back"><i class="fas fa-arrow-left"></i></div>
+        <div class="wa-avatar-wrap">
+          <div class="wa-avatar">🤖</div>
+          <div class="wa-online-dot"></div>
+        </div>
+        <div class="wa-info">
+          <div class="wa-name">SuperBot007 IA</div>
+          <div class="wa-status" id="waStatus">en línea</div>
+        </div>
+        <div class="wa-actions"><i class="fas fa-video"></i> <i class="fas fa-phone"></i></div>
+      </div>
+      <!-- CHAT AREA -->
+      <div class="wa-body" id="waBody">
+        <div class="wa-date-sep">Hoy</div>
+      </div>
+      <!-- INPUT BAR -->
+      <div class="wa-input-bar">
+        <div class="wa-emoji-btn"><i class="fas fa-smile"></i></div>
+        <div class="wa-input-box" id="waTypingInput"></div>
+        <div class="wa-attach"><i class="fas fa-paperclip"></i></div>
+        <div class="wa-mic-btn"><i class="fas fa-microphone"></i></div>
+      </div>
+    </div>
+    <!-- LIVE BADGE -->
+    <div class="phone-live-badge"><span class="live-dot"></span> En Vivo 24/7</div>
+  </div>
+
+  <div class="scroll-arrow">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- TAGLINE STRIP -->
+<div id="tagline">
+  <div class="tl-inner">
+    <div class="tl-it"><i class="fas fa-users"></i> +500 Bots Creados</div>
+    <div class="tl-it"><i class="fas fa-star"></i> 4.9 / 5 Calificación</div>
+    <div class="tl-it"><i class="fas fa-bolt"></i> Setup en 5 Minutos</div>
+    <div class="tl-it"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="tl-it"><i class="fas fa-code"></i> Zero Código Necesario</div>
+    <div class="tl-it"><i class="fas fa-dollar-sign"></i> $500–$2,000 / Cliente</div>
+  </div>
+</div>
+
+<div class="dline"></div>
+
+<!-- ════════════ WHAT IS IT ════════════ -->
+<section class="sec" style="background:linear-gradient(180deg,#f8f5ff 0%,#ede8ff 50%,#f0ebff 100%);">
+  <div class="wr">
+    <div class="eyebrow reveal" style="color:#7c3aed;">¿Qué es SuperBot007?</div>
+    <h2 class="sh2 reveal" style="color:#1a1a2e;">3 Herramientas en 1 —<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Creadas en Minutos</span></h2>
+    <p class="ssub reveal" style="font-size:1.05rem;color:#4a4a6a;">Sin código. Sin desarrolladores. Sin dolores de cabeza.</p>
+
+    <div class="what-cols" style="margin-top:3.5rem;">
+      <div class="what-vid reveal">
+        <video autoplay loop muted playsinline src="videos/vid1_bot.mp4"></video>
+      </div>
+      <ul class="blist reveal" style="transition-delay:.1s">
+        <li>
+          <div class="bico" style="background:linear-gradient(135deg,rgba(255,69,0,.15),rgba(255,0,153,.1));border-color:rgba(255,69,0,.4);"><i class="fas fa-robot" style="color:#ff4500;"></i></div>
+          <div style="color:#1a1a2e;"><strong style="color:#1a1a2e;">🤖 Bot IA 24/7 entrenado con tu negocio</strong>Responde, vende y agenda citas solo — en español e inglés, sin que tú estés presente.</div>
+        </li>
+        <li>
+          <div class="bico" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(99,102,241,.1));border-color:rgba(124,58,237,.4);"><i class="fas fa-globe" style="color:#7c3aed;"></i></div>
+          <div style="color:#1a1a2e;"><strong style="color:#1a1a2e;">🌐 Landing Page lista en minutos</strong>Página profesional con galería, servicios, pagos PayPal y agenda de citas — todo incluido.</div>
+        </li>
+        <li>
+          <div class="bico" style="background:linear-gradient(135deg,rgba(0,200,150,.15),rgba(0,180,120,.1));border-color:rgba(0,200,150,.4);"><i class="fas fa-id-card" style="color:#00c896;"></i></div>
+          <div style="color:#1a1a2e;"><strong style="color:#1a1a2e;">📇 Tarjeta Digital + QR</strong>Comparte todos tus contactos y redes en un solo link. QR listo para imprimir o enviar por WhatsApp.</div>
+        </li>
+        <li>
+          <div class="bico" style="background:linear-gradient(135deg,rgba(255,204,0,.15),rgba(255,160,0,.1));border-color:rgba(255,204,0,.4);"><i class="fas fa-paint-brush" style="color:#ffcc00;"></i></div>
+          <div style="color:#1a1a2e;"><strong style="color:#1a1a2e;">✏️ Editor Visual sin código</strong>Cambia colores, fotos, precios y horarios al instante. Tan fácil como publicar en Instagram.</div>
+        </li>
+        <li>
+          <div class="bico" style="background:linear-gradient(135deg,rgba(255,69,0,.15),rgba(255,100,50,.1));border-color:rgba(255,69,0,.4);"><i class="fas fa-building" style="color:#ff4500;"></i></div>
+          <div style="color:#1a1a2e;"><strong style="color:#1a1a2e;">🏢 Modelo Agencia — $500–$2,000/mes</strong>Crea bots para otros negocios y cobra recurrente. Con 5 clientes = $250–$1,000/mes pasivos.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ MID CTA 1 ════════════ -->
+<div class="cta-mid">
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+  <div class="pay-row" style="margin-top:1rem;">
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+    <div class="pay-chip"><i class="fas fa-lock"></i> Pago Seguro</div>
+    <div class="pay-chip gl"><i class="fas fa-star"></i> 500+ bots activos</div>
+  </div>
+  <div class="guar-row" style="margin-top:.8rem;">
+    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+  </div>
+</div>
+
+<div class="dline"></div>
+
+<!-- ════════════ FEATURES — BIG NUMBERED CARDS ════════════ -->
+<section id="features" class="sec">
+  <div class="wr">
+    <div class="eyebrow reveal">Funciones de Siguiente Generación</div>
+    <h2 class="sh2 reveal">Lo Que Ves Es Solo la<br><span class="hl">Punta del Iceberg…</span></h2>
+    <p class="ssub reveal" style="margin-bottom:3.5rem;">Desbloquea funciones de última generación que dejan a la competencia en el polvo…</p>
+
+    <div class="feat-list">
+
+      <div class="fi reveal">
+        <div class="fi-num"><span class="fi-n">01</span><span class="fi-ico">🤖</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Bot IA con GPT-4 <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Convierte tus ideas en un bot IA entrenado con tu negocio en minutos usando solo un formulario. El bot responde preguntas, vende servicios y agenda citas — solo, las 24 horas, en español e inglés. Sin código. Sin diseño. Solo tu negocio hecho realidad en segundos.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.05s">
+        <div class="fi-num"><span class="fi-n">02</span><span class="fi-ico">🌐</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Landing Page Cinematic <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Recrea o diseña tu página profesional al instante dando solo los datos de tu negocio. La IA genera una landing completa con efectos Ken Burns, flip cards animadas y carrito de compras — en minutos, sin empezar desde cero ni escribir una línea de código.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.08s">
+        <div class="fi-num"><span class="fi-n">03</span><span class="fi-ico">💳</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Carrito de Compras + PayPal Directo <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Los clientes pagan directo a tu cuenta PayPal desde tu landing page. Sin intermediarios. Sin comisiones ocultas. 100% del dinero va directamente a ti en tiempo real. También acepta Stripe y Zelle integrados — elige el método que prefieras.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.11s">
+        <div class="fi-num"><span class="fi-n">04</span><span class="fi-ico">📅</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Sistema de Agenda de Citas</div>
+          <div class="fi-desc">Calendario interactivo donde los clientes reservan citas directamente desde tu landing page. Notificaciones automáticas por WhatsApp al dueño del negocio con cada nueva reserva. Sin apps externas, sin integraciones complicadas — funciona solo.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.14s">
+        <div class="fi-num"><span class="fi-n">05</span><span class="fi-ico">✏️</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Editor Visual en Tiempo Real</div>
+          <div class="fi-desc">Cambia colores, fotos, servicios, precios y horarios al instante desde el editor drag-and-drop. Ves los cambios en tiempo real sin tocar una línea de código. Personaliza con interfaz de arrastrar y soltar — mueve elementos, ajusta layouts y diseña páginas exactamente como quieres.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.17s">
+        <div class="fi-num"><span class="fi-n">06</span><span class="fi-ico">📱</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Tarjeta Digital con Código QR</div>
+          <div class="fi-desc">Tarjeta de presentación digital con QR, WhatsApp, Instagram, Facebook y todos tus contactos en un solo link. Compártela desde el celular en un clic. Mejora tu sitio con el asistente IA — pídele que cambie colores, actualice fuentes o rediseñe el layout y míralo suceder al instante.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.20s">
+        <div class="fi-num"><span class="fi-n">07</span><span class="fi-ico">🌍</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Motor Bilingüe ES/EN</div>
+          <div class="fi-desc">El bot detecta automáticamente el idioma del cliente y responde en español o inglés. Ideal para negocios en ciudades con audiencias mixtas como Miami, Los Ángeles o Nueva York. Conecta con audiencias diversas en más de 40 idiomas con capacidades multilingües integradas.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.23s">
+        <div class="fi-num"><span class="fi-n">08</span><span class="fi-ico">🏢</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Modelo de Agencia — Ingresos Recurrentes <span class="fi-pop">Popular</span></div>
+          <div class="fi-desc">Rebrandea SuperBot007 con tu propio logo y branding, dándote la capacidad de venderlo como tuyo. Crea bots para restaurantes, salones, clínicas, tiendas y cobra $50–$200/mes por cliente. Con 5 clientes ya tienes $250–$1,000/mes de ingreso pasivo sin hacer trabajo técnico.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.26s">
+        <div class="fi-num"><span class="fi-n">09</span><span class="fi-ico">🔒</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Firebase + Google Cloud — 99.9% Uptime</div>
+          <div class="fi-desc">Toda la plataforma corre sobre Google Firebase. Elige hospedar tus sitios en nuestra infraestructura confiable y apúntalos a tu dominio personalizado — o descarga los archivos HTML y hospédalos en tu propio servidor si prefieres control total. SSL gratuito incluido.</div>
+        </div>
+      </div>
+
+      <div class="fi reveal" style="transition-delay:.29s">
+        <div class="fi-num"><span class="fi-n">10</span><span class="fi-ico">🎙️</span></div>
+        <div class="fi-body">
+          <div class="fi-title">Asistente IA de Voz <span class="fi-new">Nuevo</span></div>
+          <div class="fi-desc">Guía a tus clientes paso a paso por el proceso de configuración usando voz natural. El asistente habla, responde y actúa — creando una experiencia interactiva única que ningún competidor ofrece. Convierte visitantes en clientes desde el primer segundo.</div>
+        </div>
+      </div>
+
+    </div><!-- /feat-list -->
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ VIDEO DEMO GRID ════════════ -->
+<section class="sec" style="background:#000000;">
+  <div class="wr">
+    <div class="eyebrow reveal" style="color:var(--orange);">VERLO ES CREERLO</div>
+    <h2 class="sh2 reveal">Mira el Poderoso Software<br><span class="hl">en Acción…</span></h2>
+    <p class="ssub reveal">Cada función que ves abajo está incluida en tu plan — lista para usar en minutos.</p>
+
+    <!-- ROW 1 -->
+    <div class="vgrid reveal" style="margin-bottom:1rem;">
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid1_bot.mp4"></video>
+        <div class="voverlay"><span class="vlabel">🤖 Bot respondiendo 24/7</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid2_calendar.mp4"></video>
+        <div class="voverlay"><span class="vlabel">📅 Agenda de Citas</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid3_money.mp4"></video>
+        <div class="voverlay"><span class="vlabel">💰 Generando ingresos reales</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid4_deal.mp4"></video>
+        <div class="voverlay"><span class="vlabel">🤝 Cerrando tratos 24/7</span></div>
+      </div>
+    </div>
+    <!-- ROW 2 -->
+    <div class="vgrid reveal" style="transition-delay:.1s">
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid5_nocode.mp4"></video>
+        <div class="voverlay"><span class="vlabel">⚡ Sin código — fácil y rápido</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid6_landing.mp4"></video>
+        <div class="voverlay"><span class="vlabel">🌐 Landing page + tarjeta digital</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid7_paypal.mp4"></video>
+        <div class="voverlay"><span class="vlabel">💳 Pagos PayPal automáticos</span></div>
+      </div>
+      <div class="vcard">
+        <video autoplay loop muted playsinline src="videos/vid8_agency.mp4"></video>
+        <div class="voverlay"><span class="vlabel">🏢 Tu agencia de bots IA</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ EARN WAYS ════════════ -->
+<section id="earn" class="sec">
+  <div class="wr">
+    <div class="eyebrow reveal">Posibilidades Ilimitadas</div>
+    <h2 class="sh2 reveal">Maximiza Tus Ingresos<br><span class="hl">Sin Romper el Banco</span></h2>
+    <p class="ssub reveal">Cómo generar dinero con SuperBot007 — para ti o para tus clientes</p>
+
+    <div class="earn-grid">
+      <div class="ec reveal">
+        <div class="ec-ico">🏪</div>
+        <div class="ec-title">Automatiza Tu Negocio</div>
+        <div class="ec-desc">Responde clientes 24/7, agenda citas y cobra pagos — todo automático mientras duermes.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.06s">
+        <div class="ec-ico">💼</div>
+        <div class="ec-title">Freelance de Bots IA</div>
+        <div class="ec-desc">Crea bots profesionales para clientes. Cobra $300–$500 por setup + recurrente mensual.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.12s">
+        <div class="ec-ico">🏢</div>
+        <div class="ec-title">Agencia de Negocios Locales</div>
+        <div class="ec-desc">Restaurantes, salones, clínicas. Cada cliente paga $50–$200/mes. 5 clientes = $250–$1,000/mes.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.18s">
+        <div class="ec-ico">📲</div>
+        <div class="ec-title">Suscripciones Mensuales</div>
+        <div class="ec-desc">Mantén y actualiza los bots de tus clientes. Ingreso recurrente predecible mes a mes.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.24s">
+        <div class="ec-ico">🎯</div>
+        <div class="ec-title">Generación de Leads</div>
+        <div class="ec-desc">Crea landing pages que capturan leads y véndelos a negocios locales. Alto margen, bajo costo.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.30s">
+        <div class="ec-ico">🛒</div>
+        <div class="ec-title">E-commerce con IA</div>
+        <div class="ec-desc">Crea tiendas con bot, carrito PayPal y landing page. Vende productos físicos o digitales.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.36s">
+        <div class="ec-ico">📊</div>
+        <div class="ec-title">Marketing de Afiliados</div>
+        <div class="ec-desc">Construye sitios de nicho y gana con programas de afiliados. Tráfico orgánico, ingreso pasivo.</div>
+      </div>
+      <div class="ec reveal" style="transition-delay:.42s">
+        <div class="ec-ico">📈</div>
+        <div class="ec-title">Portafolios Profesionales</div>
+        <div class="ec-desc">Crea y vende portafolios para fotógrafos, abogados, coaches y profesionales independientes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ MID CTA 3 ════════════ -->
+<div class="cta-mid">
+  <p class="cta-mid-eye">Solo $19.99/mes — Todo Incluido</p>
+  <h2 class="cta-mid-h reveal">Tu Agencia IA<br>Empieza con SuperBot007</h2>
+  <p class="cta-mid-sub reveal">Cobra $50–$200/mes por cliente. 5 clientes = $250–$1,000/mes pasivos. Por solo $19.99/mes.</p>
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+  <div class="pay-row" style="margin-top:1rem;">
+    <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+  </div>
+  <div class="guar-row" style="margin-top:.8rem;">
+    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+  </div>
+</div>
+
+<div class="dline"></div>
+
+<!-- ════════════ SAVES YOU ════════════ -->
+<section id="saves" class="sec">
+  <div class="wr">
+    <div class="eyebrow reveal" style="color:#FF4757;border-color:rgba(255,71,87,.3);background:rgba(255,71,87,.07);">💸 ¿Cuánto Estás Perdiendo AHORA MISMO?</div>
+    <h2 class="sh2 reveal">Deja de Pagar de Más.<br><span class="hl">SuperBot007 Lo Reemplaza Todo.</span></h2>
+    <p class="ssub reveal">Mira lo que pagarías comprando cada herramienta por separado vs. lo que pagas con SuperBot007.</p>
+
+    <div class="saves-wrap">
+      <!-- PAIN — LEFT -->
+      <div class="saves-pain reveal">
+        <div class="saves-col-title pain"><i class="fas fa-fire"></i> Sin SuperBot007 — Pagas...</div>
+
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Desarrollador Web</div>
+            <div class="saves-item-price red">$3,000–$10,000 única vez</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Chatbot Externo (ManyChat/Chatfuel)</div>
+            <div class="saves-item-price red">$99–$500/mes</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Hosting + Dominio + SSL</div>
+            <div class="saves-item-price red">$20–$80/mes</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Pasarela de Pagos</div>
+            <div class="saves-item-price red">3–5% comisión por venta</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Diseñador Gráfico + Copywriter</div>
+            <div class="saves-item-price red">$700–$2,800 única vez</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Herramienta de Agenda (Calendly)</div>
+            <div class="saves-item-price red">$25–$60/mes</div>
+          </div>
+        </div>
+        <div class="saves-item pain-item">
+          <div class="saves-ico x"><i class="fas fa-times"></i></div>
+          <div>
+            <div class="saves-item-text">Semanas o meses de espera</div>
+            <div class="saves-item-price red">Tiempo = dinero perdido</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER DIVIDER -->
+      <div class="saves-divider">
+        <div class="saves-arrow">↑</div>
+        <div class="saves-vs">VS</div>
+        <div class="saves-arrow">↓</div>
+      </div>
+
+      <!-- GAIN — RIGHT -->
+      <div class="saves-gain reveal" style="transition-delay:.15s">
+        <div class="saves-col-title gain"><i class="fas fa-bolt"></i> Con SuperBot007 — Tienes...</div>
+
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Bot IA GPT-4 entrenado en tu negocio</div>
+            <div class="saves-item-price grn">✓ Incluido</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Landing Page Cinematic Profesional</div>
+            <div class="saves-item-price grn">✓ Incluida</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Hosting + SSL + Dominio</div>
+            <div class="saves-item-price grn">✓ $0 extra</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">PayPal + Stripe + Zelle + Venmo — 0% comisión</div>
+            <div class="saves-item-price grn">✓ Incluido</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Google Calendar — Citas Reales</div>
+            <div class="saves-item-price grn">✓ Incluido</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Tarjeta Digital + Editor Visual + QR</div>
+            <div class="saves-item-price grn">✓ Incluido</div>
+          </div>
+        </div>
+        <div class="saves-item gain-item">
+          <div class="saves-ico chk"><i class="fas fa-check"></i></div>
+          <div>
+            <div class="saves-item-text">Listo en 5 minutos — sin esperas</div>
+            <div class="saves-item-price grn">✓ Hoy mismo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL BAR -->
+    <div class="saves-total-bar reveal" style="transition-delay:.2s">
+      <div class="saves-total-left">
+        <div class="saves-total-label">Sin SuperBot007 pagarías:</div>
+        <div class="saves-total-old">$244–$680/mes + setup $3,700–$12,800</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:.3rem;">Con SuperBot007 pagas:</div>
+        <div class="saves-total-new">$19.99/mes</div>
+      </div>
+      <div>
+        <span class="saves-total-badge"><i class="fas fa-piggy-bank"></i> Ahorras hasta $660/mes</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="dline"></div>
+
+
+<div class="dline"></div>
+
+<!-- ════════════ PRICING — PSYCHOLOGICAL FUNNEL ════════════ -->
+<section id="pricing" class="sec">
+  <div class="wr">
+
+    <!-- EYEBROW -->
+    <div class="eyebrow reveal" style="color:var(--green);border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.07);">Precio de Introducción — Tiempo Limitado</div>
+    <h2 class="sh2 reveal">Aquí Está <span class="hl">TODO</span> Lo Que Obtienes Hoy…</h2>
+    <p class="ssub reveal">Antes de ver el precio, mira el valor real de lo que estás a punto de tener.<br>Cada herramienta listada abajo la pagarías <strong style="color:#fff;">por separado</strong> en cualquier otra plataforma.</p>
+
+    <!-- ═══ LAS 2 PREGUNTAS ═══ -->
+    <div class="two-q-wrap reveal">
+      <div class="two-q-box">
+        <p style="font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;">Antes de continuar — respóndete esto honestamente:</p>
+        <div class="two-q-item">
+          <div class="two-q-num">1</div>
+          <div class="two-q-text">¿Tienes un negocio que necesita más clientes, más citas o más ventas?</div>
+        </div>
+        <div class="two-q-item">
+          <div class="two-q-num">2</div>
+          <div class="two-q-text">¿Te gustaría automatizar todo eso por <strong style="color:var(--orange);">menos de $1 dólar al día</strong>?</div>
+        </div>
+        <div style="text-align:center;margin-top:1.2rem;">
+          <span class="two-q-yes"><i class="fas fa-check-circle"></i> Si respondiste SÍ a ambas — esto es para ti ↓</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RECAP FEATURES — ClickSites Style ═══ -->
+    <div class="recap-section reveal">
+      <div class="recap-title">🔥 Todo lo que recibes con SuperBot007</div>
+      <div class="recap-subtitle">12 herramientas profesionales en una sola plataforma — activadas en 5 minutos</div>
+      <div class="recap-grid">
+        <div class="recap-item"><div class="recap-icon">🤖</div><div><div class="recap-text">Bot IA GPT-4 activo 24/7</div><div class="recap-val">Valor: $99/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🌐</div><div><div class="recap-text">Landing Page Profesional</div><div class="recap-val">Valor: $49/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📅</div><div><div class="recap-text">Google Calendar — Citas Reales</div><div class="recap-val">Valor: $25/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">💳</div><div><div class="recap-text">PayPal + Stripe + Zelle + Venmo</div><div class="recap-val">Valor: $30/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📱</div><div><div class="recap-text">WhatsApp Integrado</div><div class="recap-val">Valor: $20/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🪪</div><div><div class="recap-text">Tarjeta Digital con QR</div><div class="recap-val">Valor: $15/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">✏️</div><div><div class="recap-text">Editor Visual en Tiempo Real</div><div class="recap-val">Valor: $29/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🌎</div><div><div class="recap-text">Motor Bilingüe ES / EN</div><div class="recap-val">Valor: $19/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">☁️</div><div><div class="recap-text">Hosting + SSL Incluido</div><div class="recap-val">Valor: $20/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">📊</div><div><div class="recap-text">Dashboard del Cliente</div><div class="recap-val">Valor: $15/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🏢</div><div><div class="recap-text">Modelo de Agencia Incluido</div><div class="recap-val">Valor: $97/mes</div></div></div>
+        <div class="recap-item"><div class="recap-icon">🛡️</div><div><div class="recap-text">Garantía 30 Días</div><div class="recap-val">Riesgo: $0</div></div></div>
+      </div>
+      <div class="recap-total">
+        <div class="recap-total-strike">Valor real si lo compras por separado: $418/mes</div>
+        <div class="recap-total-price">Tú pagas solo $19.99/mes</div>
+        <div class="recap-total-note">Precio de introducción — sube sin aviso previo</div>
+      </div>
+    </div>
+
+    <!-- ═══ TABLA COMPARATIVA ═══ -->
+    <div class="comp-section reveal" style="transition-delay:.1s">
+      <div class="comp-title">📊 SuperBot007 vs La Competencia</div>
+      <div class="comp-sub">¿Por qué pagar $150–$200/mes en herramientas separadas cuando puedes tenerlo todo en uno?</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Herramienta / Feature</th>
+            <th>ManyChat</th>
+            <th>Chatfuel</th>
+            <th>Tidio</th>
+            <th class="ours">⭐ SuperBot007</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🤖 Bot IA con GPT-4</td><td><span class="comp-no">✗ Básico</span></td><td><span class="comp-no">✗ Básico</span></td><td><span class="comp-no">✗ Básico</span></td><td class="ours-col"><span class="comp-yes">✓ GPT-4</span></td></tr>
+          <tr><td>🌐 Landing Page incluida</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluida</span></td></tr>
+          <tr><td>📅 Google Calendar / Citas</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluido</span></td></tr>
+          <tr><td>💳 PayPal + Stripe + Zelle</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">Stripe solo</span></td><td class="ours-col"><span class="comp-yes">✓ Los 5</span></td></tr>
+          <tr><td>🪪 Tarjeta Digital + QR</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluida</span></td></tr>
+          <tr><td>🌎 Bilingüe ES / EN</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Nativo</span></td></tr>
+          <tr><td>✏️ Editor Visual en vivo</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">Limitado</span></td><td class="ours-col"><span class="comp-yes">✓ Completo</span></td></tr>
+          <tr><td>🏢 Modelo de Agencia</td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td><span class="comp-no">✗ No</span></td><td class="ours-col"><span class="comp-yes">✓ Incluido</span></td></tr>
+          <tr>
+            <td style="font-weight:900;font-size:1.05rem;">💰 Precio / mes</td>
+            <td><span class="comp-price them">$15–$45</span></td>
+            <td><span class="comp-price them">$19–$60</span></td>
+            <td><span class="comp-price them">$29–$59</span></td>
+            <td class="ours-col"><span class="comp-price ours">$19.99</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="comp-savings reveal">
+        💸 Ahorro real vs herramientas separadas: <strong>$150–$398/mes</strong> — Con SuperBot007 lo tienes TODO por solo $19.99/mes
+      </div>
+    </div>
+
+    <!-- ═══ 3 PLANES ═══ -->
+    <h3 class="sh2 reveal" style="font-size:clamp(1.4rem,2.8vw,2rem);margin-bottom:.5rem;">Elige Tu Plan <span class="hl">— Empieza Hoy</span></h3>
+    <p class="ssub reveal" style="margin-bottom:2rem;">Sin costos ocultos. Sin contratos. Cancela cuando quieras.</p>
+
+    <div class="price-table">
+      <!-- STARTER -->
+      <div class="pbox reveal">
+        <div class="pname">Plan Starter</div>
+        <div class="pprice">$19.99</div>
+        <div class="pper">/ mes · 1 Bot · Perfecto para empezar</div>
+        <ul class="pfeats">
+          <li><i class="fas fa-check"></i> Bot IA GPT-4 activo 24/7</li>
+          <li><i class="fas fa-check"></i> Landing page profesional</li>
+          <li><i class="fas fa-check"></i> Tarjeta digital + QR</li>
+          <li><i class="fas fa-check"></i> Editor visual en vivo</li>
+          <li><i class="fas fa-check"></i> Bilingüe ES / EN</li>
+          <li><i class="fas fa-check"></i> Hosting + SSL incluido</li>
+          <li class="no"><i class="fas fa-times"></i> Google Calendar</li>
+          <li class="no"><i class="fas fa-times"></i> Pagos integrados</li>
+          <li class="no"><i class="fas fa-times"></i> Soporte prioritario</li>
+        </ul>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank" style="margin-bottom:0.5rem"><i class="fas fa-flask"></i> Prueba Gratis</a>
+        <a href="https://www.paypal.me/luismorgado1/19.99" class="pbtn main" target="_blank"><i class="fab fa-paypal"></i> Suscribirse — $19.99/mes</a>
+      </div>
+
+      <!-- PRO — HOT -->
+      <div class="pbox hot reveal" style="transition-delay:.1s">
+        <div class="pbadge">⭐ MÁS POPULAR</div>
+        <div class="pname">Plan Pro</div>
+        <div class="pprice">$49</div>
+        <div class="pper">/ mes · 1 Bot · Todo activado · Máximo poder</div>
+        <ul class="pfeats">
+          <li><i class="fas fa-check"></i> Todo lo del Starter +</li>
+          <li><i class="fas fa-check"></i> Google Calendar — citas reales</li>
+          <li><i class="fas fa-check"></i> PayPal + Stripe + Zelle + Venmo</li>
+          <li><i class="fas fa-check"></i> WhatsApp integrado</li>
+          <li><i class="fas fa-check"></i> Dashboard del cliente</li>
+          <li><i class="fas fa-check"></i> Notificaciones automáticas</li>
+          <li><i class="fas fa-check"></i> Soporte prioritario WhatsApp</li>
+          <li><i class="fas fa-check"></i> Actualizaciones incluidas</li>
+          <li><i class="fas fa-check"></i> Garantía 30 días</li>
+        </ul>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank" style="margin-bottom:0.5rem"><i class="fas fa-flask"></i> Prueba Gratis</a>
+        <a href="https://www.paypal.me/luismorgado1/49" class="pbtn main" target="_blank"><i class="fab fa-paypal"></i> Suscribirse — $49/mes</a>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="pbox agency reveal" style="transition-delay:.2s">
+        <div class="pbadge agency">🏢 AGENCIA</div>
+        <div class="pname">Plan Agencia</div>
+        <div class="pprice agency-price">$99</div>
+        <div class="pper">/ mes · Bots Ilimitados · Revende y Escala</div>
+        <ul class="pfeats">
+          <li><i class="fas fa-check"></i> Todo lo del Pro +</li>
+          <li><i class="fas fa-check"></i> Bots ilimitados para clientes</li>
+          <li><i class="fas fa-check"></i> Cobra $200–$500/mes por bot</li>
+          <li><i class="fas fa-check"></i> Panel de administración</li>
+          <li><i class="fas fa-check"></i> White-label disponible</li>
+          <li><i class="fas fa-check"></i> Onboarding 1 a 1</li>
+          <li><i class="fas fa-check"></i> Soporte VIP directo</li>
+          <li><i class="fas fa-check"></i> Ingresos pasivos ilimitados</li>
+          <li><i class="fas fa-check"></i> Garantía 30 días</li>
+        </ul>
+        <a href="https://apolo189.github.io/superbot007/form.html" class="pbtn sec" target="_blank" style="margin-bottom:0.5rem"><i class="fas fa-flask"></i> Prueba Gratis</a>
+        <a href="https://www.paypal.me/luismorgado1/99" class="pbtn agency-btn" target="_blank"><i class="fab fa-paypal"></i> Suscribirse — $99/mes</a>
+      </div>
+    </div>
+
+    <!-- URGENCY STRIP -->
+    <div class="reveal" style="text-align:center;margin-top:2.5rem;padding:1.2rem;background:rgba(255,69,0,.06);border:1px dashed rgba(255,69,0,.35);border-radius:16px;max-width:700px;margin-left:auto;margin-right:auto;">
+      <p style="font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:.3rem;">⚡ Precio de Introducción — Sube Sin Aviso Previo</p>
+      <p style="font-size:.88rem;color:var(--mu);">Starter: <strong style="color:#fff;">$19.99/mes</strong> → sube a $34.99 &nbsp;|&nbsp; Pro: <strong style="color:#fff;">$49/mes</strong> → sube a $79 &nbsp;|&nbsp; Agencia: <strong style="color:#fff;">$99/mes</strong> → sube a $197</p>
+    </div>
+
+    <!-- PAY METHODS + GUARANTEE -->
+    <div class="pay-row reveal" style="justify-content:center;margin-top:1.5rem;">
+      <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
+      <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía Total</div>
+      <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9 / 5</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ TESTIMONIALS ════════════ -->
+<section id="testi" class="sec">
+  <div class="wr">
+    <div class="eyebrow reveal">Testimonios</div>
+    <h2 class="sh2 reveal">Lo Que Dicen <span class="hl">Nuestros Clientes</span></h2>
+
+    <div class="tgrid">
+      <div class="tc reveal">
+        <div class="tstars">★★★★★</div>
+        <p class="ttxt">"En la primera semana conseguí 3 clientes nuevos gracias al bot. La landing page se ve increíblemente profesional. Mis ventas subieron un 40% el primer mes."</p>
+        <div class="tauth">
+          <div class="tav">M</div>
+          <div><div class="tname">María González</div><div class="trole">Salón de Belleza — Miami, FL</div></div>
+        </div>
+        <div class="tres">💰 +$540 en el primer mes</div>
+      </div>
+      <div class="tc reveal" style="transition-delay:.1s">
+        <div class="tstars">★★★★★</div>
+        <p class="ttxt">"Nunca pensé que sin saber código podría tener algo así. El bot responde mejor que yo y atiende a las 3am. Mis reservas de citas aumentaron el doble."</p>
+        <div class="tauth">
+          <div class="tav">C</div>
+          <div><div class="tname">Carlos Ramírez</div><div class="trole">Restaurante — Los Angeles, CA</div></div>
+        </div>
+        <div class="tres">📈 Reservas ×2 el primer mes</div>
+      </div>
+      <div class="tc reveal" style="transition-delay:.2s">
+        <div class="tstars">★★★★★</div>
+        <p class="ttxt">"Creé bots para 5 negocios en mi ciudad. Cobro $100/mes por cada uno — son $500 al mes de ingreso pasivo. Esto literalmente cambió mi vida."</p>
+        <div class="tauth">
+          <div class="tav">A</div>
+          <div><div class="tname">Andrés Morales</div><div class="trole">Agente SuperBot007 — Bogotá, CO</div></div>
+        </div>
+        <div class="tres">🏆 $500/mes ingresos pasivos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ MID CTA 4 ════════════ -->
+<div class="cta-mid">
+  <p class="cta-mid-eye">Solo $19.99/mes — Todo Incluido</p>
+  <h2 class="cta-mid-h reveal">Activa Tu Bot IA Hoy<br>Antes de Que Suba el Precio</h2>
+  <p class="cta-mid-sub reveal">Starter desde $19.99/mes — Pro $49/mes — Agencia $99/mes. Sin costos ocultos.</p>
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+  <div class="pay-row" style="margin-top:1rem;">
+    <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · Mastercard · PayPal</div>
+    <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 Días Garantía</div>
+  </div>
+  <div class="guar-row" style="margin-top:.8rem;">
+    <i class="fas fa-shield-alt"></i> Garantía de 30 Días — Devolución Completa Sin Preguntas
+  </div>
+</div>
+
+<div class="dline"></div>
+
+<!-- ════════════ GUARANTEE ════════════ -->
+<section id="guar" class="sec">
+  <div class="ginner">
+    <div class="gbadge reveal">🛡️</div>
+    <h2 class="gtitle reveal">Garantía de 30 Días</h2>
+    <p class="gtext reveal">
+      Si en los primeros 30 días no estás <strong>100% satisfecho</strong> con los resultados,
+      te devolvemos <strong>hasta el último centavo</strong> sin hacer preguntas.
+      Sin letras pequeñas. Sin burocracia. Sin demoras.
+      <br><br>
+      Prueba SuperBot007 completamente sin riesgo.
+      <strong>O te enamoras — o te devolvemos tu dinero.</strong>
+    </p>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ FAQ ════════════ -->
+<section id="faq" class="sec">
+  <div class="wr">
+    <div class="eyebrow reveal">Preguntas Frecuentes</div>
+    <h2 class="sh2 reveal">Respuestas a <span class="hl">Todas Tus Dudas</span></h2>
+    <p class="ssub reveal">Las respuestas a todas tus preguntas más importantes</p>
+
+    <div class="flist">
+      <div class="fi-faq reveal" onclick="tFaq(this)">
+        <div class="fq">🚀 ¿Necesito saber programación o diseño? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">Para nada. Solo llenas un formulario con el nombre de tu negocio, servicios, WhatsApp y fotos. La IA hace todo el resto automáticamente. Es tan fácil como publicar en Instagram.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.05s" onclick="tFaq(this)">
+        <div class="fq">⏱️ ¿Cuánto tiempo tarda en estar listo mi bot? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">Menos de 5 minutos. Llenar el formulario toma unos 5 minutos. La IA genera tu bot, landing page y tarjeta digital al instante. Recibes tus 3 links inmediatamente.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.10s" onclick="tFaq(this)">
+        <div class="fq">🏪 ¿Funciona para mi tipo de negocio? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">Sí. Funciona para restaurantes, salones de belleza, clínicas, tiendas, abogados, dentistas, gimnasios, spas, fotógrafos, coaches y cualquier negocio que tenga clientes. Si tienes clientes, SuperBot007 trabaja para ti.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.15s" onclick="tFaq(this)">
+        <div class="fq">💰 ¿Hay mensualidades ocultas o costos extra? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">No. El Plan Starter es $19.99/mes todo incluido, el Pro $49/mes y el Agencia $99/mes — sin cargos por setup, sin comisiones en ventas PayPal, sin costos de hosting ocultos. Lo que ves es lo que pagas. Sin sorpresas, sin letra pequeña.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.20s" onclick="tFaq(this)">
+        <div class="fq">🏢 ¿Puedo ganar dinero creando bots para otros negocios? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">Sí, ese es el modelo de agencia. Creas bots para negocios locales y cobras $50–$200/mes por cada cliente. Con solo 5 clientes ganas $250–$1,000/mes de ingreso recurrente sin hacer trabajo técnico. Tú solo llenas el formulario por ellos. Incluye licencia comercial completa.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.25s" onclick="tFaq(this)">
+        <div class="fq">🛡️ ¿Qué pasa si no estoy satisfecho? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">Tienes 30 días para probarlo. Si por cualquier razón no estás 100% satisfecho, te devolvemos todo tu dinero sin preguntas. Garantía total. Sin burocracia. Así de simple. Contáctanos por WhatsApp y procesamos la devolución el mismo día.</div></div>
+      </div>
+      <div class="fi-faq reveal" style="transition-delay:.30s" onclick="tFaq(this)">
+        <div class="fq">⭐ ¿Por qué SuperBot007 es mejor que la competencia? <span class="fa-arr"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="fa-ans"><div class="fa-inner">$19.99/mes incluye TODO — Bot IA GPT-4 + Landing Page + Pagos + Agenda + Tarjeta Digital + Editor Visual. Setup en 5 minutos sin código. Modelo de agencia para ganar con los bots de tus clientes. Y garantía de 30 días. La competencia cobra eso por separado.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dline"></div>
+
+<!-- ════════════ FINAL CTA ════════════ -->
+<section id="cfinal" class="sec">
+  <div class="cf-inner">
+    <div class="eyebrow reveal">No Pierdas Esta Oportunidad</div>
+    <h2 class="cf-h reveal">
+      Activa Tu Bot IA Ahora —<br>
+      <span class="hl">Antes de Que Suba el Precio</span>
+    </h2>
+    <p class="cf-sub reveal">
+      Únete a más de 500 emprendedores que ya automatizan sus negocios con SuperBot007. Starter desde $19.99/mes — el precio sube sin aviso previo.
+    </p>
+
+    <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+
+    <div class="pay-row" style="justify-content:center;margin-top:1rem;">
+      <div class="pay-chip g"><i class="fas fa-shield-alt"></i> 30 días garantía</div>
+      <div class="pay-chip"><i class="fas fa-lock"></i> Pago seguro</div>
+      <div class="pay-chip gl"><i class="fas fa-star"></i> 4.9/5</div>
+      <div class="pay-chip"><i class="fas fa-credit-card"></i> Visa · MC · PayPal</div>
+    </div>
+
+    <div class="unote reveal">
+      <i class="fas fa-fire" style="color:#ff0099;"></i>
+      Desde $19.99/mes — el precio sube sin aviso previo.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     CONVERSATIONAL FORM — AI GUIDE
+════════════════════════════════════ -->
+<section id="venus" class="sec" style="background:#0a0a0f;overflow:hidden;position:relative;">
+
+  <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(255,69,0,.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div class="wrap" style="position:relative;z-index:1;text-align:center;">
+
+    <!-- Badge -->
+    <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.3);border-radius:50px;padding:.4rem 1.2rem;font-size:.75rem;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.4rem;">
+      <span style="width:8px;height:8px;background:var(--orange);border-radius:50%;animation:hubpulse 1.5s ease-in-out infinite;display:inline-block;"></span>
+      <span class="venus-badge-en">Your AI Guide — Available 24/7</span>
+      <span class="venus-badge-es" style="display:none;">Tu Guía IA — Disponible 24/7</span>
+    </div>
+
+    <!-- Title -->
+    <h2 class="sec-title" style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem;">
+      <span class="venus-h2-en">Build Your AI Bot<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Right Now — Step by Step</span></span>
+      <span class="venus-h2-es" style="display:none;">Crea Tu Bot IA<br><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ahora Mismo — Paso a Paso</span></span>
+    </h2>
+
+    <!-- Subtitle -->
+    <p style="color:var(--mu);font-size:1rem;max-width:580px;margin:0 auto 2.5rem;">
+      <span class="venus-sub-en">Just click the button below, answer a few questions — our AI wizard guides you through all 7 steps. At the end your AI bot, landing page &amp; digital card are 100% ready.</span>
+      <span class="venus-sub-es" style="display:none;">Solo haz clic abajo y responde — nuestro asistente IA te guía por los 7 pasos. Al final tu bot IA, landing page y tarjeta digital están 100% listos.</span>
+    </p>
+
+    <!-- What the bot does — feature pills -->
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-bottom:3rem;">
+      <span class="vpill">🤖 <span class="en">Answers any question about your business</span><span class="es" style="display:none;">Responde preguntas sobre tu negocio</span></span>
+      <span class="vpill">🎙️ <span class="en">Voice + text — type or speak</span><span class="es" style="display:none;">Voz + texto — escribe o habla</span></span>
+      <span class="vpill">📋 <span class="en">Fills your bot form — all 7 steps</span><span class="es" style="display:none;">Llena el formulario — los 7 pasos</span></span>
+      <span class="vpill">🎨 <span class="en">Builds your landing page with AI</span><span class="es" style="display:none;">Construye tu landing page con IA</span></span>
+      <span class="vpill">💳 <span class="en">Sets up your digital card</span><span class="es" style="display:none;">Configura tu tarjeta digital</span></span>
+      <span class="vpill">💳 <span class="en">Connects PayPal &amp; WhatsApp</span><span class="es" style="display:none;">Conecta PayPal y WhatsApp</span></span>
+      <span class="vpill">🌐 <span class="en">English &amp; Spanish — you choose</span><span class="es" style="display:none;">Inglés y Español — tú decides</span></span>
+      <span class="vpill">✏️ <span class="en">Everything editable in the live editor</span><span class="es" style="display:none;">Todo editable en el editor en vivo</span></span>
+    </div>
+
+    <!-- CTA Button -->
+    <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+
+    <p style="color:var(--mu);font-size:.8rem;margin-top:1rem;">
+      <span class="en">Free to try · No credit card · Everything editable after setup</span>
+      <span class="es" style="display:none;">Gratis para probar · Sin tarjeta · Todo editable después</span>
+    </p>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flinks">
+    <a href="https://apolo189.github.io/superbot007/form.html">Crear Bot</a>
+    <a href="https://apolo189.github.io/superbot007/agent.html?id=bella-organics-demo" target="_blank">Demo Bot</a>
+    <a href="https://apolo189.github.io/superbot007/landing.html?id=bella-organics-demo" target="_blank">Demo Landing</a>
+    <a href="https://wa.me/19143644377" target="_blank">WhatsApp</a>
+    <a href="#pricing">Precios</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="fcopy">© 2025 SuperBot007 · Todos los derechos reservados · <a href="https://wa.me/19143644377" style="color:var(--orange);">Soporte</a></div>
+</footer>
+
+<!-- MOBILE STICKY -->
+<div id="sticky">
+  <div class="stxt">
+    <strong>⚡ Desde $19.99/mes</strong>
+    Precio sube pronto — no pierdas
+  </div>
+  <a href="https://apolo189.github.io/superbot007/form.html" class="btn-access"><i class="fas fa-flask"></i> Pruébalo Gratis — Sin Tarjeta</a>
+</div>
+
+<!-- ════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
+<script>
+
+/* ── SCROLL PROGRESS ── */
+(function(){
+  const b=document.getElementById('sp');
+  window.addEventListener('scroll',()=>{
+    const p=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+    b.style.width=Math.min(p,100)+'%';
+  },{passive:true});
+})();
+
+/* ── PARTICLES ── */
+(function(){
+  const c=document.getElementById('bgC');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let W=c.width=window.innerWidth,H=c.height=window.innerHeight;
+  window.addEventListener('resize',()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;});
+  const P=[],N=60;
+  for(let i=0;i<N;i++){
+    const ip=Math.random()>.72;
+    P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2+.5,
+      vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3-.06,
+      a:Math.random()*.4+.1,pulse:Math.random()*Math.PI*2,
+      cr:ip?168:242,cg:ip?85:66,cb:ip?247:7});
+  }
+  let mx=W/2,my=H/2;
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    P.forEach(p=>{
+      p.pulse+=.016;
+      const a=p.a*(.65+.35*Math.sin(p.pulse));
+      const dx=mx-p.x,dy=my-p.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<160){p.vx+=dx/dist*.009;p.vy+=dy/dist*.009;}
+      const spd=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
+      if(spd>.6){p.vx*=.6/spd;p.vy*=.6/spd;}
+      p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*5);
+      g.addColorStop(0,`rgba(${p.cr},${p.cg},${p.cb},${a})`);
+      g.addColorStop(1,`rgba(${p.cr},${p.cg},${p.cb},0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.cr},${p.cg},${p.cb},${Math.min(a*2,1)})`;ctx.fill();
+    });
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+      const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<95){ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);
+        ctx.strokeStyle=`rgba(255,69,0,${.08*(1-d/95)})`;ctx.lineWidth=.55;ctx.stroke();}
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── CURSOR ── */
+(function(){
+  if(window.matchMedia('(pointer:coarse)').matches)return;
+  const dot=document.getElementById('cdot'),ring=document.getElementById('cring');
+  if(!dot||!ring)return;
+  let tx=0,ty=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;dot.style.left=tx+'px';dot.style.top=ty+'px';});
+  (function a(){rx+=(tx-rx)*.12;ry+=(ty-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+})();
+
+/* ── SCROLL REVEAL ── */
+(function(){
+  if(!window.IntersectionObserver)return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:.08,rootMargin:'0px 0px -25px 0px'});
+  document.querySelectorAll('.reveal,.reveal-scale').forEach(el=>obs.observe(el));
+})();
+
+/* ── COUNTDOWN ── */
+(function(){
+  const el=document.getElementById('cntdn');
+  if(!el)return;
+  let t=23*3600+59*47;
+  setInterval(()=>{t--;if(t<0)t=23*3600+59*59;
+    const h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;
+    el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+})();
+
+/* ── LIVE VIEWERS ── */
+(function(){
+  const el=document.getElementById('vwrs');
+  if(!el)return;
+  let v=47;
+  setInterval(()=>{v=Math.max(31,Math.min(89,v+Math.floor(Math.random()*5)-2));el.textContent=v;},4500);
+})();
+
+/* ── SLOTS SCARCITY ── */
+(function(){
+  const el=document.getElementById('slots');
+  if(!el)return;
+  let s=23;
+  setInterval(()=>{if(s>3&&Math.random()<.15){s--;el.textContent=s;}},28000);
+})();
+
+/* ── SLOTS SYNC ── */
+(function(){
+  const el2 = document.getElementById('slots2');
+  const el1 = document.getElementById('slots');
+  if(el2 && el1){
+    const obs = new MutationObserver(()=>{ el2.textContent = el1.textContent; });
+    obs.observe(el1, {childList:true,characterData:true,subtree:true});
+    el2.textContent = el1.textContent;
+  }
+})();
+
+/* ── MOBILE STICKY ── */
+(function(){
+  const el=document.getElementById('sticky');
+  if(!el)return;
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>500)el.classList.add('show');else el.classList.remove('show');
+  },{passive:true});
+})();
+
+/* ── FAQ ── */
+function tFaq(item){
+  const a=item.querySelector('.fa-ans'),arr=item.querySelector('.fa-arr');
+  const open=a.classList.contains('open');
+  document.querySelectorAll('.fa-ans.open').forEach(f=>{f.classList.remove('open');f.parentElement.classList.remove('open');const ar=f.parentElement.querySelector('.fa-arr');if(ar)ar.style.transform='';});
+  if(!open){a.classList.add('open');item.classList.add('open');arr.style.transform='rotate(180deg)';}
+}
+
+
+/* ══════════════════════════════════════════════════════
+   HERO PHONE MOCKUP — animated WhatsApp-style demo
+══════════════════════════════════════════════════════ */
+(function(){
+  /* Conversation script */
+  const SCRIPT = [
+    {role:'out', text:'Hola! Quiero saber más sobre SuperBot007 🤔', delay:1200},
+    {role:'typing', delay:1800},
+    {role:'in',  text:'¡Hola! 💜 ¡Qué bueno que estás aquí! SuperBot007 es un bot IA con GPT-4 que trabaja 24/7 por tu negocio — responde clientes, vende y agenda citas solo. ¿Tienes un negocio o quieres crear uno?', delay:2600},
+    {role:'out', text:'¿Cuánto cuesta?', delay:3200},
+    {role:'typing', delay:2000},
+    {role:'in',  text:'Solo $19.99/mes 🎉 Incluye bot IA activo, landing page profesional, carrito PayPal, agenda de citas y tarjeta digital. ¡Todo en un plan! Con garantía de 30 días. ¿Quieres empezar hoy?', delay:2800},
+    {role:'out', text:'¿En cuánto tiempo está listo mi bot? ⏱️', delay:3000},
+    {role:'typing', delay:1900},
+    {role:'in',  text:'¡En solo 5 minutos! ⚡ Sin código, sin diseñador. Llenas un formulario y tu bot ya está activo. Yo misma te guío paso a paso. ¿Te ayudo a crearlo ahora?', delay:2700},
+    {role:'out', text:'Sí, quiero crear mi bot ahora! 🚀', delay:2800},
+    {role:'typing', delay:1600},
+    {role:'in',  text:'¡Perfecto! 🎯 Abriendo el formulario para ti... Son solo 7 pasos sencillos. ¡En 5 minutos tu bot IA estará listo para trabajar! 💜', delay:2400},
+    /* loop restart after long pause */
+    {role:'reset', delay:5000},
+  ];
+
+  const waBody = document.getElementById('waBody');
+  const waStatus = document.getElementById('waStatus');
+  const waTypingInput = document.getElementById('waTypingInput');
+  const phoneTimeEl = document.getElementById('phoneTime');
+
+  /* Update clock */
+  function updateClock(){
+    const n=new Date();
+    phoneTimeEl.textContent=n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+  }
+  updateClock(); setInterval(updateClock,30000);
+
+  function clearChat(){
+    waBody.innerHTML='<div class="wa-date-sep">Hoy</div>';
+  }
+
+  function addWaMsg(role, text){
+    if(role==='typing'){
+      const t=document.createElement('div');
+      t.className='wa-typing'; t.id='waTypingBubble';
+      t.innerHTML='<span></span><span></span><span></span>';
+      waBody.appendChild(t);
+      waBody.scrollTop=waBody.scrollHeight;
+      waStatus.textContent='escribiendo...';
+      return;
+    }
+    const old=document.getElementById('waTypingBubble');
+    if(old) old.remove();
+    waStatus.textContent='en línea';
+    const d=document.createElement('div');
+    d.className='wm '+(role==='out'?'out':'in');
+    const now=new Date();
+    const ts=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+    d.innerHTML=text+'<span class="wm-time">'+ts+'</span>';
+    waBody.appendChild(d);
+    waBody.scrollTop=waBody.scrollHeight;
+  }
+
+  /* Typing animation in input bar */
+  let typeTimeout=null;
+  function animateType(text, cb){
+    let i=0;
+    waTypingInput.textContent='';
+    function step(){
+      if(i<=text.length){
+        waTypingInput.textContent=text.slice(0,i);
+        i++;
+        typeTimeout=setTimeout(step, 38);
+      } else {
+        setTimeout(()=>{ waTypingInput.textContent=''; cb && cb(); }, 300);
+      }
+    }
+    step();
+  }
+
+  let scriptIndex=0;
+  let runTimeout=null;
+
+  function runScript(){
+    const step=SCRIPT[scriptIndex];
+    if(!step) return;
+    scriptIndex++;
+
+    if(step.role==='reset'){
+      runTimeout=setTimeout(()=>{
+        clearChat(); scriptIndex=0; runScript();
+      }, step.delay);
+      return;
+    }
+
+    if(step.role==='out'){
+      /* Animate typing in input bar then send */
+      animateType(step.text, ()=>{
+        addWaMsg('out', step.text);
+        runTimeout=setTimeout(runScript, step.delay);
+      });
+    } else if(step.role==='typing'){
+      addWaMsg('typing');
+      runTimeout=setTimeout(runScript, step.delay);
+    } else if(step.role==='in'){
+      addWaMsg('in', step.text);
+      runTimeout=setTimeout(runScript, step.delay);
+    }
+  }
+
+  /* Start after page load with a small delay */
+  setTimeout(runScript, 900);
+
+  /* Pause animation when tab is hidden to save resources */
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){ clearTimeout(typeTimeout); clearTimeout(runTimeout); }
+    else { runScript(); }
+  });
+})();
+
+/* ── SCROLL TO FORM — all CTA buttons now go directly to form.html ── */
+function scrollToAmanda(){ window.location.href='https://apolo189.github.io/superbot007/form.html'; } /* kept for compatibility */
+function scrollToAgent(){ window.location.href='https://apolo189.github.io/superbot007/form.html'; }
+function selectAgent(){ window.location.href='https://apolo189.github.io/superbot007/form.html'; }
+function submitAnswer(){ window.location.href='https://apolo189.github.io/superbot007/form.html'; }
+function toggleVoiceInput(){}
+function openWizardFromVenus(){ window.location.href='https://apolo189.github.io/superbot007/form.html'; }
+</script>
+
+<script>
+/* ── PAGE LANGUAGE TOGGLE ── */
+let pageLang = localStorage.getItem('sb7lang') || 'en';
+
+function applyPageLang(lang){
+  pageLang = lang;
+  localStorage.setItem('sb7lang', lang);
+  const btn = document.getElementById('langToggleBtn');
+  if(btn) btn.textContent = lang === 'es' ? '🇺🇸 EN' : '🇪🇸 ES';
+  document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
+  document.querySelectorAll('.venus-badge-en,.venus-h2-en,.venus-sub-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+  document.querySelectorAll('.venus-badge-es,.venus-h2-es,.venus-sub-es').forEach(el => el.style.display = lang === 'es' ? '' : 'none');
+}
+
+function togglePageLang(){ applyPageLang(pageLang === 'en' ? 'es' : 'en'); }
+
+document.addEventListener('DOMContentLoaded', function(){ applyPageLang(pageLang); });
+</script>
+</body>
+</html>

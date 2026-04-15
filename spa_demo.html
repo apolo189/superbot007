@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperBot007 — Demo LIVE: Clínica Spa de Lujo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#ff4500;
+  --purple:#7c3aed;
+  --pink:#ec4899;
+  --green:#00e676;
+  --dark:#05050a;
+  --card:#0d0d1a;
+  --border:rgba(124,58,237,.25);
+  --grad:linear-gradient(135deg,#7c3aed,#ec4899);
+  --grad-o:linear-gradient(135deg,#ff4500,#ff0099);
+  --gold:#d4af37;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--dark);color:#fff;font-family:'Inter',system-ui,sans-serif;}
+
+/* ─── TOP BAR ─── */
+.top-bar{
+  height:38px;
+  background:var(--grad-o);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;letter-spacing:.06em;
+  text-shadow:0 1px 3px rgba(0,0,0,.4);
+  gap:.8rem;
+  flex-shrink:0;
+}
+.top-pill{background:rgba(0,0,0,.25);padding:.15rem .6rem;border-radius:20px;font-size:.65rem;}
+
+/* ─── MAIN LAYOUT ─── */
+.app{display:flex;flex-direction:column;height:100vh;}
+.panels{display:grid;grid-template-columns:380px 1fr 420px;flex:1;overflow:hidden;}
+
+/* ─── LEFT: WIZARD ─── */
+.wizard{
+  background:#080812;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.wiz-head{
+  padding:1rem 1.2rem .8rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.wiz-brand{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;}
+.wiz-logo{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--grad-o);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.wiz-title{font-size:.85rem;font-weight:900;letter-spacing:-.01em;}
+.wiz-title span{background:var(--grad-o);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.prog-wrap{margin-bottom:.6rem;}
+.prog-label{display:flex;justify-content:space-between;font-size:.6rem;color:rgba(255,255,255,.5);margin-bottom:.3rem;}
+.prog-bar{height:5px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--grad-o);border-radius:5px;transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%;}
+
+.step-dots{display:flex;gap:.35rem;justify-content:center;}
+.sdot{
+  width:22px;height:6px;border-radius:3px;
+  background:rgba(255,255,255,.1);
+  transition:all .4s;
+}
+.sdot.done{background:var(--green);}
+.sdot.active{background:var(--orange);box-shadow:0 0 8px rgba(255,69,0,.6);}
+
+/* chat */
+.chat-box{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;
+}
+.chat-head{
+  padding:.7rem 1.2rem;
+  background:rgba(124,58,237,.08);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.6rem;
+  flex-shrink:0;
+}
+.chat-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+  box-shadow:0 0 16px rgba(124,58,237,.5);
+}
+.chat-name{font-size:.82rem;font-weight:800;}
+.chat-status{font-size:.6rem;color:var(--green);display:flex;align-items:center;gap:.3rem;}
+.cdot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:gp 1.5s infinite;}
+@keyframes gp{0%,100%{opacity:1}50%{opacity:.3}}
+
+.chat-msgs{
+  flex:1;padding:.8rem 1rem;overflow-y:auto;
+  display:flex;flex-direction:column;gap:.6rem;
+}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+
+.msg{
+  max-width:88%;padding:.65rem .85rem;border-radius:12px;
+  font-size:.78rem;line-height:1.55;
+  animation:msgIn .35s ease;
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.bot{
+  background:rgba(124,58,237,.14);
+  border:1px solid rgba(124,58,237,.22);
+  align-self:flex-start;border-bottom-left-radius:3px;
+}
+.msg.usr{
+  background:rgba(255,69,0,.14);
+  border:1px solid rgba(255,69,0,.22);
+  align-self:flex-end;border-bottom-right-radius:3px;
+}
+.typing-indicator{
+  display:flex;gap:4px;padding:.55rem .85rem;
+  background:rgba(124,58,237,.1);border-radius:12px;
+  width:fit-content;border-bottom-left-radius:3px;
+}
+.typing-indicator span{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(124,58,237,.7);
+  animation:tdot 1.2s infinite;
+}
+.typing-indicator span:nth-child(2){animation-delay:.2s;}
+.typing-indicator span:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* wave */
+.wave-bar{
+  display:flex;align-items:center;justify-content:center;gap:3px;
+  height:30px;flex-shrink:0;
+  background:rgba(255,69,0,.05);
+  border-top:1px solid rgba(255,69,0,.1);
+  padding:0 1rem;
+}
+.wb{
+  width:3px;border-radius:2px;
+  background:linear-gradient(180deg,#ff4500,#ff0099);
+  animation:wv 1s ease-in-out infinite;
+}
+.wb:nth-child(1){height:5px;animation-delay:0s}
+.wb:nth-child(2){height:12px;animation-delay:.08s}
+.wb:nth-child(3){height:20px;animation-delay:.16s}
+.wb:nth-child(4){height:14px;animation-delay:.12s}
+.wb:nth-child(5){height:24px;animation-delay:.04s}
+.wb:nth-child(6){height:18px;animation-delay:.2s}
+.wb:nth-child(7){height:24px;animation-delay:.08s}
+.wb:nth-child(8){height:14px;animation-delay:.28s}
+.wb:nth-child(9){height:5px;animation-delay:.16s}
+@keyframes wv{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.wave-bar.silent .wb{animation:none;transform:scaleY(.3);opacity:.25;}
+
+/* ─── START OVERLAY ─── */
+#startOverlay{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,#05050a 0%,#0d0820 50%,#05050a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1.5rem;cursor:pointer;
+}
+#startOverlay .ov-logo{
+  width:80px;height:80px;border-radius:22px;
+  background:linear-gradient(135deg,#ff4500,#ff0099);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.8rem;
+  box-shadow:0 0 60px rgba(255,69,0,.5);
+  animation:ovPulse 2s ease-in-out infinite;
+}
+@keyframes ovPulse{0%,100%{transform:scale(1);box-shadow:0 0 40px rgba(255,69,0,.4)}50%{transform:scale(1.06);box-shadow:0 0 80px rgba(255,69,0,.7)}}
+#startOverlay h1{
+  font-size:2rem;font-weight:900;text-align:center;line-height:1.2;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.7));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+#startOverlay p{
+  font-size:.95rem;color:rgba(255,255,255,.55);text-align:center;max-width:380px;
+  line-height:1.6;
+}
+#startOverlay .ov-btn{
+  padding:1rem 2.5rem;
+  background:linear-gradient(135deg,#ff4500,#ff0099);
+  color:#fff;border:none;border-radius:50px;
+  font-size:1.1rem;font-weight:900;cursor:pointer;
+  box-shadow:0 8px 40px rgba(255,69,0,.5);
+  transition:all .3s;
+  font-family:'Inter',system-ui,sans-serif;
+  animation:ovBtn 1.5s ease-in-out infinite;
+}
+@keyframes ovBtn{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+#startOverlay .ov-btn:hover{transform:scale(1.05)!important;box-shadow:0 12px 50px rgba(255,69,0,.7);}
+#startOverlay .ov-hint{font-size:.72rem;color:rgba(255,255,255,.3);margin-top:-.5rem;}
+
+/* ─── MIDDLE: FORM ─── */
+.form-panel{
+  background:var(--dark);
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  padding:1.5rem 1.8rem;
+}
+.form-panel::-webkit-scrollbar{width:4px;}
+.form-panel::-webkit-scrollbar-thumb{background:var(--border);}
+
+.step-content{display:none;}
+.step-content.active{display:block;}
+
+.step-eyebrow{
+  font-size:.6rem;font-weight:800;letter-spacing:.12em;
+  color:var(--orange);text-transform:uppercase;margin-bottom:.25rem;
+}
+.step-title{font-size:1.3rem;font-weight:900;margin-bottom:.2rem;line-height:1.2;}
+.step-sub{font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:1.2rem;}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.form-grid.one{grid-template-columns:1fr;}
+.full{grid-column:1/-1;}
+
+.field{display:flex;flex-direction:column;gap:.3rem;}
+.field label{font-size:.62rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.07em;}
+.field input,.field textarea,.field select{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:.65rem .9rem;
+  color:#fff;font-size:.82rem;
+  transition:all .25s;outline:none;
+  font-family:'Inter',system-ui,sans-serif;
+  resize:none;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:rgba(124,58,237,.6);
+  background:rgba(124,58,237,.05);
+  box-shadow:0 0 0 3px rgba(124,58,237,.12);
+}
+.field textarea{min-height:80px;line-height:1.5;}
+
+.typing-cursor::after{content:'|';animation:bc .7s infinite;}
+@keyframes bc{0%,100%{opacity:1}50%{opacity:0}}
+
+/* color swatches */
+.swatch-row{display:flex;gap:.5rem;align-items:center;}
+.sw{
+  width:32px;height:32px;border-radius:7px;
+  border:2px solid transparent;cursor:pointer;
+  transition:all .2s;
+}
+.sw.active{border-color:#fff;transform:scale(1.15);}
+
+/* services list */
+.svc-list{display:flex;flex-direction:column;gap:.6rem;}
+.svc-card{
+  display:grid;grid-template-columns:1fr auto;gap:.3rem;
+  background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);
+  border-radius:10px;padding:.75rem 1rem;
+  animation:msgIn .35s ease;
+}
+.svc-name{font-size:.85rem;font-weight:700;}
+.svc-price{font-size:.9rem;font-weight:900;color:var(--green);text-align:right;}
+.svc-desc{font-size:.72rem;color:rgba(255,255,255,.6);grid-column:1/-1;line-height:1.4;}
+
+/* pay badges */
+.pay-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;}
+.pbadge{
+  padding:.4rem 1rem;border-radius:20px;font-size:.75rem;font-weight:800;
+  animation:msgIn .35s ease;
+}
+.pbadge.paypal{background:rgba(0,48,135,.4);border:1px solid rgba(0,112,255,.4);}
+.pbadge.stripe{background:rgba(99,91,255,.25);border:1px solid rgba(99,91,255,.4);}
+.pbadge.zelle{background:rgba(110,0,255,.25);border:1px solid rgba(110,0,255,.4);}
+.pbadge.venmo{background:rgba(58,178,255,.2);border:1px solid rgba(58,178,255,.4);}
+.pbadge.cash{background:rgba(0,212,109,.2);border:1px solid rgba(0,212,109,.4);}
+
+/* photo grid */
+.photo-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;
+}
+.photo-slot{
+  aspect-ratio:4/3;border-radius:8px;overflow:hidden;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.photo-slot img{
+  width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .6s ease;
+}
+.photo-slot img.loaded{opacity:1;}
+.ph-plus{
+  position:absolute;font-size:1.2rem;color:rgba(255,255,255,.2);
+  pointer-events:none;
+  transition:opacity .3s;
+}
+.photo-slot img.loaded + .ph-plus,
+.photo-slot:has(img.loaded) .ph-plus{opacity:0;}
+
+/* success */
+.success-screen{
+  display:none;
+  flex-direction:column;align-items:center;text-align:center;gap:1rem;
+  padding:2rem 1rem;
+}
+.success-screen.show{display:flex;}
+.success-icon{font-size:3rem;}
+.success-h{font-size:1.5rem;font-weight:900;}
+.success-h span{background:var(--grad-o);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.slinks{display:flex;flex-direction:column;gap:.5rem;width:100%;}
+.slink{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.75rem 1rem;border-radius:10px;
+  font-size:.8rem;font-weight:700;text-decoration:none;color:#fff;
+  transition:all .2s;
+}
+.slink:hover{transform:translateX(4px);}
+.slink.bot{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.35);}
+.slink.land{background:rgba(255,69,0,.15);border:1px solid rgba(255,69,0,.3);}
+.slink.card{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);}
+.timer-box{
+  padding:.8rem 1.5rem;
+  background:rgba(0,230,118,.07);
+  border:1px solid rgba(0,230,118,.2);
+  border-radius:10px;width:100%;
+}
+.timer-val{font-size:1.6rem;font-weight:900;color:var(--green);}
+
+.activate-btn{
+  width:100%;padding:1rem;
+  background:var(--grad-o);
+  color:#fff;border:none;border-radius:12px;
+  font-size:1rem;font-weight:900;cursor:pointer;
+  box-shadow:0 8px 30px rgba(255,69,0,.35);
+  transition:all .3s;margin-top:.8rem;
+  font-family:'Inter',system-ui,sans-serif;
+}
+.activate-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,69,0,.5);}
+
+/* ─── RIGHT: LIVE PREVIEW ─── */
+.preview-panel{
+  background:#050508;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.preview-head{
+  padding:.7rem 1rem;
+  background:rgba(0,0,0,.4);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.6rem;
+  flex-shrink:0;
+}
+.preview-dots span{
+  display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;
+}
+.preview-dots span:nth-child(1){background:#ff5f57;}
+.preview-dots span:nth-child(2){background:#ffbd2e;}
+.preview-dots span:nth-child(3){background:#28c840;}
+.preview-url{
+  flex:1;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:6px;
+  padding:.25rem .6rem;font-size:.65rem;color:rgba(255,255,255,.5);
+  display:flex;align-items:center;gap:.4rem;
+}
+.preview-url::before{content:'🔒';font-size:.6rem;}
+.preview-live{
+  font-size:.6rem;font-weight:800;color:var(--green);
+  background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);
+  padding:.15rem .5rem;border-radius:10px;
+  display:flex;align-items:center;gap:.3rem;
+}
+.plive-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:gp 1s infinite;}
+
+.preview-content{
+  flex:1;overflow:hidden;position:relative;
+}
+
+/* the fake landing page being built */
+.fake-landing{
+  height:100%;overflow-y:auto;
+  font-size:.65rem;
+}
+.fake-landing::-webkit-scrollbar{width:2px;}
+.fake-landing::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);}
+
+/* Landing sections — initially hidden */
+.lp-hero{
+  min-height:220px;position:relative;overflow:hidden;
+  background:#0a0014;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:1.2rem;
+  transition:all .8s ease;
+}
+.lp-hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(5,0,20,.85) 100%);
+  z-index:1;
+}
+.lp-hero-img{
+  position:absolute;inset:0;
+  object-fit:cover;width:100%;height:100%;
+  opacity:0;transition:opacity 1s ease;
+}
+.lp-hero-img.show{opacity:.6;}
+.lp-hero-content{position:relative;z-index:2;}
+.lp-logo-bar{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;
+}
+.lp-logo-img{
+  width:32px;height:32px;border-radius:8px;
+  object-fit:cover;
+  opacity:0;transition:opacity .6s;
+}
+.lp-logo-img.show{opacity:1;}
+.lp-logo-name{
+  font-size:.75rem;font-weight:900;
+  color:#fff;
+  opacity:0;transition:opacity .6s;
+}
+.lp-logo-name.show{opacity:1;}
+.lp-h1{
+  font-size:1.1rem;font-weight:900;line-height:1.2;
+  margin-bottom:.4rem;
+  opacity:0;transform:translateY(8px);
+  transition:all .7s ease;
+}
+.lp-h1.show{opacity:1;transform:translateY(0);}
+.lp-h1 em{
+  background:linear-gradient(135deg,var(--gold),#fff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  font-style:normal;
+}
+.lp-tagline{
+  font-size:.68rem;color:rgba(255,255,255,.7);margin-bottom:.8rem;
+  opacity:0;transition:opacity .6s .2s;
+}
+.lp-tagline.show{opacity:1;}
+.lp-cta-btn{
+  display:inline-block;padding:.5rem 1.2rem;
+  background:var(--grad-o);color:#fff;border-radius:20px;
+  font-size:.7rem;font-weight:800;border:none;cursor:pointer;
+  opacity:0;transform:translateY(4px);transition:all .5s .3s;
+}
+.lp-cta-btn.show{opacity:1;transform:translateY(0);}
+
+/* Services section */
+.lp-services{
+  padding:1rem;background:#080815;
+  opacity:0;transform:translateY(10px);transition:all .7s ease;
+}
+.lp-services.show{opacity:1;transform:translateY(0);}
+.lp-section-label{
+  font-size:.6rem;font-weight:800;letter-spacing:.1em;
+  color:rgba(212,175,55,.8);text-transform:uppercase;margin-bottom:.3rem;
+}
+.lp-section-h{
+  font-size:.85rem;font-weight:900;margin-bottom:.1rem;
+}
+.lp-section-sub{font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:.8rem;}
+.lp-svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.lp-svc-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:.6rem .7rem;
+  opacity:0;transform:translateY(6px);transition:all .4s ease;
+}
+.lp-svc-card.show{opacity:1;transform:translateY(0);}
+.lp-svc-n{font-size:.75rem;font-weight:800;margin-bottom:.15rem;}
+.lp-svc-p{font-size:.72rem;font-weight:900;color:var(--green);margin-bottom:.15rem;}
+.lp-svc-d{font-size:.6rem;color:rgba(255,255,255,.5);line-height:1.4;}
+
+/* Gallery */
+.lp-gallery{
+  padding:1rem;background:#050510;
+  opacity:0;transition:opacity .7s;
+}
+.lp-gallery.show{opacity:1;}
+.lp-gal-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:3px;
+  border-radius:8px;overflow:hidden;
+}
+.lp-gal-slot{
+  aspect-ratio:1;overflow:hidden;
+  background:rgba(255,255,255,.04);
+}
+.lp-gal-slot img{
+  width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .6s;
+}
+.lp-gal-slot img.show{opacity:1;}
+
+/* Bot widget preview */
+.lp-bot-preview{
+  padding:.8rem 1rem;background:#080815;
+  border-top:1px solid var(--border);
+  opacity:0;transition:opacity .7s;
+  flex-shrink:0;
+}
+.lp-bot-preview.show{opacity:1;}
+.bot-widget{
+  background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);
+  border-radius:12px;padding:.7rem;display:flex;align-items:center;gap:.6rem;
+}
+.bot-av{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--grad);display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;flex-shrink:0;
+}
+.bot-msg-preview{flex:1;}
+.bot-msg-text{font-size:.7rem;color:rgba(255,255,255,.8);line-height:1.4;}
+.bot-name-badge{font-size:.55rem;color:rgba(124,58,237,.8);margin-bottom:.15rem;font-weight:700;}
+.bot-pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  animation:gp .8s infinite;flex-shrink:0;
+}
+
+/* Digital card preview */
+.lp-card-preview{
+  padding:.8rem 1rem;background:#060610;
+  border-top:1px solid var(--border);
+  opacity:0;transition:opacity .7s;
+  flex-shrink:0;
+}
+.lp-card-preview.show{opacity:1;}
+.dig-card{
+  background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));
+  border:1px solid rgba(124,58,237,.3);border-radius:12px;
+  padding:.8rem 1rem;
+  display:flex;align-items:center;gap:.7rem;
+}
+.dig-card-av{
+  width:36px;height:36px;border-radius:50%;overflow:hidden;
+  border:2px solid rgba(124,58,237,.5);flex-shrink:0;
+}
+.dig-card-av img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s;}
+.dig-card-av img.show{opacity:1;}
+.dig-card-info{flex:1;}
+.dig-card-n{font-size:.78rem;font-weight:900;opacity:0;transition:opacity .5s;}
+.dig-card-n.show{opacity:1;}
+.dig-card-t{font-size:.62rem;color:rgba(255,255,255,.6);opacity:0;transition:opacity .5s .1s;}
+.dig-card-t.show{opacity:1;}
+.dig-card-links{display:flex;gap:.4rem;margin-top:.3rem;}
+.dig-link{
+  width:22px;height:22px;border-radius:5px;
+  background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;font-size:.65rem;
+}
+
+/* QR code placeholder */
+.qr-box{
+  width:42px;height:42px;border:1px solid rgba(255,255,255,.15);
+  border-radius:5px;display:grid;
+  grid-template-columns:repeat(5,1fr);gap:1px;padding:3px;
+  flex-shrink:0;opacity:0;transition:opacity .6s;
+}
+.qr-box.show{opacity:1;}
+.qr-cell{background:rgba(255,255,255,.15);border-radius:1px;}
+.qr-cell.b{background:rgba(255,255,255,.8);}
+</style>
+</head>
+<body>
+
+<!-- ═══ START OVERLAY ═══ -->
+<div id="startOverlay" onclick="startDemo()">
+  <div class="ov-logo">🤖</div>
+  <h1>SuperBot007<br>Demo en Vivo</h1>
+  <p>Ve cómo Amanda IA construye un bot completo, landing page y tarjeta digital para una Clínica Spa de lujo — en tiempo real.</p>
+  <button class="ov-btn">▶ Ver Demo con Voz</button>
+  <div class="ov-hint">🔊 Activa el volumen de tu dispositivo</div>
+</div>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <span>⚡ SUPERBOT007 — DEMO EN VIVO</span>
+    <span class="top-pill">🤖 Bot IA + Landing + Tarjeta Digital</span>
+    <span class="top-pill">⏱️ <span id="liveTimer">0:00</span></span>
+  </div>
+
+  <!-- THREE PANELS -->
+  <div class="panels">
+
+    <!-- ════ PANEL 1: WIZARD / AMANDA ════ -->
+    <div class="wizard">
+      <div class="wiz-head">
+        <div class="wiz-brand">
+          <div class="wiz-logo">🤖</div>
+          <div class="wiz-title"><span>SuperBot007</span></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-label">
+            <span id="stepLabel">Paso 1 de 7</span>
+            <span id="pctLabel">14%</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:14%;"></div></div>
+        </div>
+        <div class="step-dots">
+          <div class="sdot active" id="dot1"></div>
+          <div class="sdot" id="dot2"></div>
+          <div class="sdot" id="dot3"></div>
+          <div class="sdot" id="dot4"></div>
+          <div class="sdot" id="dot5"></div>
+          <div class="sdot" id="dot6"></div>
+          <div class="sdot" id="dot7"></div>
+        </div>
+      </div>
+
+      <div class="chat-box">
+        <div class="chat-head">
+          <div class="chat-avatar">🧙‍♀️</div>
+          <div>
+            <div class="chat-name">Amanda IA</div>
+            <div class="chat-status"><span class="cdot"></span> Construyendo tu bot...</div>
+          </div>
+        </div>
+        <div class="chat-msgs" id="chatMsgs"></div>
+        <div class="wave-bar" id="waveBar">
+          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PANEL 2: FORM ════ -->
+    <div class="form-panel" id="formPanel">
+
+      <!-- STEP 1 -->
+      <div class="step-content active" id="step1">
+        <div class="step-eyebrow">Paso 1 de 7</div>
+        <div class="step-title">Tu Negocio 🏢</div>
+        <div class="step-sub">Cuéntame sobre tu clínica spa</div>
+        <div class="form-grid">
+          <div class="field"><label>Nombre del Negocio</label><input id="f_name" type="text"></div>
+          <div class="field"><label>Tipo de Negocio</label><input id="f_type" type="text"></div>
+          <div class="field"><label>Ciudad</label><input id="f_city" type="text"></div>
+          <div class="field"><label>Teléfono</label><input id="f_phone" type="text"></div>
+          <div class="field full"><label>Descripción del Negocio</label><textarea id="f_desc"></textarea></div>
+          <div class="field"><label>Título Landing Page</label><input id="f_title" type="text"></div>
+          <div class="field"><label>Mensaje de Bienvenida Bot</label><input id="f_welcome" type="text"></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-content" id="step2">
+        <div class="step-eyebrow">Paso 2 de 7</div>
+        <div class="step-title">Diseño & Colores 🎨</div>
+        <div class="step-sub">La identidad visual de tu marca</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Color Primario</label>
+            <div class="swatch-row">
+              <div class="sw active" style="background:#8b5cf6;" id="c1" onclick="pickColor('#8b5cf6','f_color1','c1')"></div>
+              <div class="sw" style="background:#ec4899;" id="c2" onclick="pickColor('#ec4899','f_color1','c2')"></div>
+              <div class="sw" style="background:#d4af37;" id="c3" onclick="pickColor('#d4af37','f_color1','c3')"></div>
+              <div class="sw" style="background:#10b981;" id="c4" onclick="pickColor('#10b981','f_color1','c4')"></div>
+              <input type="text" id="f_color1" value="#8b5cf6" style="max-width:90px;">
+            </div>
+          </div>
+          <div class="field">
+            <label>Color Secundario</label>
+            <div class="swatch-row">
+              <div class="sw active" style="background:#d4af37;"></div>
+              <input type="text" id="f_color2" value="#d4af37" style="max-width:90px;">
+            </div>
+          </div>
+          <div class="field"><label>URL Logo</label><input id="f_logo" type="text"></div>
+          <div class="field"><label>Imagen Hero Principal</label><input id="f_hero" type="text"></div>
+          <div class="field"><label>Título Sección Servicios</label><input id="f_stitle" type="text"></div>
+          <div class="field"><label>Subtítulo Servicios</label><input id="f_ssub" type="text"></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-content" id="step3">
+        <div class="step-eyebrow">Paso 3 de 7</div>
+        <div class="step-title">Tus Servicios 💎</div>
+        <div class="step-sub">Generados con IA basados en tu negocio</div>
+        <div class="svc-list" id="svcList"></div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-content" id="step4">
+        <div class="step-eyebrow">Paso 4 de 7</div>
+        <div class="step-title">Métodos de Pago 💳</div>
+        <div class="step-sub">Cobros directos a tu cuenta — sin intermediarios</div>
+        <div class="pay-badges" id="payBadges"></div>
+        <div class="form-grid">
+          <div class="field"><label>PayPal Email</label><input id="f_paypal" type="text"></div>
+          <div class="field"><label>Zelle / Venmo</label><input id="f_zelle" type="text"></div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-content" id="step5">
+        <div class="step-eyebrow">Paso 5 de 7</div>
+        <div class="step-title">Galería de Fotos 📸</div>
+        <div class="step-sub">Las imágenes que verán tus clientes</div>
+        <div class="photo-grid" id="photoGrid">
+          <div class="photo-slot"><img id="ph0" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph1" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph2" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph3" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph4" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph5" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph6" src=""><div class="ph-plus">+</div></div>
+          <div class="photo-slot"><img id="ph7" src=""><div class="ph-plus">+</div></div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step-content" id="step6">
+        <div class="step-eyebrow">Paso 6 de 7</div>
+        <div class="step-title">Contacto & Agenda 📅</div>
+        <div class="step-sub">Google Calendar para citas reales</div>
+        <div class="form-grid">
+          <div class="field"><label>WhatsApp</label><input id="f_wa" type="text"></div>
+          <div class="field"><label>Email</label><input id="f_email" type="text"></div>
+          <div class="field"><label>Dirección</label><input id="f_addr" type="text"></div>
+          <div class="field"><label>Google Calendar ID</label><input id="f_cal" type="text"></div>
+          <div class="field"><label>Duración Cita (min)</label><input id="f_dur" type="text"></div>
+          <div class="field"><label>Anticipación (horas)</label><input id="f_adv" type="text"></div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step-content" id="step7">
+        <div class="step-eyebrow">Paso 7 de 7 — ÚLTIMO PASO</div>
+        <div class="step-title">¡Casi Listo! 🚀</div>
+        <div class="step-sub">Activa tu ecosistema digital completo</div>
+        <div class="form-grid one">
+          <div class="field">
+            <label>Idioma del Bot</label>
+            <select id="f_lang"><option value="es">🇪🇸 Español</option><option value="en">🇺🇸 English</option><option value="both">🌎 Bilingüe ES/EN</option></select>
+          </div>
+          <div class="field">
+            <label>Instrucción Especial IA (Opcional)</label>
+            <textarea id="f_inst" placeholder="Ej: Siempre mencionar la promoción del mes..."></textarea>
+          </div>
+        </div>
+        <button class="activate-btn" id="activateBtn" onclick="activateBot()">
+          🤖 Activar Bot 007
+        </button>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✅</div>
+        <div class="success-h"><span>¡Bot Activado!</span></div>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.6);max-width:320px;line-height:1.5;">
+          Serenity Spa &amp; Clinic tiene su ecosistema digital completo funcionando 24/7
+        </p>
+        <div class="slinks">
+          <a href="https://superbot007.com/agent.html?id=bella-organics-demo" target="_blank" class="slink bot">🤖 Chatbot IA — Respondiendo clientes ahora</a>
+          <a href="https://superbot007.com/agent.html?id=bella-organics-demo" target="_blank" class="slink land">🌐 Landing Page — Lista para compartir</a>
+          <a href="https://superbot007.com/agent.html?id=bella-organics-demo" target="_blank" class="slink card">📱 Tarjeta Digital + QR — Lista para compartir</a>
+        </div>
+        <div class="timer-box">
+          <div class="timer-val">⏱️ <span id="timerDisplay">0:00</span></div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.5);margin-top:.2rem;">De cero a bot activo</div>
+        </div>
+      </div>
+
+    </div><!-- /form-panel -->
+
+    <!-- ════ PANEL 3: LIVE PREVIEW ════ -->
+    <div class="preview-panel">
+      <div class="preview-head">
+        <div class="preview-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="preview-url">serenityspa.superbot007.app</div>
+        <div class="preview-live"><span class="plive-dot"></span> LIVE</div>
+      </div>
+
+      <div class="preview-content">
+        <div class="fake-landing" id="fakeLanding">
+
+          <!-- Hero -->
+          <div class="lp-hero" id="lpHero">
+            <div class="lp-hero-bg"></div>
+            <img class="lp-hero-img" id="lpHeroImg" src="uploads/spa_hero.jpg" alt="Serenity Spa">
+            <div class="lp-hero-content">
+              <div class="lp-logo-bar">
+                <img class="lp-logo-img" id="lpLogoImg" src="uploads/spa_logo.jpg" alt="Logo">
+                <div class="lp-logo-name" id="lpLogoName">Serenity Spa &amp; Clinic</div>
+              </div>
+              <div class="lp-h1" id="lpH1">Bienvenida a <em>Serenity</em> — Tu Santuario de Bienestar</div>
+              <div class="lp-tagline" id="lpTagline">Tratamientos premium • Miami, FL • Reserva en WhatsApp</div>
+              <button class="lp-cta-btn" id="lpCTA">Reservar Cita Ahora →</button>
+            </div>
+          </div>
+
+          <!-- Services -->
+          <div class="lp-services" id="lpServices">
+            <div class="lp-section-label">Nuestros Tratamientos</div>
+            <div class="lp-section-h">Servicios Premium</div>
+            <div class="lp-section-sub">Tecnología de vanguardia para tu bienestar</div>
+            <div class="lp-svc-grid" id="lpSvcGrid"></div>
+          </div>
+
+          <!-- Gallery -->
+          <div class="lp-gallery" id="lpGallery">
+            <div class="lp-section-label" style="padding:0 0 .4rem;">Galería</div>
+            <div class="lp-gal-grid" id="lpGalGrid">
+              <div class="lp-gal-slot"><img id="gal0" src="uploads/spa_hero.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal1" src="uploads/spa_facial.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal2" src="uploads/spa_massage.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal3" src="uploads/spa_products.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal4" src="uploads/spa_reception.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal5" src="uploads/spa_glow.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal6" src="uploads/spa_aroma.jpg"></div>
+              <div class="lp-gal-slot"><img id="gal7" src="uploads/spa_pool.jpg"></div>
+            </div>
+          </div>
+
+          <!-- Bot widget -->
+          <div class="lp-bot-preview" id="lpBot">
+            <div class="lp-section-label" style="margin-bottom:.4rem;">Asistente IA</div>
+            <div class="bot-widget">
+              <div class="bot-av">🧙‍♀️</div>
+              <div class="bot-msg-preview">
+                <div class="bot-name-badge">Amanda IA — Serenity Spa</div>
+                <div class="bot-msg-text" id="botPreviewMsg">Hola! Bienvenida a Serenity Spa &amp; Clinic. Soy tu asistente. ¿En qué puedo ayudarte? 😊</div>
+              </div>
+              <div class="bot-pulse"></div>
+            </div>
+          </div>
+
+          <!-- Digital card -->
+          <div class="lp-card-preview" id="lpCard">
+            <div class="lp-section-label" style="margin-bottom:.4rem;">Tarjeta Digital</div>
+            <div class="dig-card">
+              <div class="dig-card-av"><img id="cardAv" src="uploads/spa_logo.jpg"></div>
+              <div class="dig-card-info">
+                <div class="dig-card-n" id="cardName">Serenity Spa &amp; Clinic</div>
+                <div class="dig-card-t" id="cardTitle">Clínica Estética & Spa de Lujo • Miami, FL</div>
+                <div class="dig-card-links">
+                  <div class="dig-link">💬</div>
+                  <div class="dig-link">📸</div>
+                  <div class="dig-link">📘</div>
+                  <div class="dig-link">🔗</div>
+                </div>
+              </div>
+              <div class="qr-box" id="qrBox">
+                <div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell"></div><div class="qr-cell b"></div>
+                <div class="qr-cell b"></div><div class="qr-cell"></div><div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell"></div>
+                <div class="qr-cell"></div><div class="qr-cell b"></div><div class="qr-cell"></div><div class="qr-cell b"></div><div class="qr-cell b"></div>
+                <div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell b"></div>
+                <div class="qr-cell"></div><div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell b"></div><div class="qr-cell b"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /fake-landing -->
+      </div>
+    </div><!-- /preview-panel -->
+
+  </div><!-- /panels -->
+</div><!-- /app -->
+
+<script>
+// ══════════════════════════════════════
+//  DEMO DATA — Serenity Spa & Clinic
+// ══════════════════════════════════════
+const PHOTOS = [
+  'uploads/spa_hero.jpg',
+  'uploads/spa_facial.jpg',
+  'uploads/spa_massage.jpg',
+  'uploads/spa_products.jpg',
+  'uploads/spa_reception.jpg',
+  'uploads/spa_glow.jpg',
+  'uploads/spa_aroma.jpg',
+  'uploads/spa_pool.jpg',
+];
+
+const SERVICES = [
+  {name:'Facial Hidratación Profunda', price:'$150', desc:'Tratamiento de 60 min con ácido hialurónico y vitamina C.'},
+  {name:'Masaje Terapéutico Premium', price:'$120', desc:'Cuerpo completo con aceites esenciales de lujo.'},
+  {name:'Botox & Rellenos', price:'$350+', desc:'Procedimientos estéticos con resultados naturales garantizados.'},
+  {name:'Aromaterapia Signature', price:'$95', desc:'Sesión exclusiva 90 min con aceites orgánicos importados.'},
+  {name:'Microblading Cejas', price:'$280', desc:'Diseño pelo a pelo con pigmentos certificados.'},
+  {name:'Peeling Químico', price:'$200', desc:'Renueva la piel, elimina manchas y rejuvenece.'},
+];
+
+const EL_KEY = atob('ZGY0YTliZTg4NTUwNDM0MDI0MmIyZDFlZjk4ZjA1NDM3MDJiNmM1ZmRlOTc4MzJkYmRjNjcwZDYyNTE1MzBiYw==');
+const VOICE_ID = 'pFZP5JQG7iQjIQuC4Bku';
+
+// ── State ──
+let startTime = Date.now();
+let timerInt;
+
+// ── Live timer ──
+function startTimer() {
+  timerInt = setInterval(() => {
+    const s = Math.floor((Date.now()-startTime)/1000);
+    const m = Math.floor(s/60);
+    document.getElementById('liveTimer').textContent = `${m}:${(s%60).toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+// ── ElevenLabs TTS — Serial queue: ONE voice at a time, never overlaps ──
+let audioQueue = [];
+let audioPlaying = false;
+let currentAudio = null;
+
+function stopAllAudio() {
+  if(currentAudio) { currentAudio.pause(); currentAudio = null; }
+  audioQueue = [];
+  audioPlaying = false;
+  document.getElementById('waveBar').classList.add('silent');
+}
+
+async function playNext() {
+  if(audioPlaying || audioQueue.length === 0) return;
+  audioPlaying = true;
+  const text = audioQueue.shift();
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`, {
+      method: 'POST',
+      headers: {'xi-api-key': EL_KEY, 'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        text,
+        model_id: 'eleven_turbo_v2_5',
+        voice_settings: {stability: 0.32, similarity_boost: 0.88, style: 0.5, use_speaker_boost: true}
+      })
+    });
+    if (r.ok) {
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      currentAudio = new Audio(url);
+      document.getElementById('waveBar').classList.remove('silent');
+      await new Promise(resolve => {
+        currentAudio.onended = resolve;
+        currentAudio.onerror = resolve;
+        currentAudio.play().catch(resolve);
+      });
+      document.getElementById('waveBar').classList.add('silent');
+      currentAudio = null;
+    }
+  } catch(e) {}
+  audioPlaying = false;
+  playNext(); // play next in queue
+}
+
+function speak(text) {
+  // Add to queue — plays when previous finishes
+  audioQueue.push(text);
+  playNext();
+}
+
+function addMsg(text, who='bot', sayIt=true) {
+  const msgs = document.getElementById('chatMsgs');
+  const t = msgs.querySelector('.typing-indicator');
+  if(t) t.remove();
+  const d = document.createElement('div');
+  d.className = `msg ${who}`;
+  d.textContent = text;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  if(who==='bot' && sayIt) speak(text);
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMsgs');
+  const prev = msgs.querySelector('.typing-indicator');
+  if(prev) prev.remove();
+  const d = document.createElement('div');
+  d.className = 'typing-indicator';
+  d.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function typeField(id, text, speed=22) {
+  return new Promise(resolve => {
+    const el = document.getElementById(id);
+    if(!el){resolve();return;}
+    el.value = '';
+    el.classList.add('typing-cursor');
+    let i=0;
+    const iv = setInterval(()=>{
+      if(i>=text.length){clearInterval(iv);el.classList.remove('typing-cursor');resolve();return;}
+      el.value += text[i++];
+    }, speed);
+  });
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+function setStep(n) {
+  const pct = Math.round((n/7)*100);
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('pctLabel').textContent = pct+'%';
+  document.getElementById('stepLabel').textContent = `Paso ${n} de 7`;
+  for(let i=1;i<=7;i++){
+    const d = document.getElementById('dot'+i);
+    if(!d) continue;
+    d.classList.remove('active','done');
+    if(i<n) d.classList.add('done');
+    else if(i===n) d.classList.add('active');
+  }
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step-content').forEach(s=>s.classList.remove('active'));
+  const s = document.getElementById('step'+n);
+  if(s){ s.classList.add('active'); document.getElementById('formPanel').scrollTop=0; }
+  setStep(n);
+}
+
+function pickColor(hex, field, id) {
+  document.getElementById(field).value = hex;
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Preview updates ──
+function showPreview() {
+  document.getElementById('lpHeroImg').classList.add('show');
+  document.getElementById('lpLogoImg').classList.add('show');
+  document.getElementById('lpLogoName').classList.add('show');
+  document.getElementById('lpH1').classList.add('show');
+  document.getElementById('lpTagline').classList.add('show');
+  document.getElementById('lpCTA').classList.add('show');
+}
+
+function showServices() {
+  const grid = document.getElementById('lpSvcGrid');
+  grid.innerHTML = '';
+  document.getElementById('lpServices').classList.add('show');
+  SERVICES.forEach((s,i) => {
+    setTimeout(()=>{
+      const c = document.createElement('div');
+      c.className = 'lp-svc-card';
+      c.innerHTML = `<div class="lp-svc-n">${s.name}</div><div class="lp-svc-p">${s.price}</div><div class="lp-svc-d">${s.desc}</div>`;
+      grid.appendChild(c);
+      setTimeout(()=>c.classList.add('show'),50);
+    }, i*300);
+  });
+}
+
+function showGallery() {
+  document.getElementById('lpGallery').classList.add('show');
+  for(let i=0;i<8;i++){
+    setTimeout(()=>{
+      const img = document.getElementById('gal'+i);
+      if(img){ img.classList.add('show'); }
+    }, i*180);
+  }
+}
+
+function showBot() {
+  document.getElementById('lpBot').classList.add('show');
+}
+
+function showCard() {
+  document.getElementById('lpCard').classList.add('show');
+  document.getElementById('cardAv').classList.add('show');
+  document.getElementById('cardName').classList.add('show');
+  document.getElementById('cardTitle').classList.add('show');
+  document.getElementById('qrBox').classList.add('show');
+}
+
+function activateBot() {
+  document.querySelectorAll('.step-content').forEach(s=>s.classList.remove('active'));
+  document.getElementById('successScreen').classList.add('show');
+  document.getElementById('progFill').style.width='100%';
+  document.getElementById('pctLabel').textContent='100%';
+  for(let i=1;i<=7;i++){
+    const d=document.getElementById('dot'+i);
+    if(d){d.classList.remove('active');d.classList.add('done');}
+  }
+  const elapsed = Math.round((Date.now()-startTime)/1000);
+  const m=Math.floor(elapsed/60), s=elapsed%60;
+  document.getElementById('timerDisplay').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  clearInterval(timerInt);
+  addMsg('🎉 ¡FELICIDADES! Serenity Spa & Clinic ya tiene su bot IA activo, landing page en vivo y tarjeta digital publicada. ¡Todo en menos de 5 minutos! Esto es SuperBot007. 🚀');
+}
+
+// ══════════════════════════════════════
+//  MAIN DEMO SEQUENCE
+// ══════════════════════════════════════
+async function runDemo() {
+  console.log('🚀 runDemo started');
+  startTimer();
+  document.getElementById('waveBar').classList.add('silent');
+
+  await sleep(800);
+  showTyping();
+  await sleep(1400);
+  await addMsg('¡Hola! Soy Amanda, tu asistente IA de SuperBot007. 🤖 Voy a construir tu bot, landing page y tarjeta digital en tiempo real. ¡Comenzamos!');
+
+  // ─ STEP 1 ─
+  await sleep(700);
+  showTyping();
+  await sleep(1200);
+  await addMsg('Paso 1 — Cuéntame de tu negocio. ¿Cómo se llama tu spa? ¿En qué ciudad estás?');
+  await sleep(400);
+  await typeField('f_name','Serenity Spa & Clinic',30);
+  await sleep(200);
+  addMsg('Serenity Spa & Clinic ✨','usr',false);
+  await sleep(300);
+  await typeField('f_type','Clínica Estética & Spa de Lujo',25);
+  await typeField('f_city','Miami, FL',35);
+  await typeField('f_phone','+1 (305) 555-0199',30);
+  await sleep(300);
+  await typeField('f_desc','Somos una clínica spa de lujo en el corazón de Miami. Ofrecemos tratamientos faciales avanzados, masajes terapéuticos, aromaterapia premium y procedimientos estéticos de última generación.',18);
+  await typeField('f_title','Bienvenida a Serenity — Tu Santuario de Bienestar',22);
+  await typeField('f_welcome','Hola! Bienvenida a Serenity Spa & Clinic. Soy tu asistente. ¿En qué puedo ayudarte? 😊',18);
+
+  // ─ STEP 2 ─
+  await sleep(600);
+  showStep(2);
+  showTyping();
+  await sleep(1300);
+  await addMsg('Paso 2 — Diseño y colores 🎨 Elegí un gradiente lila y dorado para tu spa de lujo. Estoy subiendo tu logo y la imagen principal.');
+  await sleep(400);
+  await typeField('f_logo','uploads/spa_logo.jpg',15);
+  await sleep(300);
+  document.getElementById('lpLogoImg').classList.add('show');
+  document.getElementById('lpLogoName').classList.add('show');
+  await typeField('f_hero','uploads/spa_hero.jpg',15);
+  await sleep(400);
+  document.getElementById('lpHeroImg').classList.add('show');
+  document.getElementById('lpH1').classList.add('show');
+  document.getElementById('lpTagline').classList.add('show');
+  document.getElementById('lpCTA').classList.add('show');
+  await typeField('f_stitle','Nuestros Tratamientos Premium',25);
+  await typeField('f_ssub','Tecnología de vanguardia para tu bienestar',25);
+  addMsg('¡Diseño aplicado! Mira la preview a la derecha →','usr',false);
+  await sleep(400);
+
+  // ─ STEP 3 ─
+  await sleep(500);
+  showStep(3);
+  showTyping();
+  await sleep(1400);
+  await addMsg('Paso 3 — Servicios 💎 La IA generó tus 6 servicios basándose en tu descripción. ¡Aparecen en la landing en tiempo real!');
+  const list = document.getElementById('svcList');
+  list.innerHTML = '';
+  for(const s of SERVICES){
+    await sleep(320);
+    const card = document.createElement('div');
+    card.className='svc-card';
+    card.innerHTML=`<div class="svc-name">${s.name}</div><div class="svc-price">${s.price}</div><div class="svc-desc full">${s.desc}</div>`;
+    list.appendChild(card);
+  }
+  showServices();
+  addMsg('Servicios listos ✓','usr',false);
+  await sleep(400);
+
+  // ─ STEP 4 ─
+  await sleep(500);
+  showStep(4);
+  showTyping();
+  await sleep(1300);
+  await addMsg('Paso 4 — Pagos 💳 Activando los 5 métodos de cobro. El dinero va directo a tu cuenta, sin intermediarios.');
+  await typeField('f_paypal','serenity@spa.com',30);
+  await typeField('f_zelle','+1 (305) 555-0199',30);
+  const pays = ['paypal','stripe','zelle','venmo','cash'];
+  const labels = {paypal:'💙 PayPal ✓',stripe:'💜 Stripe ✓',zelle:'🟣 Zelle ✓',venmo:'🔵 Venmo ✓',cash:'💚 CashApp ✓'};
+  const pb = document.getElementById('payBadges');
+  for(const p of pays){
+    await sleep(280);
+    const b=document.createElement('div');
+    b.className=`pbadge ${p}`;
+    b.textContent=labels[p];
+    pb.appendChild(b);
+  }
+  addMsg('Pagos configurados ✓','usr',false);
+  await sleep(400);
+
+  // ─ STEP 5 ─
+  await sleep(500);
+  showStep(5);
+  showTyping();
+  await sleep(1400);
+  await addMsg('Paso 5 — Fotos 📸 Cargando las imágenes de tu spa. Tus clientes necesitan ver la experiencia de lujo que ofreces.');
+  for(let i=0;i<8;i++){
+    await sleep(260);
+    const img=document.getElementById('ph'+i);
+    if(img){
+      img.src=PHOTOS[i];
+      img.onload=()=>img.classList.add('loaded');
+    }
+  }
+  showGallery();
+  addMsg('Galería lista ✓','usr',false);
+  await sleep(400);
+
+  // ─ STEP 6 ─
+  await sleep(500);
+  showStep(6);
+  showTyping();
+  await sleep(1300);
+  await addMsg('Paso 6 — Contacto & Agenda 📅 Conectando Google Calendar. Tus clientes podrán agendar citas reales con notificación a tu WhatsApp.');
+  await typeField('f_wa','+1 (305) 555-0199',28);
+  await typeField('f_email','hello@serenityspa.com',28);
+  await typeField('f_addr','1200 Brickell Ave, Miami FL',28);
+  await typeField('f_cal','serenity@spa.com',28);
+  document.getElementById('f_dur').value='60';
+  document.getElementById('f_adv').value='24';
+  showBot();
+  addMsg('Google Calendar conectado ✓','usr',false);
+  await sleep(400);
+
+  // ─ STEP 7 ─
+  await sleep(500);
+  showStep(7);
+  showTyping();
+  await sleep(1400);
+  await addMsg('Último paso 🚀 El bot es bilingüe — detecta automáticamente español o inglés. Activa con un clic y todo estará listo.');
+  document.getElementById('f_lang').value='both';
+  await sleep(300);
+  await typeField('f_inst','Siempre mencionar la promoción del mes: 20% off en faciales. Ofrecer cita de evaluación gratis.',18);
+  await sleep(600);
+  showCard();
+  const btn = document.getElementById('activateBtn');
+  btn.style.boxShadow = '0 0 40px rgba(255,69,0,.8)';
+  btn.textContent = '⚡ ¡Presiona Activar Bot 007!';
+  await sleep(1200);
+  btn.style.boxShadow = '';
+  btn.textContent = '🤖 Activar Bot 007';
+  await sleep(1000);
+  activateBot();
+}
+
+// ── Start (triggered by user click = unlocks audio) ──
+function startDemo() {
+  const ov = document.getElementById('startOverlay');
+  ov.style.transition = 'opacity .5s';
+  ov.style.opacity = '0';
+  setTimeout(() => { ov.style.display='none'; }, 500);
+  stopAllAudio();
+  startTime = Date.now();
+  runDemo();
+}
+
+window.addEventListener('load', () => {
+  // Just show the overlay — demo starts on click
+  startTime = Date.now();
+});
+</script>
+</body>
+</html>

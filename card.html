@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '504272922277035');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=504272922277035<head>ev=PageView<head>noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <script>
 (function(){
   if("serviceWorker" in navigator){
@@ -21,6 +38,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Digital Card – Super Bot 007</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -462,7 +480,7 @@ html,body{
 
       <!-- POWERED -->
       <div class="powered">
-        Powered by <a href="https://apolo189.github.io/superbot007/" target="_blank">⚡ Super Bot 007</a>
+        Powered by <a href="https://superbot007.com/" target="_blank">⚡ Super Bot 007</a>
       </div>
     </div>
   </div>
@@ -561,6 +579,13 @@ const params=new URLSearchParams(location.search);
 const botId=params.get('id')||'';
 let botData=null;
 const base=location.origin+location.pathname.replace('card.html','');
+// Translation helper — reads botData.botLanguage
+function ct(es,en,pt){
+  const lang=(botData?.botLanguage||'es').toLowerCase();
+  if(lang==='en') return en;
+  if(lang==='pt'||lang==='pt-br') return pt||es;
+  return es;
+}
 
 function toast(msg,type='success'){
   const t=document.getElementById('cardToast');
@@ -802,10 +827,10 @@ function buildActionRow(d){
   row.innerHTML='';
   const btns=[];
   if(d.phone)
-    btns.push({cls:'call',icon:'fas fa-phone',lbl:'Llamar',href:`tel:${d.phone}`});
+    btns.push({cls:'call',icon:'fas fa-phone',lbl:ct('Llamar','Call','Ligar'),href:`tel:${d.phone}`});
   if(d.whatsapp||d.phone){
     const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
-    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría más información.`);
+    const msg=encodeURIComponent(ct(`Hola ${d.businessName||''}! Me gustaría más información.`,`Hi ${d.businessName||''}! I'd like more information.`,`Olá ${d.businessName||''}! Gostaria de mais informações.`));
     btns.push({cls:'wa',icon:'fab fa-whatsapp',lbl:'WhatsApp',href:`https://wa.me/${wa}?text=${msg}`});
   }
   if(d.email)
@@ -845,7 +870,7 @@ function buildServices(d){
 
   // Typewriter on divider title
   const divEl=document.getElementById('svcDivider');
-  queueTW(divEl,'⚡ Servicios',26,300);
+  queueTW(divEl,ct('⚡ Servicios','⚡ Services','⚡ Serviços'),26,300);
 
   const emo={entren:'💪',spinning:'🚴',yoga:'🧘',funcional:'🏋️',zumba:'💃',
              pilates:'🤸',boxeo:'🥊',natacion:'🏊',corte:'✂️',color:'🎨',
@@ -918,10 +943,10 @@ function buildCTA(d){
   sec.innerHTML='';
   if(d.whatsapp||d.phone){
     const wa=(d.whatsapp||d.phone||'').replace(/\D/g,'');
-    const msg=encodeURIComponent(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`);
-    sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> Agendar por WhatsApp</a>`;
+    const msg=encodeURIComponent(ct(`Hola ${d.businessName||''}! Me gustaría agendar una cita.`,`Hi ${d.businessName||''}! I'd like to schedule an appointment.`,`Olá ${d.businessName||''}! Gostaria de agendar uma consulta.`));
+    sec.innerHTML+=`<a class="cta-btn wa-cta" href="https://wa.me/${wa}?text=${msg}" target="_blank"><i class="fab fa-whatsapp"></i> ${ct('Agendar por WhatsApp','Book via WhatsApp','Agendar pelo WhatsApp')}</a>`;
   }
-  sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> Chatear con el Bot</a>`;
+  sec.innerHTML+=`<a class="cta-btn primary" href="${base}agent.html?id=${botId}" target="_blank"><i class="fas fa-robot"></i> ${ct('Chatear con el Bot','Chat with the Bot','Conversar com o Bot')}</a>`;
   // "Ver sitio" → real website if configured, otherwise landing page
   if(d.website){
     const ws = d.website.trim();
@@ -931,7 +956,7 @@ function buildCTA(d){
       sec.innerHTML+=`<a class="cta-btn secondary" href="${wsUrl}" target="_blank"><i class="fas fa-globe"></i> Visitar sitio web</a>`;
     }
   }
-  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-file-alt"></i> Ver Landing Page</a>`;
+  sec.innerHTML+=`<a class="cta-btn secondary" href="${base}landing.html?id=${botId}" target="_blank"><i class="fas fa-file-alt"></i> ${ct('Ver Landing Page','View Landing Page','Ver Página de Apresentação')}</a>`;
 }
 
 // ═══════════════════════════════════════
@@ -983,7 +1008,7 @@ function downloadVCF(){
   a.href=url; a.download=`${name.replace(/\s+/g,'-')}.vcf`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  toast('📇 Contacto guardado!');
+  toast(ct('📇 Contacto guardado!','📇 Contact saved!','📇 Contato salvo!'));
 }
 
 // ═══════════════════════════════════════
@@ -1003,6 +1028,9 @@ if(window._fbReady){
   }
 }
 </script>
+
+<!-- ── UPGRADE POPUP SYSTEM ── -->
+<script src="upgrade-popup.js"></script>
 
 </body>
 </html>

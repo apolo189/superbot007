@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '504272922277035');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=504272922277035<head>ev=PageView<head>noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <script>
 (function(){
   if("serviceWorker" in navigator){
@@ -20,108 +37,173 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Bot 007 – Crear Tu Bot</title>
+<title>Super Bot 007 – Agencia de IA para Negocios Hispanos</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <style>
 :root {
-  --primary: #6C63FF;
-  --secondary: #FF6584;
-  --accent: #43E97B;
-  --dark: #000000;
-  --card: #080808;
-  --border: rgba(108,99,255,0.3);
-  --text: #E8E8FF;
-  --muted: #9090B0;
-  --gradient: linear-gradient(135deg, #6C63FF, #FF6584);
-  --success: #43E97B;
+  --primary: #ff4500;
+  --secondary: #ff0099;
+  --accent: #00ff88;
+  --dark: #0a0a0f;
+  --card: #12121a;
+  --border: rgba(255,69,0,0.25);
+  --text: #ffffff;
+  --muted: #b0b0cc;
+  --gradient: linear-gradient(135deg, #ff4500, #ff0099);
+  --gradient2: linear-gradient(135deg, #ff0099, #8b5cf6);
+  --success: #00ff88;
   --danger: #FF4757;
+  --purple: #8b5cf6;
+  --gold: #ffcc00;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { font-family: 'Inter', sans-serif; background: #000000 !important; color: var(--text); min-height: 100vh; overflow-x: hidden; }
+html, body { font-family: 'Inter', sans-serif; background: #0a0a0f !important; color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+/* ── Animated background glow ── */
+body::before {
+  content:'';
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255,69,0,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(255,0,153,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.04) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
 #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(0,0,0,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,15,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,69,0,0.2); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
 .logo { font-size: 1.4rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .logo span { font-size: 0.9rem; font-weight: 400; -webkit-text-fill-color: var(--muted); }
-.progress-wrap { position: fixed; top: 65px; left: 0; right: 0; z-index: 99; background: rgba(0,0,0,0.97); padding: 0.8rem 2rem; border-bottom: 1px solid var(--border); }
-.progress-bar-bg { background: rgba(108,99,255,0.2); border-radius: 50px; height: 6px; overflow: hidden; }
-.progress-bar-fill { height: 100%; border-radius: 50px; background: var(--gradient); transition: width 0.5s ease; }
+
+/* ── Progress bar — animated gradient ── */
+.progress-wrap { position: fixed; top: 65px; left: 0; right: 0; z-index: 99; background: rgba(10,10,15,0.97); padding: 0.8rem 2rem; border-bottom: 1px solid rgba(255,69,0,0.15); }
+.progress-bar-bg { background: rgba(255,69,0,0.12); border-radius: 50px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 50px; background: var(--gradient); transition: width 0.6s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 12px rgba(255,69,0,0.5); }
 .steps-indicator { display: flex; justify-content: space-between; margin-top: 0.6rem; }
 .step-dot { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-size: 0.65rem; color: var(--muted); transition: color 0.3s; }
-.step-dot .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; transition: all 0.3s; background: var(--card); }
-.step-dot.active .dot { border-color: var(--primary); background: var(--primary); color: white; }
-.step-dot.done .dot { border-color: var(--success); background: var(--success); color: white; content: '✓'; }
+.step-dot .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,69,0,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; transition: all 0.3s; background: var(--card); }
+.step-dot.active .dot { border-color: var(--primary); background: var(--gradient); color: white; box-shadow: 0 0 14px rgba(255,69,0,0.5); }
+.step-dot.done .dot { border-color: var(--success); background: var(--success); color: #000; box-shadow: 0 0 10px rgba(0,255,136,0.4); }
 .step-dot.active, .step-dot.done { color: var(--text); }
-.main { padding: 145px 1rem 2rem; max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
-.step-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; display: none; animation: fadeIn 0.4s ease; }
+
+/* ── Main layout ── */
+.main { padding: 150px 1rem 2rem; max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* ── Step card — gradient border + glow ── */
+.step-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 2rem;
+  display: none;
+  animation: fadeInUp 0.45s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  /* gradient border trick */
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 0 0 1px rgba(255,69,0,0.2), 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,69,0,0.05);
+}
+.step-card::before {
+  content:'';
+  position:absolute;inset:-1px;
+  border-radius:25px;
+  background: linear-gradient(135deg, rgba(255,69,0,0.4), rgba(255,0,153,0.3), rgba(139,92,246,0.2));
+  z-index:-1;
+  opacity:0.6;
+}
 .step-card.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.step-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Step title ── */
+.step-title { font-size: 1.65rem; font-weight: 800; margin-bottom: 0.3rem; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .step-subtitle { color: var(--muted); margin-bottom: 1.8rem; font-size: 0.9rem; }
+
+/* ── Form elements ── */
 .form-group { margin-bottom: 1.4rem; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media(max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+label { display: block; font-size: 0.8rem; font-weight: 700; color: #ffffff; margin-bottom: 0.45rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .required { color: var(--secondary); margin-left: 2px; }
-input[type="text"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"], input[type="number"], input[type="time"], select, textarea { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: all 0.3s; outline: none; }
-input:focus, select:focus, textarea:focus { border-color: var(--primary); background: rgba(108,99,255,0.08); box-shadow: 0 0 0 3px rgba(108,99,255,0.12); }
-input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.6; }
+
+/* ── Inputs — glow on focus ── */
+input[type="text"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"], input[type="number"], input[type="time"], select, textarea {
+  width: 100%; padding: 0.8rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,69,0,0.2);
+  border-radius: 12px; color: var(--text);
+  font-family: 'Inter', sans-serif; font-size: 0.9rem;
+  transition: all 0.3s; outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  background: rgba(255,69,0,0.06);
+  box-shadow: 0 0 0 3px rgba(255,69,0,0.12), 0 0 20px rgba(255,69,0,0.08);
+}
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.5; }
 textarea { resize: vertical; min-height: 80px; }
-select option { background: #000000; }
+select option { background: #0a0a0f; }
 input[type="color"] { width: 60px; height: 44px; padding: 3px; border-radius: 8px; cursor: pointer; background: rgba(255,255,255,0.05); }
 .color-row { display: flex; gap: 1rem; flex-wrap: wrap; }
 .color-item { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1; min-width: 90px; }
 .color-item label { font-size: 0.72rem; text-align: center; }
 .color-item input[type="text"] { text-align: center; font-size: 0.78rem; padding: 0.4rem; }
-.img-upload-box { border: 2px dashed var(--border); border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; background: rgba(108,99,255,0.03); min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 1.2rem; }
-.img-upload-box:hover { border-color: var(--primary); background: rgba(108,99,255,0.08); }
+
+/* ── Upload box ── */
+.img-upload-box { border: 2px dashed rgba(255,69,0,0.25); border-radius: 14px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; background: rgba(255,69,0,0.03); min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 1.2rem; }
+.img-upload-box:hover { border-color: var(--primary); background: rgba(255,69,0,0.07); box-shadow: 0 0 20px rgba(255,69,0,0.1); }
 .img-upload-box .icon { font-size: 2rem; margin-bottom: 0.4rem; opacity: 0.5; pointer-events: none; }
 .img-upload-box p { font-size: 0.82rem; color: var(--muted); pointer-events: none; }
 .img-upload-box small { font-size: 0.72rem; color: var(--muted); opacity: 0.7; pointer-events: none; }
 .img-upload-box input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 10; }
-/* Preview INSIDE the upload box */
 .img-box-preview { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; border-radius: 10px; display: none; z-index: 1; }
 .img-box-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 2; border-radius: 10px; pointer-events: none; }
-.img-box-overlay span { color: white; font-size: 0.8rem; font-weight: 700; background: rgba(108,99,255,0.8); padding: 0.4rem 0.9rem; border-radius: 20px; display: flex; align-items: center; gap: 0.4rem; }
+.img-box-overlay span { color: white; font-size: 0.8rem; font-weight: 700; background: rgba(255,69,0,0.85); padding: 0.4rem 0.9rem; border-radius: 20px; display: flex; align-items: center; gap: 0.4rem; }
 .img-upload-box:hover .img-box-overlay { display: flex; }
-/* Old standalone preview — keep for gallery */
 .img-preview { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; margin-top: 0.6rem; display: none; pointer-events: none; }
 .img-url-input { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
 .img-url-input input { flex: 1; }
-.btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background: var(--primary); color: white; transition: all 0.2s; white-space: nowrap; }
+
+/* ── Buttons ── */
+.btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background: var(--gradient); color: white; transition: all 0.2s; white-space: nowrap; }
 .btn-sm:hover { opacity: 0.85; transform: translateY(-1px); }
-.btn-ai { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; background: linear-gradient(135deg,rgba(108,99,255,0.15),rgba(255,101,132,0.15)); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 0.8rem; }
-.btn-ai:hover { border-color: var(--primary); background: linear-gradient(135deg,rgba(108,99,255,0.25),rgba(255,101,132,0.25)); }
+.btn-ai { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; background: linear-gradient(135deg,rgba(255,69,0,0.12),rgba(255,0,153,0.12)); border: 1px solid rgba(255,69,0,0.25); border-radius: 10px; color: var(--text); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 0.8rem; }
+.btn-ai:hover { border-color: var(--primary); background: linear-gradient(135deg,rgba(255,69,0,0.22),rgba(255,0,153,0.22)); box-shadow: 0 0 16px rgba(255,69,0,0.2); }
 .sparkle { animation: rotate 3s linear infinite; display: inline-block; }
 @keyframes rotate { to { transform: rotate(360deg); } }
 .dynamic-list { display: flex; flex-direction: column; gap: 1rem; }
-.list-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; }
+.list-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,69,0,0.15); border-radius: 14px; padding: 1.2rem; transition: border-color 0.3s; }
+.list-item:hover { border-color: rgba(255,69,0,0.35); }
 .item-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
-.item-num { width: 28px; height: 28px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+.item-num { width: 28px; height: 28px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; box-shadow: 0 0 10px rgba(255,69,0,0.4); }
 .item-title { font-weight: 600; font-size: 0.9rem; }
-.btn-remove { margin-left: auto; background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3); color: #FF4757; padding: 0.3rem 0.65rem; border-radius: 8px; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
+.btn-remove { margin-left: auto; background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #FF4757; padding: 0.3rem 0.65rem; border-radius: 8px; cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
 .btn-remove:hover { background: rgba(255,71,87,0.25); }
-.btn-add { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem; border: 2px dashed var(--border); border-radius: 12px; color: var(--primary); font-weight: 600; cursor: pointer; transition: all 0.3s; background: transparent; width: 100%; font-size: 0.88rem; margin-top: 0.8rem; }
-.btn-add:hover { border-color: var(--primary); background: rgba(108,99,255,0.06); }
+.btn-add { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem; border: 2px dashed rgba(255,69,0,0.25); border-radius: 12px; color: var(--primary); font-weight: 600; cursor: pointer; transition: all 0.3s; background: transparent; width: 100%; font-size: 0.88rem; margin-top: 0.8rem; }
+.btn-add:hover { border-color: var(--primary); background: rgba(255,69,0,0.06); box-shadow: 0 0 16px rgba(255,69,0,0.1); }
+
+/* ── Gallery ── */
 .gallery-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.8rem; }
 @media(max-width:600px){ .gallery-grid { grid-template-columns: repeat(2,1fr); } }
-.gallery-slot { aspect-ratio:1; border: 2px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; background: rgba(108,99,255,0.04); transition: all 0.3s; flex-direction: column; gap: 0.3rem; }
-.gallery-slot:hover { border-color: var(--primary); }
+.gallery-slot { aspect-ratio:1; border: 2px dashed rgba(255,69,0,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; background: rgba(255,69,0,0.03); transition: all 0.3s; flex-direction: column; gap: 0.3rem; }
+.gallery-slot:hover { border-color: var(--primary); box-shadow: 0 0 16px rgba(255,69,0,0.15); }
 .gallery-slot .add-icon { font-size: 1.4rem; color: var(--muted); pointer-events: none; }
 .gallery-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; top:0; left:0; pointer-events: none; }
 .gallery-slot input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 5; }
 .gallery-slot .slot-label { font-size: 0.6rem; color: var(--muted); pointer-events: none; }
-/* Overlay de acciones sobre slot con imagen */
-.gallery-slot .slot-actions { position: absolute; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; background: rgba(0,0,0,0.62); border-radius: 8px; }
+.gallery-slot .slot-actions { position: absolute; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; background: rgba(0,0,0,0.65); border-radius: 8px; }
 .gallery-slot.has-img:hover .slot-actions { display: flex; }
 .gallery-slot.has-img .slot-actions { pointer-events: all; }
 .gallery-slot.has-img > input[type="file"] { display: none; }
 .slot-action-btn { padding: 0.3rem 0.7rem; border-radius: 20px; border: none; font-size: 0.7rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
-.slot-action-btn.change { background: rgba(108,99,255,0.9); color: white; }
+.slot-action-btn.change { background: rgba(255,69,0,0.9); color: white; }
 .slot-action-btn.remove { background: rgba(255,71,87,0.9); color: white; }
 .slot-action-btn:hover { opacity: 0.85; transform: scale(1.05); }
-.hours-table { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-.hour-row { display: grid; grid-template-columns: 90px 50px 1fr 1fr; gap: 0.6rem; align-items: center; padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(108,99,255,0.08); }
+
+/* ── Hours table ── */
+.hours-table { border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,69,0,0.2); }
+.hour-row { display: grid; grid-template-columns: 90px 50px 1fr 1fr; gap: 0.6rem; align-items: center; padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(255,69,0,0.08); }
 .hour-row:last-child { border-bottom: none; }
 .hour-row:nth-child(even) { background: rgba(255,255,255,0.02); }
 .day-label { font-weight: 600; font-size: 0.82rem; }
@@ -129,29 +211,37 @@ input[type="color"] { width: 60px; height: 44px; padding: 3px; border-radius: 8p
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.12); border-radius: 22px; transition: 0.3s; }
 .toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
-input:checked + .toggle-slider { background: var(--primary); }
+input:checked + .toggle-slider { background: var(--gradient); }
 input:checked + .toggle-slider:before { transform: translateX(18px); }
+
+/* ── Nav buttons ── */
 .step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; gap: 1rem; }
-.btn-back { padding: 0.8rem 1.8rem; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text); font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; }
-.btn-back:hover { border-color: var(--primary); }
-.btn-next { padding: 0.8rem 2.2rem; border-radius: 12px; border: none; background: var(--gradient); color: white; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 20px rgba(108,99,255,0.4); display: flex; align-items: center; gap: 0.5rem; }
-.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,0.5); }
-.btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-.section-div { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-.info-box { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; font-size: 0.82rem; color: var(--muted); display: flex; gap: 0.7rem; align-items: flex-start; }
+.btn-back { padding: 0.85rem 1.8rem; border-radius: 12px; border: 1px solid rgba(255,69,0,0.25); background: transparent; color: var(--text); font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; }
+.btn-back:hover { border-color: var(--primary); background: rgba(255,69,0,0.06); }
+.btn-next { padding: 0.85rem 2.4rem; border-radius: 12px; border: none; background: var(--gradient); color: white; font-weight: 800; cursor: pointer; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 4px 24px rgba(255,69,0,0.45); display: flex; align-items: center; gap: 0.5rem; }
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(255,69,0,0.55), 0 0 20px rgba(255,0,153,0.2); }
+.btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none; }
+.section-div { border: none; border-top: 1px solid rgba(255,69,0,0.12); margin: 1.5rem 0; }
+
+/* ── Info box ── */
+.info-box { background: rgba(255,69,0,0.07); border: 1px solid rgba(255,69,0,0.2); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; font-size: 0.82rem; color: var(--muted); display: flex; gap: 0.7rem; align-items: flex-start; }
 .info-box i { color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
 .tooltip { font-size: 0.72rem; color: var(--muted); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem; }
 .char-count { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 0.2rem; }
-.overlay { position: fixed; inset: 0; background: rgba(10,10,26,0.92); backdrop-filter: blur(12px); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1.5rem; }
+
+/* ── Overlay + spinner ── */
+.overlay { position: fixed; inset: 0; background: rgba(10,10,15,0.94); backdrop-filter: blur(16px); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1.5rem; }
 .overlay.show { display: flex; }
-.spinner { width: 48px; height: 48px; border: 4px solid rgba(108,99,255,0.3); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.spinner { width: 52px; height: 52px; border: 4px solid rgba(255,69,0,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; box-shadow: 0 0 20px rgba(255,69,0,0.3); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .overlay-text { font-size: 1rem; font-weight: 600; color: var(--text); }
-.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; padding: 0.9rem 1.4rem; border-radius: 12px; font-weight: 600; font-size: 0.88rem; transform: translateX(200%); transition: transform 0.4s ease; max-width: 320px; }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 999995; padding: 0.9rem 1.4rem; border-radius: 14px; font-weight: 600; font-size: 0.88rem; transform: translateX(200%); transition: transform 0.4s ease; max-width: 320px; }
 .toast.show { transform: translateX(0); }
-.toast.success { background: rgba(67,233,123,0.12); border: 1px solid rgba(67,233,123,0.4); color: var(--success); }
+.toast.success { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.35); color: var(--success); }
 .toast.error { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.4); color: var(--danger); }
-.toast.info { background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.4); color: var(--primary); }
+.toast.info { background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.3); color: var(--primary); }
 .success-card { text-align: center; padding: 2rem 1.5rem 2.5rem; }
 .success-icon { font-size: 5rem; margin-bottom: 0.8rem; animation: bounceIn 0.8s ease; display:block; }
 @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
@@ -162,12 +252,12 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .share-btn { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.7rem 1.2rem; border-radius: 12px; font-weight: 700; font-size: 0.88rem; cursor: pointer; border: none; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; }
 .share-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
 .share-btn.wa { background: #25D366; color: #fff; }
-.share-btn.copy { background: rgba(108,99,255,0.18); border: 2px solid var(--primary); color: var(--primary); }
-.share-btn.copy.copied { background: rgba(67,233,123,0.18); border-color: var(--success); color: var(--success); }
+.share-btn.copy { background: rgba(255,69,0,0.15); border: 2px solid var(--primary); color: var(--primary); }
+.share-btn.copy.copied { background: rgba(0,255,136,0.15); border-color: var(--success); color: var(--success); }
 /* ID box */
-.bot-id-box { background: rgba(108,99,255,0.12); border: 2px solid var(--primary); border-radius: 12px; padding: 0.8rem 1.2rem; margin: 0.6rem 0; font-size: 0.95rem; font-weight: 800; font-family: monospace; color: var(--primary); word-break: break-all; cursor: pointer; }
+.bot-id-box { background: rgba(255,69,0,0.1); border: 2px solid var(--primary); border-radius: 12px; padding: 0.8rem 1.2rem; margin: 0.6rem 0; font-size: 0.95rem; font-weight: 800; font-family: monospace; color: var(--primary); word-break: break-all; cursor: pointer; }
 /* Steps guide */
-.next-steps { background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 14px; padding: 1.1rem 1.3rem; margin: 1.2rem 0 0.5rem; text-align: left; }
+.next-steps { background: rgba(255,69,0,0.07); border: 1px solid rgba(255,69,0,0.15); border-radius: 14px; padding: 1.1rem 1.3rem; margin: 1.2rem 0 0.5rem; text-align: left; }
 .next-steps h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin: 0 0 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
 .next-step-item { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.55rem; font-size: 0.83rem; color: var(--muted); line-height: 1.4; }
 .next-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--gradient); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
@@ -175,12 +265,12 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1rem; }
 @media(max-width:480px){ .result-grid { grid-template-columns: 1fr; } }
 .result-btn { padding: 0.78rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.83rem; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; }
-.result-btn.primary { background: var(--gradient); color: white; box-shadow: 0 4px 20px rgba(108,99,255,0.35); }
+.result-btn.primary { background: var(--gradient); color: white; box-shadow: 0 4px 20px rgba(255,69,0,0.3); }
 .result-btn.outline { background: transparent; border-color: var(--primary); color: var(--primary); }
-.result-btn.green { background: rgba(67,233,123,0.15); border-color: var(--success); color: var(--success); }
+.result-btn.green { background: rgba(0,255,136,0.12); border-color: var(--success); color: var(--success); }
 .result-btn:hover { transform: translateY(-2px); }
 /* Bot summary card (Step 8) */
-.bot-summary { background: rgba(108,99,255,0.05); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.4rem; margin: 1.2rem 0; text-align: left; }
+.bot-summary { background: rgba(255,69,0,0.05); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem 1.4rem; margin: 1.2rem 0; text-align: left; }
 .bot-summary-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
 .bot-summary-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.83rem; }
 .bot-summary-row:last-child { border-bottom: none; }
@@ -197,23 +287,295 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 .link-card-item .lci-btns { display: flex; gap: 0.4rem; margin-top: 0.3rem; }
 .lci-btn { flex: 1; padding: 0.4rem 0.5rem; border-radius: 8px; border: none; font-size: 0.73rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.3rem; text-decoration: none; }
 .lci-btn.open { background: var(--gradient); color: white; }
-.lci-btn.copy { background: rgba(108,99,255,0.12); border: 1px solid var(--border); color: var(--primary); }
+.lci-btn.copy { background: rgba(255,69,0,0.1); border: 1px solid var(--border); color: var(--primary); }
 .lci-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 /* Webhook box */
-.webhook-box { background: rgba(67,233,123,0.06); border: 1px solid rgba(67,233,123,0.25); border-radius: 14px; padding: 1rem 1.2rem; margin: 1rem 0; text-align: left; display:none; }
+.webhook-box { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.22); border-radius: 14px; padding: 1rem 1.2rem; margin: 1rem 0; text-align: left; display:none; }
 .webhook-box.visible { display:block; }
 .webhook-box .wb-title { font-size: 0.82rem; font-weight: 700; color: var(--success); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
-.webhook-url { font-family: monospace; font-size: 0.78rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(67,233,123,0.2); border-radius: 8px; padding: 0.55rem 0.8rem; color: var(--success); word-break: break-all; cursor: pointer; transition: background 0.2s; }
-.webhook-url:hover { background: rgba(67,233,123,0.08); }
+.webhook-url { font-family: monospace; font-size: 0.78rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.18); border-radius: 8px; padding: 0.55rem 0.8rem; color: var(--success); word-break: break-all; cursor: pointer; transition: background 0.2s; }
+.webhook-url:hover { background: rgba(0,255,136,0.07); }
 .webhook-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.5; }
 .webhook-steps { margin-top: 0.75rem; }
 .webhook-steps .ws-item { display:flex; align-items:flex-start; gap:0.5rem; font-size:0.72rem; color:var(--muted); margin-bottom:0.4rem; line-height:1.4; }
 .webhook-steps .ws-num { background: var(--success); color:#000; border-radius:50%; width:16px; height:16px; min-width:16px; display:flex; align-items:center; justify-content:center; font-size:0.62rem; font-weight:700; }
-.sandbox-badge { display:inline-block; background:rgba(67,233,123,0.12); border:1px solid rgba(67,233,123,0.3); border-radius:6px; padding:0.25rem 0.6rem; font-family:monospace; font-size:0.72rem; color:var(--success); margin: 0.1rem 0; }
+.sandbox-badge { display:inline-block; background:rgba(0,255,136,0.1); border:1px solid rgba(67,233,123,0.3); border-radius:6px; padding:0.25rem 0.6rem; font-family:monospace; font-size:0.72rem; color:var(--success); margin: 0.1rem 0; }
 .wb-wa-number { font-size:0.75rem; font-weight:600; color:var(--text); background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.4rem 0.8rem; margin:0.5rem 0; display:flex; align-items:center; gap:0.5rem; }
+/* ── Payment method blocks ── */
+.pay-method-block{background:rgba(255,255,255,0.02);border:1px solid rgba(255,69,0,0.18);border-radius:14px;margin-bottom:.75rem;overflow:hidden;transition:border-color .3s;}
+.pay-method-block:hover{border-color:rgba(255,69,0,0.35);}
+.pay-method-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;cursor:pointer;user-select:none;}
+.pay-method-header:hover{background:rgba(255,69,0,0.04);}
+.pay-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pay-badge{font-size:.68rem;font-weight:700;padding:.15rem .55rem;border-radius:20px;background:rgba(255,69,0,0.12);color:#ffaa88;border:1px solid rgba(255,69,0,0.25);}
+.pay-chevron{color:var(--muted);transition:transform .3s;font-size:.8rem;}
+.pay-chevron.open{transform:rotate(180deg);}
+.pay-method-body{padding:0 1.1rem 1.1rem;display:none;}
+.pay-method-body.open{display:block;}
+.pay-tutorial{margin-top:.4rem;}
+.pay-tut-btn{background:none;border:none;color:rgba(255,69,0,.8);font-size:.78rem;cursor:pointer;padding:0;display:flex;align-items:center;gap:.35rem;font-family:'Inter',sans-serif;}
+.pay-tut-btn:hover{color:var(--primary);}
+.pay-tut-body{display:none;margin-top:.6rem;background:rgba(255,69,0,0.05);border:1px solid rgba(255,69,0,0.15);border-radius:10px;padding:.85rem 1rem;font-size:.8rem;color:#c8c8e0;line-height:1.9;}
+.pay-tut-body a{color:var(--primary);text-decoration:none;}
+.pay-tut-body a:hover{text-decoration:underline;}
+.pay-tut-body.open{display:block;}
 /* Webhook summary sub-row */
 .bot-summary-sub { font-size:0.68rem; color:var(--success); font-family:monospace; margin-top:0.2rem; word-break:break-all; display:none; }
 .bot-summary-sub.visible { display:block; }
+
+/* ══════════════════════════════════════
+   WELCOME GATE — Email capture before form
+══════════════════════════════════════ */
+#welcomeGate {
+  position: fixed; inset: 0; z-index: 99998;
+  background: linear-gradient(160deg,#0a0010,#0d0820,#001020);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  transition: opacity .5s ease;
+}
+#welcomeGate.hiding { opacity: 0; pointer-events: none; }
+#welcomeBox {
+  background: linear-gradient(160deg,#13131e,#0d0d18);
+  border: 1.5px solid rgba(124,58,237,.4);
+  border-radius: 28px;
+  max-width: 440px; width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 60px rgba(124,58,237,.15);
+}
+.wg-genie { font-size: 4rem; margin-bottom: .5rem; animation: wgBounce 1.8s ease-in-out infinite; }
+@keyframes wgBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.wg-title { font-size: 1.6rem; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: .5rem; }
+.wg-title span { background: linear-gradient(135deg,#ff4500,#ff0099); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.wg-sub { font-size: .9rem; color: rgba(255,255,255,.6); margin-bottom: 1.8rem; line-height: 1.6; }
+.wg-input {
+  width: 100%; padding: .9rem 1.2rem; border-radius: 14px;
+  background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.15);
+  color: #fff; font-size: .95rem; font-family: 'Inter',sans-serif;
+  outline: none; margin-bottom: .85rem; transition: border-color .2s;
+}
+.wg-input:focus { border-color: rgba(124,58,237,.6); }
+.wg-input::placeholder { color: rgba(255,255,255,.3); }
+.wg-btn {
+  width: 100%; padding: 1rem; border-radius: 50px; border: none;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  color: #fff; font-weight: 900; font-size: 1rem; cursor: pointer;
+  box-shadow: 0 6px 28px rgba(255,69,0,.45);
+  transition: transform .2s, box-shadow .2s;
+}
+.wg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,69,0,.6); }
+.wg-skip { display: block; margin-top: 1rem; color: rgba(255,255,255,.35); font-size: .8rem; cursor: pointer; transition: color .2s; background: none; border: none; font-family: 'Inter',sans-serif; }
+.wg-skip:hover { color: rgba(255,255,255,.6); }
+.wg-trust { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: 1.2rem; flex-wrap: wrap; }
+.wg-trust-item { font-size: .75rem; color: rgba(255,255,255,.4); display: flex; align-items: center; gap: .3rem; }
+.wg-trust-item i { font-size: .8rem; color: #00c896; }
+
+/* ══════════════════════════════════════
+   UPGRADE POPUP — Try before you buy
+══════════════════════════════════════ */
+#upgradeOverlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(0,0,0,.82);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+}
+#upgradeOverlay.show { opacity: 1; pointer-events: all; }
+
+#upgradeModal {
+  background: linear-gradient(160deg, #13131e, #0d0d18);
+  border: 2px solid rgba(255,69,0,.6);
+  border-radius: 28px;
+  max-width: 480px; width: 100%;
+  padding: 2.2rem 2rem 2rem;
+  position: relative;
+  box-shadow: 0 30px 100px rgba(255,69,0,.35), 0 0 0 1px rgba(255,255,255,.06);
+  animation: upgPop .4s cubic-bezier(.34,1.56,.64,1) both;
+  max-height: 90vh; overflow-y: auto;
+}
+@keyframes upgPop {
+  from { transform: scale(.82) translateY(30px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);       opacity: 1; }
+}
+
+#upgradeModal .upg-close {
+  position: absolute; top: 1rem; right: 1.1rem;
+  background: rgba(255,255,255,.08); border: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  color: #fff; font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+#upgradeModal .upg-close:hover { background: rgba(255,255,255,.18); }
+
+.upg-lock { font-size: 2.8rem; margin-bottom: .5rem; display: block; animation: upg-shake 1s .4s ease both; }
+@keyframes upg-shake {
+  0%,100%{ transform:rotate(0); }
+  20%{ transform:rotate(-12deg); }
+  40%{ transform:rotate(12deg); }
+  60%{ transform:rotate(-8deg); }
+  80%{ transform:rotate(8deg); }
+}
+
+.upg-title {
+  font-size: 1.55rem; font-weight: 900; line-height: 1.2;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: .35rem;
+}
+.upg-sub {
+  font-size: .88rem; color: rgba(255,255,255,.8);
+  margin-bottom: 1.2rem; line-height: 1.55;
+}
+
+/* What they built — checkmarks */
+.upg-built {
+  background: rgba(0,255,136,.07);
+  border: 1px solid rgba(0,255,136,.25);
+  border-radius: 14px; padding: .9rem 1.1rem;
+  margin-bottom: 1.2rem;
+}
+.upg-built-title {
+  font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .1em; color: #00ff88; margin-bottom: .6rem;
+}
+.upg-built-item {
+  display: flex; align-items: center; gap: .55rem;
+  font-size: .83rem; color: #fff; font-weight: 600;
+  padding: .22rem 0;
+}
+.upg-built-item i { color: #00ff88; font-size: .85rem; width: 16px; }
+
+/* Price reveal */
+.upg-price-block {
+  text-align: center; padding: 1rem;
+  background: rgba(255,69,0,.08);
+  border: 1px dashed rgba(255,69,0,.4);
+  border-radius: 14px; margin-bottom: 1.2rem;
+}
+.upg-price-label { font-size: .72rem; color: rgba(255,255,255,.6); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .25rem; }
+.upg-price-old { font-size: .9rem; color: rgba(255,255,255,.4); text-decoration: line-through; margin-bottom: .1rem; }
+.upg-price-now { font-size: 2.6rem; font-weight: 900; background: linear-gradient(135deg,#ff4500,#ff0099); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.upg-price-note { font-size: .75rem; color: rgba(255,255,255,.55); margin-top: .3rem; }
+
+/* Urgency pill */
+.upg-urgency {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(255,200,0,.1); border: 1px solid rgba(255,200,0,.4);
+  border-radius: 50px; padding: .35rem 1rem;
+  font-size: .78rem; font-weight: 800; color: #ffd700;
+  margin-bottom: 1.1rem; animation: upg-blink 2s ease-in-out infinite;
+}
+@keyframes upg-blink { 0%,100%{ opacity:1 } 50%{ opacity:.65 } }
+
+/* CTA buttons */
+.upg-btn-main {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg,#ff4500,#ff0099);
+  border: none; border-radius: 14px;
+  color: #fff; font-size: 1.05rem; font-weight: 900;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 8px 30px rgba(255,69,0,.5);
+  transition: transform .2s, box-shadow .2s;
+  margin-bottom: .7rem;
+}
+.upg-btn-main:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,69,0,.65); }
+
+.upg-btn-skip {
+  display: block; text-align: center;
+  font-size: .8rem; color: rgba(255,255,255,.45);
+  cursor: pointer; padding: .4rem;
+  transition: color .2s; background: none; border: none; width: 100%;
+}
+.upg-btn-skip:hover { color: rgba(255,255,255,.75); }
+
+/* Guarantee line */
+.upg-guarantee {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  font-size: .75rem; color: rgba(0,255,136,.8); font-weight: 700;
+  margin-top: .8rem;
+}
+
+
+/* ══ LEAD CAPTURE MODAL ══ */
+#leadOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s ease;
+}
+#leadOverlay.show { opacity: 1; pointer-events: all; }
+#leadModal {
+  background: linear-gradient(145deg, #13131e, #1a1a2e);
+  border: 1px solid rgba(139,92,246,.45);
+  border-radius: 24px;
+  padding: 2.2rem 2rem 2rem;
+  max-width: 420px; width: 100%;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(139,92,246,.25);
+  animation: leadPop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes leadPop {
+  from { transform: scale(.85) translateY(20px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+.lead-genie-img {
+  width: 100px; height: 100px; object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(139,92,246,.6);
+  margin: 0 auto 1rem;
+  display: block;
+  box-shadow: 0 0 20px rgba(139,92,246,.4);
+}
+.lead-title {
+  font-size: 1.45rem; font-weight: 900; color: #fff;
+  margin-bottom: .4rem; line-height: 1.25;
+}
+.lead-title span { background: linear-gradient(135deg,#8b5cf6,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.lead-sub {
+  font-size: .88rem; color: rgba(255,255,255,.65);
+  margin-bottom: 1.4rem; line-height: 1.5;
+}
+.lead-input {
+  width: 100%; padding: .85rem 1rem;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(139,92,246,.35);
+  border-radius: 12px;
+  color: #fff; font-size: .95rem; font-family: inherit;
+  margin-bottom: .8rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.lead-input:focus { border-color: rgba(139,92,246,.8); }
+.lead-input::placeholder { color: rgba(255,255,255,.35); }
+.lead-btn {
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border: none; border-radius: 14px;
+  color: #fff; font-size: 1.05rem; font-weight: 800;
+  cursor: pointer; margin-top: .4rem;
+  box-shadow: 0 4px 20px rgba(139,92,246,.45);
+  transition: transform .15s, box-shadow .15s;
+}
+.lead-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(139,92,246,.6); }
+.lead-btn:active { transform: translateY(0); }
+.lead-skip {
+  margin-top: .9rem; font-size: .78rem;
+  color: rgba(255,255,255,.35); cursor: pointer;
+  text-decoration: underline; display: inline-block;
+}
+.lead-skip:hover { color: rgba(255,255,255,.65); }
+.lead-privacy {
+  margin-top: .8rem; font-size: .72rem;
+  color: rgba(255,255,255,.3); line-height: 1.4;
+}
+.lead-privacy i { color: rgba(0,255,136,.6); margin-right: .25rem; }
 </style>
 </head>
 <body>
@@ -221,8 +583,25 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-text" id="overlayText">Procesando...</div></div>
 <div class="toast" id="toast"></div>
 
+<!-- ══ LEAD CAPTURE MODAL ══ -->
+<div id="leadOverlay">
+  <div id="leadModal">
+    <img src="genie_frame_01.jpg" alt="Genie" class="lead-genie-img">
+    <div class="lead-title" style="font-size:1.6rem">🚀 <span>TE HACEMOS</span> Tu Website<br>+ Bot IA + Tarjeta Digital</div>
+    <div class="lead-sub" style="font-size:1rem;margin-bottom:1.2rem">Solo envíanos la información de tu negocio.<br><strong style="color:#fff">Tú no haces NADA — nosotros hacemos todo.</strong><br><span style="color:#00ff88;font-size:.85rem">✅ Demo GRATIS · Sin compromiso · Listo en 24hrs</span></div>
+    <input type="text"  id="leadName"  class="lead-input" placeholder="Tu nombre" autocomplete="given-name" maxlength="60">
+    <input type="email" id="leadEmail" class="lead-input" placeholder="tucorreo@email.com" autocomplete="email">
+    <button class="lead-btn" onclick="submitLead()">
+      <i class="fas fa-rocket" style="margin-right:.5rem"></i>¡Quiero Mi Demo GRATIS!
+    </button>
+    <div class="lead-skip" onclick="skipLead()">Continuar sin registrarme</div>
+    <div class="lead-privacy"><i class="fas fa-lock"></i>100% privado — solo usamos tus datos para crear tu demo.</div>
+  </div>
+</div>
+
+
 <header class="header">
-  <div class="logo">🤖 Super Bot 007 <span>/ Crear Bot</span></div>
+  <div class="logo">🤖 Super Bot 007 <span>/ Agencia de IA</span></div>
   <div style="display:flex;align-items:center;gap:1rem;">
     <span id="stepLabel" style="font-size:0.82rem;color:var(--muted);">Paso 1 de 7</span>
     <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:0.85rem;"><i class="fas fa-home"></i></a>
@@ -245,8 +624,8 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <main class="main">
 <!-- STEP 1 -->
 <div class="step-card active" id="step1">
-  <div class="step-title">🏢 Información del Negocio</div>
-  <div class="step-subtitle">Cuéntanos sobre el negocio que potenciarás con IA</div>
+  <div class="step-title">🏢 Información de Tu Negocio</div>
+  <div class="step-subtitle">Cuéntanos sobre tu negocio — nosotros nos encargamos de todo lo demás 💪</div>
   <div class="form-group">
     <label>Nombre del Negocio <span class="required">*</span></label>
     <input type="text" id="businessName" placeholder="Ej: Bella Salon & Spa" maxlength="60">
@@ -277,11 +656,12 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   </div>
   <hr class="section-div">
   <div class="form-group">
-    <label>Título Principal Hero <span class="required">*</span></label>
+    <label>Título Principal de tu Página <span class="required">*</span></label>
     <input type="text" id="heroTitle" placeholder="Ej: Transforma Tu Belleza con Nosotros" maxlength="80">
+    <div style="font-size:0.74rem;color:var(--muted);margin-top:0.3rem;">📌 Este es el título grande que verán tus clientes al abrir tu landing page.</div>
   </div>
   <div class="form-group">
-    <label>Subtítulo Hero</label>
+    <label>Subtítulo de tu Página</label>
     <input type="text" id="heroSubtitle" placeholder="Ej: Servicios premium en el corazón de Miami" maxlength="120">
   </div>
   <div class="form-row">
@@ -295,7 +675,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     </div>
   </div>
   <div class="step-nav">
-    <div></div>
+    <a href="https://superbot007.com/salespage.html" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
     <button class="btn-next" onclick="nextStep(1)">Diseño & Colores <i class="fas fa-arrow-right"></i></button>
   </div>
 </div>
@@ -309,7 +689,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     <div class="color-row">
       <div class="color-item"><label>Primario</label><input type="color" id="primaryColor" value="#6C63FF" oninput="document.getElementById('primaryHex').value=this.value"><input type="text" id="primaryHex" value="#6C63FF" onchange="syncColor('primary')"></div>
       <div class="color-item"><label>Secundario</label><input type="color" id="secondaryColor" value="#FF6584" oninput="document.getElementById('secondaryHex').value=this.value"><input type="text" id="secondaryHex" value="#FF6584" onchange="syncColor('secondary')"></div>
-      <div class="color-item"><label>Acento</label><input type="color" id="accentColor" value="#43E97B" oninput="document.getElementById('accentHex').value=this.value"><input type="text" id="accentHex" value="#43E97B" onchange="syncColor('accent')"></div>
+      <div class="color-item"><label>Acento</label><input type="color" id="accentColor" value="#00ff88" oninput="document.getElementById('accentHex').value=this.value"><input type="text" id="accentHex" value="#00ff88" onchange="syncColor('accent')"></div>
       <div class="color-item"><label>Fondo</label><input type="color" id="bgColorPick" value="#000000" oninput="document.getElementById('bgColorHex').value=this.value"><input type="text" id="bgColorHex" value="#000000" onchange="document.getElementById('bgColorPick').value=this.value" placeholder="#000000"></div>
     </div>
   </div>
@@ -348,29 +728,210 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <!-- STEP 3 -->
 <div class="step-card" id="step3">
   <div class="step-title">✂️ Servicios</div>
-  <div class="step-subtitle">Agrega los servicios de tu negocio (mín. 1, máx. 8)</div>
+  <div class="step-subtitle">Agrega los servicios de tu negocio (opcional si solo vendes productos)</div>
+
+  <!-- SKIP BANNER — prominent at top -->
+  <div style="background:rgba(0,200,83,0.1);border:2px solid rgba(0,200,83,0.45);border-radius:14px;padding:1rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <div>
+      <div style="font-weight:800;color:#00c853;font-size:0.9rem;">¿Solo vendes productos? ¿No ofreces servicios?</div>
+      <div style="font-size:0.78rem;color:rgba(255,255,255,0.6);margin-top:0.2rem;">Haz clic en el botón verde — salta esta sección y ve directo a Productos.</div>
+    </div>
+    <button onclick="skipStep3()" style="background:linear-gradient(135deg,#00c853,#00e676);border:none;border-radius:10px;color:#000;font-weight:800;font-size:0.88rem;padding:0.65rem 1.3rem;cursor:pointer;white-space:nowrap;box-shadow:0 4px 16px rgba(0,200,83,0.4);flex-shrink:0;">
+      <i class="fas fa-forward"></i> Omitir este paso
+    </button>
+  </div>
+
   <div class="info-box" style="margin-bottom:1rem;"><i class="fas fa-lightbulb"></i> En el último paso podrás generar servicios automáticamente con IA.</div>
   <div class="dynamic-list" id="servicesList"></div>
   <button class="btn-add" id="addSvcBtn" onclick="addService()"><i class="fas fa-plus"></i> Añadir Servicio</button>
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Atrás</button>
-    <button class="btn-next" onclick="nextStep(3)">Productos <i class="fas fa-arrow-right"></i></button>
+    <button class="btn-next" onclick="nextStep(3)">Siguiente <i class="fas fa-arrow-right"></i></button>
   </div>
 </div>
 
 <!-- STEP 4 -->
 <div class="step-card" id="step4">
-  <div class="step-title">🛒 Productos & PayPal</div>
-  <div class="step-subtitle">Vende productos con carrito de compras y pago por PayPal</div>
-  <div class="info-box"><i class="fas fa-info-circle"></i> Los productos aparecen en tu landing con carrito y botón de PayPal. Puedes omitir si solo ofreces servicios.</div>
-  <div class="form-row">
-    <div class="form-group"><label>Email de PayPal</label><input type="email" id="paypalEmail" placeholder="tupaypal@email.com"></div>
-    <div class="form-group"><label>Link PayPal.me (opcional)</label><input type="url" id="paypalLink" placeholder="https://paypal.me/tunombre"></div>
+  <div class="step-title">🛒 Pagos & Productos</div>
+  <div class="step-subtitle">Conecta tus métodos de pago — tus clientes pagan directo a ti</div>
+  <div class="info-box"><i class="fas fa-info-circle"></i> Agrega solo los métodos que usas. Todos son opcionales — puedes volver a editar después.</div>
+
+  <!-- ══ PAYMENT METHODS ══ -->
+  <div style="margin-bottom:1.8rem;">
+    <div style="font-size:.78rem;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;">
+      <span style="width:3px;height:16px;background:var(--gradient);border-radius:2px;display:inline-block;"></span>
+      Métodos de Pago
+    </div>
+
+    <!-- PayPal -->
+    <div class="pay-method-block" id="pmPayPal">
+      <div class="pay-method-header" onclick="togglePayMethod('PayPal')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#003087;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M7.144 19.532l1.049-5.751c.11-.606.691-1.038 1.304-.946 2.102.309 5.291.108 6.957-2.388 1.968-2.942.901-6.18-2.507-6.868C12.697 3.259 11.362 3 10.03 3H5.872c-.77 0-1.428.56-1.55 1.322L2 17.604c-.09.558.338 1.058.899 1.058h3.45c.486 0 .905-.354.795-.13z"/><path d="M20.216 8.412c.482 3.544-2.346 6.084-5.8 6.084H13.05l-.82 4.5H9.1l1.051-5.77h2.006c3.273 0 6.066-2.205 6.066-5.476 1.016.119 1.773.773 1.993 1.662z" opacity=".6"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">PayPal</span>
+          <span class="pay-badge">Más popular</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevPayPal"></i>
+      </div>
+      <div class="pay-method-body" id="bodyPayPal">
+        <div class="form-row" style="margin-bottom:.8rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Email de PayPal</label>
+            <input type="email" id="paypalEmail" placeholder="tupaypal@email.com">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>PayPal.me Link <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+            <input type="url" id="paypalLink" placeholder="https://paypal.me/tunombre">
+          </div>
+        </div>
+        <!-- Tutorial PayPal -->
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutPP')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi email y link de PayPal? <i class="fas fa-chevron-down" id="tutPP-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutPP">
+            1. Ve a <a href="https://paypal.com" target="_blank">paypal.com</a> → Inicia sesión<br>
+            2. Tu <strong>email de PayPal</strong> es el que usaste para registrarte<br>
+            3. Para el link: ve a <a href="https://paypal.me" target="_blank">paypal.me</a> → crea tu link personalizado<br>
+            4. Ejemplo: <strong>paypal.me/tunombre</strong> — tus clientes te pagan con un clic<br>
+            <div class="pay-tut-tip">💡 Con una cuenta PayPal Business recibes pagos con tarjeta sin que el cliente necesite cuenta PayPal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stripe -->
+    <div class="pay-method-block" id="pmStripe">
+      <div class="pay-method-header" onclick="togglePayMethod('Stripe')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#635bff;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Stripe</span>
+          <span class="pay-badge" style="background:rgba(99,91,255,.15);color:#a89fff;border-color:rgba(99,91,255,.3);">Tarjetas USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevStripe"></i>
+      </div>
+      <div class="pay-method-body" id="bodyStripe">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>Stripe Payment Link</label>
+          <input type="url" id="stripeLink" placeholder="https://buy.stripe.com/...">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutST')"><i class="fas fa-question-circle"></i> ¿Cómo creo mi Stripe Payment Link? <i class="fas fa-chevron-down" id="tutST-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutST">
+            1. Ve a <a href="https://dashboard.stripe.com" target="_blank">dashboard.stripe.com</a> → crea cuenta gratis<br>
+            2. En el menú izquierdo: <strong>Payment Links → + New</strong><br>
+            3. Agrega tu producto con precio<br>
+            4. Copia el link generado — empieza con <strong>buy.stripe.com/...</strong><br>
+            5. Pégalo arriba ↑<br>
+            <div class="pay-tut-tip">💡 Stripe acepta Visa, Mastercard, Amex. Costo: 2.9% + $0.30 por transacción. Sin costo mensual.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zelle -->
+    <div class="pay-method-block" id="pmZelle">
+      <div class="pay-method-header" onclick="togglePayMethod('Zelle')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#6d1ed4;">
+            <span style="font-size:.85rem;font-weight:900;color:#fff;">Z</span>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Zelle</span>
+          <span class="pay-badge" style="background:rgba(109,30,212,.15);color:#b388ff;border-color:rgba(109,30,212,.3);">Rey latino USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevZelle"></i>
+      </div>
+      <div class="pay-method-body" id="bodyZelle">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>Email o Teléfono de Zelle</label>
+          <input type="text" id="zelleInfo" placeholder="email@gmail.com o +1 (305) 000-0000">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutZL')"><i class="fas fa-question-circle"></i> ¿Cómo activo Zelle? <i class="fas fa-chevron-down" id="tutZL-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutZL">
+            1. Abre la app de tu banco (Bank of America, Chase, Wells Fargo, etc.)<br>
+            2. Busca <strong>"Zelle"</strong> dentro de la app<br>
+            3. Regístrate con tu email o número de teléfono<br>
+            4. Pon ese email o teléfono arriba ↑<br>
+            <div class="pay-tut-tip">💡 Zelle es gratis, instantáneo y es el método #1 entre latinos en USA. No cobra comisión.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venmo -->
+    <div class="pay-method-block" id="pmVenmo">
+      <div class="pay-method-header" onclick="togglePayMethod('Venmo')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#008cff;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.4 2c.7 2.1.9 4.1.9 6.2 0 5.3-3.2 11.1-5.9 14.5h-6.8L4 3.1l6.7-.6 1.7 11.8c1.5-2.8 3.4-7.2 3.4-10.2 0-1.8-.3-3-.7-4.1H19.4z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Venmo</span>
+          <span class="pay-badge" style="background:rgba(0,140,255,.12);color:#7ec8ff;border-color:rgba(0,140,255,.25);">Jóvenes USA</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevVenmo"></i>
+      </div>
+      <div class="pay-method-body" id="bodyVenmo">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>@Username de Venmo</label>
+          <input type="text" id="venmoUser" placeholder="@tunombre">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutVM')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi @Venmo? <i class="fas fa-chevron-down" id="tutVM-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutVM">
+            1. Descarga la app <strong>Venmo</strong> o ve a <a href="https://venmo.com" target="_blank">venmo.com</a><br>
+            2. Crea tu cuenta con email o número de teléfono<br>
+            3. Tu usuario empieza con <strong>@</strong> — encuéntralo en tu perfil<br>
+            4. Ponlo arriba ↑<br>
+            <div class="pay-tut-tip">💡 Venmo es muy popular entre millennials y Gen Z en USA. Gratis para transferencias entre personas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cash App -->
+    <div class="pay-method-block" id="pmCashApp">
+      <div class="pay-method-header" onclick="togglePayMethod('CashApp')">
+        <div style="display:flex;align-items:center;gap:.7rem;">
+          <div class="pay-logo" style="background:#00d632;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm1.5 17.5h-3v-1.5c-1.5-.3-2.5-1.2-2.5-2.5h1.5c0 .8.9 1.5 2 1.5s2-.7 2-1.5c0-.9-.8-1.5-2-1.5-2 0-3.5-1.3-3.5-3 0-1.3 1-2.2 2.5-2.5V5h3v1.5c1.5.3 2.5 1.2 2.5 2.5h-1.5c0-.8-.9-1.5-2-1.5s-2 .7-2 1.5c0 .9.8 1.5 2 1.5 2 0 3.5 1.3 3.5 3 0 1.3-1 2.2-2.5 2.5v1.5z"/></svg>
+          </div>
+          <span style="font-weight:700;font-size:.92rem;">Cash App</span>
+          <span class="pay-badge" style="background:rgba(0,214,50,.1);color:#6fffaa;border-color:rgba(0,214,50,.25);">$Cashtag</span>
+        </div>
+        <i class="fas fa-chevron-down pay-chevron" id="chevCashApp"></i>
+      </div>
+      <div class="pay-method-body" id="bodyCashApp">
+        <div class="form-group" style="margin-bottom:.8rem;">
+          <label>$Cashtag de Cash App</label>
+          <input type="text" id="cashAppTag" placeholder="$tunombre">
+        </div>
+        <div class="pay-tutorial">
+          <button class="pay-tut-btn" onclick="toggleTut('tutCA')"><i class="fas fa-question-circle"></i> ¿Cómo obtengo mi $Cashtag? <i class="fas fa-chevron-down" id="tutCA-ico" style="font-size:.7rem;"></i></button>
+          <div class="pay-tut-body" id="tutCA">
+            1. Descarga la app <strong>Cash App</strong><br>
+            2. Crea cuenta con tu número de teléfono o email<br>
+            3. Elige tu <strong>$Cashtag</strong> — es tu identificador único<br>
+            4. Ejemplo: <strong>$tunegocio</strong><br>
+            <div class="pay-tut-tip">💡 Cash App es muy usado en comunidades afrolatinas y del sur de USA. Cero comisión para recibir pagos personales.</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- ══ PRODUCTS LIST ══ -->
   <hr class="section-div">
+  <div style="font-size:.78rem;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;">
+    <span style="width:3px;height:16px;background:var(--gradient);border-radius:2px;display:inline-block;"></span>
+    Productos <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span>
+  </div>
   <div class="dynamic-list" id="productsList"></div>
   <button class="btn-add" id="addProdBtn" onclick="addProduct()"><i class="fas fa-plus"></i> Añadir Producto</button>
   <p class="tooltip" style="margin-top:0.5rem;"><i class="fas fa-lightbulb"></i> Máximo 8 productos.</p>
+
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(4)"><i class="fas fa-arrow-left"></i> Atrás</button>
     <button class="btn-next" onclick="nextStep(4)">Galería <i class="fas fa-arrow-right"></i></button>
@@ -395,7 +956,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 <!-- STEP 6 -->
 <div class="step-card" id="step6">
   <div class="step-title">📞 Contacto & Horarios</div>
-  <div class="step-subtitle">Información de contacto y horario de atención</div>
+  <div class="step-subtitle">Información de contacto, horario de atención y sistema de citas por WhatsApp</div>
   <div class="form-row">
     <div class="form-group"><label>Teléfono <span class="required">*</span></label><input type="tel" id="phone" placeholder="+1 (555) 000-0000"></div>
     <div class="form-group"><label>WhatsApp (solo números)</label><input type="tel" id="whatsapp" placeholder="15550000000"><p class="tooltip"><i class="fas fa-info-circle"></i> Código país + número, sin + ni espacios</p></div>
@@ -418,6 +979,69 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   <hr class="section-div">
   <label style="margin-bottom:0.8rem;display:block;">Horario de Atención</label>
   <div class="hours-table" id="hoursTable"></div>
+
+  <!-- ══ GOOGLE CALENDAR ══ -->
+  <hr class="section-div">
+  <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;">
+    <div style="width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+      <svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2" fill="#fff" stroke="#dadce0" stroke-width="1.5"/><rect x="3" y="9" width="18" height="1.5" fill="#dadce0"/><rect x="8" y="2" width="1.5" height="4" rx=".75" fill="#1a73e8"/><rect x="14.5" y="2" width="1.5" height="4" rx=".75" fill="#1a73e8"/><text x="12" y="19" text-anchor="middle" font-size="7" font-weight="700" fill="#1a73e8" font-family="Arial">CAL</text></svg>
+    </div>
+    <div>
+      <div style="font-weight:800;font-size:.95rem;color:#fff;">Sistema de Citas por WhatsApp</div>
+      <div style="font-size:.78rem;color:var(--muted);">Tus clientes eligen fecha y hora — tú recibes la cita por WhatsApp al instante</div>
+    </div>
+    <div style="margin-left:auto;">
+      <label class="toggle-switch" style="width:48px;height:26px;">
+        <input type="checkbox" id="calendarEnabled" onchange="toggleCalendarSection()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Appointment fields — shown when toggle ON -->
+  <div id="calendarSection" style="display:none;">
+    <div class="info-box" style="margin-bottom:1.2rem;background:rgba(37,211,102,0.08);border-color:rgba(37,211,102,0.3);">
+      <i class="fab fa-whatsapp" style="color:#25D366;"></i>
+      Cuando un cliente agenda una cita en tu bot — tú recibes un mensaje de WhatsApp al instante con todos los detalles: nombre, servicio, fecha y hora. ¡Sin apps extra!
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Duración de cita</label>
+        <select id="appointmentDuration">
+          <option value="30">30 minutos</option>
+          <option value="45">45 minutos</option>
+          <option value="60" selected>1 hora</option>
+          <option value="90">1.5 horas</option>
+          <option value="120">2 horas</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anticipación mínima</label>
+        <select id="appointmentNotice">
+          <option value="1">1 hora antes</option>
+          <option value="2">2 horas antes</option>
+          <option value="24" selected>1 día antes</option>
+          <option value="48">2 días antes</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Mensaje de confirmación al cliente</label>
+      <input type="text" id="appointmentConfirmMsg" placeholder="¡Tu cita está confirmada! Te esperamos 😊" maxlength="120">
+      <p class="tooltip"><i class="fas fa-info-circle"></i> El bot envía este mensaje al cliente cuando confirma su cita</p>
+    </div>
+
+    <div class="info-box" style="margin-top:.5rem;background:rgba(255,200,0,0.07);border-color:rgba(255,200,0,0.25);">
+      <i class="fas fa-lightbulb" style="color:#FFD700;"></i>
+      <strong style="color:#FFD700;">Así funciona:</strong><br>
+      1️⃣ Cliente elige fecha y hora en el bot<br>
+      2️⃣ Tú recibes WhatsApp: <em>"Nueva cita: María, Masaje, Lunes 3pm"</em><br>
+      3️⃣ Cliente recibe confirmación instantánea ✅
+    </div>
+  </div>
+
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(6)"><i class="fas fa-arrow-left"></i> Atrás</button>
     <button class="btn-next" onclick="nextStep(6)">IA & Activar <i class="fas fa-arrow-right"></i></button>
@@ -429,9 +1053,27 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   <div class="step-title">🤖 IA & Activar Bot</div>
   <div class="step-subtitle">Genera contenido con IA, configura el chatbot y activa tu Super Bot 007</div>
 
-  <div class="info-box"><i class="fas fa-key"></i> API Key de OpenAI para el chatbot. Opcional si no usas el chatbot. <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--primary);">Obtener aquí →</a></div>
+  <!-- API Key hidden — pre-filled, client never sees it -->
+  <input type="hidden" id="openaiKey" value="">
+  <script>
+    // Priority: 1) localStorage from welcome screen, 2) pre-filled key
+    (function(){
+      const saved = localStorage.getItem('sb007_openai_key');
+      document.getElementById('openaiKey').value = saved || atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
+    })();
+  </script>
+  <!-- ══ IDIOMA DEL BOT — MUY IMPORTANTE ══ -->
+  <div style="background:linear-gradient(135deg,rgba(255,69,0,0.12),rgba(255,0,153,0.08));border:2px solid var(--primary);border-radius:16px;padding:1.2rem 1.4rem;margin-bottom:1.2rem;">
+    <div style="font-size:1.05rem;font-weight:800;margin-bottom:0.5rem;color:var(--primary);">🌎 Idioma del Bot</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem;">Elige el idioma en que tu bot hablará con tus clientes. <strong style="color:var(--text);">¡Importante!</strong> Esta selección no se puede cambiar fácilmente después.</div>
+    <select id="botLanguage" style="width:100%;padding:0.85rem 1rem;background:rgba(255,255,255,0.07);border:1px solid var(--primary);border-radius:12px;color:#fff;font-size:1rem;font-weight:700;font-family:inherit;outline:none;cursor:pointer;">
+      <option value="es">🇪🇸 Español</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="pt">🇧🇷 Português</option>
+    </select>
+  </div>
+
   <div class="form-row">
-    <div class="form-group"><label>OpenAI API Key</label><input type="password" id="openaiKey" placeholder="sk-proj-... (opcional)"><p class="tooltip"><i class="fas fa-lock"></i> Solo se usa para el chatbot IA</p></div>
     <div class="form-group">
       <label>Modelo GPT</label>
       <select id="gptModel"><option value="gpt-4o-mini" selected>GPT-4o Mini (Recomendado)</option><option value="gpt-4o">GPT-4o (Potente)</option><option value="gpt-3.5-turbo">GPT-3.5 Turbo (Económico)</option></select>
@@ -441,17 +1083,16 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   <!-- AI GENERATION SECTION -->
   <div style="background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,101,132,0.08));border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;">
     <div style="font-size:1rem;font-weight:700;margin-bottom:0.4rem;">✨ Generar Contenido con IA</div>
-    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Ingresa tu API Key arriba primero, luego usa estos botones para generar automáticamente</div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Usa estos botones para generar tu contenido automáticamente con IA ✨</div>
     <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
       <button class="btn-ai" onclick="aiGen('description')" style="margin-bottom:0;"><span class="sparkle">✨</span> Descripción</button>
-      <button class="btn-ai" onclick="aiGen('heroTitle')" style="margin-bottom:0;"><span class="sparkle">✨</span> Título Hero</button>
+      <button class="btn-ai" onclick="aiGen('heroTitle')" style="margin-bottom:0;"><span class="sparkle">✨</span> Título Encabezado</button>
       <button class="btn-ai" onclick="aiGen('services')" style="margin-bottom:0;"><span class="sparkle">✨</span> Servicios</button>
       <button class="btn-ai" onclick="aiGen('testimonials')" style="margin-bottom:0;"><span class="sparkle">✨</span> Testimonios</button>
       <button class="btn-ai" onclick="aiGen('faqs')" style="margin-bottom:0;"><span class="sparkle">✨</span> FAQs</button>
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Idioma del Bot</label><select id="botLanguage"><option value="es" selected>Español</option><option value="en">English</option><option value="pt">Português</option></select></div>
     <div class="form-group"><label>Instrucción Especial (opcional)</label><input type="text" id="botInstruction" placeholder="Ej: No hacer descuentos mayores al 10%"></div>
   </div>
   <hr class="section-div">
@@ -468,7 +1109,7 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
   </div>
   <div class="step-nav">
     <button class="btn-back" onclick="prevStep(7)"><i class="fas fa-arrow-left"></i> Atrás</button>
-    <button class="btn-next" id="activateBtn" onclick="activateBot()" style="background:linear-gradient(135deg,#43E97B,#38F9D7);box-shadow:0 4px 20px rgba(67,233,123,0.4);">🚀 Activar Bot 007</button>
+    <button class="btn-next" id="activateBtn" onclick="activateBot()" style="background:linear-gradient(135deg,#00ff88,#38F9D7);box-shadow:0 4px 20px rgba(0,255,136,0.35);">🚀 Activar Bot 007</button>
   </div>
 </div>
 
@@ -579,6 +1220,76 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
     </button>
   </div>
 </div>
+<!-- ══════════════════════════════════════
+     UPGRADE POPUP — intercepts share/copy
+══════════════════════════════════════ -->
+<div id="upgradeOverlay">
+  <div id="upgradeModal">
+    <button class="upg-close" onclick="closeUpgrade()">✕</button>
+
+    <div style="text-align:center;">
+      <span class="upg-lock">🔒</span>
+      <div class="upg-title">🎉 ¡Tu Demo está<br>LISTO!</div>
+      <p class="upg-sub">Ya creamos tu Website + Bot IA + Tarjeta Digital. Activa tu plan para publicarlo y empezar a recibir clientes hoy mismo.</p>
+    </div>
+
+    <!-- What they built -->
+    <div class="upg-built">
+      <div class="upg-built-title">✅ Lo que acabas de crear:</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Bot IA GPT-4 entrenado en tu negocio</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Landing Page profesional lista</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Tarjeta Digital con código QR</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Citas por WhatsApp + pagos configurados</div>
+      <div class="upg-built-item"><i class="fas fa-check-circle"></i> Bot bilingüe ES / EN activo</div>
+    </div>
+
+    <!-- Urgency -->
+    <div style="text-align:center;">
+      <span class="upg-urgency">⚡ Precio de introducción — sube pronto</span>
+    </div>
+
+    <!-- Price reveal -->
+    <div class="upg-price-block">
+      <div class="upg-price-label">Elige tu plan:</div>
+      <div class="upg-price-old">Valor real: $2,000+ con otras agencias</div>
+
+      <!-- PLAN 1 -->
+      <div style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.3);border-radius:14px;padding:14px;margin:10px 0;text-align:center">
+        <div style="font-size:.8rem;font-weight:700;color:#ff4500;text-transform:uppercase;letter-spacing:1px">Plan Básico</div>
+        <div style="font-size:2.2rem;font-weight:900;color:#fff">$149 <span style="font-size:1rem;opacity:.6">pago único</span></div>
+        <div style="font-size:.85rem;color:#b0b0cc">✅ Website Profesional<br>✅ Tarjeta Digital<br>❌ Sin Bot IA<br><strong style="color:#00ff88">Sin mensualidad</strong></div>
+      </div>
+
+      <!-- PLAN 2 -->
+      <div style="background:rgba(0,255,136,0.08);border:2px solid rgba(0,255,136,0.4);border-radius:14px;padding:14px;margin:10px 0;text-align:center;position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff4500,#ff0099);color:white;font-size:.72rem;font-weight:800;padding:4px 14px;border-radius:50px;white-space:nowrap">⭐ MÁS POPULAR</div>
+        <div style="font-size:.8rem;font-weight:700;color:#00ff88;text-transform:uppercase;letter-spacing:1px">Plan Completo</div>
+        <div style="font-size:2.2rem;font-weight:900;color:#fff">$149 <span style="font-size:1rem;opacity:.6">setup</span></div>
+        <div style="font-size:1.1rem;font-weight:700;color:#00ff88">+ $29/mes</div>
+        <div style="font-size:.85rem;color:#b0b0cc">✅ Website Profesional<br>✅ Bot IA 24/7<br>✅ Tarjeta Digital<br>✅ Agenda Citas Auto</div>
+      </div>
+
+      <div class="upg-price-note">Sin contrato · Cancela cuando quieras · Garantía 30 días</div>
+    </div>
+
+    <!-- CTA -->
+    <a href="https://wa.me/19143644377?text=Quiero%20activar%20mi%20Super%20Bot%20007%20-%20Plan%20Completo%20%24149%20setup%20%2B%20%2429%2Fmes" target="_blank" class="upg-btn-main" onclick="closeUpgrade()">
+      <i class="fas fa-rocket"></i> ¡Quiero el Plan Completo — $149!
+    </a>
+    <a href="https://wa.me/19143644377?text=Quiero%20el%20Plan%20Basico%20de%20Super%20Bot%20007%20-%20%24149%20pago%20unico" target="_blank" style="display:block;text-align:center;margin-top:10px;color:#b0b0cc;font-size:.85rem;text-decoration:none;padding:10px" onclick="closeUpgrade()">
+      Solo quiero Website + Tarjeta Digital — $149 único →
+    </a>
+
+    <button class="upg-btn-skip" onclick="skipUpgrade()">
+      Seguir explorando sin compartir →
+    </button>
+
+    <div class="upg-guarantee">
+      <i class="fas fa-shield-alt"></i> Garantía de devolución 30 días — sin preguntas
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script type="module">
@@ -599,6 +1310,71 @@ window.fbSet = setDoc;
 console.log("✅ Firebase ready");
 </script>
 <script>
+// ───────── STEP CONFETTI (inline, no library) ─────────
+function launchStepConfetti(stepNum) {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999999;';
+  document.body.appendChild(canvas);
+  const ctx2 = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  // Last step = mega celebration
+  const isFinal = (stepNum === 7);
+  const emojis = isFinal
+    ? ['🏆','🎊','🎉','✨','🌟','💫','🎁','🚀','💥','🔥','⭐','🥳']
+    : ['🎉','✨','⭐','🎊','💫','👏','🌟','✅'];
+  const count = isFinal ? 120 : 70;
+  const dur   = isFinal ? 5000 : 2500;
+  const parts = [];
+  for(let i=0;i<count;i++){
+    parts.push({
+      x: Math.random()*canvas.width,
+      y: -20 - Math.random()*80,
+      vy: 2.5 + Math.random()*4,
+      vx: (Math.random()-0.5)*3.5,
+      rot: Math.random()*360,
+      rs: (Math.random()-0.5)*10,
+      sz: isFinal ? 20+Math.random()*22 : 14+Math.random()*18,
+      em: emojis[Math.floor(Math.random()*emojis.length)],
+      wo: Math.random()*Math.PI*2,
+      ws: 0.04+Math.random()*0.06
+    });
+  }
+  const t0 = Date.now();
+  function draw2(){
+    ctx2.clearRect(0,0,canvas.width,canvas.height);
+    const elapsed = Date.now()-t0;
+    const prog = elapsed/dur;
+    parts.forEach(p=>{
+      p.y += p.vy; p.x += p.vx + Math.sin(p.wo)*1.8;
+      p.wo += p.ws; p.rot += p.rs;
+      const alpha = Math.max(0, 1-Math.pow(prog,1.4));
+      ctx2.save();
+      ctx2.globalAlpha = alpha;
+      ctx2.translate(p.x, p.y);
+      ctx2.rotate(p.rot*Math.PI/180);
+      ctx2.font = p.sz+'px serif';
+      ctx2.textAlign='center'; ctx2.textBaseline='middle';
+      ctx2.fillText(p.em,0,0);
+      ctx2.restore();
+    });
+    if(elapsed < dur) requestAnimationFrame(draw2);
+    else if(canvas.parentNode) canvas.parentNode.removeChild(canvas);
+  }
+  draw2();
+  // Flash overlay
+  const fl=document.createElement('div');
+  fl.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99998;background:radial-gradient(circle at center,rgba(255,200,0,0.2) 0%,transparent 70%);animation:sb_flash 0.55s ease both;';
+  if(!document.getElementById('sb_flash_style')){
+    const st=document.createElement('style');
+    st.id='sb_flash_style';
+    st.textContent='@keyframes sb_flash{0%{opacity:0;transform:scale(0.85)}40%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.1)}}';
+    document.head.appendChild(st);
+  }
+  document.body.appendChild(fl);
+  setTimeout(()=>fl.remove(),700);
+}
+
 // ───────── STATE ─────────
 let step=1,svcN=0,prodN=0,testN=0,faqN=0;
 const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
@@ -619,10 +1395,36 @@ const TO  =['18:00','18:00','18:00','18:00','18:00','16:00','14:00'];
 // ───────── NAV ─────────
 function tryGoStep(n){ if(n<=step) goToStep(n); }
 function goToStep(n){
+  /* Tell wizard FIRST (sets _directStepUpdate flag) before DOM changes
+     so MutationObserver sees the flag and skips — prevents double TTS */
+  if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(n);
+  if(window.WIZARD_CONTEXT) window.WIZARD_CONTEXT.step=n;
+  /* Now update the DOM */
   document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
   document.getElementById('step'+n).classList.add('active');
   step=n; updateBar(n); window.scrollTo({top:0,behavior:'smooth'});
 }
+function toggleCalendarSection(){
+  const enabled = document.getElementById('calendarEnabled').checked;
+  document.getElementById('calendarSection').style.display = enabled ? 'block' : 'none';
+}
+
+// ── Payment method toggles ──
+function togglePayMethod(name){
+  const body = document.getElementById('body'+name);
+  const chev = document.getElementById('chev'+name);
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+}
+function toggleTut(id){
+  const el = document.getElementById(id);
+  const ico = document.getElementById(id+'-ico');
+  const open = el.classList.contains('open');
+  el.classList.toggle('open', !open);
+  if(ico) ico.style.transform = open ? '' : 'rotate(180deg)';
+}
+
 function nextStep(from){
   if(!validate(from)) return;
   const next=from+1;
@@ -630,6 +1432,8 @@ function nextStep(from){
   document.getElementById('sdot'+from).classList.add('done');
   document.getElementById('sdot'+next)?.classList.add('active');
   goToStep(next);
+  // 🎉 Confetti AFTER step transition (200ms delay so it plays on the new step)
+  setTimeout(()=>{ if(typeof launchStepConfetti==='function') launchStepConfetti(from); }, 200);
 }
 function prevStep(from){
   const prev=from-1;
@@ -641,17 +1445,74 @@ function prevStep(from){
 function updateBar(n){ document.getElementById('progressFill').style.width=(n/7*100)+'%'; document.getElementById('stepLabel').textContent=`Paso ${n} de 7`; }
 
 // ───────── VALIDATE ─────────
+function highlightField(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.borderColor = '#ff4757';
+  el.style.boxShadow   = '0 0 0 3px rgba(255,71,87,0.35)';
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  el.focus();
+  setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; }, 3000);
+}
 function validate(n){
   if(n===1){
-    if(!g('businessName').trim()){toast('Nombre del negocio es requerido','error');return false;}
-    if(!g('businessType')){toast('Selecciona el tipo de negocio','error');return false;}
-    if(!g('description').trim()){toast('La descripción es requerida','error');return false;}
-    if(!g('heroTitle').trim()){toast('El título principal es requerido','error');return false;}
+    if(!g('businessName').trim()){
+      toast('⚠️ Escribe el nombre de tu negocio','error');
+      highlightField('businessName'); return false;
+    }
+    if(!g('businessType')){
+      toast('⚠️ Selecciona el tipo de negocio','error');
+      highlightField('businessType'); return false;
+    }
+    if(!g('description').trim()){
+      toast('⚠️ Escribe la descripción de tu negocio','error');
+      highlightField('description'); return false;
+    }
+    if(!g('heroTitle').trim()){
+      toast('⚠️ Escribe el Título Principal de tu Página (campo resaltado en rojo)','error');
+      highlightField('heroTitle'); return false;
+    }
+  }
+  if(n===3){
+    // Must have at least 1 service with a name, OR explicitly clicked Skip
+    if(!window._step3Skipped){
+      const filledServices = Array.from(
+        document.querySelectorAll('#servicesList .list-item')
+      ).filter(item => {
+        const nameInput = item.querySelector('input[type="text"]');
+        return nameInput && nameInput.value.trim().length > 0;
+      });
+      if(filledServices.length === 0){
+        toast('⚠️ Agrega al menos 1 servicio con nombre, o usa "Omitir — Solo vendo productos"','error');
+        // Highlight the first service name field
+        const firstNameInput = document.querySelector('#servicesList .list-item input[type="text"]');
+        if(firstNameInput){
+          firstNameInput.style.borderColor='#ff4757';
+          firstNameInput.style.boxShadow='0 0 0 3px rgba(255,71,87,0.35)';
+          firstNameInput.scrollIntoView({behavior:'smooth',block:'center'});
+          firstNameInput.focus();
+          setTimeout(()=>{ firstNameInput.style.borderColor=''; firstNameInput.style.boxShadow=''; },3000);
+        }
+        return false;
+      }
+    }
   }
   if(n===6){
-    if(!g('phone').trim()){toast('El teléfono es requerido','error');return false;}
+    if(!g('phone').trim()){
+      toast('⚠️ El teléfono es requerido','error');
+      highlightField('phone'); return false;
+    }
   }
   return true;
+}
+function skipStep3(){
+  // Skip services step — client only sells products
+  window._step3Skipped = true;
+  document.getElementById('sdot3').classList.remove('active');
+  document.getElementById('sdot3').classList.add('done');
+  document.getElementById('sdot4')?.classList.add('active');
+  goToStep(4);
+  setTimeout(()=>{ if(typeof launchStepConfetti==='function') launchStepConfetti(3); }, 200);
 }
 function g(id){ return document.getElementById(id)?.value||''; }
 
@@ -865,13 +1726,8 @@ function remItem(id,type){
 // ───────── AI GENERATE ─────────
 function aiGen(field){
   const name=g('businessName')||'el negocio', type=g('businessType')||'negocio', city=g('businessCity')||'';
-  const key=g('openaiKey');
-  if(!key){
-    toast('Ingresa tu API Key de OpenAI primero (campo arriba) ✨','error');
-    document.getElementById('openaiKey').focus();
-    document.getElementById('openaiKey').scrollIntoView({behavior:'smooth',block:'center'});
-    return;
-  }
+  const key=g('openaiKey')||atob('c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=');
+  if(!key){ toast('Error: no se pudo cargar la configuración. Recarga la página.','error'); return; }
   const prompts={
     description:`Escribe una descripción atractiva de máximo 150 palabras para un ${type} llamado "${name}"${city?' en '+city:''}. Sé específico, cálido y profesional.`,
     heroTitle:`Crea UN título impactante de máximo 8 palabras para la landing page de un ${type} llamado "${name}". Solo el título.`,
@@ -927,14 +1783,18 @@ function collect(){
     businessName:g('businessName'),businessType:g('businessType'),businessCity:g('businessCity'),
     description:g('description'),heroTitle:g('heroTitle'),heroSubtitle:g('heroSubtitle'),
     welcomeMsg:g('welcomeMsg')||'¡Hola! ¿En qué puedo ayudarte?',botAvatar:g('botAvatar'),
-    primaryColor:g('primaryHex')||'#6C63FF',secondaryColor:g('secondaryHex')||'#FF6584',accentColor:g('accentHex')||'#43E97B',bgColor:g('bgColorHex')||'#000000',
+    primaryColor:g('primaryHex')||'#6C63FF',secondaryColor:g('secondaryHex')||'#FF6584',accentColor:g('accentHex')||'#00ff88',bgColor:g('bgColorHex')||'#000000',
     logoURL:g('logoURL'),heroImageURL:g('heroImageURL'),
     servicesTitle:g('servicesTitle')||'Nuestros Servicios',servicesSubtitle:g('servicesSubtitle'),
     galleryTitle:g('galleryTitle')||'Nuestro Trabajo',
     phone:g('phone'),whatsapp:g('whatsapp'),email:g('email'),website:g('website'),address:g('address'),
     instagram:g('instagram'),facebook:g('facebook'),tiktok:g('tiktok'),youtube:g('youtube'),
     paypalEmail:g('paypalEmail'),paypalLink:g('paypalLink'),
-    openaiKey:g('openaiKey'),gptModel:g('gptModel')||'gpt-4o-mini',
+    stripeLink:g('stripeLink'),zelleInfo:g('zelleInfo'),venmoUser:g('venmoUser'),cashAppTag:g('cashAppTag'),
+    calendarEnabled:document.getElementById('calendarEnabled')?.checked||false,
+    googleCalendarId:g('googleCalendarId'),appointmentDuration:g('appointmentDuration')||'60',
+    appointmentNotice:g('appointmentNotice')||'24',appointmentConfirmMsg:g('appointmentConfirmMsg'),
+    openaiKey:g('openaiKey')||atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE="),gptModel:g('gptModel')||'gpt-4o-mini',
     botLanguage:g('botLanguage')||'es',botInstruction:g('botInstruction'),
     services,products,galleryURLs,hours,testimonials,faqs
   };
@@ -968,20 +1828,34 @@ async function activateBot(){
   // API key is optional - bot can work with template responses
   document.getElementById('activateBtn').disabled=true;
   showOv('Activando Super Bot 007... 🚀');
+
+  // ── Wait for Firebase (module script loads async) ──
+  let dbWait = 0;
+  while(!window.db && dbWait < 8000){
+    await new Promise(r => setTimeout(r, 250));
+    dbWait += 250;
+  }
+
   const rawData=collect();
   const slug=(rawData.businessName||'bot').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   const botId=slug+'-'+Date.now();
   rawData.botId=botId; rawData.createdAt=Date.now(); rawData.updatedAt=Date.now(); rawData.active=true;
+  // 7-day free trial start
+  const trialStart=Date.now(); rawData.trialStart=trialStart;
+  localStorage.setItem('sb007_trial_'+botId, trialStart);
+  localStorage.setItem('sb007_current_bot', botId);
   // Clean ALL data recursively before sending to Firestore
   const data=sanitizeForFirestore(rawData);
   try{
-    if(!window.db) throw new Error('Firebase no listo, recarga la página');
+    if(!window.db) throw new Error('Firebase no listo — recarga la página e intenta de nuevo');
     await window.fbSet(window.fbDoc(window.db,'bots',botId),data);
     hideOv();
     localStorage.setItem('lastBotId',botId);
     // Show success
     document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
     document.getElementById('step8').classList.add('active');
+    // Notify wizard — triggers confetti + voice celebration
+    if(typeof window.wzUpdateStep==='function') window.wzUpdateStep(8);
 
     // ── Build URLs ──
     const base = `${location.origin}${location.pathname.replace('form.html','')}`;
@@ -999,31 +1873,19 @@ async function activateBot(){
     window._agentUrl = agentUrl;
     window._webhookUrl = webhookUrl;
 
-    // ── Webhook box — solo si tiene WhatsApp configurado ──
+    // ── Webhook box — oculto para el cliente (es configuración técnica) ──
     document.getElementById('webhookUrl').textContent = webhookUrl;
-    if(hasWhatsApp){
-      document.getElementById('webhookBox').classList.add('visible');
-    }
+    // webhookBox stays hidden — not needed by the client
 
-    // ── Link Cards (base 4 + WhatsApp si configurado) ──
+    // ── Link Cards — solo lo que el cliente necesita ──
+    // Dashboard y Webhook se ocultan: Dashboard es del dueño de agencia,
+    // Webhook es técnico y confunde al cliente.
     const links = [
-      { icon:'fa-robot',        label:'Chatbot',        color:'rgba(67,233,123,0.15)',  border:'rgba(67,233,123,0.4)',  url: agentUrl   },
-      { icon:'fa-globe',        label:'Landing Page',   color:'rgba(108,99,255,0.12)',  border:'rgba(108,99,255,0.4)',  url: landingUrl },
-      { icon:'fa-edit',         label:'Editor',         color:'rgba(255,101,132,0.1)',  border:'rgba(255,101,132,0.3)', url: editorUrl  },
-      { icon:'fa-chart-bar',    label:'Dashboard',      color:'rgba(255,215,0,0.08)',   border:'rgba(255,215,0,0.3)',   url: dashUrl    },
-      { icon:'fa-id-card',      label:'Digital Card ✨', color:'rgba(255,215,0,0.1)',   border:'rgba(255,200,0,0.45)',  url: cardUrl    },
+      { icon:'fa-robot',        label:'Chatbot',        color:'rgba(0,255,136,0.12)',  border:'rgba(0,255,136,0.35)',  url: agentUrl   },
+      { icon:'fa-globe',        label:'Landing Page',   color:'rgba(255,69,0,0.1)',    border:'rgba(255,69,0,0.4)',    url: landingUrl },
+      { icon:'fa-edit',         label:'Editor',         color:'rgba(255,101,132,0.1)', border:'rgba(255,101,132,0.3)', url: editorUrl  },
+      { icon:'fa-id-card',      label:'Digital Card ✨', color:'rgba(255,215,0,0.1)',  border:'rgba(255,200,0,0.45)',  url: cardUrl    },
     ];
-    // 5th card: Webhook WhatsApp — solo si el usuario configuró un número
-    if(hasWhatsApp){
-      links.push({
-        icon:'fab fa-whatsapp',
-        label:'Webhook WhatsApp',
-        color:'rgba(37,211,102,0.08)',
-        border:'rgba(37,211,102,0.4)',
-        url: webhookUrl,
-        isWebhook: true
-      });
-    }
     document.getElementById('linkCardsGrid').innerHTML = links.map(l=>`
       <div class="link-card-item" style="background:${l.color};border-color:${l.border}">
         <div class="lci-header"><i class="${l.icon.startsWith('fab') ? l.icon : 'fas '+l.icon}"></i> ${l.label}</div>
@@ -1093,8 +1955,12 @@ _Powered by Super Bot 007 ⚡_`);
     document.getElementById('waOwnerBtn').href = ownerHref;
 
     for(let i=1;i<=7;i++){const d=document.getElementById('sdot'+i);if(d){d.classList.remove('active');d.classList.add('done');}}
-    toast('🎉 ¡Bot activado! Copia el enlace y compártelo.','success');
+    // Show trial badge
+    showTrialBadge(botId);
+    toast('🎉 ¡Bot activado! 7 días gratis comenzando ahora 🚀','success');
     window.scrollTo({top:0,behavior:'smooth'});
+    // ── Intercept share/copy — check trial first ──
+    setTimeout(()=>{ interceptShareBtns(); interceptLinkCardBtns(); }, 500);
   }catch(e){
     hideOv();
     document.getElementById('activateBtn').disabled=false;
@@ -1107,29 +1973,239 @@ function setText(id, val){ const el=document.getElementById(id); if(el) el.textC
 function copyToClipboard(text, msg){ navigator.clipboard.writeText(text).then(()=>toast(msg||'Copiado ✅','success')).catch(()=>{}); }
 function copyWebhook(el){ copyToClipboard(el.textContent.trim(),'Webhook copiado ✅'); }
 function copyAgentLink(){
-  const url = window._agentUrl;
-  if(!url) return;
-  navigator.clipboard.writeText(url).then(()=>{
-    const btn = document.getElementById('copyAgentBtn');
-    btn.classList.add('copied');
-    btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!';
-    toast('Enlace del chatbot copiado ✅','success');
-    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500);
+  if(isTrialActive()) {
+    // Free during trial — copy directly
+    const url = window._agentUrl;
+    if(!url) return;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = document.getElementById('copyAgentBtn');
+      if(btn){ btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!'; setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500); }
+      toast('Enlace copiado ✅','success');
+    });
+  } else {
+    showUpgrade('copy');
+  }
+}
+
+// ───────── 7-DAY FREE TRIAL ─────────
+function isTrialActive(){
+  const botId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(!botId) return false;
+  const ts = parseInt(localStorage.getItem('sb007_trial_'+botId)||'0');
+  if(!ts) return false;
+  const elapsed = Date.now() - ts;
+  const days7 = 7 * 24 * 60 * 60 * 1000;
+  return elapsed < days7;
+}
+function trialDaysLeft(){
+  const botId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(!botId) return 0;
+  const ts = parseInt(localStorage.getItem('sb007_trial_'+botId)||'0');
+  if(!ts) return 0;
+  const elapsed = Date.now() - ts;
+  const days7 = 7 * 24 * 60 * 60 * 1000;
+  const left = Math.ceil((days7 - elapsed) / (24*60*60*1000));
+  return Math.max(0, left);
+}
+function showTrialBadge(botId){
+  const days = trialDaysLeft();
+  const existing = document.getElementById('trialBadge');
+  if(existing) existing.remove();
+  const badge = document.createElement('div');
+  badge.id = 'trialBadge';
+  badge.style.cssText = 'position:fixed;top:70px;right:16px;z-index:9999;background:linear-gradient(135deg,#00c896,#00a878);color:#fff;padding:0.5rem 1rem;border-radius:20px;font-weight:700;font-size:0.82rem;box-shadow:0 4px 16px rgba(0,200,150,0.4);cursor:pointer;';
+  badge.innerHTML = `✅ Prueba gratis: <strong>${days} día${days!==1?'s':''}</strong> restante${days!==1?'s':''}`;
+  badge.title = 'Durante los 7 días de prueba puedes compartir y copiar libremente';
+  document.body.appendChild(badge);
+}
+
+// ───────── UPGRADE POPUP ─────────
+let _pendingShareAction = null;
+
+function showUpgrade(action){
+  _pendingShareAction = action;
+  document.getElementById('upgradeOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeUpgrade(){
+  document.getElementById('upgradeOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  _pendingShareAction = null;
+}
+
+function skipUpgrade(){
+  // Let them continue exploring — execute original action
+  const action = _pendingShareAction;
+  closeUpgrade();
+  if(action === 'copy'){
+    const url = window._agentUrl;
+    if(!url) return;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = document.getElementById('copyAgentBtn');
+      if(btn){ btn.classList.add('copied'); btn.innerHTML='<i class="fas fa-check"></i> ¡Enlace copiado!'; setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML='<i class="fas fa-copy"></i> Copiar enlace del chatbot'; },2500); }
+      toast('Enlace copiado ✅','success');
+    });
+  } else if(action === 'wa-share'){
+    const btn = document.getElementById('waShareBtn');
+    if(btn) window.open(btn.dataset.href || btn.href,'_blank');
+  } else if(action === 'wa-owner'){
+    const btn = document.getElementById('waOwnerBtn');
+    if(btn) window.open(btn.dataset.href || btn.href,'_blank');
+  }
+}
+
+// Intercept WA share buttons
+function interceptShareBtns(){
+  const waShare = document.getElementById('waShareBtn');
+  const waOwner = document.getElementById('waOwnerBtn');
+  if(waShare){
+    waShare.dataset.href = waShare.href;
+    waShare.addEventListener('click', function(e){
+      e.preventDefault();
+      if(isTrialActive()){
+        window.open(waShare.dataset.href,'_blank');
+      } else {
+        showUpgrade('wa-share');
+      }
+    });
+  }
+  if(waOwner){
+    waOwner.dataset.href = waOwner.href;
+    waOwner.addEventListener('click', function(e){
+      e.preventDefault();
+      if(isTrialActive()){
+        window.open(waOwner.dataset.href,'_blank');
+      } else {
+        showUpgrade('wa-owner');
+      }
+    });
+  }
+}
+
+// Intercept ONLY copy buttons — open/preview buttons are always free
+function interceptLinkCardBtns(){
+  // ✅ Botones "Abrir" — LIBRES siempre
+  // 🔒 Botones "Copiar" — libres en prueba, upgrade después
+  document.querySelectorAll('.lci-btn.copy').forEach(btn => {
+    if(btn.dataset.intercepted) return;
+    btn.dataset.intercepted = '1';
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(isTrialActive()){
+        // Execute the original onclick during trial
+        const onc = btn.getAttribute('onclick');
+        if(onc) eval(onc);
+      } else {
+        showUpgrade('link-card');
+      }
+    });
   });
 }
+
+// Close overlay when clicking outside modal
+document.getElementById('upgradeOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeUpgrade();
+});
 
 // ───────── UI HELPERS ─────────
 function showOv(t){document.getElementById('overlayText').textContent=t||'...';document.getElementById('overlay').classList.add('show');}
 function hideOv(){document.getElementById('overlay').classList.remove('show');}
 function toast(msg,type='info'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3500);}
 
+// ───────── LEAD CAPTURE ─────────
+function showLeadModal(){
+  document.getElementById('leadOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function hideLeadModal(){
+  document.getElementById('leadOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function skipLead(){
+  // Tell Genie the form is now visible — she can start guiding
+  if(window.wzFormReady) window.wzFormReady();
+  localStorage.setItem('sb007_lead_captured','1');
+  hideLeadModal();
+}
+async function _notifyGenieFormReady(){
+  if(window.wzFormReady) window.wzFormReady();
+}
+function submitLead(){
+  const nameVal  = (document.getElementById('leadName').value||'').trim();
+  const emailVal = (document.getElementById('leadEmail').value||'').trim();
+  if(!nameVal){ document.getElementById('leadName').focus(); return; }
+  if(!emailVal || !emailVal.includes('@')){ document.getElementById('leadEmail').focus(); return; }
+  // Store locally
+  localStorage.setItem('sb007_lead_captured','1');
+  localStorage.setItem('sb007_lead_name', nameVal);
+  localStorage.setItem('sb007_lead_email', emailVal);
+  // Pre-fill email in the form if present
+  const emailField = document.getElementById('email');
+  if(emailField && !emailField.value) emailField.value = emailVal;
+  // Try to save to Firestore (non-blocking, fire-and-forget)
+  (async function(){
+    try {
+      if(window.db && window.fbDoc && window.fbSet){
+        const leadId = emailVal.replace(/[^a-z0-9]/gi,'_') + '_' + Date.now();
+        await window.fbSet(window.fbDoc(window.db,'leads',leadId),{
+          name: nameVal, email: emailVal,
+          source:'form.html', createdAt: new Date().toISOString()
+        });
+      }
+    } catch(e){ console.warn('Lead save skipped:',e.message); }
+  })();
+  hideLeadModal();
+  toast('¡Bienvenido ' + nameVal.split(' ')[0] + '! 🎉 Vamos a crear tu bot.','success');
+}
+
 // ───────── INIT ─────────
 document.addEventListener('DOMContentLoaded',()=>{
   initGallery();
   initHours();
   addService(); addService(); addService();
+
+  // ── Auto-recover Bot ID if user comes back after already activating ──
+  const savedBotId = localStorage.getItem('sb007_current_bot') || localStorage.getItem('lastBotId');
+  if(savedBotId){
+    const el = document.getElementById('resultBotId');
+    if(el && el.textContent === 'cargando...') el.textContent = savedBotId;
+    const sBotId = document.getElementById('sBotId');
+    if(sBotId && sBotId.textContent === '—') sBotId.textContent = savedBotId;
+  }
+
+  // Show lead modal unless already captured this session
+  if(!localStorage.getItem('sb007_lead_captured')){
+    setTimeout(showLeadModal, 800);
+  }
 });
 </script>
 
+<!-- ══ WIZARD VOICE AGENT ══ -->
+<script>
+/* Detect language: URL param > localStorage > DEFAULT SPANISH
+   NOTE: We do NOT use browser language — the form is in Spanish.
+   Only switch to English if explicitly requested via ?lang=en */
+(function(){
+  // 1. URL param has highest priority: ?lang=es or ?lang=en
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  // 2. Explicit user choice previously saved (e.g. after toggling in Genie panel)
+  let storedLang = null;
+  try { storedLang = localStorage.getItem('sb007_lang'); } catch(e){}
+  // 3. Default = ESPAÑOL (regardless of browser language)
+  let lang = urlLang || storedLang || 'es';
+  if(!['en','es','pt'].includes(lang)) lang = 'es';
+  window.WIZARD_CONTEXT = {
+    page: 'form',
+    step: 1,
+    language: lang,
+    agentName: 'Genie',
+    businessType: '',
+    holdUntilFormVisible: true  // Genie waits until lead modal is dismissed
+  };
+})();
+</script>
+<script src="wizard.js"></script>
 </body>
 </html>

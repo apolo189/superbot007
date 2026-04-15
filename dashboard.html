@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','504272922277035');fbq('track','PageView');
+</script>
+<noscript><img height='1' width='1' style='display:none' src='https://www.facebook.com/tr?id=504272922277035&ev=PageView&noscript=1'/></noscript>
+<!-- End Meta Pixel Code -->
 <script>
 (function(){
   if("serviceWorker" in navigator){
@@ -21,6 +27,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Center – Super Bot 007</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -347,12 +354,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#000000 !importa
     appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
   });
   const db = getFirestore(app);
+
   window.db        = db;
   window._getDocs  = getDocs;
   window._col      = collection;
   window._doc      = doc;
   window._updateDoc= updateDoc;
   window._getDoc   = getDoc;
+
+  // Note: Anonymous auth is disabled in Firebase project.
+  // Reads for bots collection work without auth (public read allowed).
+  // Appointments and messages are read via Cloudflare Worker KV endpoints.
   window._fbReady  = true;
   window.dispatchEvent(new Event('fbReady'));
 </script>
@@ -395,23 +407,49 @@ async function loadBots(){
 }
 
 async function loadAppts(){
-  if(!window.db) return;
+  allAppts = [];
+  // Primary: Cloudflare Worker KV endpoint (persistent across all worker instances)
   try{
-    const snap = await window._getDocs(window._col(window.db,'appointments'));
-    allAppts=[];
-    snap.forEach(d=>allAppts.push({id:d.id,...d.data()}));
-    allAppts.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  }catch(e){ console.warn('loadAppts',e); }
+    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/appointments?limit=200',
+      { signal: AbortSignal.timeout(8000) });
+    if(r.ok){
+      const data = await r.json();
+      if(Array.isArray(data.appointments)){
+        allAppts = data.appointments;
+      }
+    }
+  }catch(e){ console.warn('loadAppts Worker error:', e.message); }
+  // Fallback: Try Firestore JS SDK (only if Worker returned nothing)
+  if(allAppts.length === 0 && window.db){
+    try{
+      const snap = await window._getDocs(window._col(window.db,'appointments'));
+      snap.forEach(d=>allAppts.push({id:d.id,...d.data()}));
+    }catch(e){ /* Firestore rules block unauthenticated reads */ }
+  }
+  allAppts.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 
 async function loadMsgs(){
-  if(!window.db) return;
+  allMsgs = [];
+  // Primary: Cloudflare Worker KV endpoint (persistent across all worker instances)
   try{
-    const snap = await window._getDocs(window._col(window.db,'messages'));
-    allMsgs=[];
-    snap.forEach(d=>allMsgs.push({id:d.id,...d.data()}));
-    allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  }catch(e){ allMsgs=[]; }
+    const r = await fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/messages?limit=200',
+      { signal: AbortSignal.timeout(8000) });
+    if(r.ok){
+      const data = await r.json();
+      if(Array.isArray(data.messages)){
+        allMsgs = data.messages;
+      }
+    }
+  }catch(e){ console.warn('loadMsgs Worker error:', e.message); }
+  // Fallback: Try Firestore (only if Worker returned nothing and rules allow)
+  if(allMsgs.length === 0 && window.db){
+    try{
+      const snap = await window._getDocs(window._col(window.db,'messages'));
+      snap.forEach(d=>allMsgs.push({id:d.id,...d.data()}));
+    }catch(e){ /* Firestore rules may block unauthenticated reads */ }
+  }
+  allMsgs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 
 function buildClients(){
@@ -717,7 +755,7 @@ async function checkCloudflare(){
 
 async function checkGitHub(){
   try{
-    const r = await fetch('https://apolo189.github.io/superbot007/admin.html',{
+    const r = await fetch('https://superbot007.com/admin.html',{
       method:'HEAD', signal: AbortSignal.timeout(8000)
     });
     setHealth('github', r.ok, 'Pages Online ✅', 'Sin respuesta ❌');

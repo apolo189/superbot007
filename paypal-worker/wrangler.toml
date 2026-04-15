@@ -1,0 +1,8 @@
+name = "superbot007-paypal"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+account_id = "bacef02447c4158d74bd20cc1eb0443f"
+
+[vars]
+PAYPAL_CLIENT_ID = "AUVdPqYB7o1U8VBwrjEfxNIKW0uKp2hFSIECnk51iA5QfBFpbEFLuU8sLnBk5JkV-kkyS9yBBi0Jk"
+PAYPAL_WEBHOOK_ID = "placeholder"

@@ -21,6 +21,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hub – Super Bot 007</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -31,10 +32,10 @@
   --grad:linear-gradient(135deg,#f24207,#FF6584);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{min-height:100%;font-family:'Inter',sans-serif;background:#000;color:var(--text);overflow-x:hidden;}
+html,body{min-height:100%;font-family:'Inter',sans-serif;background:#000;color:var(--text);overflow-x:hidden;overflow-y:scroll;width:100%;max-width:100%;}
 
 /* ── PARTICLES ── */
-#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;will-change:auto;}
 
 /* ── LOCK SCREEN ── */
 #lockScreen{
@@ -400,7 +401,7 @@ async function checkCloudflare(){
 }
 async function checkGitHub(){
   try{
-    const r=await fetch('https://apolo189.github.io/superbot007/admin.html',{method:'HEAD',signal:AbortSignal.timeout(8000)});
+    const r=await fetch('https://superbot007.com/admin.html',{method:'HEAD',signal:AbortSignal.timeout(8000)});
     setH('github',r.ok,'Pages Online ✅','Sin respuesta ❌');
   }catch(e){ setH('github',false,'Pages Online ✅','Sin respuesta ❌'); }
 }
@@ -415,30 +416,62 @@ function toast(msg,dur=2500){
   setTimeout(()=>t.classList.remove('show'),dur);
 }
 
-// ── PARTICLES ──
+// ── PARTICLES — sin temblor ──
 (function(){
   const c=document.getElementById('bgCanvas');
   const ctx=c.getContext('2d');
-  let W,H,pts=[];
-  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
-  resize(); window.addEventListener('resize',resize);
-  for(let i=0;i<55;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:0,vy:0,r:Math.random()*1.5+0.5,a:Math.random()*0.25+0.05});
-  // Draw once — static particles, no movement, no shake
+  let W=0,H=0,pts=[];
+  let resizeTimer=null;
+
+  function setSize(){
+    // Usa el tamaño real del viewport sin forzar reflow
+    const dpr=1; // sin devicePixelRatio para evitar shake
+    W=window.innerWidth;
+    H=window.innerHeight;
+    c.width=W;
+    c.height=H;
+  }
+
+  function initPts(){
+    pts=[];
+    for(let i=0;i<50;i++){
+      pts.push({
+        x:Math.random()*W, y:Math.random()*H,
+        r:Math.random()*1.4+0.4,
+        a:Math.random()*0.22+0.04
+      });
+    }
+  }
+
   function draw(){
     ctx.clearRect(0,0,W,H);
     pts.forEach((p,i)=>{
       ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(242,66,7,${p.a})`; ctx.fill();
+      ctx.fillStyle='rgba(242,66,7,'+p.a+')'; ctx.fill();
       pts.slice(i+1).forEach(q=>{
         const d=Math.hypot(p.x-q.x,p.y-q.y);
-        if(d<120){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=`rgba(242,66,7,${0.06*(1-d/120)})`; ctx.lineWidth=0.5; ctx.stroke(); }
+        if(d<110){
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle='rgba(242,66,7,'+(0.05*(1-d/110))+')';
+          ctx.lineWidth=0.5; ctx.stroke();
+        }
       });
     });
   }
-  draw();
-  window.addEventListener('resize',()=>{ resize(); draw(); });
+
+  // Init
+  setSize(); initPts(); draw();
+
+  // Resize con debounce — evita temblor por múltiples eventos
+  window.addEventListener('resize',function(){
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(function(){ setSize(); initPts(); draw(); },120);
+  });
 })();
 </script>
+
+<!-- ── UPGRADE POPUP SYSTEM ── -->
+<script src="upgrade-popup.js"></script>
 
 </body>
 </html>

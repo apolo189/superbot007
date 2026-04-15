@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head><title>Creating demo bot...</title></head>
+<body>
+<p id="status">Creating demo bot with Google Calendar...</p>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyDuc8AX8NTfEJHsJP018uG1J3b1PG4KKrQ",
+  authDomain:"super-bot-007.firebaseapp.com",
+  projectId:"super-bot-007",
+  storageBucket:"super-bot-007.firebasestorage.app",
+  messagingSenderId:"929685785305",
+  appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
+});
+
+const db = getFirestore(app);
+const botId = "superbot007-demo-calendar";
+
+const demoData = {
+  botId,
+  businessName: "SuperBot007 Demo Spa",
+  businessType: "Spa & Belleza",
+  businessCity: "Miami, FL",
+  description: "El mejor spa de Miami. Servicios de relajación, masajes y tratamientos de belleza premium.",
+  heroTitle: "Bienvenida al Paraíso",
+  heroSubtitle: "Tu momento de relajación te espera",
+  welcomeMsg: "¡Hola! Soy tu asistente virtual 🌸 ¿En qué puedo ayudarte hoy?",
+  primaryColor: "#7c3aed",
+  secondaryColor: "#ff0099",
+  accentColor: "#00ff88",
+  bgColor: "#0d0820",
+  phone: "+1 (305) 555-0123",
+  whatsapp: "13055550123",
+  email: "demo@superbot007.com",
+  botLanguage: "es",
+  gptModel: "gpt-4o-mini",
+  calendarEnabled: true,
+  googleCalendarId: "demo@superbot007.com",
+  appointmentDuration: "60",
+  appointmentNotice: "24",
+  appointmentConfirmMsg: "¡Tu cita está confirmada! Te esperamos 🌸",
+  paypalEmail: "demo@superbot007.com",
+  paypalLink: "https://paypal.me/superbot007demo",
+  services: [
+    { name: "Masaje Relajante", price: "$80", desc: "60 min de pura relajación" },
+    { name: "Facial Premium", price: "$65", desc: "Limpieza facial profunda" },
+    { name: "Manicure + Pedicure", price: "$55", desc: "Uñas perfectas" },
+    { name: "Masaje de Piedras", price: "$95", desc: "Terapia con piedras calientes" }
+  ],
+  hours: {
+    sunday: { open: false, from: "09:00", to: "18:00" },
+    monday: { open: true, from: "09:00", to: "19:00" },
+    tuesday: { open: true, from: "09:00", to: "19:00" },
+    wednesday: { open: true, from: "09:00", to: "19:00" },
+    thursday: { open: true, from: "09:00", to: "19:00" },
+    friday: { open: true, from: "09:00", to: "20:00" },
+    saturday: { open: true, from: "10:00", to: "17:00" }
+  },
+  testimonials: [
+    { name: "María García", stars: 5, text: "¡El mejor spa de Miami! Volveré pronto." },
+    { name: "Carlos López", stars: 5, text: "Servicio increíble, muy profesionales." }
+  ],
+  faqs: [
+    { q: "¿Cómo agendo una cita?", a: "Puedes agendar aquí mismo con el asistente o llamarnos directamente." },
+    { q: "¿Aceptan pagos con tarjeta?", a: "Sí, aceptamos PayPal, Zelle, efectivo y tarjetas." }
+  ],
+  active: true,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+  trialStart: Date.now()
+};
+
+try {
+  await setDoc(doc(db, 'bots', botId), demoData);
+  document.getElementById('status').innerHTML = '✅ Demo bot created! Bot ID: ' + botId;
+  console.log('✅ Created:', botId);
+} catch(e) {
+  document.getElementById('status').innerHTML = '❌ Error: ' + e.message;
+  console.error(e);
+}
+</script>
+</body>
+</html>

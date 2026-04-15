@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '504272922277035');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=504272922277035<head>ev=PageView<head>noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <script>
 (function(){
   if("serviceWorker" in navigator){
@@ -21,6 +38,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chatbot – Super Bot 007</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 <style>
@@ -48,7 +66,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 .app-shell {
   position: relative; z-index: 1;
   display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr var(--right-w);
+  grid-template-columns: var(--sidebar-w) minmax(0,1fr) var(--right-w);
   height: 100vh;
 }
 
@@ -155,6 +173,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   background: rgba(5,5,15,0.7);
   border-right: 1px solid var(--border);
   overflow: hidden; position: relative;
+  min-width: 0; /* prevent grid blowout so quick-btns scroll works */
 }
 
 /* CHAT TOPBAR */
@@ -200,14 +219,31 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 }
 .cart-topbar-count.show { display: flex; }
 
+/* LANG TOGGLE BUTTON */
+.lang-btn {
+  width: auto; min-width: 54px; height: 34px; border-radius: 10px;
+  border: 1.5px solid rgba(108,99,255,0.5); background: rgba(108,99,255,0.18);
+  color: #fff; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.5px; gap: 0.3rem; padding: 0 0.65rem;
+  transition: all 0.2s; box-shadow: 0 2px 10px rgba(108,99,255,0.25);
+}
+.lang-btn:hover { border-color: var(--p); background: rgba(108,99,255,0.35); transform: scale(1.05); }
+
 /* QUICK BUTTONS */
 .quick-btns {
   display: flex; gap: 0.4rem; padding: 0.5rem 0.9rem;
   overflow-x: auto; flex-shrink: 0;
   background: rgba(5,5,15,0.6);
   border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-wrap: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 }
-.quick-btns::-webkit-scrollbar { height: 0; }
+.quick-btns::-webkit-scrollbar { height: 3px; }
+.quick-btns::-webkit-scrollbar-track { background: transparent; }
+.quick-btns::-webkit-scrollbar-thumb { background: rgba(108,99,255,0.35); border-radius: 10px; }
 .quick-btn {
   white-space: nowrap; padding: 0.32rem 0.75rem;
   background: rgba(108,99,255,0.09); border: 1px solid rgba(108,99,255,0.2);
@@ -219,7 +255,67 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   background: rgba(255,101,132,0.1); border-color: rgba(255,101,132,0.3); color: var(--s);
 }
 .quick-btn.products-btn:hover { background: rgba(255,101,132,0.2); border-color: var(--s); color: white; }
+/* FAQ quick buttons — same bar, different accent color */
+.quick-btn.faq-btn {
+  background: rgba(255,200,0,0.07); border-color: rgba(255,200,0,0.25); color: #FFD700;
+}
+.quick-btn.faq-btn:hover { background: rgba(255,200,0,0.18); border-color: #FFD700; color: white; }
+/* FAQ row — second line, smaller padding, border-top only */
+.quick-btns.faq-row {
+  padding: 0.35rem 0.9rem;
+  border-top: 1px solid rgba(255,200,0,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  background: rgba(3,3,12,0.7);
+}
 
+/* ══════ TUTORIAL PANEL ══════ */
+.tut-step {
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 10px; margin-bottom: 0.6rem;
+  overflow: hidden; background: rgba(108,99,255,0.04);
+}
+.tut-step-hdr {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.6rem 0.8rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.tut-step-hdr:hover { background: rgba(108,99,255,0.1); }
+.tut-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 800;
+  background: rgba(242,66,7,0.15); border: 1px solid rgba(242,66,7,0.4); color: #f24207;
+}
+.tut-num-green { background: rgba(67,233,123,0.12); border-color: rgba(67,233,123,0.3); color: #43E97B; }
+.tut-num-blue  { background: rgba(79,172,254,0.12); border-color: rgba(79,172,254,0.3); color: #4facfe; }
+.tut-num-yellow{ background: rgba(255,200,0,0.12);  border-color: rgba(255,200,0,0.3);  color: #FFD700; }
+.tut-title { font-size: 0.8rem; font-weight: 700; flex: 1; }
+.tut-arrow { color: rgba(255,255,255,0.25); font-size: 0.7rem; transition: transform 0.2s; }
+.tut-step.open .tut-arrow { transform: rotate(90deg); color: var(--p); }
+.tut-body { display: none; padding: 0.6rem 0.8rem 0.8rem 2.5rem; }
+.tut-step.open .tut-body { display: block; }
+.tut-body p { font-size: 0.78rem; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 0.6rem; }
+.tut-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.75rem;
+  font-weight: 700; text-decoration: none; cursor: pointer;
+  border: 1px solid; transition: all 0.2s; margin-top: 0.2rem;
+}
+.tut-btn-red    { background: rgba(242,66,7,0.12);  border-color: rgba(242,66,7,0.4);  color: #f24207; }
+.tut-btn-green  { background: rgba(67,233,123,0.1); border-color: rgba(67,233,123,0.3);color: #43E97B; }
+.tut-btn-blue   { background: rgba(79,172,254,0.1); border-color: rgba(79,172,254,0.3);color: #4facfe; }
+.tut-btn-purple { background: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3);color: #a89cff; }
+.tut-btn:hover  { filter: brightness(1.3); transform: translateY(-1px); }
+.tut-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
+.tut-link-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 0.4rem 0.7rem; gap: 0.5rem;
+}
+.tut-link-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); min-width: 60px; }
+.tut-link-url   { font-size: 0.68rem; color: #a89cff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tut-link-copy  { font-size: 0.68rem; background: none; border: none; color: var(--muted); cursor: pointer; padding: 0.2rem 0.4rem; border-radius: 4px; transition: all 0.2s; flex-shrink: 0; }
+.tut-link-copy:hover { background: rgba(108,99,255,0.2); color: white; }
 /* MESSAGES */
 .messages {
   flex: 1; overflow-y: auto; padding: 1rem 1.1rem;
@@ -449,15 +545,15 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 .booking-panel { padding: 0.9rem; flex: 1; }
 .bk-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); margin-bottom: 0.28rem; display: block; }
 .bk-input, .bk-select, .bk-textarea {
-  width: 100%; padding: 0.52rem 0.72rem;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-  border-radius: 10px; color: var(--text); font-family: 'Inter',sans-serif;
-  font-size: 0.81rem; outline: none; transition: border-color 0.2s, background 0.2s;
+  width: 100%; padding: 0.58rem 0.78rem;
+  background: rgba(255,255,255,0.09); border: 1px solid rgba(108,99,255,0.45);
+  border-radius: 10px; color: #fff; font-family: 'Inter',sans-serif;
+  font-size: 0.84rem; outline: none; transition: border-color 0.2s, background 0.2s;
   margin-bottom: 0.62rem;
 }
-.bk-input:focus, .bk-select:focus, .bk-textarea:focus { border-color: var(--p); background: rgba(108,99,255,0.08); }
-.bk-input::placeholder, .bk-textarea::placeholder { color: var(--muted); }
-.bk-select option { background: #1a1a3e; }
+.bk-input:focus, .bk-select:focus, .bk-textarea:focus { border-color: var(--p); background: rgba(108,99,255,0.15); box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+.bk-input::placeholder, .bk-textarea::placeholder { color: rgba(200,200,220,0.5); }
+.bk-select option { background: #1a1a3e; color: #fff; }
 .bk-textarea { resize: none; }
 .bk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
 .bk-row .bk-input { margin-bottom: 0; }
@@ -477,39 +573,39 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
 .bk-step-dot { flex:1; text-align:center; font-size:0.65rem; font-weight:700; color:var(--muted); position:relative; }
 .bk-step-dot.active { color:var(--a); }
 .bk-step-dot.done { color:var(--a); }
-.bk-step-dot span { display:block; width:22px; height:22px; border-radius:50%; border:2px solid var(--border); margin:0 auto 3px; line-height:18px; font-size:0.65rem; }
-.bk-step-dot.active span { border-color:var(--a); background:rgba(67,233,123,0.18); color:var(--a); }
-.bk-step-dot.done span { border-color:var(--a); background:rgba(67,233,123,0.15); color:var(--a); }
+.bk-step-dot span { display:block; width:24px; height:24px; border-radius:50%; border:2px solid rgba(108,99,255,0.3); margin:0 auto 3px; line-height:20px; font-size:0.68rem; font-weight:800; color:rgba(180,180,220,0.6); }
+.bk-step-dot.active span { border-color:var(--a); background:rgba(67,233,123,0.22); color:var(--a); box-shadow:0 0 8px rgba(67,233,123,0.3); }
+.bk-step-dot.done span { border-color:var(--a); background:rgba(67,233,123,0.18); color:var(--a); }
 .bk-step-line { flex:0 0 18px; height:2px; background:var(--border); margin-bottom:14px; }
 .bk-step-line { flex:0 0 18px; height:2px; background:rgba(67,233,123,0.25); margin-bottom:14px; }
 .bk-step-line.done { background:var(--a); }
 .bk-cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.55rem; }
-.bk-cal-nav button { background:rgba(108,99,255,0.12); border:1px solid var(--border); color:var(--text); border-radius:8px; width:28px; height:28px; cursor:pointer; font-size:0.75rem; transition:all 0.2s; }
-.bk-cal-nav button:hover { background:rgba(108,99,255,0.25); border-color:var(--p); }
-.bk-cal-month { font-size:0.82rem; font-weight:700; color:var(--text); }
+.bk-cal-nav button { background:rgba(108,99,255,0.18); border:1px solid rgba(108,99,255,0.4); color:#fff; border-radius:8px; width:30px; height:30px; cursor:pointer; font-size:0.85rem; font-weight:800; transition:all 0.2s; }
+.bk-cal-nav button:hover { background:rgba(108,99,255,0.35); border-color:var(--p); transform:scale(1.1); }
+.bk-cal-month { font-size:0.88rem; font-weight:800; color:#fff; letter-spacing:0.02em; }
 .bk-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
-.bk-cal-dow { font-size:0.58rem; font-weight:700; color:var(--muted); text-align:center; padding:2px 0; }
-.bk-cal-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:0.72rem; font-weight:600; cursor:pointer; border:1px solid transparent; transition:all 0.18s; color:var(--text); }
-.bk-cal-day:hover:not(.disabled):not(.empty) { background:rgba(108,99,255,0.2); border-color:var(--p); }
-.bk-cal-day.today { border-color:rgba(108,99,255,0.4); color:var(--p); }
-.bk-cal-day.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 2px 10px rgba(108,99,255,0.4); }
-.bk-cal-day.disabled { color:rgba(144,144,176,0.3); cursor:not-allowed; }
-.bk-cal-day.empty { cursor:default; }
-.bk-cal-day.closed { color:rgba(255,71,87,0.35); cursor:not-allowed; text-decoration:line-through; }
+.bk-cal-dow { font-size:0.62rem; font-weight:800; color:rgba(180,180,220,0.9); text-align:center; padding:3px 0; letter-spacing:0.03em; }
+.bk-cal-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; border:1px solid rgba(108,99,255,0.15); transition:all 0.18s; color:rgba(230,230,255,0.9); background:rgba(255,255,255,0.04); }
+.bk-cal-day:hover:not(.disabled):not(.empty):not(.closed) { background:rgba(108,99,255,0.28); border-color:var(--p); color:#fff; transform:scale(1.08); }
+.bk-cal-day.today { border-color:rgba(108,99,255,0.7); color:#fff; background:rgba(108,99,255,0.18); font-weight:900; }
+.bk-cal-day.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 3px 14px rgba(108,99,255,0.5); transform:scale(1.1); }
+.bk-cal-day.disabled { color:rgba(144,144,176,0.2); cursor:not-allowed; background:transparent; border-color:transparent; }
+.bk-cal-day.empty { cursor:default; background:transparent; border-color:transparent; }
+.bk-cal-day.closed { color:rgba(255,71,87,0.3); cursor:not-allowed; text-decoration:line-through; background:transparent; border-color:transparent; }
 .bk-time-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; max-height:160px; overflow-y:auto; padding-right:2px; }
 .bk-time-grid::-webkit-scrollbar { width:3px; }
 .bk-time-grid::-webkit-scrollbar-track { background:transparent; }
 .bk-time-grid::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
-.bk-time-slot { padding:0.38rem 0.2rem; text-align:center; border:1px solid var(--border); border-radius:8px; font-size:0.72rem; font-weight:600; cursor:pointer; color:var(--muted); transition:all 0.18s; background:rgba(255,255,255,0.02); }
-.bk-time-slot:hover { border-color:var(--p); color:var(--p); background:rgba(108,99,255,0.1); }
-.bk-time-slot.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 2px 8px rgba(108,99,255,0.35); }
-.bk-section-title { font-size:0.7rem; font-weight:700; color:var(--muted); margin:0.6rem 0 0.35rem; text-transform:uppercase; letter-spacing:0.04em; }
+.bk-time-slot { padding:0.45rem 0.2rem; text-align:center; border:1px solid rgba(108,99,255,0.3); border-radius:8px; font-size:0.75rem; font-weight:700; cursor:pointer; color:rgba(200,200,255,0.85); transition:all 0.18s; background:rgba(108,99,255,0.08); }
+.bk-time-slot:hover { border-color:var(--p); color:#fff; background:rgba(108,99,255,0.22); transform:translateY(-1px); }
+.bk-time-slot.selected { background:var(--grad); color:white; border-color:transparent; box-shadow:0 3px 12px rgba(108,99,255,0.45); transform:translateY(-1px); }
+.bk-section-title { font-size:0.72rem; font-weight:800; color:rgba(180,180,230,0.9); margin:0.6rem 0 0.4rem; text-transform:uppercase; letter-spacing:0.06em; }
 .bk-selected-badge { display:inline-flex; align-items:center; gap:0.35rem; background:rgba(67,233,123,0.12); border:1px solid rgba(67,233,123,0.3); border-radius:20px; padding:0.25rem 0.65rem; font-size:0.72rem; font-weight:700; color:var(--a); margin-bottom:0.5rem; }
 .bk-nav-btns { display:flex; gap:0.4rem; margin-top:0.6rem; }
-.bk-back-btn { flex:0 0 auto; padding:0.6rem 0.8rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:10px; color:var(--muted); font-size:0.78rem; cursor:pointer; transition:all 0.2s; }
-.bk-back-btn:hover { border-color:var(--p); color:var(--text); }
-.bk-next-btn { flex:1; padding:0.6rem; background:var(--grad); border:none; border-radius:10px; color:white; font-weight:800; font-size:0.8rem; cursor:pointer; transition:all 0.2s; box-shadow:0 3px 12px rgba(108,99,255,0.35); }
-.bk-next-btn:hover { opacity:0.9; transform:translateY(-1px); }
+.bk-back-btn { flex:0 0 auto; padding:0.6rem 0.9rem; background:rgba(255,255,255,0.08); border:1px solid rgba(108,99,255,0.35); border-radius:10px; color:rgba(200,200,255,0.85); font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.bk-back-btn:hover { border-color:var(--p); color:#fff; background:rgba(108,99,255,0.15); }
+.bk-next-btn { flex:1; padding:0.62rem; background:var(--grad); border:none; border-radius:10px; color:white; font-weight:900; font-size:0.82rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(108,99,255,0.4); letter-spacing:0.02em; }
+.bk-next-btn:hover { opacity:0.92; transform:translateY(-2px); box-shadow:0 6px 20px rgba(108,99,255,0.5); }
 
 .bk-success {
   text-align: center; padding: 1.2rem 0.8rem;
@@ -606,6 +702,7 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <div class="biz-name" id="bizNameEl">Super Bot 007</div>
       <div class="biz-type" id="bizTypeEl">Asistente Virtual</div>
       <div class="online-badge"><span class="online-dot"></span> En línea</div>
+      <div id="botIdBadge" style="display:none;margin-top:0.4rem;font-size:0.65rem;color:var(--muted);font-family:monospace;cursor:pointer;background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.25);border-radius:6px;padding:0.2rem 0.5rem;" onclick="navigator.clipboard.writeText(this.dataset.id).then(()=>{this.textContent='\u2705 Copiado!';setTimeout(()=>{this.textContent='\U0001f194 '+this.dataset.id;},1500)})" title="Haz clic para copiar tu Bot ID"></div>
     </div>
     <div class="info-section" id="contactSection" style="display:none">
       <div class="info-section-title"><i class="fas fa-address-card"></i> Contacto</div>
@@ -624,8 +721,16 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <div class="social-links" id="socialLinks"></div>
     </div>
     <div class="panel-actions" id="panelActions">
+      <!-- PayPal Button — shown when paypalLink exists -->
+      <a class="panel-action-btn" id="paypalBtnLeft" href="#" target="_blank" style="display:none;background:linear-gradient(135deg,rgba(0,112,186,0.2),rgba(0,56,118,0.15));border:1px solid rgba(0,112,186,0.45);color:#1E9BF0;">
+        <i class="fab fa-paypal"></i> Pagar con PayPal — $10.99
+      </a>
       <a class="panel-action-btn landing" id="landingBtn" href="#" target="_blank">
         <i class="fas fa-globe"></i> Ver Landing Page
+      </a>
+      <a class="panel-action-btn" id="editorBtnLeft" href="#" target="_blank"
+         style="background:rgba(255,101,132,0.1);border:1px solid rgba(255,101,132,0.35);color:#ff6584;">
+        <i class="fas fa-paint-brush"></i> Editar Landing
       </a>
       <a class="panel-action-btn" id="cardBtnLeft" href="#" target="_blank" style="display:none;background:linear-gradient(135deg,rgba(255,200,0,0.15),rgba(255,140,0,0.1));border:1px solid rgba(255,200,0,0.4);color:#FFD700;">
         <i class="fas fa-id-card"></i> Tarjeta Digital
@@ -633,6 +738,24 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
       <a class="panel-action-btn wa" id="waBtnLeft" href="#" target="_blank" style="display:none">
         <i class="fab fa-whatsapp"></i> WhatsApp
       </a>
+      <!-- FAQ + Tutorial Button -->
+      <a class="panel-action-btn" href="ayuda.html" target="_blank"
+         style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.35);color:#a89cff;">
+        <i class="fas fa-book-open"></i> FAQ &amp; Tutorial
+      </a>
+      <!-- Acceso rápido -->
+      <a class="panel-action-btn" href="acceso.html" target="_blank"
+         style="background:rgba(255,69,0,0.08);border:1px solid rgba(255,69,0,0.3);color:#ff7043;">
+        <i class="fas fa-key"></i> Acceder a mis Bots
+      </a>
+    </div>
+
+    <!-- FAQ PANEL (collapsible) -->
+    <div id="faqPanel" style="display:none;padding:0 1rem 1rem;">
+      <div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">
+        <i class="fas fa-question-circle" style="color:var(--p);"></i> Preguntas Frecuentes
+      </div>
+      <div id="faqList"></div>
     </div>
   </div>
 
@@ -651,13 +774,77 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-topbar-count" id="cartTopbarCount">0</span>
         </button>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleChatLang()" title="Cambiar idioma / Switch language"><span id="langBtnFlag">🇪🇸</span> <span id="langBtnLabel">ES</span></button>
+        <button class="topbar-btn" onclick="toggleTutorialPanel()" title="Tutorial" id="tutorialTopBtn"><i class="fas fa-book-open"></i></button>
         <button class="topbar-btn" onclick="clearChat()" title="Limpiar chat"><i class="fas fa-trash-alt"></i></button>
         <a class="topbar-btn" href="index.html" title="Inicio"><i class="fas fa-home"></i></a>
       </div>
     </div>
 
-    <!-- Quick Buttons -->
+    <!-- Tutorial Panel (inline, toggle) -->
+    <div id="tutorialPanel" style="display:none;background:rgba(8,8,22,0.98);border-bottom:1px solid rgba(108,99,255,0.25);padding:1rem 1.1rem;overflow-y:auto;max-height:55vh;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+        <div style="font-size:0.82rem;font-weight:800;color:#a89cff;"><i class="fas fa-book-open" style="margin-right:0.4rem;"></i>📖 Tutorial — Cómo usar Super Bot 007</div>
+        <button onclick="toggleTutorialPanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="tut-step" id="tut1">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut1')">
+          <span class="tut-num">1</span>
+          <span class="tut-title">Crea tu bot (5–10 min)</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Llena el formulario con el nombre de tu negocio, servicios, WhatsApp y API Key de OpenAI. En minutos tienes tu bot listo.</p>
+          <a href="form.html" target="_blank" class="tut-btn tut-btn-red"><i class="fas fa-external-link-alt"></i> Abrir formulario</a>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="tut-step" id="tut2">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut2')">
+          <span class="tut-num tut-num-green">2</span>
+          <span class="tut-title">Personaliza con el Editor</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Cambia colores, fotos, textos y más. Necesitas tu BOT ID (lo recibiste al crear el bot).</p>
+          <a id="editorTutBtn" href="editor.html" target="_blank" class="tut-btn tut-btn-green"><i class="fas fa-paint-brush"></i> Abrir editor</a>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="tut-step" id="tut3">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut3')">
+          <span class="tut-num tut-num-blue">3</span>
+          <span class="tut-title">Tus 3 links públicos</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Cada bot tiene 3 links para compartir con tus clientes:</p>
+          <div class="tut-links" id="tutLinks"></div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="tut-step" id="tut4">
+        <div class="tut-step-hdr" onclick="toggleTutStep('tut4')">
+          <span class="tut-num tut-num-yellow">4</span>
+          <span class="tut-title">¿Necesitas ayuda?</span>
+          <i class="fas fa-chevron-right tut-arrow"></i>
+        </div>
+        <div class="tut-body">
+          <p>Guía completa con tutoriales paso a paso, preguntas frecuentes y solución de problemas.</p>
+          <a href="ayuda.html" target="_blank" class="tut-btn tut-btn-purple"><i class="fas fa-life-ring"></i> Abrir Centro de Ayuda</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Buttons row 1: Services/Pricing/etc -->
     <div class="quick-btns" id="quickBtns" style="display:none"></div>
+    <!-- Quick Buttons row 2: FAQ — separate row so it never overlaps right panel -->
+    <div class="quick-btns faq-row" id="faqBtns" style="display:none"></div>
 
     <!-- Messages -->
     <div class="messages" id="messages">
@@ -707,8 +894,8 @@ html, body { height: 100%; font-family: 'Inter', sans-serif; background: #000000
   <!-- RIGHT PANEL -->
   <div class="right-panel" id="rightPanel">
     <div class="right-header">
-      <div class="right-title"><i class="fas fa-calendar-check"></i> Agendar Cita</div>
-      <div class="right-subtitle">Rellena el formulario y te confirmamos</div>
+      <div class="right-title"><i class="fab fa-whatsapp" style="color:#25D366;"></i> Agendar Cita</div>
+      <div class="right-subtitle">Elige fecha y hora — te confirmamos por WhatsApp ✅</div>
     </div>
     <div class="booking-panel" id="bookingPanel">
       <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem;">
@@ -808,7 +995,10 @@ const cfg = {
   appId:"1:929685785305:web:4cbdd1c7b8fcb381e7ccc8"
 };
 const app = initializeApp(cfg);
-const db = getFirestore(app);
+const db  = getFirestore(app);
+
+// Note: Anonymous auth disabled. Bots collection is publicly readable.
+// Appointments are also saved via Cloudflare Worker KV (primary persistent storage).
 window.db = db;
 window.fbDoc = doc;
 window.fbGetDoc = getDoc;
@@ -826,7 +1016,30 @@ let messages = [];
 let isTyping = false;
 let appointmentMode = false;
 let cart = [];
-const botId = new URLSearchParams(location.search).get('id');
+
+// ══════ PRE-QUALIFICATION STATE ══════
+let prequalMode = false;
+let prequalStep = 0;
+let prequalData = {};
+const PREQUAL_QUESTIONS_ES = [
+  { key: 'projectType', q: '¿Qué tipo de trabajo necesitas? 🏗️', chips: ['🏠 Kitchen / Cocina', '🚿 Bathroom / Baño', '🏚️ Roofing / Techo', '🪟 Flooring / Pisos', '🏡 Room Addition', '🎨 Full Renovation'] },
+  { key: 'location',    q: '¿En qué ciudad o área está la propiedad? 📍', chips: ['Miami', 'Doral', 'Kendall', 'Hialeah', 'Coral Gables', 'Broward'] },
+  { key: 'ownership',   q: '¿Es tu propiedad o es una renta/inversión? 🔑', chips: ['🏠 Es mi casa', '🏢 Es una inversión', '🔑 Es una renta'] },
+  { key: 'timeline',    q: '¿Cuándo quieres empezar el proyecto? 📅', chips: ['🔥 ASAP (menos de 30 días)', '📆 1-3 meses', '🗓️ Más de 3 meses', '🤔 Solo explorando'] },
+  { key: 'budget',      q: '¿Tienes un rango de presupuesto en mente? 💰', chips: ['$3K - $8K', '$8K - $20K', '$20K - $50K', '$50K+', '🤷 No sé aún'] }
+];
+const PREQUAL_QUESTIONS_EN = [
+  { key: 'projectType', q: 'What type of project are you looking for? 🏗️', chips: ['🏠 Kitchen', '🚿 Bathroom', '🏚️ Roofing', '🪟 Flooring', '🏡 Room Addition', '🎨 Full Renovation'] },
+  { key: 'location',    q: 'Where is the property located? 📍', chips: ['Miami', 'Doral', 'Kendall', 'Hialeah', 'Coral Gables', 'Broward'] },
+  { key: 'ownership',   q: 'Is this your own property or a rental/investment? 🔑', chips: ['🏠 My own home', '🏢 Investment property', '🔑 Rental'] },
+  { key: 'timeline',    q: 'When are you looking to start? 📅', chips: ['🔥 ASAP (within 30 days)', '📆 1-3 months', '🗓️ 3+ months', '🤔 Just exploring'] },
+  { key: 'budget',      q: 'Do you have a budget range in mind? 💰', chips: ['$3K - $8K', '$8K - $20K', '$20K - $50K', '$50K+', '🤷 Not sure yet'] }
+];
+// UI language override: null = use botData.botLanguage, 'en' or 'es'
+// Support ?lang=es or ?lang=en in URL to force language
+const _urlParams = new URLSearchParams(location.search);
+let uiLangOverride = _urlParams.get('lang') || null; // e.g. ?lang=es forces Spanish
+const botId = _urlParams.get('id');
 
 // ══════ PARTICLES (black deep bg) ══════
 (function(){
@@ -862,12 +1075,19 @@ function _startAgent(){
     addBotMsg('❌ No se especificó Bot ID. Usa <strong>?id=TU_BOT_ID</strong> en la URL.');
     return;
   }
-  document.getElementById('landingBtn').href = `landing.html?id=${botId}`;
+  // Fix absolute URLs for GitHub Pages
+  const pageBase = location.origin + location.pathname.replace('agent.html','');
+  document.getElementById('landingBtn').href = `${pageBase}landing.html?id=${botId}`;
+  // Show Bot ID badge in sidebar (owner can click to copy)
+  const botIdBadge = document.getElementById('botIdBadge');
+  if(botIdBadge && botId){ botIdBadge.dataset.id = botId; botIdBadge.textContent = '🆔 '+botId; botIdBadge.style.display=''; }
+  // Editor button
+  const edBtnL = document.getElementById('editorBtnLeft');
+  if(edBtnL) edBtnL.href = `${pageBase}editor.html?id=${botId}`;
   // Digital Card button
   const cardBtnL = document.getElementById('cardBtnLeft');
   if(cardBtnL){
-    const cardBase = location.origin + location.pathname.replace('agent.html','');
-    cardBtnL.href = `${cardBase}card.html?id=${botId}`;
+    cardBtnL.href = `${pageBase}card.html?id=${botId}`;
     cardBtnL.style.display = 'flex';
   }
   loadBot();
@@ -934,6 +1154,15 @@ async function loadBot(){
 function initChat(){
   const d = botData;
 
+  // Determine effective language (URL param overrides bot setting)
+  const currentLang = uiLangOverride || d.botLanguage || 'es';
+  // Apply URL lang override to botData
+  if(uiLangOverride) d.botLanguage = uiLangOverride;
+  const langBtn  = document.getElementById('langBtnLabel');
+  const langFlag = document.getElementById('langBtnFlag');
+  if(langBtn)  langBtn.textContent  = currentLang === 'en' ? 'EN' : 'ES';
+  if(langFlag) langFlag.textContent = currentLang === 'en' ? '🇺🇸' : '🇪🇸';
+
   // Colors
   if(d.primaryColor)   document.documentElement.style.setProperty('--p', d.primaryColor);
   if(d.secondaryColor) document.documentElement.style.setProperty('--s', d.secondaryColor);
@@ -994,6 +1223,33 @@ function initChat(){
     waL.style.display='flex';
   }
 
+  // PayPal button
+  const ppLink = d.paypalLink || d.paypalEmail;
+  if(ppLink){
+    const ppBtn = document.getElementById('paypalBtnLeft');
+    if(ppBtn){
+      ppBtn.href = ppLink.startsWith('http') ? ppLink : `https://paypal.me/${ppLink}`;
+      ppBtn.style.display = 'flex';
+      // Update label with actual price if available
+      const price = (d.services&&d.services[0]&&d.services[0].price) ? d.services[0].price : '$10.99';
+      ppBtn.innerHTML = `<i class="fab fa-paypal"></i> Pagar con PayPal — ${price}`;
+    }
+  }
+
+  // FAQ panel in left sidebar
+  if(Array.isArray(d.faqs) && d.faqs.length > 0){
+    const faqPanel = document.getElementById('faqPanel');
+    const faqList  = document.getElementById('faqList');
+    faqList.innerHTML = d.faqs.map(f=>`
+      <div style="margin-bottom:0.6rem;padding:0.55rem 0.7rem;background:rgba(108,99,255,0.06);
+           border:1px solid rgba(108,99,255,0.13);border-radius:8px;cursor:pointer;"
+           onclick="this.querySelector('.faq-ans').style.display=this.querySelector('.faq-ans').style.display==='none'?'block':'none'">
+        <div style="font-size:0.76rem;font-weight:700;color:var(--text);">❓ ${f.q}</div>
+        <div class="faq-ans" style="display:none;font-size:0.73rem;color:var(--muted);margin-top:0.4rem;line-height:1.5;">💬 ${f.a}</div>
+      </div>`).join('');
+    faqPanel.style.display = 'block';
+  }
+
   // Right panel booking form
   buildRightBookingForm(d);
 
@@ -1023,12 +1279,19 @@ function initChat(){
   addBotMsgTypewriter(welcome);
 
   // Second message with services after delay
-  if(d.services && d.services.length > 0){
+  // Only show service list on welcome if bot does NOT have pre-qualification
+  const hasPrequalWelcome = d.botInstruction?.includes('PRE-QUALIFY') || d.botInstruction?.includes('PRE-CALIF');
+  if(d.services && d.services.length > 0 && !hasPrequalWelcome){
     setTimeout(()=>{
+      const isEN_bot = d.botLanguage === 'en';
       const serviceList = d.services.slice(0,4).map(s=>`• **${s.name}**${s.price?' – '+s.price:''}`).join('\n');
       const actions = d.services.slice(0,3).map(s=>s.name);
-      if(d.products && d.products.length > 0) actions.push('🛒 Ver productos');
-      const serviceIntros = [
+      if(d.products && d.products.length > 0) actions.push(isEN_bot ? '🛒 Products' : '🛒 Ver productos');
+      const serviceIntros = isEN_bot ? [
+        `Here's a quick look at our most popular services 😊\n\n${serviceList}\n\nAnything catch your eye?`,
+        `Just so you know, here's what we do best:\n\n${serviceList}\n\nWant to know more about any of these? 😄`,
+        `Here's what we offer:\n\n${serviceList}\n\nIs there something specific you're looking for? 🙌`
+      ] : [
         `Por si te interesa saber, estos son los servicios que más gustan 😊\n\n${serviceList}\n\n¿Alguno te llama la atención?`,
         `Rápidamente, lo que más hacemos por aquí:\n\n${serviceList}\n\n¿Quieres saber más de alguno? 😄`,
         `Para que tengas idea de lo que ofrecemos:\n\n${serviceList}\n\n¿Hay algo que ya estabas buscando? 🙌`
@@ -1036,21 +1299,35 @@ function initChat(){
       addBotMsgTypewriter(serviceIntros[Math.floor(Math.random()*serviceIntros.length)], actions);
     }, 1600);
   }
-}
+
+  // FAQs are shown as persistent buttons in the quick-bar (added inside buildQuickReplies)
+
+} // end initChat
 
 // ══════ QUICK REPLIES DYNAMIC ══════
 function buildQuickReplies(d){
   const qb = document.getElementById('quickBtns');
   qb.innerHTML = '';
 
-  // Core quick replies
-  const baseReplies = [
+  // Detect language
+  const lang = d.botLanguage || 'es';
+  const isEN = lang === 'en'; // bilingual = show Spanish by default (bot will match user language)
+
+  // Core quick replies — bilingual
+  const baseReplies = isEN ? [
+    { label: '✂️ Services',   msg: 'What services do you offer?' },
+    { label: '💰 Pricing',    msg: 'What are your prices?' },
+    { label: '📅 Appointment',msg: 'I want to book an appointment' },
+    { label: '🕐 Hours',      msg: 'What are your hours?' },
+    { label: '📍 Location',   msg: 'Where are you located?' },
+    { label: '💳 Payments',   msg: 'What payment methods do you accept?' },
+  ] : [
     { label: '✂️ Servicios', msg: '¿Qué servicios ofrecen?' },
-    { label: '💰 Precios', msg: '¿Cuáles son sus precios?' },
-    { label: '📅 Cita', msg: 'Quiero agendar una cita' },
-    { label: '🕐 Horarios', msg: '¿Cuáles son sus horarios?' },
+    { label: '💰 Precios',   msg: '¿Cuáles son sus precios?' },
+    { label: '📅 Cita',      msg: 'Quiero agendar una cita' },
+    { label: '🕐 Horarios',  msg: '¿Cuáles son sus horarios?' },
     { label: '📍 Ubicación', msg: '¿Dónde están ubicados?' },
-    { label: '💳 Pagos', msg: '¿Cuáles son sus métodos de pago?' },
+    { label: '💳 Pagos',     msg: '¿Cuáles son sus métodos de pago?' },
   ];
 
   baseReplies.forEach(r=>{
@@ -1061,16 +1338,71 @@ function buildQuickReplies(d){
     qb.appendChild(btn);
   });
 
+  // 🎯 Pre-qualification button — only if bot has pre-qual instruction
+  if(d.botInstruction && (d.botInstruction.includes('PRE-QUALIFY') || d.botInstruction.includes('PRE-CALIF'))){
+    const btn = document.createElement('button');
+    btn.className = 'quick-btn';
+    btn.style.cssText = 'background:linear-gradient(135deg,rgba(249,115,22,0.25),rgba(250,204,21,0.15));border-color:#F97316;color:#FACC15;font-weight:700;';
+    btn.textContent = isEN ? '🎯 Get Free Estimate' : '🎯 Estimado Gratis';
+    btn.onclick = ()=>{
+      const msg = isEN ? 'I need a free estimate' : 'Necesito un estimado gratis';
+      sendQuick(msg);
+    };
+    qb.appendChild(btn);
+  }
+
   // Products button — only if products exist
   if(d.products && d.products.length > 0){
     const btn = document.createElement('button');
     btn.className = 'quick-btn products-btn';
-    btn.innerHTML = '🛒 Productos';
+    btn.innerHTML = isEN ? '🛒 Products' : '🛒 Productos';
     btn.onclick = ()=>showProductsInChat();
     qb.appendChild(btn);
   }
 
   qb.style.display = 'flex';
+
+  // FAQ buttons — go in their OWN separate row below, never overlapping right panel
+  // Default FAQs shown when the bot has no custom FAQs configured
+  // isEN already declared above — reuse it
+  const defaultFaqs = isEN ? [
+    { q: '🌐 How do I add the bot to my website?',   a: 'Copy the embed code from the Tutorial section and paste it before </body> on your page.' },
+    { q: '🔗 Where do I share my bot link?',          a: 'Your bot link is: agent.html?id=YOUR-ID — share it on WhatsApp, Instagram or your bio.' },
+    { q: '💳 How do I share my digital card?',        a: 'Share this link: card.html?id=YOUR-ID — works on WhatsApp, email and QR codes.' },
+    { q: '🚀 What do I need to go LIVE?',             a: 'Pay the plan, your bot activates automatically. Then share your 3 links!' },
+    { q: '📲 Is there an app to download?',           a: 'No download needed — everything is in the cloud. Your links work on any device.' },
+    { q: '✏️ How do I edit my bot?',                  a: 'Open the Visual Editor (editor.html?id=YOUR-ID) to change text, colors, services and more.' }
+  ] : [
+    { q: '🌐 ¿Cómo inserto el bot en mi página web?', a: 'Copia el código embed del Tutorial y pégalo antes del </body> de tu sitio web.' },
+    { q: '🔗 ¿Dónde comparto mi link del bot?',       a: 'Tu link es: agent.html?id=TU-ID — compártelo por WhatsApp, Instagram o tu bio.' },
+    { q: '💳 ¿Cómo comparto mi tarjeta digital?',     a: 'Comparte este link: card.html?id=TU-ID — funciona por WhatsApp, email y código QR.' },
+    { q: '🚀 ¿Qué hago para estar en VIVO?',          a: 'Paga el plan, tu bot se activa automáticamente. ¡Luego comparte tus 3 links!' },
+    { q: '📲 ¿Hay algo que descargar?',               a: 'No necesitas descargar nada — todo está en la nube. Tus links funcionan en cualquier dispositivo.' },
+    { q: '✏️ ¿Cómo edito mi bot?',                   a: 'Abre el Editor Visual (editor.html?id=TU-ID) para cambiar textos, colores, servicios y más.' }
+  ];
+
+  const faqRow = document.getElementById('faqBtns');
+  if(faqRow){
+    // Use custom FAQs if available, otherwise show default helpful FAQs
+    const faqSource = (Array.isArray(d.faqs) && d.faqs.length > 0) ? d.faqs : defaultFaqs;
+    faqRow.innerHTML = '';
+
+    // Label prefix
+    const lbl = document.createElement('span');
+    lbl.style.cssText = 'font-size:0.65rem;color:var(--muted);font-weight:700;white-space:nowrap;align-self:center;padding-right:0.3rem;flex-shrink:0;';
+    lbl.textContent = '❓ FAQ:';
+    faqRow.appendChild(lbl);
+
+    faqSource.slice(0,6).forEach(f=>{
+      const btn = document.createElement('button');
+      btn.className = 'quick-btn faq-btn';
+      btn.textContent = f.q.length > 32 ? f.q.substring(0,30)+'…' : f.q;
+      btn.title = f.q;
+      btn.onclick = ()=>sendQuick(f.q); // stays visible — no remove()
+      faqRow.appendChild(btn);
+    });
+    faqRow.style.display = 'flex';
+  }
 }
 
 // ══════ SHOW PRODUCTS IN CHAT ══════
@@ -1528,6 +1860,7 @@ function buildSystemPrompt(){
   const d = botData;
   const isEN = d.botLanguage === 'en';
   const isPT = d.botLanguage === 'pt';
+  const isBilingual = d.botLanguage === 'bilingual' || d.botLanguage === 'auto';
 
   // Build lists in chosen language
   const noService  = isEN ? 'Services coming soon.' : isPT ? 'Serviços em breve.' : 'Próximamente se añadirán servicios.';
@@ -1584,10 +1917,69 @@ ${faqs||noFaq}
 SPECIAL INSTRUCTIONS: ${d.botInstruction||noInstr}
 
 ABSOLUTE RULES:
-1. LANGUAGE: ALWAYS reply in English. No exceptions. Even if the customer writes in another language, respond in English.
-2. TRUTH: NEVER make up prices, services or info. If you don't know, say so and suggest WhatsApp.
+1. LANGUAGE: ALWAYS reply in English. No exceptions.
+2. FAQs FIRST: If the customer asks something covered in the FAQs, answer it DIRECTLY and COMPLETELY. Do NOT ask "tell me more" when they already told you.
+3. TRUTH: NEVER make up prices, services or info. If you don't know, say so and suggest WhatsApp.
+4. BREVITY: 1-3 lines for simple questions. Answer the question — don't dodge it.
+5. SALES: For payments → give the PayPal link directly. For appointments → form on the right 👉.
+6. CONTEXT: Remember the entire conversation. Don't ask what they already told you.
+7. EMOJIS: Maximum 2 per reply.
+8. CLOSING: Only ask a follow-up question AFTER you've already answered the main question.
+9. EMPATHY: If the customer is frustrated, empathize FIRST, inform after.
+10. DIRECT: If asked something specific → answer specifically. NEVER dodge with "tell me more".`;
+    messages = [{ role: 'system', content: sysPrompt }];
+    return;
+  }
+
+  // ── BILINGUAL PROMPT (auto-detect user language) ─────────────────────────────
+  if(isBilingual){
+    const sysPrompt = `You are the virtual assistant of "${d.businessName}", a ${d.businessType||'business'}${d.businessCity?' in '+d.businessCity:''}.
+
+CRITICAL LANGUAGE RULE (most important rule of all):
+- DETECT the language the customer writes in.
+- If they write in ENGLISH → respond ENTIRELY in English.
+- If they write in SPANISH → respond ENTIRELY in Spanish.
+- If they write in PORTUGUESE → respond ENTIRELY in Portuguese.
+- NEVER mix languages. NEVER reply in a different language than what the customer used.
+- Match their language from the VERY FIRST message.
+
+PERSONALITY:
+You are like a real person who works there: friendly, enthusiastic, genuinely helpful, with your own personality.
+- Talk like texting a trusted friend, NOT like a FAQ page or a robot.
+- Be warm and approachable. If the customer seems frustrated, switch to an empathetic tone.
+- ALWAYS vary your expressions. Never repeat the same greeting twice.
+- If the customer shares their name, use it naturally in the conversation.
+- Ask ONE question at a time, never a list of questions.
+
+BUSINESS INFORMATION:
+Description: ${d.description||'A business dedicated to providing the best service.'}
+
+SERVICES:
+${services||noService}
+
+PRODUCTS:
+${products||noProduct}
+
+HOURS: ${hours||noHours}
+
+CONTACT:
+- Phone: ${d.phone||consultWord}
+- WhatsApp: ${d.whatsapp||consultWord}
+- Email: ${d.email||consultWord}
+- Address: ${d.address||consultWord}
+- Website: ${d.website||noAvail}
+- PayPal: ${d.paypalEmail||d.paypalLink||noConfig}
+
+FREQUENTLY ASKED QUESTIONS:
+${faqs||noFaq}
+
+SPECIAL INSTRUCTIONS: ${d.botInstruction||noInstr}
+
+ABSOLUTE RULES:
+1. LANGUAGE: Detect and ALWAYS reply in the SAME language the customer writes in (English, Spanish, or Portuguese).
+2. TRUTH: NEVER make up prices, services or info. If you don't know, say so and offer WhatsApp contact.
 3. BREVITY: 1-3 lines for simple questions. More detail only if the customer asks.
-4. SALES: For appointments → form on the right 👉. For products → cart button 🛒 above. For payments → PayPal and WhatsApp.
+4. SALES: For appointments → form on the right 👉. For products → cart 🛒. For payments → PayPal and WhatsApp.
 5. CONTEXT: Remember the entire conversation. Don't ask what they already told you.
 6. EMOJIS: Maximum 2 per reply, only if they add warmth or clarity.
 7. CLOSING: End with ONE open question to keep the dialogue going.
@@ -1681,22 +2073,47 @@ CONTACTO:
 - Web: ${d.website||noAvail}
 - PayPal: ${d.paypalEmail||d.paypalLink||noConfig}
 
-PREGUNTAS FRECUENTES:
+PREGUNTAS FRECUENTES DEL NEGOCIO:
 ${faqs||noFaq}
+
+PREGUNTAS FRECUENTES DE LA PLATAFORMA SUPER BOT 007 (responde SIEMPRE estas):
+Q: ¿Cómo inserto el bot en mi página web?
+A: Copia este código y pégalo antes del </body> de tu página web:\n<iframe src="https://superbot007.com/agent.html?id=TU-BOT-ID" style="position:fixed;bottom:20px;right:20px;width:380px;height:580px;border:none;border-radius:18px;z-index:9999;"></iframe>\nCambia TU-BOT-ID por tu ID real.
+
+Q: ¿Dónde comparto el link de mi bot?
+A: Tu link del bot es: https://superbot007.com/agent.html?id=TU-BOT-ID — compártelo por WhatsApp, Instagram, Facebook, tu bio o email.
+
+Q: ¿Cómo comparto mi tarjeta digital?
+A: Comparte este link: https://superbot007.com/card.html?id=TU-BOT-ID — funciona en WhatsApp, email, y puedes convertirlo en código QR en cualquier generador gratuito.
+
+Q: ¿Qué tengo que hacer para estar en VIVO (live)?
+A: Solo 3 pasos: 1) Paga tu plan en PayPal 2) Tu bot se activa automáticamente 3) Comparte tus 3 links: Bot, Landing Page y Tarjeta Digital. ¡Listo!
+
+Q: ¿Hay algo que descargar o instalar?
+A: No necesitas descargar nada. Todo está en la nube. Tus links funcionan en cualquier celular, tablet o computadora, sin apps ni instalaciones.
+
+Q: ¿Cómo edito mi bot después de crearlo?
+A: Abre el Editor Visual: https://superbot007.com/editor.html?id=TU-BOT-ID — ahí cambias textos, colores, servicios, productos, fotos y más.
+
+Q: ¿Cuáles son mis 3 links principales?
+A: 🤖 Bot: agent.html?id=TU-ID | 🌐 Landing: landing.html?id=TU-ID | 💳 Tarjeta: card.html?id=TU-ID
+
+Q: ¿Cómo comparto mi landing page?
+A: Tu landing page está en: https://superbot007.com/landing.html?id=TU-BOT-ID — compártela en redes sociales, anuncios o tu bio de Instagram.
 
 INSTRUCCIONES ESPECIALES: ${d.botInstruction||noInstr}
 
 REGLAS ABSOLUTAS:
-1. IDIOMA: SIEMPRE responde en Español. Sin excepción. Aunque el cliente escriba en otro idioma, responde en Español.
-2. VERDAD: JAMÁS inventes precios, servicios ni info. Si no sabes, dilo y sugiere WhatsApp.
-3. BREVEDAD: 1-3 líneas para preguntas simples. Más detalle solo si el cliente lo pide.
-4. VENTAS: Para citas → formula derecha 👉. Para productos → botón 🛒 arriba y carrito flotante. Para pagos → PayPal y WhatsApp.
-5. CONTEXTO: Recuerda toda la conversación. No preguntes lo que ya te dijeron.
-6. EMOJIS: Máximo 2 por respuesta, solo si aportan calidez o claridad.
-7. CIERRE: Termina con UNA pregunta abierta para mantener el diálogo.
-8. EMPATÍA: Si el cliente está frustrado, empatiza PRIMERO, informa después.
-9. COMPRAS: Guía suavemente hacia el carrito, las formas de pago y lo fácil del proceso.
-10. HUMANIDAD: Celebra con el cliente cuando algo lo emociona. Sé genuino/a.`;
+1. IDIOMA: SIEMPRE responde en Español. Sin excepción.
+2. FAQs PRIMERO: Si el cliente hace una pregunta que está en las FAQs, respóndela DIRECTAMENTE y COMPLETA. NO preguntes "¿qué buscas?" cuando ya te lo dijeron.
+3. VERDAD: JAMÁS inventes precios, servicios ni info. Si no sabes, dilo y sugiere WhatsApp.
+4. BREVEDAD: 1-3 líneas para preguntas simples. Responde la pregunta, no la evadas.
+5. VENTAS: Para pagos → da el link de PayPal directamente. Para citas → formulario derecha 👉.
+6. CONTEXTO: Recuerda toda la conversación. No preguntes lo que ya te dijeron.
+7. EMOJIS: Máximo 2 por respuesta.
+8. CIERRE: Solo haz UNA pregunta de seguimiento si ya respondiste la pregunta principal.
+9. EMPATÍA: Si el cliente está frustrado, empatiza PRIMERO, informa después.
+10. DIRECTO: Si te preguntan algo concreto → responde concreto. NUNCA esquives con "cuéntame más".`;
 
   messages = [{ role: 'system', content: sysPrompt }];
 }
@@ -1713,6 +2130,31 @@ async function sendMessage(){
 
   addUserMsg(text);
   messages.push({ role:'user', content:text });
+
+  // ── Pre-qualification flow: if active, handle chip or typed answer ──
+  if(prequalMode){
+    const lang = detectConversationLang();
+    const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+    if(prequalStep < questions.length){
+      prequalData[questions[prequalStep].key] = text;
+      prequalStep++;
+      setTimeout(()=> showPrequalStep(), 400);
+      return;
+    }
+  }
+
+  // ── Trigger pre-qualification if bot has it configured ──
+  // Activates on ANY first message if bot has PRE-QUALIFY — or on specific keywords
+  const hasPrequal = botData?.botInstruction?.includes('PRE-QUALIFY') || botData?.botInstruction?.includes('PRE-CALIF');
+  const isFirstUserMsg = messages.filter(m=>m.role==='user').length === 1;
+  if(hasPrequal && !prequalMode && !appointmentMode && (isFirstUserMsg || isPrequalIntent(text))){
+    const lang = botData?.botLanguage === 'en' ? 'en' : 'es';
+    const intro = lang === 'en'
+      ? 'Great! Let me ask you a few quick questions so I can give you the most accurate info. It\'ll only take a minute! 🙌'
+      : '¡Perfecto! Antes de continuar, déjame hacerte unas preguntas rápidas para darte la información más precisa. ¡Solo toma un minuto! 🙌';
+    addBotMsgTypewriter(intro, [], ()=> startPrequal()); // ← startPrequal runs AFTER typewriter finishes
+    return;
+  }
 
   // Check for product/shopping intent
   if(isShoppingIntent(text) && botData?.products?.length > 0){
@@ -1735,6 +2177,8 @@ async function sendMessage(){
 
   try{
     const response = await callGPT(messages);
+    // Small natural pause before showing response (feels more human)
+    await new Promise(r => setTimeout(r, 320));
     removeTyping(typingId);
     isTyping = false;
     document.getElementById('sendBtn').disabled = false;
@@ -1748,7 +2192,15 @@ async function sendMessage(){
     isTyping = false;
     document.getElementById('sendBtn').disabled = false;
     setAvatarThinking(false);
-    addBotMsgTypewriter('Lo siento, algo salió mal. ¡Intenta de nuevo! 😊');
+    // Use smart fallback instead of generic error
+    const lastUserMsg = messages.filter(m=>m.role==='user').slice(-1)[0]?.content || '';
+    const smart = fallbackResponse(lastUserMsg);
+    if(smart){
+      messages.push({ role:'assistant', content:smart });
+      addBotMsgTypewriter(smart);
+    } else {
+      addBotMsgTypewriter('Un momento, déjame verificar eso. ¿Puedes repetir tu pregunta? 😊');
+    }
   }
 }
 
@@ -1764,18 +2216,46 @@ function setAvatarThinking(active){
 }
 
 // ══════ GPT CALL ══════
+const PROXY_URL = 'https://superbot007-proxy.luisomorgado4.workers.dev';
+
 async function callGPT(msgs){
-  const key = botData?.openaiKey;
   const model = botData?.gptModel || 'gpt-4o-mini';
-  if(!key) return fallbackResponse(msgs[msgs.length-1].content);
-  const res = await fetch('https://api.openai.com/v1/chat/completions',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-    body: JSON.stringify({ model, messages: msgs, max_tokens:520, temperature:0.82 })
+  
+  // Try Cloudflare Worker proxy first (key is safe server-side)
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+    const res = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages: msgs, max_tokens: 520, temperature: 0.82 }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (res.ok) {
+      const data = await res.json();
+      const content = data.choices?.[0]?.message?.content?.trim();
+      if (content) return content;
+    }
+  } catch(e) {
+    console.warn('Proxy unavailable or slow, using direct API:', e.message);
+  }
+  
+  // Direct fallback (uses bot's own key from Firebase, or platform master key)
+  const _MASTER_KEY = atob("c2stcHJvai1fTG11NFZfY3I5VEdVLV83QTBXYnNma0xmUjAyOFkwY1JtbnVnSUhrckxOUDRrcC1EeVB4bjZfMEgwMTFDenV5MzVjQW9DTjltOFQzQmxia0ZKR0VoV2NtMjlaQng5bGhXdFQyT2t0aWRyOHVEcHRYYVFEZ3JmQ001Qm9XSkgtcGhiY0N1ejVIZXBmOEFVTEh3VGxKQlcwWG5sSUE=");
+  const key = (botData?.openaiKey && botData.openaiKey.trim()) ? botData.openaiKey.trim() : _MASTER_KEY;
+  
+  const res2 = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({ model, messages: msgs, max_tokens: 520, temperature: 0.82 })
   });
-  if(!res.ok){ const err=await res.json(); throw new Error(err.error?.message||'API error'); }
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim();
+  if (!res2.ok) {
+    const err = await res2.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'API error ' + res2.status);
+  }
+  const data2 = await res2.json();
+  return data2.choices?.[0]?.message?.content?.trim();
 }
 
 // ══════ FALLBACK RESPONSES (más humanas) ══════
@@ -1897,6 +2377,191 @@ function fallbackResponse(userMsg){
 }
 
 // ══════ INTENT DETECTION ══════
+// ══════ PRE-QUALIFICATION FLOW ══════
+function isPrequalIntent(msg){
+  if(!botData?.botInstruction?.includes('PRE-QUALIFY') && !botData?.botInstruction?.includes('PRE-CALIF')) return false;
+  const k=['estimate','estimado','presupuesto','quote','cotización','cotizacion','remodel','remodelacion','remodelación','renovation','roofing','techo','kitchen','cocina','bathroom','baño','flooring','pisos','addition','quiero hacer','necesito hacer','tengo un proyecto','i need','i want','cuanto cuesta','how much'];
+  return k.some(kw=>msg.toLowerCase().includes(kw));
+}
+
+function startPrequal(){
+  prequalMode = true;
+  prequalStep = 0;
+  prequalData = {};
+  showPrequalStep();
+}
+
+function showPrequalStep(){
+  const lang = detectConversationLang();
+  const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+  if(prequalStep >= questions.length){ finishPrequal(); return; }
+  const q = questions[prequalStep];
+  const total = questions.length;
+
+  // Progress bar HTML
+  const pct = Math.round((prequalStep / total) * 100);
+  const progressHtml = `<div style="margin-bottom:8px;">
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-bottom:3px;">
+      <span>${lang==='en'?'Lead Qualification':'Pre-Calificación'} · ${lang==='en'?'Step':'Paso'} ${prequalStep+1}/${total}</span>
+      <span>${pct}%</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:99px;height:4px;">
+      <div style="background:var(--p);width:${pct}%;height:100%;border-radius:99px;transition:width 0.4s;"></div>
+    </div>
+  </div>`;
+
+  // Chip buttons
+  const chipsHtml = q.chips.map(c =>
+    `<button onclick="selectPrequalChip('${c.replace(/'/g,"&#39;")}')"
+      style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#fff;
+             padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;margin:3px;
+             transition:all 0.2s;" 
+      onmouseover="this.style.background='rgba(var(--p-rgb,108,99,255),0.3)';this.style.borderColor='var(--p)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.15)'"
+    >${c}</button>`
+  ).join('');
+
+  const fullHtml = `${progressHtml}<div style="margin-bottom:6px;font-weight:600;font-size:0.9rem;">${q.q}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:6px;">${chipsHtml}</div>
+  <div style="margin-top:8px;font-size:0.7rem;color:var(--muted);">${lang==='en'?'Or type your answer below ↓':'O escribe tu respuesta abajo ↓'}</div>`;
+
+  addBotMsgHTML(fullHtml);
+}
+
+function selectPrequalChip(value){
+  const lang = detectConversationLang();
+  const questions = lang === 'en' ? PREQUAL_QUESTIONS_EN : PREQUAL_QUESTIONS_ES;
+  const key = questions[prequalStep]?.key;
+  if(!key) return;
+  prequalData[key] = value;
+  addUserMsg(value);
+  messages.push({ role:'user', content: value });
+  prequalStep++;
+  setTimeout(()=> showPrequalStep(), 400);
+}
+
+function finishPrequal(){
+  prequalMode = false;
+  const lang = detectConversationLang();
+  const grade = scoreLeadGrade(prequalData);
+
+  // Build summary context for GPT
+  const summary = lang === 'en'
+    ? `Project: ${prequalData.projectType||'?'} | Location: ${prequalData.location||'?'} | Ownership: ${prequalData.ownership||'?'} | Timeline: ${prequalData.timeline||'?'} | Budget: ${prequalData.budget||'?'} | GRADE: ${grade}`
+    : `Proyecto: ${prequalData.projectType||'?'} | Ubicación: ${prequalData.location||'?'} | Propiedad: ${prequalData.ownership||'?'} | Timeline: ${prequalData.timeline||'?'} | Presupuesto: ${prequalData.budget||'?'} | GRADO: ${grade}`;
+
+  // Inject context into conversation so GPT knows the grade
+  messages.push({ role:'system', content:`[LEAD PRE-QUALIFICATION RESULT]: ${summary}. ACT ACCORDINGLY based on grade.` });
+
+  // Show result card
+  const gradeConfig = {
+    A: { emoji:'🔥', color:'#22c55e', label: lang==='en'?'HOT LEAD':'LEAD CALIENTE',   msg: lang==='en'?'Great news! Based on your answers, our team can come do a FREE in-home estimate. We\'d measure everything and give you a written quote within 24 hours. 📋':'¡Excelentes noticias! Basándome en lo que me dijiste, nuestro equipo puede ir a darte un estimado GRATIS en tu casa. Medimos todo y te damos una cotización por escrito en 24 horas. 📋' },
+    B: { emoji:'⚡', color:'#f59e0b', label: lang==='en'?'WARM LEAD':'LEAD TIBIO',     msg: lang==='en'?'Thanks for the info! I\'ll connect you with our project coordinator who can walk you through options and give you a virtual estimate. 📞':'¡Gracias por la info! Te voy a conectar con nuestro coordinador de proyectos para que te explique las opciones y te haga un estimado virtual. 📞' },
+    C: { emoji:'💬', color:'#6b7280', label: lang==='en'?'EXPLORING':'EXPLORANDO',    msg: lang==='en'?'No worries! Here\'s a general price range for your project type. When you\'re ready, we\'re here for a free estimate. 😊':'¡Sin problema! Aquí te dejo un rango general de precios para tu tipo de proyecto. Cuando estés listo, estamos aquí para un estimado gratis. 😊' }
+  };
+  const g = gradeConfig[grade];
+
+  const cardHtml = `<div style="background:linear-gradient(135deg,rgba(${grade==='A'?'34,197,94':'grade'==='B'?'245,158,11':'107,114,128'},0.15) 0%,rgba(0,0,0,0.3) 100%);border:1px solid ${g.color}40;border-radius:12px;padding:14px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:1.4rem;">${g.emoji}</span>
+      <div>
+        <div style="font-size:0.65rem;color:var(--muted);font-weight:700;letter-spacing:1px;">${lang==='en'?'QUALIFICATION RESULT':'RESULTADO DE CALIFICACIÓN'}</div>
+        <div style="font-weight:800;color:${g.color};font-size:0.95rem;">${g.label}</div>
+      </div>
+    </div>
+    <div style="font-size:0.82rem;line-height:1.5;color:#e2e8f0;">${g.msg}</div>
+  </div>`;
+
+  setTimeout(()=>{
+    addBotMsgHTML(cardHtml);
+    // Follow-up action after card
+    setTimeout(()=>{
+      if(grade === 'A'){
+        const actions = lang==='en'
+          ? ['📅 Schedule Free Estimate','📞 Call Us Now','💰 See Pricing']
+          : ['📅 Agendar Estimado Gratis','📞 Llamarnos Ahora','💰 Ver Precios'];
+        addBotMsgTypewriter(lang==='en'
+          ? `Perfect! Here\'s what happens next: our project manager visits your property (${prequalData.location||'your area'}), takes measurements, and gives you a detailed written quote — completely FREE, no commitment. When works best for you this week? 🗓️`
+          : `¡Perfecto! Lo que sigue es: nuestro project manager visita tu propiedad en ${prequalData.location||'tu área'}, toma medidas y te da una cotización detallada por escrito — completamente GRATIS, sin compromiso. ¿Qué día te queda mejor esta semana? 🗓️`
+        , actions);
+      } else if(grade === 'B'){
+        const actions = lang==='en'
+          ? ['📞 Schedule a Call','📋 See Services','💰 Financing Options']
+          : ['📞 Agendar Llamada','📋 Ver Servicios','💰 Opciones de Financiamiento'];
+        addBotMsgTypewriter(lang==='en'
+          ? `Got it! For a ${prequalData.projectType||'project'} like this, budget range is typically ${prequalData.budget||'varies by scope'}. I can have our coordinator reach out to discuss details and timeline. What\'s the best way to contact you?`
+          : `¡Entendido! Para un proyecto de ${prequalData.projectType||'este tipo'}, el rango típico es ${prequalData.budget||'varía según el alcance'}. Puedo hacer que nuestro coordinador te contacte para hablar detalles. ¿Cuál es la mejor forma de comunicarse contigo?`
+        , actions);
+      } else {
+        const actions = lang==='en'
+          ? ['📸 See Our Portfolio','💰 General Pricing','📞 Contact Us']
+          : ['📸 Ver Nuestros Proyectos','💰 Precios Generales','📞 Contáctanos'];
+        addBotMsgTypewriter(lang==='en'
+          ? `No pressure at all! 😊 For a ${prequalData.projectType||'project'} in ${prequalData.location||'Miami'}, typical range is around ${getPriceRange(prequalData.projectType)}. When you\'re ready to move forward, we offer FREE estimates. Check our Instagram @miamiproconstruction to see recent projects! 📸`
+          : `¡Sin presión! 😊 Para un proyecto de ${prequalData.projectType||'este tipo'} en ${prequalData.location||'Miami'}, el rango típico es alrededor de ${getPriceRange(prequalData.projectType)}. Cuando estés listo, ofrecemos estimados GRATIS. ¡Mira nuestro Instagram @miamiproconstruction para ver proyectos recientes! 📸`
+        , actions);
+      }
+    }, 600);
+  }, 300);
+}
+
+function scoreLeadGrade(data){
+  let score = 0;
+  // Ownership (max 3 pts)
+  if(data.ownership?.includes('Mi casa') || data.ownership?.includes('My own')) score += 3;
+  else if(data.ownership?.includes('inversión') || data.ownership?.includes('Investment')) score += 2;
+  else score += 1;
+  // Timeline (max 3 pts)
+  if(data.timeline?.includes('ASAP') || data.timeline?.includes('30')) score += 3;
+  else if(data.timeline?.includes('1-3') || data.timeline?.includes('month')) score += 2;
+  else score += 0;
+  // Budget (max 3 pts)
+  if(data.budget?.includes('50K') || data.budget?.includes('20K')) score += 3;
+  else if(data.budget?.includes('8K') || data.budget?.includes('20K')) score += 2;
+  else if(data.budget?.includes('3K')) score += 1;
+  else score += 0;
+  // Grade
+  if(score >= 7) return 'A';
+  if(score >= 4) return 'B';
+  return 'C';
+}
+
+function getPriceRange(projectType){
+  const t = (projectType||'').toLowerCase();
+  if(t.includes('kitchen') || t.includes('cocina')) return '$8,500 – $25,000';
+  if(t.includes('bathroom') || t.includes('baño')) return '$4,500 – $12,000';
+  if(t.includes('roof') || t.includes('techo')) return '$6,000 – $18,000';
+  if(t.includes('floor') || t.includes('piso')) return '$3,500 – $9,000';
+  if(t.includes('addition') || t.includes('cuarto')) return '$25,000 – $80,000';
+  if(t.includes('renovation') || t.includes('renovaci')) return '$30,000 – $150,000+';
+  return '$3,500 – $50,000+';
+}
+
+function detectConversationLang(){
+  // First check bot's configured language
+  if(botData?.botLanguage === 'en') return 'en';
+  if(botData?.botLanguage === 'es' || botData?.botLanguage === 'pt') return botData.botLanguage;
+  // For bilingual: detect from last user messages
+  const userMsgs = messages.filter(m=>m.role==='user').slice(-3).map(m=>m.content||'').join(' ').toLowerCase();
+  const esWords = ['hola','necesito','quiero','tengo','para','como','que','mi','tu','es','por','remodelacion','baño','cocina'];
+  const enWords = ['hello','need','want','have','for','how','what','my','your','is','the',' i '];
+  const esCount = esWords.filter(w=>userMsgs.includes(w)).length;
+  const enCount = enWords.filter(w=>userMsgs.includes(w)).length;
+  return enCount > esCount ? 'en' : 'es';
+}
+
+function addBotMsgHTML(html){
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const avatarUrl = botData?.avatarUrl || botData?.botAvatar || '';
+  const avatarHtml = avatarUrl
+    ? `<div class="msg-avatar"><img src="${avatarUrl}" alt="bot" style="width:32px;height:32px;border-radius:50%;object-fit:cover;"></div>`
+    : `<div class="msg-avatar">🤖</div>`;
+  div.innerHTML = `${avatarHtml}<div class="msg-bubble" style="max-width:90%;">${html}</div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+}
+
 function isAppointmentIntent(msg){
   const k=['cita','reserva','agendar','appointment','book','reservar','quiero ir','programar','apartar','separar lugar','pedir turno','turno','quiero una cita','me gustaría ir'];
   return k.some(kw=>msg.toLowerCase().includes(kw));
@@ -1907,7 +2572,7 @@ function isShoppingIntent(msg){
 }
 
 // ══════ TYPEWRITER BOT MESSAGE ══════
-function addBotMsgTypewriter(text, actions=[]){
+function addBotMsgTypewriter(text, actions=[], onDone=null){
   const div = document.createElement('div');
   div.className = 'msg bot';
   const avatarHtml = botData?.botAvatar
@@ -1951,8 +2616,9 @@ function addBotMsgTypewriter(text, actions=[]){
       }
       playReceiveSound();
       scrollToBottom();
+      if(onDone) onDone(); // ← callback when typewriter finishes
     }
-  }, 18); // speed of typewriter
+  }, 28); // speed of typewriter — slightly slower for natural reading pace
 
   return div;
 }
@@ -2034,7 +2700,11 @@ async function submitApptForm(formId){
   const note=document.getElementById(formId+'_note')?.value.trim();
   if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
   if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
-  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-form'}); }catch(e){}
+  const apptData = {botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-form'};
+  // Save to Firebase Firestore
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),apptData); }catch(e){}
+  // ALSO save to Cloudflare Worker (backup — ensures dashboard always sees it)
+  try{ fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/save-appointment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(apptData)}); }catch(e){}
   const form=document.getElementById(formId);
   if(form) form.innerHTML=`<div class="appt-success"><div class="check-icon">✅</div><strong>¡Cita agendada!</strong><p>Hola <strong>${name}</strong>, tu solicitud está registrada${service?' para <strong>'+service+'</strong>':''}${date?' el <strong>'+date+'</strong>':''}.</p><p>Te contactamos al <strong>${phone}</strong> 😊</p></div>`;
   appointmentMode=false;
@@ -2052,7 +2722,9 @@ async function submitApptFormWA(formId){
   const note=document.getElementById(formId+'_note')?.value.trim();
   if(!name){ document.getElementById(formId+'_name').focus(); toast('Ingresa tu nombre','error'); return; }
   if(!phone){ document.getElementById(formId+'_phone').focus(); toast('Ingresa tu teléfono','error'); return; }
-  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),{botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-wa'}); }catch(e){}
+  const apptDataWA = {botId:botId||'',businessName:botData?.businessName||'',name,phone,email,service,date,time,note,createdAt:Date.now(),status:'pending',source:'chatbot-wa'};
+  try{ if(window.db) await window.fbAddDoc(window.fbCollection(window.db,'appointments'),apptDataWA); }catch(e){}
+  try{ fetch('https://superbot007-whatsapp.luisomorgado4.workers.dev/save-appointment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(apptDataWA)}); }catch(e){}
   const wa=(botData?.whatsapp||botData?.phone||'').replace(/\D/g,'');
   const biz=botData?.businessName||'';
   let msg=`Hola ${biz}! Me llamo *${name}*\n📞 ${phone}`;
@@ -2069,6 +2741,52 @@ async function submitApptFormWA(formId){
 function cancelBookingForm(msgId){ document.getElementById(msgId)?.remove(); appointmentMode=false; addBotMsgTypewriter('Sin problema 😊 ¿En qué más puedo ayudarte?'); scrollToBottom(); }
 
 // ══════ CLEAR CHAT ══════
+// ══════ TUTORIAL PANEL ══════
+function toggleTutorialPanel(){
+  const panel = document.getElementById('tutorialPanel');
+  const btn   = document.getElementById('tutorialTopBtn');
+  const open  = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'block' : 'none';
+  if(btn) btn.style.color = open ? 'var(--p)' : '';
+  // Populate links with real bot ID when opening
+  if(open && botData){
+    const base = 'https://superbot007.com/';
+    const id   = new URLSearchParams(location.search).get('id') || '';
+    const links = [
+      { label:'🤖 Bot',      url: base+'agent.html?id='+id },
+      { label:'🌐 Landing',  url: base+'landing.html?id='+id },
+      { label:'💳 Tarjeta',  url: base+'card.html?id='+id },
+      { label:'✏️ Editor',   url: base+'editor.html?id='+id },
+    ];
+    const container = document.getElementById('tutLinks');
+    if(container && !container.dataset.built){
+      container.dataset.built = '1';
+      links.forEach(lk=>{
+        const row = document.createElement('div');
+        row.className = 'tut-link-row';
+        row.innerHTML = `
+          <span class="tut-link-label">${lk.label}</span>
+          <span class="tut-link-url">${lk.url}</span>
+          <button class="tut-link-copy" onclick="copyTutLink(this,'${lk.url}')"><i class="fas fa-copy"></i></button>`;
+        container.appendChild(row);
+      });
+    }
+    // Update editor link with bot id
+    const edBtn = document.getElementById('editorTutBtn');
+    if(edBtn && id) edBtn.href = base+'editor.html?id='+id;
+  }
+}
+function toggleTutStep(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('open');
+}
+function copyTutLink(btn, url){
+  navigator.clipboard.writeText(url).then(()=>{
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(()=>{ btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+  });
+}
+
 function clearChat(){
   document.getElementById('messages').innerHTML='';
   appointmentMode = false;
@@ -2078,6 +2796,28 @@ function clearChat(){
     const welcome = botData.welcomeMsg || `¡Hola de nuevo! 👋 Soy el asistente de **${botData.businessName}**. ¿En qué te puedo ayudar? 😊`;
     addBotMsgTypewriter(welcome);
   }
+}
+
+// ══════ LANGUAGE TOGGLE ══════
+function toggleChatLang(){
+  // Determine current effective language
+  const curLang = uiLangOverride || (botData ? botData.botLanguage : 'es') || 'es';
+  // Toggle between 'en' and 'es'
+  uiLangOverride = (curLang === 'en') ? 'es' : 'en';
+  // Update button label and flag
+  const btn  = document.getElementById('langBtnLabel');
+  const flag = document.getElementById('langBtnFlag');
+  if(btn)  btn.textContent  = uiLangOverride === 'en' ? 'EN' : 'ES';
+  if(flag) flag.textContent = uiLangOverride === 'en' ? '🇺🇸' : '🇪🇸';
+  // Apply to botData so buildSystemPrompt uses new lang
+  if(botData) botData.botLanguage = uiLangOverride;
+  // Rebuild system prompt with new language
+  buildSystemPrompt();
+  // Show confirmation message
+  const msg = uiLangOverride === 'en'
+    ? '🌐 Switched to English! I\'ll respond in English from now on.'
+    : '🌐 ¡Cambiado a Español! Responderé en español de ahora en adelante.';
+  addBotMsgTypewriter(msg);
 }
 
 // ══════ TOAST ══════
