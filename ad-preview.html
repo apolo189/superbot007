@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Creator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Arial Black', Arial, sans-serif; }
+  
+  .ad {
+    width: 1080px;
+    height: 1080px;
+    background: #0A0A0A;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 60px;
+  }
+
+  /* Background grid effect */
+  .ad::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      linear-gradient(rgba(99,102,241,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  /* Glow effects */
+  .glow-top {
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(99,102,241,0.3) 0%, transparent 70%);
+    z-index: 0;
+  }
+  .glow-bottom {
+    position: absolute;
+    bottom: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(ellipse, rgba(168,85,247,0.2) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .content { position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+  /* TOP BADGE */
+  .badge {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 10px 35px;
+    border-radius: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    box-shadow: 0 0 30px rgba(99,102,241,0.5);
+  }
+
+  /* HEADLINE */
+  .headline {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .headline .line1 {
+    font-size: 52px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    display: block;
+  }
+  .headline .line2 {
+    font-size: 58px;
+    font-weight: 900;
+    color: #facc15;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    display: block;
+  }
+  .headline .line3 {
+    font-size: 46px;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    display: block;
+    margin-top: 5px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 80px; height: 4px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+    margin: 20px auto;
+  }
+
+  /* FEATURES GRID */
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 40px;
+    margin: 5px 0 20px;
+    width: 100%;
+  }
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #e2e8f0;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .feature .check {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(99,102,241,0.4);
+  }
+
+  /* PRICE SECTION */
+  .price-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin: 10px 0;
+    width: 100%;
+  }
+
+  .price-box {
+    background: linear-gradient(135deg, #1e1b4b, #2d1b69);
+    border: 2px solid rgba(99,102,241,0.4);
+    border-radius: 20px;
+    padding: 20px 35px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(99,102,241,0.2);
+  }
+  .price-label {
+    color: #a5b4fc;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .price-amount {
+    color: #facc15;
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .price-sub {
+    color: #94a3b8;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .price-plus {
+    color: #6366f1;
+    font-size: 50px;
+    font-weight: 900;
+  }
+
+  /* GUARANTEE BADGES */
+  .badges-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 10px 0;
+  }
+  .mini-badge {
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.3);
+    color: #a5b4fc;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 50px;
+  }
+
+  /* CTA */
+  .cta {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 22px 80px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 40px rgba(99,102,241,0.6), 0 10px 30px rgba(0,0,0,0.3);
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  /* BOTTOM */
+  .bottom-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: 1px solid rgba(99,102,241,0.3);
+    padding-top: 20px;
+    margin-top: 10px;
+  }
+  .brand {
+    color: #6366f1;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .brand span { color: #facc15; }
+  .stars {
+    color: #facc15;
+    font-size: 28px;
+    letter-spacing: 3px;
+  }
+  .tagline {
+    color: #64748b;
+    font-size: 18px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="ad">
+  <div class="glow-top"></div>
+  <div class="glow-bottom"></div>
+
+  <div class="content">
+    <!-- BADGE -->
+    <div class="badge">🤖 SUPER BOT 007</div>
+
+    <!-- HEADLINE -->
+    <div class="headline">
+      <span class="line1">CONSIGUE TU</span>
+      <span class="line2">WEBSITE + BOT IA</span>
+      <span class="line3">PROFESIONAL HOY</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- FEATURES -->
+    <div class="features">
+      <div class="feature"><div class="check">✓</div>Landing Page Profesional</div>
+      <div class="feature"><div class="check">✓</div>Bot IA 24/7 en tu idioma</div>
+      <div class="feature"><div class="check">✓</div>Agenda Citas Automático</div>
+      <div class="feature"><div class="check">✓</div>Tarjeta Digital Incluida</div>
+      <div class="feature"><div class="check">✓</div>Pre-Califica tus Clientes</div>
+      <div class="feature"><div class="check">✓</div>Sin Contrato — Cancela Cuando</div>
+    </div>
+
+    <!-- PRICE -->
+    <div class="price-section">
+      <div class="price-box">
+        <div class="price-label">Solo paga</div>
+        <div class="price-amount">$149</div>
+        <div class="price-sub">setup único</div>
+      </div>
+      <div class="price-plus">+</div>
+      <div class="price-box">
+        <div class="price-label">Mantenimiento</div>
+        <div class="price-amount">$29</div>
+        <div class="price-sub">por mes</div>
+      </div>
+    </div>
+
+    <!-- MINI BADGES -->
+    <div class="badges-row">
+      <div class="mini-badge">✅ Sin contrato largo</div>
+      <div class="mini-badge">✅ Setup en 24hrs</div>
+      <div class="mini-badge">✅ Soporte incluido</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">🚀 EMPIEZA HOY MISMO →</div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="brand">SUPER<span>BOT</span>007.COM</div>
+    <div class="stars">★★★★★</div>
+    <div class="tagline">Tu negocio nunca duerme 🌙</div>
+  </div>
+</div>
+</body>
+</html>
