@@ -1250,16 +1250,34 @@ input:checked + .toggle-slider:before { transform: translateX(18px); }
 
     <!-- Price reveal -->
     <div class="upg-price-block">
-      <div class="upg-price-label">Activa todo por solo</div>
+      <div class="upg-price-label">Elige tu plan:</div>
       <div class="upg-price-old">Valor real: $2,000+ con otras agencias</div>
-      <div class="upg-price-now">$297<span style="font-size:1rem;opacity:.7"> setup</span></div>
-      <div style="text-align:center;color:#00ff88;font-size:1.1rem;font-weight:700;margin:4px 0">+ $49/mes mantenimiento</div>
+
+      <!-- PLAN 1 -->
+      <div style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.3);border-radius:14px;padding:14px;margin:10px 0;text-align:center">
+        <div style="font-size:.8rem;font-weight:700;color:#ff4500;text-transform:uppercase;letter-spacing:1px">Plan Básico</div>
+        <div style="font-size:2.2rem;font-weight:900;color:#fff">$149 <span style="font-size:1rem;opacity:.6">pago único</span></div>
+        <div style="font-size:.85rem;color:#b0b0cc">✅ Website Profesional<br>✅ Tarjeta Digital<br>❌ Sin Bot IA<br><strong style="color:#00ff88">Sin mensualidad</strong></div>
+      </div>
+
+      <!-- PLAN 2 -->
+      <div style="background:rgba(0,255,136,0.08);border:2px solid rgba(0,255,136,0.4);border-radius:14px;padding:14px;margin:10px 0;text-align:center;position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff4500,#ff0099);color:white;font-size:.72rem;font-weight:800;padding:4px 14px;border-radius:50px;white-space:nowrap">⭐ MÁS POPULAR</div>
+        <div style="font-size:.8rem;font-weight:700;color:#00ff88;text-transform:uppercase;letter-spacing:1px">Plan Completo</div>
+        <div style="font-size:2.2rem;font-weight:900;color:#fff">$149 <span style="font-size:1rem;opacity:.6">setup</span></div>
+        <div style="font-size:1.1rem;font-weight:700;color:#00ff88">+ $29/mes</div>
+        <div style="font-size:.85rem;color:#b0b0cc">✅ Website Profesional<br>✅ Bot IA 24/7<br>✅ Tarjeta Digital<br>✅ Agenda Citas Auto</div>
+      </div>
+
       <div class="upg-price-note">Sin contrato · Cancela cuando quieras · Garantía 30 días</div>
     </div>
 
     <!-- CTA -->
-    <a href="https://wa.me/19143644377?text=Quiero%20activar%20mi%20Super%20Bot%20007%20-%20%24297%20setup%20%2B%20%2449%2Fmes" target="_blank" class="upg-btn-main" onclick="closeUpgrade()">
-      <i class="fas fa-rocket"></i> ¡Activar Mi Bot — $297 Setup!
+    <a href="https://wa.me/19143644377?text=Quiero%20activar%20mi%20Super%20Bot%20007%20-%20Plan%20Completo%20%24149%20setup%20%2B%20%2429%2Fmes" target="_blank" class="upg-btn-main" onclick="closeUpgrade()">
+      <i class="fas fa-rocket"></i> ¡Quiero el Plan Completo — $149!
+    </a>
+    <a href="https://wa.me/19143644377?text=Quiero%20el%20Plan%20Basico%20de%20Super%20Bot%20007%20-%20%24149%20pago%20unico" target="_blank" style="display:block;text-align:center;margin-top:10px;color:#b0b0cc;font-size:.85rem;text-decoration:none;padding:10px" onclick="closeUpgrade()">
+      Solo quiero Website + Tarjeta Digital — $149 único →
     </a>
 
     <button class="upg-btn-skip" onclick="skipUpgrade()">
